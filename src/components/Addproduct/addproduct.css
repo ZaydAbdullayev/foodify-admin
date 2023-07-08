@@ -1,0 +1,107 @@
+.product_box {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+.add_product {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    padding-right: 8%;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #17b1ed;
+    border-radius: 30px;
+}
+
+.add_product > div {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap1);
+}
+
+.product_img {
+    width: 250px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    border: 2px solid #17b1ed;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.product_img > input {
+    display: none;
+}
+
+.product_img > svg {
+    font-size: 200px;
+    color: #17b1ed;
+}
+
+.add_product > div > input {
+    width: 100%;
+    height: 50px;
+    padding: 0 2%;
+    border-radius: 10px;
+    border: 1px solid #17b1ed;
+    background: none;
+    color: #17b1ed;
+    font-size: var(--fs5);
+}
+
+
+.add_product > div > input[type="submit"] {
+    cursor: pointer;
+    background: #17b1ed;
+    color: #fff;
+}
+
+.add_product > div > input[type="submit"]:active{
+    background: #17b2ea4f;
+}
+
+.add_product > div > input::placeholder {
+    color: #17b2ea4f;
+}
+.form-add-product > div > label > input[type="file"] {
+    display: none;
+}
+
+.selected_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.view-product-img {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.view-product-img > figure > img {
+    width: 130px;
+    height: 220px;
+    object-fit: cover;
+}
+
+.select-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: cadetblue;
+    height: 40px;
+    border-radius: 6px;
+    color: #17b1ed;
+    border: 1px solid #17b1ed;
+}
