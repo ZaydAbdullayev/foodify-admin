@@ -20,7 +20,8 @@ export const Login = () => {
     ApiService.fetching("login/user", loginData)
       .then((res) => {
         console.log(res);
-        console.log(res.data.innerData.user.token);
+        const role = res.data.innerData.user;
+        localStorage.setItem("user", JSON.stringify(role));
         dispatch(acLogin());
         navigate("/");
         setErr(false);

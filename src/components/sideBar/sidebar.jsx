@@ -13,7 +13,7 @@ import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 export const Sidebar = () => {
-  const login = JSON.parse(localStorage.getItem("login")) || [];
+  const login = JSON.parse(localStorage.getItem("user")) || [];
   const isShrinkView = useSelector((state) => state.shrink);
   const dispatch = useDispatch();
   const [activeCategoryId, setActiveCategoryId] = useState(null);
@@ -41,7 +41,7 @@ export const Sidebar = () => {
         </button>
       </div>
       <ul className="menu_box">
-        {login.role === "owner"
+        {login.user.role === "owner"
           ? menu.map((item) => {
               return (
                 <div key={item.id}>

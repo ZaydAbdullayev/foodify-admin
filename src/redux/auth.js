@@ -1,4 +1,5 @@
-const token = localStorage.getItem("token") || null;
+const user = localStorage.getItem("user") || {};
+const token = user.token || null;
 
 export const reAuth = (state = token, action) => {
   switch (action.type) {

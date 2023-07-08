@@ -10,12 +10,12 @@ import { Auth } from "./auth/auth";
 import { Addproduct } from "./components/Addproduct/addproduct";
 
 export const Router = () => {
-  const login = JSON.parse(localStorage.getItem("login")) || [];
+  const login = JSON.parse(localStorage.getItem("user")) || [];
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signin" element={<Signin />} />
-      {login.role === "owner" ? (
+      {login.user.role === "owner" ? (
         <Route path="/" element={<Auth />}>
           <Route path="/" element={<Layout />}>
             <Route path="sidebar" element={<Sidebar />} />
