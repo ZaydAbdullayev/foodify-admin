@@ -2,8 +2,11 @@ import axios from "axios";
 
 const base_url = "https://yandex.sp-school58.uz";
 
+const user = JSON.parse(localStorage.getItem("user")) || [];
+
 const config = {
   headers: {
+    Authorization: `Bearer ${user.token}`,
     "Content-Type": "application/json; multipart/form-data",
   },
 };
