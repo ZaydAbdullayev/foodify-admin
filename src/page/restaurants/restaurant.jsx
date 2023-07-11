@@ -26,7 +26,6 @@ export const Restaurant = () => {
         const msg = "Restoran qo'shishda qandaydir xatolik yuz berdi";
         enqueueSnackbar(msg, { variant: "error" });
         console.log(err);
-        ClearForm(".add_reastaurant");
       });
   };
 

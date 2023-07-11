@@ -8,11 +8,13 @@ import { ApiService } from "../../service/api.service";
 export const Addproduct = () => {
   const [files, setFiles] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const user = JSON.parse(localStorage.getItem("user") || []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
+    console.log(data);
 
     ApiService.fetching("add/product", data)
       .then((res) => {
@@ -77,17 +79,14 @@ export const Addproduct = () => {
             placeholder="Maxsulot haqida tavsif"
             required
           />
+          <input
+            type="hidden"
+            name="restaurant"
+            defaultValue={user.user.username}
+          />
           <input type="submit" value="Qo'shish" />
         </div>
       </form>
-    </div>
-  );
-};
-
-export const Customer = () => {
-  return (
-    <div className="curtomer">
-      <h1>Sizga bu sahifaga kirish uchun ruxsat berilmagan!!!</h1>
     </div>
   );
 };

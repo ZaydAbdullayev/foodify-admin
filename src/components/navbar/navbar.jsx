@@ -10,6 +10,7 @@ import { FaBell } from "react-icons/fa";
 import default_img from "../../assets/images/default-img.png";
 
 export const Navbar = () => {
+  const user = JSON.parse(localStorage.getItem("user") || []);
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export const Navbar = () => {
       </div>
       <div className={modal ? "modal_box" : "modal_box close_modal"}>
         <div className="user">
-          <b>Username</b>
+          <b>{user?.user?.username}</b>
           <figure>
             <img src={default_img} alt="user_photo" />
             <button onClick={closeModal}>x</button>

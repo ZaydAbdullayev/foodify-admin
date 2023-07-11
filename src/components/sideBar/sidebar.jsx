@@ -55,7 +55,7 @@ export const Sidebar = () => {
                     onClick={() => handleCategoryClick(item.id)}
                   >
                     <span>{item.icon}</span> <p>{item.name}</p>{" "}
-                    <i>
+                    <i style={item.list ? {} : { display: "none" }}>
                       {activeCategoryId === item.id ? (
                         <RiArrowDownSLine />
                       ) : (
@@ -98,7 +98,14 @@ export const Sidebar = () => {
                     to={item.path}
                     onClick={() => handleCategoryClick(item.id)}
                   >
-                    <span>{item.icon}</span> <p>{item.name}</p> <i></i>
+                    <span>{item.icon}</span> <p>{item.name}</p>
+                    <i style={item.list ? {} : { display: "none" }}>
+                      {activeCategoryId === item.id ? (
+                        <RiArrowDownSLine />
+                      ) : (
+                        <RiArrowUpSLine />
+                      )}
+                    </i>
                   </Link>
                   {item.id === activeCategoryId && (
                     <ul className="inner_menu">
@@ -134,24 +141,28 @@ const menu = [
     path: "/dashboard",
     name: "Dashboard",
     icon: <MdDashboard />,
+    list: false,
   },
   {
     id: "0765435",
     path: "/restaurant",
     name: "Restaurants",
     icon: <SiHomeassistantcommunitystore />,
+    list: true,
   },
   {
     id: "243567",
     path: "/add/product",
     name: "AddProduct",
     icon: <IoIosRestaurant />,
+    list: true,
   },
   {
     id: "765433",
     path: "/settings",
     name: "Settings",
     icon: <AiFillSetting />,
+    list: false,
   },
 ];
 const menu_customer = [
@@ -160,25 +171,28 @@ const menu_customer = [
     path: "/dashboard",
     name: "Dashboard",
     icon: <MdDashboard />,
+    list: false,
   },
   {
     id: "243567",
     path: "/add/product",
     name: "Add Product",
     icon: <IoIosRestaurant />,
+    list: true,
   },
   {
     id: "765433",
     path: "/settings",
     name: "Settings",
     icon: <AiFillSetting />,
+    list: false,
   },
 ];
 
 const category = [
   {
     id: "0765435",
-    name: "Add restoraund",
+    name: "Add restaurant",
     path: "/add",
   },
   {

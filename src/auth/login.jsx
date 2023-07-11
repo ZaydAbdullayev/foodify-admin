@@ -20,8 +20,8 @@ export const Login = () => {
     ApiService.fetching("login/user", loginData)
       .then((res) => {
         console.log(res);
-        const role = res.data.innerData.user;
-        localStorage.setItem("user", JSON.stringify(role));
+        const user = res.data.innerData.user;
+        localStorage.setItem("user", JSON.stringify(user));
         dispatch(acLogin());
         navigate("/");
         setErr(false);
@@ -104,12 +104,13 @@ export const Signin = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const loginData = Object.fromEntries(formData.entries());
-    localStorage.setItem("login", JSON.stringify(loginData));
-    ClearForm("#form");
 
     ApiService.fetching("register", loginData)
       .then((res) => {
         console.log(res);
+        const user = res.data.innerData.user;
+        localStorage.setItem("user", JSON.stringify(user));
+        ClearForm("#form");
       })
       .catch((err) => {
         console.log(err);

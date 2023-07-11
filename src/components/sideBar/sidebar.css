@@ -73,10 +73,6 @@
     color: #fff;
 }
 
-/* .shrink_box>h3 {
-    display: none;
-} */
-
 .menu_box {
     width: 100%;
     display: flex;
@@ -132,6 +128,13 @@
 
 .menu_box_item:focus::after {
     display: none;
+}
+
+.menu_box_item>i {
+    position: absolute;
+    top: 50%;
+    right: 4%;
+    transform: translate(-50%, -50%);
 }
 
 

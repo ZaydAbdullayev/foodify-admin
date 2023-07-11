@@ -15,7 +15,7 @@ export const Router = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signin" element={<Signin />} />
-      {login.user.role === "owner" ? (
+      {login?.user?.role === "owner" ? (
         <Route path="/" element={<Auth />}>
           <Route path="/" element={<Layout />}>
             <Route path="sidebar" element={<Sidebar />} />
