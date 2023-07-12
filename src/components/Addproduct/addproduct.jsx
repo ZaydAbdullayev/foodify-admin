@@ -14,11 +14,10 @@ export const Addproduct = () => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
-    console.log(data);
 
     ApiService.fetching("add/product", data)
       .then((res) => {
-        console.log(res.response.message);
+        console.log(res);
         const msg = "Maxsulot muaffaqiyatli qoshildi";
         enqueueSnackbar(msg, { variant: "success" });
         ClearForm(".add_product");
@@ -28,7 +27,6 @@ export const Addproduct = () => {
         const msg = "Maxsulot qoshishda xatolik yuz berdi ";
         enqueueSnackbar(msg, { variant: "error" });
         console.log(err);
-        ClearForm(".add_product");
       });
   };
 
@@ -69,13 +67,13 @@ export const Addproduct = () => {
           />
           <input
             type="number"
-            name="review_count"
+            name="price"
             placeholder="Maxsulot narxini kiriting"
             required
           />
           <input
             type="text"
-            name="text"
+            name="description"
             placeholder="Maxsulot haqida tavsif"
             required
           />
