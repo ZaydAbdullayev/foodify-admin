@@ -1,32 +1,35 @@
 import React, { useState } from "react";
 import "./addproduct.css";
-import { MdAllInbox } from "react-icons/md";
+import { IoIosRestaurant } from "react-icons/io";
 import { useSnackbar } from "notistack";
 import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
+import { NumericFormat } from "react-number-format";
+import { useNavigate } from "react-router-dom";
 
 export const Addproduct = () => {
+  const user = JSON.parse(localStorage.getItem("user") || []);
   const [files, setFiles] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
-  const user = JSON.parse(localStorage.getItem("user") || []);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
+    data.price = data?.price?.split(" ").join("");
 
     ApiService.fetching("add/product", data)
       .then((res) => {
-        console.log(res);
-        const msg = "Maxsulot muaffaqiyatli qoshildi";
+        const msg = "Maxsulot muaffaqiyatli qo'shildi";
         enqueueSnackbar(msg, { variant: "success" });
         ClearForm(".add_product");
         setFiles([]);
+        navigate("/product");
       })
       .catch((err) => {
-        const msg = "Maxsulot qoshishda xatolik yuz berdi ";
+        const msg = "Maxsulot qo'shishda xatolik yuz berdi ";
         enqueueSnackbar(msg, { variant: "error" });
-        console.log(err);
       });
   };
 
@@ -44,7 +47,7 @@ export const Addproduct = () => {
             style={files.length ? { border: "none" } : {}}
             className="product_img"
           >
-            {files.length ? "" : <MdAllInbox />}
+            {files.length ? "" : <IoIosRestaurant />}
             <input
               type="file"
               name="img"
@@ -65,22 +68,30 @@ export const Addproduct = () => {
             placeholder="Maxsulot nomini kiriting"
             required
           />
-          <input
-            type="number"
-            name="price"
+          <NumericFormat
             placeholder="Maxsulot narxini kiriting"
+            suffix=" sum"
+            thousandSeparator=" "
+            allowLeadingZeros
+            displayType="input"
+            name="price"
             required
           />
           <input
             type="text"
             name="description"
             placeholder="Maxsulot haqida tavsif"
+          />
+          <input
+            type="text"
+            name="category"
+            placeholder="Maxsulot turini kiriting"
             required
           />
           <input
             type="hidden"
             name="restaurant"
-            defaultValue={user.user.username}
+            defaultValue={user?.user?.id}
           />
           <input type="submit" value="Qo'shish" />
         </div>

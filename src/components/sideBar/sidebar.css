@@ -46,7 +46,7 @@
 
 .sidebar_container>a,
 .shrink>a {
-    font-size: var(--fs3);
+    font-size: calc(var(--fs3) + 1px);
     color: #fff;
     border-bottom: 1px solid #cccccc2f;
     padding: var(--pd1);

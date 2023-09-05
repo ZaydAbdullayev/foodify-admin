@@ -4,16 +4,22 @@ import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
 
 import { MdOutlineAddBusiness } from "react-icons/md";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useSnackbar } from "notistack";
+import { AiOutlineCheck } from "react-icons/ai";
 
 export const Restaurant = () => {
   const [files, setFiles] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const [show, setShow] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
+    data.username = data?.username?.split(" ").join("_");
+
+    console.log(data);
 
     ApiService.fetching("add/restaurant", data)
       .then((res) => {
@@ -27,6 +33,10 @@ export const Restaurant = () => {
         enqueueSnackbar(msg, { variant: "error" });
         console.log(err);
       });
+  };
+
+  const handleShow = () => {
+    setShow(!show);
   };
 
   const takeImg = (e) => {
@@ -57,8 +67,26 @@ export const Restaurant = () => {
         </label>
         <input
           type="text"
-          name="name"
+          name="username"
           placeholder="Restoran nomini kiriting"
+          required
+        />
+        <label className="label">
+          <input
+            type={show ? "password" : "text"}
+            name="password"
+            placeholder="Parol kiriting"
+            required
+            autoComplete="off"
+          />
+          <span onClick={handleShow} style={show ? {} : { color: "orange" }}>
+            {show ? <BsEyeSlash /> : <BsEye />}
+          </span>
+        </label>
+        <input
+          type="text"
+          name="rating"
+          placeholder="Restoranning reytingi"
           required
         />
         <div className="delivery_time">
@@ -70,19 +98,23 @@ export const Restaurant = () => {
             <p>gacha</p>
           </label>
         </div>
-        <input
-          type="text"
-          name="review_count"
-          placeholder="Sharhlar soni"
-          required
-        />
-        <input
-          type="text"
-          name="rating"
-          placeholder="Restoranning reytingi"
-          required
-        />
-        <input type="submit" value="Qo'shish" />
+        <div className="delivery_time">
+          <p>Qo'shilayotgan joy turi</p>
+          <div>
+            <label>
+              <p>Restaurant</p>
+              <input type="radio" name="type" value="Restaurant" required />
+            </label>
+            <label>
+              <p>Shop</p>
+              <input type="radio" name="type" value="Shop" required />
+            </label>
+          </div>
+        </div>
+        <input type="hidden" name="role" value="restaurant" />
+        <button>
+          Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
+        </button>
       </form>
     </div>
   );

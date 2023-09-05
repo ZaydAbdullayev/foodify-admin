@@ -4,11 +4,8 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { acShrink } from "../../redux/shrink";
 import { useLocation } from "react-router-dom";
+import { Menu, Menu_customer, Category } from "./menu";
 
-import { MdDashboard } from "react-icons/md";
-import { SiHomeassistantcommunitystore } from "react-icons/si";
-import { IoIosRestaurant } from "react-icons/io";
-import { AiFillSetting } from "react-icons/ai";
 import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -31,7 +28,7 @@ export const Sidebar = () => {
 
   return (
     <div className={isShrinkView ? "shrink" : "sidebar_container"}>
-      <Link to="/">{isShrinkView ? "Y" : "Yandex@Eats"}</Link>
+      <Link to="/">{isShrinkView ? "F" : "Foodify"}</Link>
       <div className="shrink_box">
         <h3 onClick={handleSidebarView}>
           {isShrinkView ? <RiMenu2Line /> : "Dashboard Menu"}
@@ -41,8 +38,8 @@ export const Sidebar = () => {
         </button>
       </div>
       <ul className="menu_box">
-        {login.user.role === "owner"
-          ? menu.map((item) => {
+        {login?.user?.role === "owner"
+          ? Menu.map((item) => {
               return (
                 <div key={item.id}>
                   <Link
@@ -55,7 +52,11 @@ export const Sidebar = () => {
                     onClick={() => handleCategoryClick(item.id)}
                   >
                     <span>{item.icon}</span> <p>{item.name}</p>{" "}
-                    <i style={item.list ? {} : { display: "none" }}>
+                    <i
+                      style={
+                        item.list && !isShrinkView ? {} : { display: "none" }
+                      }
+                    >
                       {activeCategoryId === item.id ? (
                         <RiArrowDownSLine />
                       ) : (
@@ -65,28 +66,28 @@ export const Sidebar = () => {
                   </Link>
                   {item.id === activeCategoryId && (
                     <ul className="inner_menu">
-                      {category
-                        .filter((cat) => cat.id === activeCategoryId)
-                        .map((catItem) => (
-                          <li key={catItem.path}>
-                            <Link
-                              to={`${item.path}${catItem.path}`}
-                              style={
-                                location === `${item.path}${catItem.path}`
-                                  ? { color: "#17b1ea" }
-                                  : {}
-                              }
-                            >
-                              {catItem.name}
-                            </Link>
-                          </li>
-                        ))}
+                      {Category.filter(
+                        (cat) => cat.id === activeCategoryId
+                      ).map((catItem) => (
+                        <li key={catItem.path}>
+                          <Link
+                            to={`${item.path}${catItem.path}`}
+                            style={
+                              location === `${item.path}${catItem.path}`
+                                ? { color: "#17b1ea" }
+                                : {}
+                            }
+                          >
+                            {catItem.name}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   )}
                 </div>
               );
             })
-          : menu_customer.map((item) => {
+          : Menu_customer.map((item) => {
               return (
                 <div key={item.id}>
                   <Link
@@ -99,7 +100,11 @@ export const Sidebar = () => {
                     onClick={() => handleCategoryClick(item.id)}
                   >
                     <span>{item.icon}</span> <p>{item.name}</p>
-                    <i style={item.list ? {} : { display: "none" }}>
+                    <i
+                      style={
+                        item.list && !isShrinkView ? {} : { display: "none" }
+                      }
+                    >
                       {activeCategoryId === item.id ? (
                         <RiArrowDownSLine />
                       ) : (
@@ -109,22 +114,22 @@ export const Sidebar = () => {
                   </Link>
                   {item.id === activeCategoryId && (
                     <ul className="inner_menu">
-                      {category
-                        .filter((cat) => cat.id === activeCategoryId)
-                        .map((catItem) => (
-                          <li key={catItem.path}>
-                            <Link
-                              to={`${item.path}${catItem.path}`}
-                              style={
-                                location === `${item.path}${catItem.path}`
-                                  ? { color: "#17b1ea" }
-                                  : {}
-                              }
-                            >
-                              {catItem.name}
-                            </Link>
-                          </li>
-                        ))}
+                      {Category.filter(
+                        (cat) => cat.id === activeCategoryId
+                      ).map((catItem) => (
+                        <li key={catItem.path}>
+                          <Link
+                            to={`${item.path}${catItem.path}`}
+                            style={
+                              location === `${item.path}${catItem.path}`
+                                ? { color: "#17b1ea" }
+                                : {}
+                            }
+                          >
+                            {catItem.name}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   )}
                 </div>
@@ -134,75 +139,3 @@ export const Sidebar = () => {
     </div>
   );
 };
-
-const menu = [
-  {
-    id: "098765",
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: <MdDashboard />,
-    list: false,
-  },
-  {
-    id: "0765435",
-    path: "/restaurant",
-    name: "Restaurants",
-    icon: <SiHomeassistantcommunitystore />,
-    list: true,
-  },
-  {
-    id: "243567",
-    path: "/add/product",
-    name: "AddProduct",
-    icon: <IoIosRestaurant />,
-    list: true,
-  },
-  {
-    id: "765433",
-    path: "/settings",
-    name: "Settings",
-    icon: <AiFillSetting />,
-    list: false,
-  },
-];
-const menu_customer = [
-  {
-    id: "098765",
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: <MdDashboard />,
-    list: false,
-  },
-  {
-    id: "243567",
-    path: "/add/product",
-    name: "Add Product",
-    icon: <IoIosRestaurant />,
-    list: true,
-  },
-  {
-    id: "765433",
-    path: "/settings",
-    name: "Settings",
-    icon: <AiFillSetting />,
-    list: false,
-  },
-];
-
-const category = [
-  {
-    id: "0765435",
-    name: "Add restaurant",
-    path: "/add",
-  },
-  {
-    id: "0765435",
-    name: "Restaurant list",
-    path: "/list",
-  },
-  {
-    id: "0765435",
-    name: "orders",
-    path: "/orders",
-  },
-];

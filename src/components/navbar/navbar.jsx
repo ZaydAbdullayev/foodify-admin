@@ -3,17 +3,19 @@ import "./navbar.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
+import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 
 export const Navbar = () => {
-  const user = JSON.parse(localStorage.getItem("user") || []);
+  const user = JSON.parse(localStorage.getItem("user")) || [];
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const name = user?.user?.username.split("_").join(" ");
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -24,7 +26,7 @@ export const Navbar = () => {
   };
 
   const log_out = () => {
-    localStorage.clear();
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -35,22 +37,34 @@ export const Navbar = () => {
         <input type="search" name="search" placeholder="search" required />
       </form>
       <div className="profile">
-        <FaBell />
-        <img src={default_img} alt="user_photo" onClick={openModal} />
+        <span onClick={() => navigate("/statistics")}>
+          <ImStatsBars />
+        </span>
+        <span>
+          <FaBell />
+        </span>
+        <img
+          src={user?.user?.img || default_img}
+          alt="user_photo"
+          onClick={openModal}
+        />
       </div>
-      <div className={modal ? "modal_box" : "modal_box close_modal"}>
+      <div
+        className={modal ? "modal_box" : "modal_box close_modal"}
+        onMouseLeave={closeModal}
+      >
         <div className="user">
-          <b>{user?.user?.username}</b>
+          <b>{name}</b>
           <figure>
-            <img src={default_img} alt="user_photo" />
+            <img src={user?.user?.img || default_img} alt="user_photo" />
             <button onClick={closeModal}>x</button>
           </figure>
         </div>
         <ul>
-          <li>Ma'lumotlarim</li>
-          <li>Manzillarim</li>
-          <li>Buyurtlarim</li>
-          <li>Bildirishnomalar</li>
+          <Link to="/">Ma'lumotlarim</Link>
+          <Link to="/">Manzillarim</Link>
+          <Link to="/">Buyurtlarim</Link>
+          <Link to="/">Bildirishnomalar</Link>
           <li onClick={log_out}>Chiqish</li>
         </ul>
       </div>

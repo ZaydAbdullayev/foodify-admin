@@ -6,22 +6,36 @@
     overflow: hidden;
 }
 
+main {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+
+main>:first-child {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99999999999;
+    background: #555;
+}
+
 .aside {
     width: 25%;
-    
+
 }
 
 .short_aside {
     width: 6%;
-    
+
 }
 
 .main {
     width: 75%;
-    
+
 }
 
 .long_main {
     width: 96%;
-    
+
 }

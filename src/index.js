@@ -9,12 +9,12 @@ import { SnackbarProvider } from "notistack";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Fragment>
-    <SnackbarProvider maxSnack={3}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <SnackbarProvider maxSnack={3}>
         <BrowserRouter>
           <Router />
         </BrowserRouter>
-      </Provider>
-    </SnackbarProvider>
+      </SnackbarProvider>
+    </Provider>
   </Fragment>
 );
