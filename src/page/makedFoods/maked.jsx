@@ -16,7 +16,7 @@ export const MakedFoods = () => {
       .catch((err) => console.log(err));
   }, [id, newOrder]);
 
-  const currentOrder = orders?.filter((item) => item?.status === 2);
+  const currentOrder = orders?.filter((item) => item?.status === 3);
   return (
     <div className="making_foods_box">
       <h1>Tayyor bo'lgan taomlar</h1>

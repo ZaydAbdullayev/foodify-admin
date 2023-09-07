@@ -48,15 +48,6 @@ export const Home = () => {
       .catch((err) => console.log(err));
   };
 
-  // to accept order's all products
-  const acceptAllProduct = (order) => {
-    ApiUpdateService.fetching(`update/order/${order.id}/${order.status}`)
-      .then((res) => {
-        dispatch(acUpload());
-      })
-      .catch((err) => console.log(err));
-  };
-
   const currentOrder = orders.filter((item) => item.status === 0);
   const user_id = currentOrder?.map((item) => item.user_id);
 
@@ -74,14 +65,13 @@ export const Home = () => {
         <h1>All Orders</h1>
         <div className="orders_body">
           {currentOrder?.map((order) => {
-            const products = JSON.parse(order?.product_data);
-            const status = products.find(({ status }) => status === "2");
-            const change = products.find(({ status }) => status === "3");
-            const time = order.receivedAt.toLocalString("en-US", {
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            });
+            const products = JSON?.parse(order?.product_data);
+            const status = products?.find(({ status }) => status === "2");
+            const change = products?.find(({ status }) => status === "3");
+            const time = order?.receivedAt
+              ?.substring(0, 19)
+              ?.split("T")
+              ?.join(" | ");
             return (
               <div
                 key={order?.id}
@@ -101,7 +91,7 @@ export const Home = () => {
                       </button>
                       <button
                         onClick={() =>
-                          acceptAllProduct({ id: order.id, status: 2 })
+                          orderAccept({ order_id: order.id, status: 1 })
                         }
                       >
                         Hammasini qabul qilish

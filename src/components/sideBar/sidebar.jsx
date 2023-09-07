@@ -8,6 +8,7 @@ import { Menu, Menu_customer, Category } from "./menu";
 
 import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import logo from "../../assets/images/logo.png";
 
 export const Sidebar = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -28,7 +29,16 @@ export const Sidebar = () => {
 
   return (
     <div className={isShrinkView ? "shrink" : "sidebar_container"}>
-      <Link to="/">{isShrinkView ? "F" : "Foodify"}</Link>
+      <div>
+        {isShrinkView ? (
+          <img src={logo} alt="" />
+        ) : (
+          <div>
+            <img src={logo} alt="" />
+            Foodify
+          </div>
+        )}
+      </div>
       <div className="shrink_box">
         <h3 onClick={handleSidebarView}>
           {isShrinkView ? <RiMenu2Line /> : "Dashboard Menu"}

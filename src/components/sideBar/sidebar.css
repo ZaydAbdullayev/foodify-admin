@@ -44,12 +44,20 @@
     justify-content: center;
 }
 
-.sidebar_container>a,
-.shrink>a {
+.sidebar_container>div,
+.shrink>div {
+    display: flex;
+    align-items: center;
     font-size: calc(var(--fs3) + 1px);
     color: #fff;
     border-bottom: 1px solid #cccccc2f;
     padding: var(--pd1);
+}
+
+.sidebar_container img,
+.shrink img {
+    width: 64px;
+    height: 64px;
 }
 
 .shrink>a {
