@@ -3,8 +3,12 @@ import "./home.css";
 import { ApiGetService, ApiUpdateService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
 import { acUpload } from "../../redux/upload";
+import { io } from "socket.io-client";
+
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
+
+const socket = io("https://backup1.foodify.uz");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -25,6 +29,11 @@ export const Home = () => {
     }, 800);
   }, [id, newOrder]);
 
+  socket.on(`/get/order/${id}`, (data) => {
+    setOrders(data);
+  });
+  console.log(orders);
+
   // to find oreder stution
   const orderStution = (order) => {
     ApiUpdateService.fetching(
@@ -33,11 +42,12 @@ export const Home = () => {
       .then((res) => {
         dispatch(acUpload());
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("malumot yuklana olmadi"));
   };
 
   // to accept order's product by id
   const orderAccept = (order) => {
+    socket.emit("/accept/order", true);
     ApiUpdateService.fetching(`update/status/${order.order_id}`, {
       status: order.status,
     })
@@ -48,7 +58,7 @@ export const Home = () => {
       .catch((err) => console.log(err));
   };
 
-  const currentOrder = orders.filter((item) => item.status === 0);
+  const currentOrder = orders?.filter((item) => item.status === 0);
   const user_id = currentOrder?.map((item) => item.user_id);
 
   useEffect(() => {
@@ -56,7 +66,7 @@ export const Home = () => {
       .then((res) => {
         setCustomer(res?.data?.innerData?.username);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("malumot yuklana olmadi"));
   }, [user_id]);
 
   return (
@@ -65,7 +75,7 @@ export const Home = () => {
         <h1>All Orders</h1>
         <div className="orders_body">
           {currentOrder?.map((order) => {
-            const products = JSON?.parse(order?.product_data);
+            const products = JSON.parse(order?.product_data);
             const status = products?.find(({ status }) => status === "2");
             const change = products?.find(({ status }) => status === "3");
             const time = order?.receivedAt

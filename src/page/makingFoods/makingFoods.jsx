@@ -33,7 +33,7 @@ export const MakingFoods = () => {
       .catch((err) => console.log(err));
   };
 
-  const currentOrder = orders?.filter((item) => item.status === 2);
+  const currentOrder = orders?.filter((item) => item.status === 1);
 
   return (
     <div className="making_foods_box">

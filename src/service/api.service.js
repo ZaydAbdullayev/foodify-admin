@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const base_url = "https://backend.foodify.uz";
+const base_url = "https://backend12.foodify.uz";
 
 const user = JSON.parse(localStorage.getItem("user")) || [];
 

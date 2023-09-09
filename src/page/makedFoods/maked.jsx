@@ -16,13 +16,14 @@ export const MakedFoods = () => {
       .catch((err) => console.log(err));
   }, [id, newOrder]);
 
-  const currentOrder = orders?.filter((item) => item?.status === 3);
+  const currentOrder = orders?.filter((item) => item?.status === 2);
   return (
     <div className="making_foods_box">
       <h1>Tayyor bo'lgan taomlar</h1>
       <div className="orders_body">
         {currentOrder?.map((order) => {
-          const products = order?.product_data && JSON?.parse(order?.product_data);
+          const products =
+            order?.product_data && JSON?.parse(order?.product_data);
           const time = order?.receivedAt
             ?.substring(0, 19)
             ?.split("T")
