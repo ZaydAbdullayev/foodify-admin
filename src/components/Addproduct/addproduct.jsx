@@ -67,6 +67,7 @@ export const Addproduct = () => {
             name="name"
             placeholder="Maxsulot nomini kiriting"
             required
+            autoComplete="off"
           />
           <NumericFormat
             placeholder="Maxsulot narxini kiriting"
@@ -81,6 +82,7 @@ export const Addproduct = () => {
             type="text"
             name="description"
             placeholder="Maxsulot haqida tavsif"
+            autoComplete="off"
           />
           <input
             type="text"

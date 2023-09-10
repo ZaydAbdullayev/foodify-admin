@@ -153,6 +153,7 @@ export const Products = () => {
                   style={{ textTransform: "capitalize" }}
                   autoFocus
                   onChange={(e) => handleInfoChange("name", e.target.value)}
+                  autoComplete="off"
                 />
                 <input
                   type="text"
@@ -161,6 +162,7 @@ export const Products = () => {
                   onChange={(e) =>
                     handleInfoChange("description", e.target.value)
                   }
+                  autoComplete="off"
                 />
               </>
             ) : (

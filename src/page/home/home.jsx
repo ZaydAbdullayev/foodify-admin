@@ -31,8 +31,8 @@ export const Home = () => {
 
   socket.on(`/get/order/${id}`, (data) => {
     setOrders(data);
+    socket.off(`/get/order/${id}`);
   });
-  console.log(orders);
 
   // to find oreder stution
   const orderStution = (order) => {
@@ -47,7 +47,7 @@ export const Home = () => {
 
   // to accept order's product by id
   const orderAccept = (order) => {
-    socket.emit("/accept/order", true);
+    socket.emit("/accept/order", { status: true, variant: order?.status });
     ApiUpdateService.fetching(`update/status/${order.order_id}`, {
       status: order.status,
     })
@@ -60,6 +60,11 @@ export const Home = () => {
 
   const currentOrder = orders?.filter((item) => item.status === 0);
   const user_id = currentOrder?.map((item) => item.user_id);
+  const newOrders = currentOrder?.sort((a, b) => {
+    const dateA = new Date(a.receivedAt);
+    const dateB = new Date(b.receivedAt);
+    return dateB - dateA;
+  });
 
   useEffect(() => {
     ApiGetService.fetching(`get/user/${user_id}`)
@@ -74,8 +79,9 @@ export const Home = () => {
       <div className="oreders">
         <h1>All Orders</h1>
         <div className="orders_body">
-          {currentOrder?.map((order) => {
-            const products = JSON.parse(order?.product_data);
+          {newOrders?.map((order) => {
+            const products =
+              order?.product_data && JSON.parse(order?.product_data);
             const status = products?.find(({ status }) => status === "2");
             const change = products?.find(({ status }) => status === "3");
             const time = order?.receivedAt

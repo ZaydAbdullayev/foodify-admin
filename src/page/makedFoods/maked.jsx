@@ -17,11 +17,17 @@ export const MakedFoods = () => {
   }, [id, newOrder]);
 
   const currentOrder = orders?.filter((item) => item?.status === 2);
+  const newOrders = currentOrder?.sort((a, b) => {
+    const dateA = new Date(a.receivedAt);
+    const dateB = new Date(b.receivedAt);
+    return dateB - dateA;
+  });
+
   return (
     <div className="making_foods_box">
       <h1>Tayyor bo'lgan taomlar</h1>
       <div className="orders_body">
-        {currentOrder?.map((order) => {
+        {newOrders?.map((order) => {
           const products =
             order?.product_data && JSON?.parse(order?.product_data);
           const time = order?.receivedAt

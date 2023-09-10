@@ -3,6 +3,9 @@ import "./makingFoods.css";
 import { useSelector, useDispatch } from "react-redux";
 import { ApiGetService, ApiUpdateService } from "../../service/api.service";
 import { acUpload } from "../../redux/upload";
+import { io } from "socket.io-client";
+
+const socket = io("https://backup1.foodify.uz");
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -23,6 +26,7 @@ export const MakingFoods = () => {
   }, [id, newOrder]);
 
   const orderAccept = (order) => {
+    socket.emit("/accept/order", { status: true, variant: 3 });
     ApiUpdateService.fetching(`update/status/${order.order_id}`, {
       status: order.status,
     })
@@ -34,12 +38,17 @@ export const MakingFoods = () => {
   };
 
   const currentOrder = orders?.filter((item) => item.status === 1);
+  const newOrders = currentOrder?.sort((a, b) => {
+    const dateA = new Date(a.receivedAt);
+    const dateB = new Date(b.receivedAt);
+    return dateB - dateA;
+  });
 
   return (
     <div className="making_foods_box">
       <h1>Tayyorlanayotgan taomlar</h1>
       <div className="orders_body">
-        {currentOrder?.map((order) => {
+        {newOrders?.map((order) => {
           const products =
             order?.product_data && JSON.parse(order?.product_data);
           const time = order.receivedAt.substring(0, 19).split("T").join(" | ");
