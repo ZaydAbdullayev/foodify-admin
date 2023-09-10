@@ -26,7 +26,11 @@ export const MakingFoods = () => {
   }, [id, newOrder]);
 
   const orderAccept = (order) => {
-    socket.emit("/accept/order", { status: true, variant: 3 });
+    socket.emit("/accept/order", {
+      status: true,
+      variant: 3,
+      user_id: order?.user_id,
+    });
     ApiUpdateService.fetching(`update/status/${order.order_id}`, {
       status: order.status,
     })

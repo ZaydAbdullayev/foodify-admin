@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DualAxes } from "@ant-design/plots";
 import { Pie, measureTextWidth } from "@ant-design/plots";
 import "./statistics.css";

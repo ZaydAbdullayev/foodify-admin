@@ -37,6 +37,10 @@
     gap: var(--gap3);
 }
 
+.order_item span {
+    text-transform: capitalize;
+}
+
 .order_item>:last-child {
     border: none;
 }

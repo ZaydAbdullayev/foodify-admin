@@ -15,7 +15,6 @@ export const Home = () => {
   const newOrder = useSelector((state) => state.upload);
   const [stution, setStution] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [customer, setCustomer] = useState(null);
   const id = user?.user?.id;
   const dispatch = useDispatch();
 
@@ -47,7 +46,11 @@ export const Home = () => {
 
   // to accept order's product by id
   const orderAccept = (order) => {
-    socket.emit("/accept/order", { status: true, variant: order?.status });
+    socket.emit("/accept/order", {
+      status: true,
+      variant: order?.status,
+      user_id: order?.user_id,
+    });
     ApiUpdateService.fetching(`update/status/${order.order_id}`, {
       status: order.status,
     })
@@ -59,20 +62,11 @@ export const Home = () => {
   };
 
   const currentOrder = orders?.filter((item) => item.status === 0);
-  const user_id = currentOrder?.map((item) => item.user_id);
   const newOrders = currentOrder?.sort((a, b) => {
     const dateA = new Date(a.receivedAt);
     const dateB = new Date(b.receivedAt);
     return dateB - dateA;
   });
-
-  useEffect(() => {
-    ApiGetService.fetching(`get/user/${user_id}`)
-      .then((res) => {
-        setCustomer(res?.data?.innerData?.username);
-      })
-      .catch((err) => console.log("malumot yuklana olmadi"));
-  }, [user_id]);
 
   return (
     <div className="home_page">
@@ -95,19 +89,29 @@ export const Home = () => {
               >
                 <figure className="order_item ">
                   <div>
-                    Buyurtmachi : {customer}{" "}
+                    <span>
+                      Buyurtmachi : {order?.address?.split("&")?.pop()}{" "}
+                    </span>
                     <span>Buyurtma ID № : {order?.id}</span>{" "}
                     <div className="btn_box">
                       <button
                         onClick={() =>
-                          orderAccept({ order_id: order.id, status: 6 })
+                          orderAccept({
+                            order_id: order.id,
+                            status: 6,
+                            user_id: order?.user_id,
+                          })
                         }
                       >
                         Hammasini bekor qilish
                       </button>
                       <button
                         onClick={() =>
-                          orderAccept({ order_id: order.id, status: 1 })
+                          orderAccept({
+                            order_id: order.id,
+                            status: 1,
+                            user_id: order?.user_id,
+                          })
                         }
                       >
                         Hammasini qabul qilish
