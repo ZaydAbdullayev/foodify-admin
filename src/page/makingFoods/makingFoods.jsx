@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./makingFoods.css";
 import { useSelector, useDispatch } from "react-redux";
-import { ApiGetService, ApiUpdateService } from "../../service/api.service";
+import { ApiGetService } from "../../service/api.service";
 import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
 
-const socket = io("https://backup1.foodify.uz");
+// const socket = io("https://backup1.foodify.uz");
+const socket = io("http://localhost:80");
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const newOrder = useSelector((state) => state.upload);
+  const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
   const [stution, setStution] = useState(null);
   const id = user?.user?.id;
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,14 +32,9 @@ export const MakingFoods = () => {
       variant: 3,
       user_id: order?.user_id,
     });
-    ApiUpdateService.fetching(`update/status/${order.order_id}`, {
-      status: order.status,
-    })
-      .then((res) => {
-        setStution(order.order_id);
-        dispatch(acUpload());
-      })
-      .catch((err) => console.log(err));
+    socket.emit("/update/order/status", order);
+    setStution(order?.id);
+    dispatch(acUpload());
   };
 
   const currentOrder = orders?.filter((item) => item.status === 1);
@@ -66,7 +62,11 @@ export const MakingFoods = () => {
                   <span>buyurtma idsi : {order?.id}</span>{" "}
                   <button
                     onClick={() =>
-                      orderAccept({ order_id: order.id, status: 3 })
+                      orderAccept({
+                        id: order.id,
+                        status: 2,
+                        user_id: order?.user_id,
+                      })
                     }
                   >
                     Buyurtma tayyor

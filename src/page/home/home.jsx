@@ -8,7 +8,8 @@ import { io } from "socket.io-client";
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
-const socket = io("https://backup1.foodify.uz");
+// const socket = io("https://backup.foodify.uz");
+const socket = io("http://localhost:80");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -51,14 +52,9 @@ export const Home = () => {
       variant: order?.status,
       user_id: order?.user_id,
     });
-    ApiUpdateService.fetching(`update/status/${order.order_id}`, {
-      status: order.status,
-    })
-      .then((res) => {
-        setStution(order.order_id);
-        dispatch(acUpload());
-      })
-      .catch((err) => console.log(err));
+    socket.emit("/update/order/status", order);
+    setStution(order?.id);
+    dispatch(acUpload());
   };
 
   const currentOrder = orders?.filter((item) => item.status === 0);
@@ -97,7 +93,7 @@ export const Home = () => {
                       <button
                         onClick={() =>
                           orderAccept({
-                            order_id: order.id,
+                            id: order.id,
                             status: 6,
                             user_id: order?.user_id,
                           })
@@ -108,7 +104,7 @@ export const Home = () => {
                       <button
                         onClick={() =>
                           orderAccept({
-                            order_id: order.id,
+                            id: order.id,
                             status: 1,
                             user_id: order?.user_id,
                           })
