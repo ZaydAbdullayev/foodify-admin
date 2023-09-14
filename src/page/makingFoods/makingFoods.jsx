@@ -5,8 +5,8 @@ import { ApiGetService } from "../../service/api.service";
 import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
 
-// const socket = io("https://backup1.foodify.uz");
-const socket = io("http://localhost:80");
+const socket = io("https://backup.foodify.uz");
+// const socket = io("http://localhost:80");
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];

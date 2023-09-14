@@ -8,8 +8,8 @@ import { io } from "socket.io-client";
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
-// const socket = io("https://backup.foodify.uz");
-const socket = io("http://localhost:80");
+const socket = io("https://backup.foodify.uz");
+// const socket = io("http://localhost:80");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
