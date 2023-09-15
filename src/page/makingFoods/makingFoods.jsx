@@ -59,7 +59,7 @@ export const MakingFoods = () => {
             >
               <figure className="cooking_food">
                 <div>
-                  <span>buyurtma idsi : {order?.id}</span>{" "}
+                  <span>buyurtmachi : {order?.adress}</span>{" "}
                   <button
                     onClick={() =>
                       orderAccept({

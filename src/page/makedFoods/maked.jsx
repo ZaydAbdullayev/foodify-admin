@@ -38,7 +38,7 @@ export const MakedFoods = () => {
             <div key={order?.id}>
               <figure className="cooking_food">
                 <div>
-                  <span>buyurtma idsi : {order?.id}</span>{" "}
+                  <span>buyurtmachi : {order?.adress}</span>{" "}
                   <span>Taxi qabul qilishini kutilmoqda...</span>
                 </div>
                 {products.length &&

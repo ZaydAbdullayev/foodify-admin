@@ -85,9 +85,7 @@ export const Home = () => {
               >
                 <figure className="order_item ">
                   <div>
-                    <span>
-                      Buyurtmachi : {order?.address?.split("&")?.pop()}{" "}
-                    </span>
+                    <span>Buyurtmachi : {order?.address}</span>
                     <span>Buyurtma ID № : {order?.id}</span>{" "}
                     <div className="btn_box">
                       <button
