@@ -103,7 +103,7 @@ export const Home = () => {
                         onClick={() =>
                           orderAccept({
                             id: order.id,
-                            status: 1,
+                            status: 2,
                             user_id: order?.user_id,
                           })
                         }
@@ -181,7 +181,11 @@ export const Home = () => {
                   </button>
                   <button
                     onClick={() =>
-                      orderAccept({ order_id: order.id, status: 1 })
+                      orderAccept({
+                        id: order.id,
+                        status: 2,
+                        user_id: order?.user_id,
+                      })
                     }
                     style={
                       status

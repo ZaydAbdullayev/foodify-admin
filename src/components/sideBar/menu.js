@@ -35,12 +35,11 @@ export const Menu = [
   },
 ];
 
-
 export const Menu_customer = [
   {
     id: "098765",
     path: "/",
-    name: "Dashboard",
+    name: "Buyurtmalar",
     icon: <MdDashboard />,
     list: false,
   },
@@ -51,13 +50,13 @@ export const Menu_customer = [
     icon: <IoIosRestaurant />,
     list: true,
   },
-  {
-    id: "345674",
-    path: "/cooking/food",
-    name: "Tayyorlanayotgan taomlar",
-    icon: <GiCook />,
-    list: false,
-  },
+  // {
+  //   id: "345674",
+  //   path: "/cooking/food",
+  //   name: "Tayyorlanayotgan taomlar",
+  //   icon: <GiCook />,
+  //   list: false,
+  // },
   {
     id: "344343",
     path: "/prepared/food",
