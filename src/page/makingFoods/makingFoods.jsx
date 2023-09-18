@@ -51,15 +51,23 @@ export const MakingFoods = () => {
         {newOrders?.map((order) => {
           const products =
             order?.product_data && JSON.parse(order?.product_data);
-          const time = order.receivedAt.substring(0, 19).split("T").join(" | ");
+          const time = new Date(order?.receivedAt).toLocalString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: false,
+          });
+
           return (
             <div
               key={order?.id}
-              className={stution === order.id ? "accepted" : ""}
+              className={stution === order?.id ? "accepted" : ""}
             >
               <figure className="cooking_food">
                 <div>
-                  <span>buyurtmachi : {order?.address}</span>{" "}
+                  <span>buyurtmachi : {order?.id}</span>{" "}
                   <button
                     onClick={() =>
                       orderAccept({

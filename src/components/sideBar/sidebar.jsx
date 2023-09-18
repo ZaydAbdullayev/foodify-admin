@@ -41,7 +41,7 @@ export const Sidebar = () => {
       </div>
       <div className="shrink_box">
         <h3 onClick={handleSidebarView}>
-          {isShrinkView ? <RiMenu2Line /> : "Dashboard Menu"}
+          {isShrinkView ? <RiMenu2Line /> : "Dashboard"}
         </h3>
         <button onClick={handleSidebarView} type="button">
           {isShrinkView ? <HiChevronRight /> : <HiChevronLeft />}

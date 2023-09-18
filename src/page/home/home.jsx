@@ -57,7 +57,7 @@ export const Home = () => {
     dispatch(acUpload());
   };
 
-  const currentOrder = orders?.filter((item) => item.status === 0);
+  const currentOrder = orders?.filter((item) => item?.status === 0);
   const newOrders = currentOrder?.sort((a, b) => {
     const dateA = new Date(a.receivedAt);
     const dateB = new Date(b.receivedAt);
@@ -67,17 +67,21 @@ export const Home = () => {
   return (
     <div className="home_page">
       <div className="oreders">
-        <h1>All Orders</h1>
+        <h1>Yangi Buyurmalar</h1>
         <div className="orders_body">
           {newOrders?.map((order) => {
             const products =
-              order?.product_data && JSON.parse(order?.product_data);
+              order?.product_data && JSON?.parse(order?.product_data);
             const status = products?.find(({ status }) => status === "2");
             const change = products?.find(({ status }) => status === "3");
-            const time = order?.receivedAt
-              ?.substring(0, 19)
-              ?.split("T")
-              ?.join(" | ");
+            const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
+              year: "numeric",
+              day: "numeric",
+              month: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              hour12: false,
+            });
             return (
               <div
                 key={order?.id}
@@ -85,7 +89,9 @@ export const Home = () => {
               >
                 <figure className="order_item ">
                   <div>
-                    <span>Buyurtmachi : {order?.address}</span>
+                    <span>
+                      Buyurtmachi : {order?.address?.split("&")?.pop()}
+                    </span>
                     <span>Buyurtma ID № : {order?.id}</span>{" "}
                     <div className="btn_box">
                       <button
@@ -103,7 +109,7 @@ export const Home = () => {
                         onClick={() =>
                           orderAccept({
                             id: order.id,
-                            status: 2,
+                            status: 1,
                             user_id: order?.user_id,
                           })
                         }
@@ -177,13 +183,13 @@ export const Home = () => {
                         : { display: "none" }
                     }
                   >
-                    backword
+                    Orqaga qaytish
                   </button>
                   <button
                     onClick={() =>
                       orderAccept({
                         id: order.id,
-                        status: 2,
+                        status: 1,
                         user_id: order?.user_id,
                       })
                     }

@@ -30,18 +30,22 @@ export const MakedFoods = () => {
         {newOrders?.map((order) => {
           const products =
             order?.product_data && JSON?.parse(order?.product_data);
-          const time = order?.receivedAt
-            ?.substring(0, 19)
-            ?.split("T")
-            ?.join(" | ");
+          const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
+            year: "numeric",
+            day: "numeric",
+            month: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: false,
+          });
           return (
             <div key={order?.id}>
               <figure className="cooking_food">
                 <div>
-                  <span>buyurtmachi : {order?.address}</span>{" "}
+                  <span>buyurtmachi : {order?.id}</span>{" "}
                   <span>Taxi qabul qilishini kutilmoqda...</span>
                 </div>
-                {products.length &&
+                {products?.length &&
                   products?.map((product) => {
                     return (
                       <figcaption key={product?.id} className="order_product">

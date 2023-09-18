@@ -46,17 +46,17 @@ export const Menu_customer = [
   {
     id: "243567",
     path: "/product",
-    name: "Products",
+    name: "Taomlar",
     icon: <IoIosRestaurant />,
     list: true,
   },
-  // {
-  //   id: "345674",
-  //   path: "/cooking/food",
-  //   name: "Tayyorlanayotgan taomlar",
-  //   icon: <GiCook />,
-  //   list: false,
-  // },
+  {
+    id: "345674",
+    path: "/cooking/food",
+    name: "Tayyorlanayotgan taomlar",
+    icon: <GiCook />,
+    list: false,
+  },
   {
     id: "344343",
     path: "/prepared/food",
@@ -86,12 +86,12 @@ export const Category = [
   },
   {
     id: "243567",
-    name: "Product list",
+    name: "Taomlar ro'yxati",
     path: "",
   },
   {
     id: "243567",
-    name: "Add product",
+    name: "Taom qo'shish",
     path: "/add",
   },
 ];

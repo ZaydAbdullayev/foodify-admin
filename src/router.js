@@ -10,7 +10,7 @@ import { Login } from "./auth/login";
 import { Auth } from "./auth/auth";
 import { Addproduct } from "./components/Addproduct/addproduct";
 import { Products } from "./page/products/products";
-// import { MakingFoods } from "./page/makingFoods/makingFoods";
+import { MakingFoods } from "./page/makingFoods/makingFoods";
 import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 
@@ -52,7 +52,7 @@ export const Router = () => {
             <Route path="sidebar" element={<Sidebar />} />
             <Route path="product" element={<Products />} />
             <Route path="product/add" element={<Addproduct />} />
-            {/* <Route path="cooking/food" element={<MakingFoods />} /> */}
+            <Route path="cooking/food" element={<MakingFoods />} />
             <Route path="prepared/food" element={<MakedFoods />} />
             <Route path="*" element={<NotFound />} />
           </Route>
