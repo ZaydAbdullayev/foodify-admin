@@ -65,7 +65,7 @@ export const Home = () => {
   });
 
   return (
-    <div className="home_page">
+    <div className="home_page container_box">
       <div className="oreders">
         <h1>Yangi Buyurmalar</h1>
         <div className="orders_body">

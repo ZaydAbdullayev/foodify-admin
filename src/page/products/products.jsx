@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./products.css";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -7,9 +7,13 @@ import {
   ApiDeleteService,
 } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
-import { useSelector, useDispatch } from "react-redux";
-import { acUpload } from "../../redux/upload";
-import { enqueueSnackbar } from "notistack";
+import { enqueueSnackbar as es } from "notistack";
+import {
+  useUpdatePbyIdMutation,
+  useDeleteProductMutation,
+  useUpdatePimgByIdMutation,
+  useGetAllProductQuery,
+} from "../../service/product.service";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
@@ -20,23 +24,16 @@ export const Products = () => {
   const user_id = JSON.parse(localStorage.getItem("user"))?.user?.id;
   const { search, pathname } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState(null);
   const [update, setUpdate] = useState(false);
   const [info, setInfo] = useState({});
-  const upload = useSelector((state) => state.upload);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    ApiGetService.fetching(`get/products/${user_id}`)
-      .then((res) => {
-        setProducts(res?.data?.innerData);
-      })
-      .catch((err) => console.log(err));
-  }, [user_id, upload]);
+  const { data: products = [] } = useGetAllProductQuery(user_id);
+  const [updatePbyId] = useUpdatePbyIdMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+  const [updatePimgById] = useUpdatePimgByIdMutation();
 
   const getUniqueCategories = () => {
     const uniqueCategories = new Set();
-    products?.forEach((item) => {
+    products?.innerData?.forEach((item) => {
       uniqueCategories.add(item.category);
     });
     return Array.from(uniqueCategories);
@@ -49,27 +46,23 @@ export const Products = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleUpdate = (product) => {
-    ApiUpdateService.fetching(`update/product/${product.id}`, product)
-      .then((res) => {
-        const msg = "Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!";
-        enqueueSnackbar(msg, { variant: "success" });
-        dispatch(acUpload());
-        setInfo({});
-        setUpdate(false);
-      })
-      .catch((err) => console.log(err));
+  const handleUpdate = async (product) => {
+    const { data } = await updatePbyId(product);
+    if (data) {
+      es("Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!", {
+        variant: "success",
+      });
+      setInfo({});
+      setUpdate(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    ApiDeleteService.fetching(`delete/product/${id}`)
-      .then((res) => {
-        console.log(res);
-        const msg = "Mahsulotni O'zgartirishda qandaydir xatolik yuz berdi";
-        enqueueSnackbar(msg, { variant: "error" });
-        dispatch(acUpload());
-      })
-      .catch((err) => console.log(err));
+  const handleDelete = async (id) => {
+    const { data } = await deleteProduct(id);
+    if (data) {
+      const msg = "Mahsulotni O'zgartirishda qandaydir xatolik yuz berdi";
+      es(msg, { variant: "error" });
+    }
   };
 
   const updateImg = (product) => {
@@ -79,15 +72,26 @@ export const Products = () => {
     })
       .then((res) => {
         const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
-        enqueueSnackbar(msg, { variant: "success" });
-        dispatch(acUpload());
+        es(msg, { variant: "success" });
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const filteredProducts = products?.filter((product) => {
+  // const updateImg = async (product, imgFile) => {
+  //   const { data } = await updatePimgById({
+  //     id: product.id,
+  //     img: JSON.stringify(imgFile),
+  //     deleteImg: product?.img,
+  //   });
+  //   if (data) {
+  //     const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
+  //     es(msg, { variant: "success" });
+  //   }
+  // };
+
+  const filteredProducts = products?.innerData?.filter((product) => {
     const categoryMatches =
       category === "" ||
       product?.category?.toLowerCase().includes(category.toLowerCase());
@@ -135,13 +139,7 @@ export const Products = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) =>
-                  updateImg({
-                    id: product.id,
-                    image: e.target.files[0],
-                    deleteImg: product?.img,
-                  })
-                }
+                onChange={(e) => updateImg(product, e.target.files[0])}
               />
               <img src={product?.img} alt="foto" />
             </label>

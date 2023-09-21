@@ -3,6 +3,8 @@ import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
 import { AiFillSetting } from "react-icons/ai";
 import { GiCook } from "react-icons/gi";
+import { BsFillInboxesFill } from "react-icons/bs";
+import { RiBoxingFill } from "react-icons/ri";
 
 export const Menu = [
   {
@@ -38,9 +40,16 @@ export const Menu = [
 export const Menu_customer = [
   {
     id: "098765",
+    path: "/historical",
+    name: "Dashboard",
+    icon: <MdDashboard />,
+    list: false,
+  },
+  {
+    id: "098765",
     path: "/",
     name: "Buyurtmalar",
-    icon: <MdDashboard />,
+    icon: <RiBoxingFill />,
     list: false,
   },
   {

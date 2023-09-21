@@ -45,7 +45,7 @@ export const MakingFoods = () => {
   });
 
   return (
-    <div className="making_foods_box">
+    <div className="making_foods_box container_box">
       <h1>Tayyorlanayotgan taomlar</h1>
       <div className="orders_body">
         {newOrders?.map((order) => {
