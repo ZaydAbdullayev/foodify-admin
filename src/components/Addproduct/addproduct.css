@@ -45,7 +45,7 @@
 
 .product_img > svg {
     font-size: 200px;
-    color: #17b1ed;
+    color: #fff6;
 }
 
 .add_product > div > input {
@@ -55,7 +55,7 @@
     border-radius: 10px;
     border: 1px solid #17b1ed;
     background: none;
-    color: #17b1ed;
+    color: #fff;
     font-size: var(--fs5);
 }
 
@@ -71,7 +71,7 @@
 }
 
 .add_product > div > input::placeholder {
-    color: #17b2ea4f;
+    color: #fff3;
 }
 .form-add-product > div > label > input[type="file"] {
     display: none;
@@ -102,6 +102,6 @@
     background-color: cadetblue;
     height: 40px;
     border-radius: 6px;
-    color: #17b1ed;
+    color: #eee;
     border: 1px solid #17b1ed;
 }

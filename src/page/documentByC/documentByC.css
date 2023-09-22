@@ -1,0 +1,4 @@
+.category_box > h1 {
+  font-size: var(--fs2);
+  font-weight: 400;
+}

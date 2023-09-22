@@ -1,18 +1,35 @@
 import React from "react";
 import "./document.css";
 import { useNavigate } from "react-router-dom";
+import { MdDateRange } from "react-icons/md";
+import { LuArrowLeftRight } from "react-icons/lu";
+import AnimatedNumber from "animated-number-react";
 
 export const Document = () => {
   const navigate = useNavigate();
 
   const getCategry = (name) => {
     const category = name?.split(" ").join("+");
-    navigate(`/historical/?ct=${category}`);
+    navigate(`/historical/${category}`);
   };
 
+  const formatValue = (value) => value.toFixed(0);
+
   return (
-    <div className="document container_box">
-      <h1>Barcha hisobotlar</h1>
+    <div className="container_box">
+      <div className="document_header">
+        <h1>Barcha hisobotlar</h1>
+
+        <form className="filter_date">
+          <label>
+            <input type="date" name="fdate" data-stution="Start:" />
+          </label>
+          <LuArrowLeftRight />
+          <label>
+            <input type="date" name="tdate" data-stution="End:" />
+          </label>
+        </form>
+      </div>
       <div className="document_body">
         {category.map((item) => {
           return (
@@ -21,9 +38,23 @@ export const Document = () => {
               key={item.id}
               onClick={() => getCategry(item?.name)}
             >
+              <p>
+                <MdDateRange />
+                <span>bugun:</span>
+                <span style={{ textTransform: "lowercase" }}>
+                  <AnimatedNumber value={item.sold} formatValue={formatValue} />{" "}
+                  ta
+                </span>
+              </p>
               <h3>{item.name}</h3>
-              <p>bugun sotildi</p>
-              <span>{item.sold}</span>
+              <span>
+                $ :{" "}
+                <AnimatedNumber
+                  value={item.id * item.sold}
+                  formatValue={formatValue}
+                />{" "}
+                sum
+              </span>
             </div>
           );
         })}

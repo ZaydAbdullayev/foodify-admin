@@ -18,6 +18,7 @@ export const Restaurant = () => {
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
     data.username = data?.username?.split(" ").join("_");
+    data.departments = JSON.stringify(data?.departments?.split(", "));
 
     console.log(data);
 
@@ -112,6 +113,7 @@ export const Restaurant = () => {
           </div>
         </div>
         <input type="hidden" name="role" value="restaurant" />
+        <input type="text" name="departments" placeholder="Bo'lim qo'shish" />
         <button>
           Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
         </button>

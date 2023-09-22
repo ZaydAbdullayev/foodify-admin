@@ -1,7 +1,49 @@
-.document > h1 {
+.document_header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.document_header > h1 {
   font-size: var(--fs2);
   font-weight: 400;
   padding-left: 1%;
+}
+
+.filter_date {
+  display: flex;
+  align-items: center;
+  gap: var(--gap5);
+}
+
+.filter_date > label input {
+  position: relative;
+  width: 130px;
+  height: 30px;
+  padding: 0 5% 3%;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  overflow: visible;
+}
+
+.filter_date > label input::after {
+  position: absolute;
+  content: attr(data-stution);
+  top: -25px;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+::-webkit-calendar-picker-indicator {
+  background-color: #fff9;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .document_body {
@@ -16,11 +58,42 @@
   width: calc(100% / 4 - var(--gap3));
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  padding: var(--pd5);
+  align-items: center;
   background: #222;
-  font-size: var(--fs6);
   letter-spacing: 1px;
   text-transform: capitalize;
   border-radius: 10px;
+  overflow: hidden;
+  font-size: var(--fs6);
+  /* line-height: 1.6; */
+}
+
+.document_item > p {
+  inline-size: 100%;
+  display: flex;
+  padding: var(--pd2);
+  align-items: center;
+  font-size: var(--fs7);
+  gap: var(--gap5);
+  background: #333;
+  border-bottom: 1px solid #555;
+  > svg {
+    font-size: var(--fs6);
+  }
+}
+
+.document_item > p > :nth-child(2) {
+  flex: 1;
+}
+
+.document_item > span {
+  inline-size: 100%;
+  padding: 0 5% 5%;
+  display: flex;
+  align-items: center;
+  gap: var(--gap5);
+}
+
+.document_item > h3 {
+  line-height: 2;
 }
