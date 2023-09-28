@@ -21,14 +21,14 @@ export const universalAPi = createApi({
 
     // path for add product
     addProduct: builder.mutation({
-      query: (data) => ({
-        url: `add/product`,
+      query: (value) => ({
+        url: "add/product",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: data,
+        body: value,
       }),
       invalidatesTags: ["product"],
     }),
@@ -75,6 +75,28 @@ export const universalAPi = createApi({
       }),
       invalidatesTags: ["product"],
     }),
+
+    // path for get departments for add products
+    getDepartments: builder.query({
+      query: (id) => ({
+        url: `get/departments/${id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }),
+      providesTags: ["product"],
+    }),
+
+    getByDate: builder.query({
+      query: (point) => ({
+        url: `get/departmentSales/${user?.user?.id}/${point?.fdate}/${point?.tdate}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -84,4 +106,6 @@ export const {
   useUpdatePbyIdMutation,
   useUpdatePimgByIdMutation,
   useDeleteProductMutation,
+  useGetDepartmentsQuery,
+  useGetByDateQuery,
 } = universalAPi;

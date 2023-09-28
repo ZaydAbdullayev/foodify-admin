@@ -6,7 +6,7 @@ import { Home } from "./page/home/home";
 import { Layout } from "./layout/layout";
 import { Sidebar } from "./components/sideBar/sidebar";
 import { Restaurant } from "./page/restaurants/restaurant";
-import { Login } from "./auth/login";
+import { CheackDepartment, Login } from "./auth/login";
 import { Auth } from "./auth/auth";
 import { Addproduct } from "./components/Addproduct/addproduct";
 import { Products } from "./page/products/products";
@@ -14,7 +14,6 @@ import { MakingFoods } from "./page/makingFoods/makingFoods";
 import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 import { Document } from "./page/document/document";
-import { DocumentByC } from "./page/documentByC/documentByC";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -36,6 +35,7 @@ export const Router = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="cheack" element={<CheackDepartment />} />
       {login?.user?.role === "owner" ? (
         <Route path="/" element={<Auth />}>
           <Route path="/" element={<Layout />}>
@@ -51,7 +51,6 @@ export const Router = () => {
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="historical" element={<Document />} />
-            <Route path="historical/:name" element={<DocumentByC />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="sidebar" element={<Sidebar />} />
             <Route path="product" element={<Products />} />

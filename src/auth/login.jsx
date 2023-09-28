@@ -1,43 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { acLogin, acLogout } from "../redux/auth";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { ClearForm } from "../service/form.service";
-import { ApiService } from "../service/api.service";
+import { useLoginUserMutation } from "../service/user.service";
+import { useCheckDepMutation } from "../service/user.service";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [err, setErr] = useState(false);
+  const [loginUser] = useLoginUserMutation();
+  const [show, setShow] = useState(true);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const loginData = Object.fromEntries(formData.entries());
     loginData.username = loginData?.username?.split(" ").join("_");
 
-    console.log(loginData);
-
-    ApiService.fetching("login/admin", loginData)
-      .then((res) => {
-        console.log(res);
-        const user = res.data.innerData.user;
-        localStorage.setItem("user", JSON.stringify(user));
-        dispatch(acLogin());
-        navigate("/");
-        setErr(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(acLogout());
-        setErr(true);
-        ClearForm("#form");
-      });
+    const { data, error } = await loginUser(loginData);
+    if (error) {
+      setErr(true);
+      ClearForm("#form");
+      return;
+    }
+    const user = data.innerData.user;
+    localStorage.setItem("user", JSON.stringify(user));
+    if (loginData.role === "restaurant") return navigate("/cheack");
+    navigate("/");
+    setErr(false);
   };
-
-  const [show, setShow] = useState(true);
 
   const handleShow = () => {
     setShow(!show);
@@ -90,6 +82,67 @@ export const Login = () => {
           Log In
         </button>
       </form>
+    </div>
+  );
+};
+
+export const CheackDepartment = () => {
+  const [pass, setPass] = useState("");
+  const [err, setErr] = useState(false);
+  const [checkDep] = useCheckDepMutation();
+
+  const loginD = async () => {
+    if (pass.length === 2) {
+      try {
+        const { data } = await checkDep(pass);
+        const dep = data.innerData.department;
+        localStorage.setItem("department", JSON.stringify(dep));
+        window.location.href = "/";
+      } catch (error) {
+        setErr(true);
+        setPass("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    loginD();
+  }, [pass]);
+
+  const removeLastDigit = () => {
+    if (pass.length > 0) {
+      setPass(pass.slice(0, -1));
+    }
+  };
+
+  return (
+    <div className="login">
+      <label className="cheack_d">
+        <p>Bo'limingiz parolini kiriting</p>
+        <label>
+          <span
+            style={
+              pass.length <= 2 && !err
+                ? {}
+                : { border: "1px solid tomato", color: "tomato" }
+            }
+          >
+            {pass}
+          </span>
+          <button onClick={() => setPass(`${pass}1`)}>1</button>
+          <button onClick={() => setPass(`${pass}2`)}>2</button>
+          <button onClick={() => setPass(`${pass}3`)}>3</button>
+          <button onClick={() => setPass(`${pass}4`)}>4</button>
+          <button onClick={() => setPass(`${pass}5`)}>5</button>
+          <button onClick={() => setPass(`${pass}6`)}>6</button>
+          <button onClick={() => setPass(`${pass}7`)}>7</button>
+          <button onClick={() => setPass(`${pass}8`)}>8</button>
+          <button onClick={() => setPass(`${pass}9`)}>9</button>
+          <button onClick={() => setPass(`${pass}0`)}>0</button>
+          <button onClick={() => setPass("")}>AC</button>
+          <button onClick={removeLastDigit}>⨉</button>
+        </label>
+      </label>
     </div>
   );
 };

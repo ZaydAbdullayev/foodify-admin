@@ -13,6 +13,7 @@ const socket = io("https://backup.foodify.uz");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
+  const department = JSON.parse(localStorage.getItem("department")) || null;
   const newOrder = useSelector((state) => state.upload);
   const [stution, setStution] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -29,9 +30,9 @@ export const Home = () => {
     }, 800);
   }, [id, newOrder]);
 
-  socket.on(`/get/order/${id}`, (data) => {
+  socket.on(`/get/order/${id}/${department}`, (data) => {
     setOrders(data);
-    socket.off(`/get/order/${id}`);
+    socket.off(`/get/order/${id}/${department}`);
   });
 
   // to find oreder stution
@@ -57,19 +58,19 @@ export const Home = () => {
     dispatch(acUpload());
   };
 
-  const currentOrder = orders?.filter((item) => item?.status === 0);
-  const newOrders = currentOrder?.sort((a, b) => {
-    const dateA = new Date(a.receivedAt);
-    const dateB = new Date(b.receivedAt);
-    return dateB - dateA;
-  });
+  // const currentOrder = orders?.filter((item) => item?.status === 0);
+  // const newOrders = currentOrder?.sort((a, b) => {
+  //   const dateA = new Date(a.receivedAt);
+  //   const dateB = new Date(b.receivedAt);
+  //   return dateB - dateA;
+  // });
 
   return (
     <div className="home_page container_box">
       <div className="oreders">
         <h1>Yangi Buyurmalar</h1>
         <div className="orders_body">
-          {newOrders?.map((order) => {
+          {orders?.map((order) => {
             const products =
               order?.product_data && JSON?.parse(order?.product_data);
             const status = products?.find(({ status }) => status === "2");

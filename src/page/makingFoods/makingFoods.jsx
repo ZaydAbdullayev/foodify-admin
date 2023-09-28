@@ -51,10 +51,10 @@ export const MakingFoods = () => {
         {newOrders?.map((order) => {
           const products =
             order?.product_data && JSON.parse(order?.product_data);
-          const time = new Date(order?.receivedAt).toLocalString("en-US", {
+          const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
             year: "numeric",
-            month: "long",
             day: "numeric",
+            month: "numeric",
             hour: "numeric",
             minute: "numeric",
             hour12: false,

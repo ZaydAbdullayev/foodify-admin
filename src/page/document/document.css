@@ -1,3 +1,12 @@
+:root {
+  --us: 30px;
+}
+
+.document_box {
+  position: relative;
+  min-height: 90vh;
+}
+
 .document_header {
   width: 100%;
   display: flex;
@@ -17,40 +26,56 @@
   gap: var(--gap5);
 }
 
+.filter_date > label {
+  height: var(--us);
+  display: flex;
+  align-items: center;
+  gap: var(--gap5);
+}
+
+.filter_date > :first-child > span {
+  margin-left: 10px;
+}
+
+.filter_date > label > span {
+  height: 100%;
+  padding: 6px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  border-radius: 20px;
+}
+
 .filter_date > label input {
   position: relative;
-  width: 130px;
-  height: 30px;
+  width: var(--us);
+  height: var(--us);
   padding: 0 5% 3%;
-  background: #333;
-  color: #fff;
+  background: none;
   border: none;
   border-radius: 7px;
   overflow: visible;
 }
 
-.filter_date > label input::after {
-  position: absolute;
-  content: attr(data-stution);
-  top: -25px;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
 ::-webkit-calendar-picker-indicator {
-  background-color: #fff9;
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: var(--us);
+  height: var(--us);
+  padding: 5px;
+  background-color: #eee;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 50%;
+  z-index: 999;
 }
 
 .document_body {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
   gap: var(--gap3);
 }
 
