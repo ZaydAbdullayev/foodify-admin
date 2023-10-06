@@ -17,6 +17,7 @@ import { Document } from "./page/document/document";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
+  const department = JSON.parse(localStorage.getItem("department")) || [];
   const span = document.createElement("span");
   span.classList.add("stm-animate");
   document.body.appendChild(span);
@@ -35,7 +36,6 @@ export const Router = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="cheack" element={<CheackDepartment />} />
       {login?.user?.role === "owner" ? (
         <Route path="/" element={<Auth />}>
           <Route path="/" element={<Layout />}>
@@ -48,15 +48,26 @@ export const Router = () => {
         </Route>
       ) : (
         <Route path="/" element={<Auth />}>
+          <Route path="cheack" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="historical" element={<Document />} />
-            <Route path="statistics" element={<Statistics />} />
+            {department === "admin" || department === "cashier" ? (
+              <>
+                <Route path="historical" element={<Document />} />
+                <Route path="statistics" element={<Statistics />} />
+              </>
+            ) : (
+              <></>
+            )}
             <Route path="sidebar" element={<Sidebar />} />
-            <Route path="product" element={<Products />} />
-            <Route path="product/add" element={<Addproduct />} />
-            <Route path="cooking/food" element={<MakingFoods />} />
-            <Route path="prepared/food" element={<MakedFoods />} />
+            {department !== "admin" && (
+              <>
+                <Route path="product" element={<Products />} />
+                <Route path="product/add" element={<Addproduct />} />
+                <Route path="cooking/food" element={<MakingFoods />} />
+                <Route path="prepared/food" element={<MakedFoods />} />
+              </>
+            )}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

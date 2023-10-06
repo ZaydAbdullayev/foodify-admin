@@ -17,8 +17,7 @@ export const Document = () => {
   const { data = [] } = useGetByDateQuery(date);
 
   const getCategry = (name) => {
-    const category = name?.split(" ").join("+");
-    navigate(`/historical/?cp=${category}`);
+    navigate(`/historical/?cp=${name}|dateby=${date.fdate}&${date.tdate}`);
     setOpen(true);
   };
 

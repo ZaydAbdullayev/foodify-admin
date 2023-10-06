@@ -12,6 +12,7 @@ import default_img from "../../assets/images/default-img.png";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
+  const department = JSON.parse(localStorage.getItem("department")) || [];
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export const Navbar = () => {
 
   const log_out = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("department");
     navigate("/login");
   };
 
@@ -37,9 +39,11 @@ export const Navbar = () => {
         <input type="search" name="search" placeholder="search" required />
       </form>
       <div className="profile">
-        <span onClick={() => navigate("/statistics")}>
-          <ImStatsBars />
-        </span>
+        {department === "admin" && (
+          <span onClick={() => navigate("/statistics")}>
+            <ImStatsBars />
+          </span>
+        )}
         <span>
           <FaBell />
         </span>

@@ -18,8 +18,9 @@ export const MakingFoods = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      ApiGetService.fetching(`get/orders/${id}`)
+      ApiGetService.fetching(`get/orders/${id}/2`)
         .then((res) => {
+          console.log(res?.data?.innerData);
           setOrders(res?.data?.innerData);
         })
         .catch((err) => console.log(err));
@@ -37,8 +38,7 @@ export const MakingFoods = () => {
     dispatch(acUpload());
   };
 
-  const currentOrder = orders?.filter((item) => item.status === 1);
-  const newOrders = currentOrder?.sort((a, b) => {
+  const newOrders = orders?.sort((a, b) => {
     const dateA = new Date(a.receivedAt);
     const dateB = new Date(b.receivedAt);
     return dateB - dateA;
@@ -72,7 +72,7 @@ export const MakingFoods = () => {
                     onClick={() =>
                       orderAccept({
                         id: order.id,
-                        status: 2,
+                        status: 3,
                         user_id: order?.user_id,
                       })
                     }

@@ -97,6 +97,17 @@ export const universalAPi = createApi({
         },
       }),
     }),
+
+    // /get/departmentProfit/:resId/:department/:start/:end
+    getDepProducts: builder.query({
+      query: (point) => ({
+        url: `get/departmentProfit/${user?.user?.id}/${point?.dep}/${point?.start}/${point?.end}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -108,4 +119,5 @@ export const {
   useDeleteProductMutation,
   useGetDepartmentsQuery,
   useGetByDateQuery,
+  useGetDepProductsQuery,
 } = universalAPi;

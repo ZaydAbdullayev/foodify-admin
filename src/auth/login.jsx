@@ -92,22 +92,16 @@ export const CheackDepartment = () => {
   const [checkDep] = useCheckDepMutation();
 
   const loginD = async () => {
-    if (pass.length === 2) {
-      try {
-        const { data } = await checkDep(pass);
-        const dep = data.innerData.department;
-        localStorage.setItem("department", JSON.stringify(dep));
-        window.location.href = "/";
-      } catch (error) {
-        setErr(true);
-        setPass("");
-      }
+    try {
+      const { data } = await checkDep(pass);
+      const dep = data.innerData;
+      localStorage.setItem("department", JSON.stringify(dep));
+      window.location.href = "/";
+    } catch (error) {
+      setErr(true);
+      setPass("");
     }
   };
-
-  useEffect(() => {
-    loginD();
-  }, [pass]);
 
   const removeLastDigit = () => {
     if (pass.length > 0) {
@@ -142,6 +136,7 @@ export const CheackDepartment = () => {
           <button onClick={() => setPass("")}>AC</button>
           <button onClick={removeLastDigit}>⨉</button>
         </label>
+        <button onClick={loginD}>kirish</button>
       </label>
     </div>
   );

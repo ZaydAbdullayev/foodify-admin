@@ -5,6 +5,7 @@ import { AiFillSetting } from "react-icons/ai";
 import { GiCook } from "react-icons/gi";
 import { BsFillInboxesFill } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
+const dep = JSON.parse(localStorage.getItem("department")) || false;
 
 export const Menu = [
   {
@@ -44,6 +45,7 @@ export const Menu_customer = [
     name: "Dashboard",
     icon: <MdDashboard />,
     list: false,
+    permission: dep !== "cashier" ? false : true,
   },
   {
     id: "098765",
@@ -51,6 +53,7 @@ export const Menu_customer = [
     name: "Buyurtmalar",
     icon: <RiBoxingFill />,
     list: false,
+    permission: dep ? true : false,
   },
   {
     id: "243567",
@@ -58,6 +61,7 @@ export const Menu_customer = [
     name: "Taomlar",
     icon: <IoIosRestaurant />,
     list: true,
+    permission: dep ? true : false,
   },
   {
     id: "345674",
@@ -65,6 +69,7 @@ export const Menu_customer = [
     name: "Tayyorlanayotgan taomlar",
     icon: <GiCook />,
     list: false,
+    permission: dep ? true : false,
   },
   {
     id: "344343",
@@ -72,6 +77,7 @@ export const Menu_customer = [
     name: "Tayyor bo'lgan taomlar",
     icon: <MdFastfood />,
     list: false,
+    permission: dep ? true : false,
   },
   {
     id: "765433",
@@ -79,6 +85,7 @@ export const Menu_customer = [
     name: "Settings",
     icon: <AiFillSetting />,
     list: false,
+    permission: dep ? true : false,
   },
 ];
 

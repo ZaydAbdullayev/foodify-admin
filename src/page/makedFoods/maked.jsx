@@ -9,15 +9,14 @@ export const MakedFoods = () => {
   const id = user?.user?.id;
 
   useEffect(() => {
-    ApiGetService.fetching(`get/orders/${id}`)
+    ApiGetService.fetching(`get/orders/${id}/3`)
       .then((res) => {
         setOrders(res?.data?.innerData);
       })
       .catch((err) => console.log(err));
   }, [id, newOrder]);
 
-  const currentOrder = orders?.filter((item) => item?.status === 2);
-  const newOrders = currentOrder?.sort((a, b) => {
+  const newOrders = orders?.sort((a, b) => {
     const dateA = new Date(a.receivedAt);
     const dateB = new Date(b.receivedAt);
     return dateB - dateA;

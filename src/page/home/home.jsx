@@ -19,21 +19,44 @@ export const Home = () => {
   const [orders, setOrders] = useState([]);
   const id = user?.user?.id;
   const dispatch = useDispatch();
+  const point =
+    department === "cashier"
+      ? `get/orders/${id}/0`
+      : `get/depOrders/${id}/${department}`;
 
   useEffect(() => {
     setTimeout(() => {
-      ApiGetService.fetching(`get/orders/${id}`)
+      ApiGetService.fetching(point)
         .then((res) => {
           setOrders(res?.data?.innerData);
         })
         .catch((err) => console.log(err));
     }, 800);
-  }, [id, newOrder]);
+  }, [id, newOrder, point]);
 
-  socket.on(`/get/order/${id}/${department}`, (data) => {
+  socket.on(`/get/newOrders/${id}`, (data) => {
     setOrders(data);
-    socket.off(`/get/order/${id}/${department}`);
+    socket.off(`/get/newOrders/${id}`);
   });
+
+  // to accept order's product by id
+  const orderAccept = (order) => {
+    console.log(order);
+    const uData = {
+      id: order?.id,
+      status: order?.status,
+      user_id: order?.user_id,
+    };
+    socket.emit("/accept/order", {
+      status: true,
+      variant: order?.status,
+      user_id: order?.user_id,
+    });
+    socket.emit("/update/order/status", uData);
+    socket.emit("/divide/orders/depart", order);
+    setStution(order?.id);
+    dispatch(acUpload());
+  };
 
   // to find oreder stution
   const orderStution = (order) => {
@@ -46,35 +69,16 @@ export const Home = () => {
       .catch((err) => console.log("malumot yuklana olmadi"));
   };
 
-  // to accept order's product by id
-  const orderAccept = (order) => {
-    socket.emit("/accept/order", {
-      status: true,
-      variant: order?.status,
-      user_id: order?.user_id,
-    });
-    socket.emit("/update/order/status", order);
-    setStution(order?.id);
-    dispatch(acUpload());
-  };
-
-  // const currentOrder = orders?.filter((item) => item?.status === 0);
-  // const newOrders = currentOrder?.sort((a, b) => {
-  //   const dateA = new Date(a.receivedAt);
-  //   const dateB = new Date(b.receivedAt);
-  //   return dateB - dateA;
-  // });
-
   return (
     <div className="home_page container_box">
       <div className="oreders">
-        <h1>Yangi Buyurmalar</h1>
+        <h1>Yangi Buyurtmalar</h1>
         <div className="orders_body">
           {orders?.map((order) => {
             const products =
               order?.product_data && JSON?.parse(order?.product_data);
-            const status = products?.find(({ status }) => status === "2");
-            const change = products?.find(({ status }) => status === "3");
+            // const status = products?.find(({ status }) => status === "2");
+            // const change = products?.find(({ status }) => status === "3");
             const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
               year: "numeric",
               day: "numeric",
@@ -88,7 +92,7 @@ export const Home = () => {
                 key={order?.id}
                 className={stution === order.id ? "accepted" : ""}
               >
-                <figure className="order_item ">
+                <figure className="order_item">
                   <div>
                     <span>
                       Buyurtmachi : {order?.address?.split("&")?.pop()}
@@ -96,24 +100,12 @@ export const Home = () => {
                     <span>Buyurtma ID № : {order?.id}</span>{" "}
                     <div className="btn_box">
                       <button
-                        onClick={() =>
-                          orderAccept({
-                            id: order.id,
-                            status: 6,
-                            user_id: order?.user_id,
-                          })
-                        }
+                        onClick={() => orderAccept({ ...order, status: 6 })}
                       >
                         Hammasini bekor qilish
                       </button>
                       <button
-                        onClick={() =>
-                          orderAccept({
-                            id: order.id,
-                            status: 1,
-                            user_id: order?.user_id,
-                          })
-                        }
+                        onClick={() => orderAccept({ ...order, status: 1 })}
                       >
                         Hammasini qabul qilish
                       </button>
@@ -174,32 +166,8 @@ export const Home = () => {
                   <p className="time">{time}</p>
                 </figure>
                 <div className="order_footer">
-                  <button
-                    style={
-                      change
-                        ? {
-                            marginTop: "1.5%",
-                            zIndex: "9",
-                          }
-                        : { display: "none" }
-                    }
-                  >
-                    Orqaga qaytish
-                  </button>
-                  <button
-                    onClick={() =>
-                      orderAccept({
-                        id: order.id,
-                        status: 1,
-                        user_id: order?.user_id,
-                      })
-                    }
-                    style={
-                      status
-                        ? { marginTop: "1.5%", zIndex: "9" }
-                        : { display: "none" }
-                    }
-                  >
+                  <button>Orqaga qaytish</button>
+                  <button onClick={() => orderAccept({ ...order, status: 1 })}>
                     Tayyorlashga berish
                   </button>
                 </div>

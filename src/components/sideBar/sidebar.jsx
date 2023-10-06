@@ -99,7 +99,10 @@ export const Sidebar = () => {
             })
           : Menu_customer.map((item) => {
               return (
-                <div key={item.id}>
+                <div
+                  key={item.id}
+                  style={item.permission ? {} : { display: "none" }}
+                >
                   <Link
                     className={
                       location === item.path
