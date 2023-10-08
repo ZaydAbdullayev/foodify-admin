@@ -136,7 +136,7 @@ export const CheackDepartment = () => {
           <button onClick={() => setPass("")}>AC</button>
           <button onClick={removeLastDigit}>⨉</button>
         </label>
-        <button onClick={loginD}>kirish</button>
+        <button onClick={loginD}>Kirish</button>
       </label>
     </div>
   );

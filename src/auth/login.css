@@ -143,9 +143,7 @@
   letter-spacing: 2px;
 }
 
-.cheack_d > label > button {
-  width: calc(100% / 3 - calc(var(--gap3) * 2 / 3));
-  aspect-ratio: 2/1;
+.cheack_d button {
   font-size: var(--fs4);
   color: #eee;
   background: #222;
@@ -153,32 +151,16 @@
   border: none;
 }
 
-.cheach_loading {
-  background: #0005;
+.cheack_d > label > button {
+  width: calc(100% / 3 - calc(var(--gap3) * 2 / 3));
+  aspect-ratio: 2/1;
 }
 
-.cheach_loading > span {
-  font-size: var(--fs5);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #ddd;
-
-  > svg {
-    font-size: var(--fs3);
-  }
+.cheack_d > button {
+  width: 100%;
+  height: 40px;
 }
 
-.load > svg {
-  animation: load 2s linear infinite;
-}
-
-@keyframes load {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+.cheack_d > button:active {
+  background: #333;
 }

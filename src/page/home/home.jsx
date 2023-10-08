@@ -8,8 +8,8 @@ import { io } from "socket.io-client";
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
-const socket = io("https://backup.foodify.uz");
-// const socket = io("http://localhost:80");
+// const socket = io("https://backup.foodify.uz");
+const socket = io("http://localhost:80");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -60,6 +60,8 @@ export const Home = () => {
 
   // to find oreder stution
   const orderStution = (order) => {
+    socket.emit("/update/ProductSt", order);
+
     ApiUpdateService.fetching(
       `update/order/${order?.order_id}/${order?.product_id}/${order?.status}`
     )
@@ -94,22 +96,26 @@ export const Home = () => {
               >
                 <figure className="order_item">
                   <div>
-                    <span>
-                      Buyurtmachi : {order?.address?.split("&")?.pop()}
-                    </span>
+                    {department === "cashier" && (
+                      <span>
+                        Buyurtmachi : {order?.address?.split("&")?.pop()}
+                      </span>
+                    )}
                     <span>Buyurtma ID № : {order?.id}</span>{" "}
-                    <div className="btn_box">
-                      <button
-                        onClick={() => orderAccept({ ...order, status: 6 })}
-                      >
-                        Hammasini bekor qilish
-                      </button>
-                      <button
-                        onClick={() => orderAccept({ ...order, status: 1 })}
-                      >
-                        Hammasini qabul qilish
-                      </button>
-                    </div>
+                    {department === "cashier" && (
+                      <div className="btn_box">
+                        <button
+                          onClick={() => orderAccept({ ...order, status: 6 })}
+                        >
+                          Hammasini bekor qilish
+                        </button>
+                        <button
+                          onClick={() => orderAccept({ ...order, status: 1 })}
+                        >
+                          Hammasini qabul qilish
+                        </button>
+                      </div>
+                    )}
                   </div>
                   {products?.map((product) => {
                     return (
@@ -134,18 +140,22 @@ export const Home = () => {
                             </>
                           ) : (
                             <>
-                              <span>Ushbu buyurtmani qabul qilasizmi?</span>
-                              <button
-                                onClick={() =>
-                                  orderStution({
-                                    order_id: order?.id,
-                                    product_id: product?.id,
-                                    status: 3,
-                                  })
-                                }
-                              >
-                                Bekor qilish
-                              </button>
+                              {department === "cashier" && (
+                                <>
+                                  <span>Ushbu buyurtmani qabul qilasizmi?</span>
+                                  <button
+                                    onClick={() =>
+                                      orderStution({
+                                        order_id: order?.id,
+                                        product_id: product?.id,
+                                        status: 3,
+                                      })
+                                    }
+                                  >
+                                    Bekor qilish
+                                  </button>
+                                </>
+                              )}
                               <button
                                 onClick={() =>
                                   orderStution({
@@ -154,8 +164,11 @@ export const Home = () => {
                                     status: 2,
                                   })
                                 }
+                                style={{ backgroundColor: "#3CE75B" }}
                               >
-                                Qabul qilish
+                                {department === "cashier"
+                                  ? "Qabul qilish"
+                                  : "Tayyor"}
                               </button>
                             </>
                           )}
@@ -165,12 +178,16 @@ export const Home = () => {
                   })}
                   <p className="time">{time}</p>
                 </figure>
-                <div className="order_footer">
-                  <button>Orqaga qaytish</button>
-                  <button onClick={() => orderAccept({ ...order, status: 1 })}>
-                    Tayyorlashga berish
-                  </button>
-                </div>
+                {department === "cashier" && (
+                  <div className="order_footer">
+                    <button>Orqaga qaytish</button>
+                    <button
+                      onClick={() => orderAccept({ ...order, status: 1 })}
+                    >
+                      Tayyorlashga berish
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}

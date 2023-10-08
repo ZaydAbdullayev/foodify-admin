@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import "./products.css";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ApiGetService,
-  ApiUpdateService,
-  ApiDeleteService,
-} from "../../service/api.service";
+import { ApiUpdateService } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
 import { enqueueSnackbar as es } from "notistack";
 import {
@@ -66,6 +62,7 @@ export const Products = () => {
   };
 
   const updateImg = (product) => {
+    console.log(product);
     ApiUpdateService.fetching(`update/productImg/${product.id}`, {
       img: product?.image,
       deleteImg: product.deleteImg,
