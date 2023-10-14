@@ -116,6 +116,6 @@ export const Category = [
   {
     id: "243567",
     name: "Taom qo'shish",
-    path: "/add",
+    path: dep === "cashier" ? "/add" : "/product",
   },
 ];
