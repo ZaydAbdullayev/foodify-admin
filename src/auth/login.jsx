@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { ClearForm } from "../service/form.service";
@@ -26,7 +26,9 @@ export const Login = () => {
     }
     const user = data.innerData.user;
     localStorage.setItem("user", JSON.stringify(user));
-    if (loginData.role === "restaurant") return navigate("/cheack");
+    if (loginData.role === "restaurant") {
+      return navigate("/check");
+    }
     navigate("/");
     setErr(false);
   };

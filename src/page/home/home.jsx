@@ -8,21 +8,24 @@ import { io } from "socket.io-client";
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
-// const socket = io("https://backup.foodify.uz");
-const socket = io("http://localhost:80");
+const socket = io("https://backup.foodify.uz");
+// const socket = io("http://localhost:80");
+// const socket = io("https://lncxlmks-80.inc1.devtunnels.ms");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const department = JSON.parse(localStorage.getItem("department")) || null;
   const newOrder = useSelector((state) => state.upload);
-  const [stution, setStution] = useState(false);
+  const [situation, setSituation] = useState(false);
   const [orders, setOrders] = useState([]);
   const id = user?.user?.id;
   const dispatch = useDispatch();
   const point =
     department === "cashier"
       ? `get/orders/${id}/0`
-      : `get/depOrders/${id}/${department}`;
+      : `get/depOrders/${id}/${department}/1`;
+  const sPoint =
+    department === "cashier" ? `/get/newOrders/${id}` : "/get/ready/orders";
 
   useEffect(() => {
     setTimeout(() => {
@@ -32,16 +35,21 @@ export const Home = () => {
         })
         .catch((err) => console.log(err));
     }, 800);
-  }, [id, newOrder, point]);
+  }, [newOrder, point]);
 
-  socket.on(`/get/newOrders/${id}`, (data) => {
-    setOrders(data);
-    socket.off(`/get/newOrders/${id}`);
-  });
+  department === "cashier" &&
+    socket.on(sPoint, (data) => {
+      setOrders(data);
+      socket.off(sPoint);
+    });
+  // const usid = "080ac7a9";
+
+  // socket.on(`get/message/${usid}`, (data) => {
+  //   console.log(data);
+  // });
 
   // to accept order's product by id
   const orderAccept = (order) => {
-    console.log(order);
     const uData = {
       id: order?.id,
       status: order?.status,
@@ -54,21 +62,24 @@ export const Home = () => {
     });
     socket.emit("/update/order/status", uData);
     socket.emit("/divide/orders/depart", order);
-    setStution(order?.id);
+    setSituation(order?.id);
     dispatch(acUpload());
   };
 
-  // to find oreder stution
-  const orderStution = (order) => {
+  // to find oreder situation
+  const orderSituation = (order) => {
+    socket.emit("/accept/order", {
+      status: true,
+      variant: order?.status,
+      user_id: order?.user_id,
+    });
     socket.emit("/update/ProductSt", order);
-
-    ApiUpdateService.fetching(
-      `update/order/${order?.order_id}/${order?.product_id}/${order?.status}`
-    )
-      .then((res) => {
-        dispatch(acUpload());
-      })
-      .catch((err) => console.log("malumot yuklana olmadi"));
+    if (
+      orders.find(({ id, status }) => id === order?.order_id && status === 3)
+    ) {
+      setSituation(order?.order_id);
+    }
+    dispatch(acUpload());
   };
 
   return (
@@ -92,7 +103,7 @@ export const Home = () => {
             return (
               <div
                 key={order?.id}
-                className={stution === order.id ? "accepted" : ""}
+                className={situation === order.id ? "accepted" : ""}
               >
                 <figure className="order_item">
                   <div>
@@ -130,11 +141,11 @@ export const Home = () => {
                         <p>{product?.quantity} ta</p>
                         <span>{product?.quantity * product?.price} so'm</span>
                         <div className="order_stution">
-                          {product?.status === "2" ? (
+                          {product?.status === 2 ? (
                             <>
                               <BsCheck2All style={{ color: "#3CE75B" }} />
                             </>
-                          ) : product?.status === "3" ? (
+                          ) : product?.status === 3 ? (
                             <>
                               <RxCross1 style={{ color: "#ff0000" }} />
                             </>
@@ -145,7 +156,7 @@ export const Home = () => {
                                   <span>Ushbu buyurtmani qabul qilasizmi?</span>
                                   <button
                                     onClick={() =>
-                                      orderStution({
+                                      orderSituation({
                                         order_id: order?.id,
                                         product_id: product?.id,
                                         status: 3,
@@ -158,7 +169,7 @@ export const Home = () => {
                               )}
                               <button
                                 onClick={() =>
-                                  orderStution({
+                                  orderSituation({
                                     order_id: order?.id,
                                     product_id: product?.id,
                                     status: 2,

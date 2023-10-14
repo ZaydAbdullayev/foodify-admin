@@ -18,8 +18,10 @@ export const Addproduct = memo(() => {
   const [current, setCurrent] = useState(null);
   const navigate = useNavigate();
   const [addProduct] = useAddProductMutation();
-  const { data: dep = [] } = useGetDepartmentsQuery(user?.user?.id);
-  const departments = JSON?.parse(dep?.innerData || "[]");
+  const { data: departments = [] } = useGetDepartmentsQuery(user?.user?.id);
+  console.log("user", departments);
+  // const departments = JSON?.parse(dep?.innerData || "[]");
+  // console.log("dep", departments);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,7 +126,7 @@ export const Addproduct = memo(() => {
         </div>
         <div className="departments">
           <p>Bo'limlar</p>
-          {departments?.map((item, index) => {
+          {departments?.innerData?.map((item, index) => {
             return (
               <label
                 key={index}

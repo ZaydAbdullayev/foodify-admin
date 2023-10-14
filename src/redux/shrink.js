@@ -1,4 +1,4 @@
-export const reShrink = (state = false, action) => {
+export const reShrink = (state = true, action) => {
   switch (action.type) {
     case "OPEN":
       return !state;

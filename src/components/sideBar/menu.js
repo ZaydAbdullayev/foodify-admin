@@ -3,7 +3,7 @@ import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
 import { AiFillSetting } from "react-icons/ai";
 import { GiCook } from "react-icons/gi";
-import { BsFillInboxesFill } from "react-icons/bs";
+import { BsCashCoin } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
 const dep = JSON.parse(localStorage.getItem("department")) || false;
 
@@ -76,6 +76,14 @@ export const Menu_customer = [
     path: "/prepared/food",
     name: "Tayyor bo'lgan taomlar",
     icon: <MdFastfood />,
+    list: false,
+    permission: dep ? true : false,
+  },
+  {
+    id: "765423",
+    path: "/payment",
+    name: "To'lov kiritish",
+    icon: <BsCashCoin />,
     list: false,
     permission: dep ? true : false,
   },

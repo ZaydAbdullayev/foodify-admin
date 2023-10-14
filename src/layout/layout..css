@@ -1,41 +1,38 @@
 .layout {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    background: #555;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: #555;
+  overflow: hidden;
 }
 
 main {
-    overflow: hidden;
-    overflow-y: auto;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
-
-main>:first-child {
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 99999999999;
-    background: #555;
+main > :first-child {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: #555;
 }
 
 .aside {
-    width: 25%;
-
+  width: 25%;
+  z-index: 999999;
 }
 
 .short_aside {
-    width: 6%;
-
+  width: 6%;
+  z-index: 999999;
 }
 
 .main {
-    width: 75%;
-
+  width: 75%;
 }
 
 .long_main {
-    width: 96%;
-
+  width: 96%;
 }

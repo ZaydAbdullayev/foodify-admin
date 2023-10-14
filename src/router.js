@@ -14,6 +14,7 @@ import { MakingFoods } from "./page/makingFoods/makingFoods";
 import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 import { Document } from "./page/document/document";
+import { Payment } from "./page/payment/payment";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -48,26 +49,23 @@ export const Router = () => {
         </Route>
       ) : (
         <Route path="/" element={<Auth />}>
-          <Route path="cheack" element={<CheackDepartment />} />
+          <Route path="check" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home />} />
             {department === "admin" || department === "cashier" ? (
               <>
                 <Route path="historical" element={<Document />} />
                 <Route path="statistics" element={<Statistics />} />
+                <Route path="product/add" element={<Addproduct />} />
               </>
             ) : (
               <></>
             )}
+            <Route path="payment" element={<Payment />} />
             <Route path="sidebar" element={<Sidebar />} />
-            {department !== "admin" && (
-              <>
-                <Route path="product" element={<Products />} />
-                <Route path="product/add" element={<Addproduct />} />
-                <Route path="cooking/food" element={<MakingFoods />} />
-                <Route path="prepared/food" element={<MakedFoods />} />
-              </>
-            )}
+            <Route path="product" element={<Products />} />
+            <Route path="cooking/food" element={<MakingFoods />} />
+            <Route path="prepared/food" element={<MakedFoods />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
