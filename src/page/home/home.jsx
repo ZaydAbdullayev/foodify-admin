@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./home.css";
-import { ApiGetService, ApiUpdateService } from "../../service/api.service";
+import { ApiGetService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
 import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
@@ -8,9 +8,9 @@ import { io } from "socket.io-client";
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
-const socket = io("https://backup.foodify.uz");
+// const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-// const socket = io("https://lncxlmks-80.inc1.devtunnels.ms");
+const socket = io("https://lncxlmks-80.inc1.devtunnels.ms");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -22,8 +22,8 @@ export const Home = () => {
   const dispatch = useDispatch();
   const point =
     department === "cashier"
-      ? `get/orders/${id}/0`
-      : `get/depOrders/${id}/${department}/1`;
+      ? `/get/orders/${id}/0`
+      : `/get/order/${id}/${department}/1`;
   const sPoint =
     department === "cashier" ? `/get/newOrders/${id}` : "/get/ready/orders";
 
@@ -42,9 +42,9 @@ export const Home = () => {
       setOrders(data);
       socket.off(sPoint);
     });
-  // const usid = "080ac7a9";
 
-  // socket.on(`get/message/${usid}`, (data) => {
+  // socket.on(`/get/order/${id}/bar`, (data) => {
+  //   alert(data);
   //   console.log(data);
   // });
 

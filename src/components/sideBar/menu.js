@@ -5,6 +5,9 @@ import { AiFillSetting } from "react-icons/ai";
 import { GiCook } from "react-icons/gi";
 import { BsCashCoin } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
+import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
+import { HiOutlineClipboardList } from "react-icons/hi";
+import { FiPlusCircle } from "react-icons/fi";
 const dep = JSON.parse(localStorage.getItem("department")) || false;
 
 export const Menu = [
@@ -102,20 +105,24 @@ export const Category = [
     id: "0765435",
     name: "Restaurant list",
     path: "",
+    icon: <MdFormatListBulleted />,
   },
   {
     id: "0765435",
     name: "Add restaurant",
     path: "/add",
+    icon: <MdAddBusiness />,
   },
   {
     id: "243567",
     name: "Taomlar ro'yxati",
     path: "",
+    icon: <HiOutlineClipboardList />,
   },
   {
     id: "243567",
     name: "Taom qo'shish",
     path: dep === "cashier" ? "/add" : "/product",
+    icon: <FiPlusCircle />,
   },
 ];

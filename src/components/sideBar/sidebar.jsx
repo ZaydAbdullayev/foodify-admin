@@ -88,7 +88,7 @@ export const Sidebar = () => {
                                 : {}
                             }
                           >
-                            {catItem.name}
+                            {isShrinkView ? catItem.icon : catItem.name}
                           </Link>
                         </li>
                       ))}
@@ -139,7 +139,7 @@ export const Sidebar = () => {
                                 : {}
                             }
                           >
-                            {catItem.name}
+                            {isShrinkView ? catItem.icon : catItem.name}
                           </Link>
                         </li>
                       ))}
