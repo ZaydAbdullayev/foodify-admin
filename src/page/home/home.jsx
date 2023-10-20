@@ -22,10 +22,12 @@ export const Home = () => {
   const dispatch = useDispatch();
   const point =
     department === "cashier"
-      ? `/get/orders/${id}/0`
-      : `/get/order/${id}/${department}/1`;
+      ? `get/orders/${id}/0`
+      : `get/depOrders/${id}/${department}/1`;
   const sPoint =
-    department === "cashier" ? `/get/newOrders/${id}` : "/get/ready/orders";
+    department === "cashier"
+      ? `/get/newOrders/${id}`
+      : `/get/order/${id}/${department}`;
 
   useEffect(() => {
     setTimeout(() => {
@@ -37,16 +39,10 @@ export const Home = () => {
     }, 800);
   }, [newOrder, point]);
 
-  department === "cashier" &&
-    socket.on(sPoint, (data) => {
-      setOrders(data);
-      socket.off(sPoint);
-    });
-
-  // socket.on(`/get/order/${id}/bar`, (data) => {
-  //   alert(data);
-  //   console.log(data);
-  // });
+  socket.on(sPoint, (data) => {
+    setOrders(data);
+    socket.off(sPoint);
+  });
 
   // to accept order's product by id
   const orderAccept = (order) => {
@@ -88,6 +84,7 @@ export const Home = () => {
         <h1>Yangi Buyurtmalar</h1>
         <div className="orders_body">
           {orders?.map((order) => {
+            console.log(order);
             const products =
               order?.product_data && JSON?.parse(order?.product_data);
             // const status = products?.find(({ status }) => status === "2");
@@ -160,6 +157,7 @@ export const Home = () => {
                                         order_id: order?.id,
                                         product_id: product?.id,
                                         status: 3,
+                                        department: department,
                                       })
                                     }
                                   >
@@ -173,6 +171,7 @@ export const Home = () => {
                                     order_id: order?.id,
                                     product_id: product?.id,
                                     status: 2,
+                                    department: department,
                                   })
                                 }
                                 style={{ backgroundColor: "#3CE75B" }}

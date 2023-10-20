@@ -15,6 +15,8 @@ import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
+import { Workers } from "./page/workers/workers";
+import { AddWorker } from "./page/workers/addWorker/addWorker";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -64,6 +66,8 @@ export const Router = () => {
             <Route path="payment" element={<Payment />} />
             <Route path="sidebar" element={<Sidebar />} />
             <Route path="product" element={<Products />} />
+            <Route path="workers" element={<Workers />} />
+            <Route path="workers/add" element={<AddWorker />} />
             <Route path="cooking/food" element={<MakingFoods />} />
             <Route path="prepared/food" element={<MakedFoods />} />
             <Route path="*" element={<NotFound />} />
@@ -77,7 +81,7 @@ export const Router = () => {
 const NotFound = () => {
   return (
     <>
-      <h1>not found</h1>
+      <h1 style={{color: "#fff"}}>Sahifa Topilmadi</h1>
     </>
   );
 };

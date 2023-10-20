@@ -7,7 +7,6 @@ import { enqueueSnackbar as es } from "notistack";
 import {
   useUpdatePbyIdMutation,
   useDeleteProductMutation,
-  useUpdatePimgByIdMutation,
   useGetAllProductQuery,
 } from "../../service/product.service";
 
@@ -25,7 +24,6 @@ export const Products = () => {
   const { data: products = [] } = useGetAllProductQuery(user_id);
   const [updatePbyId] = useUpdatePbyIdMutation();
   const [deleteProduct] = useDeleteProductMutation();
-  const [updatePimgById] = useUpdatePimgByIdMutation();
 
   const getUniqueCategories = () => {
     const uniqueCategories = new Set();

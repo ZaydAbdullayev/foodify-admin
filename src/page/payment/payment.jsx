@@ -8,7 +8,7 @@ export const Payment = () => {
   const navigate = useNavigate();
 
   const getDetails = (id) => {
-    // navigate(`/payment/dt?=${id}`);
+    navigate(`/payment?dt=${id}`);
     setOpen(true);
   };
 

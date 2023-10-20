@@ -7,6 +7,7 @@ import { BsCashCoin } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
 import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
+import { HiMiniUserGroup } from "react-icons/hi2";
 import { FiPlusCircle } from "react-icons/fi";
 const dep = JSON.parse(localStorage.getItem("department")) || false;
 
@@ -43,7 +44,7 @@ export const Menu = [
 
 export const Menu_customer = [
   {
-    id: "098765",
+    id: "098346",
     path: "/historical",
     name: "Dashboard",
     icon: <MdDashboard />,
@@ -91,6 +92,14 @@ export const Menu_customer = [
     permission: dep ? true : false,
   },
   {
+    id: "102938",
+    path: "/workers",
+    name: "Ishchilar",
+    icon: <HiMiniUserGroup />,
+    list: true,
+    permission: dep ? true : false,
+  },
+  {
     id: "765433",
     path: "/settings",
     name: "Settings",
@@ -122,7 +131,7 @@ export const Category = [
   {
     id: "243567",
     name: "Taom qo'shish",
-    path: dep === "cashier" ? "/add" : "/product",
+    path: dep === "cashier" ? "/add" : "",
     icon: <FiPlusCircle />,
   },
 ];

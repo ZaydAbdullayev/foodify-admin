@@ -7,7 +7,6 @@ import { ApiService } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import {
-  useAddProductMutation,
   useGetDepartmentsQuery,
 } from "../../service/product.service";
 
@@ -17,7 +16,6 @@ export const Addproduct = memo(() => {
   const [img, setImg] = useState(null);
   const [current, setCurrent] = useState(null);
   const navigate = useNavigate();
-  const [addProduct] = useAddProductMutation();
   const { data: departments = [] } = useGetDepartmentsQuery(user?.user?.id);
   console.log("user", departments);
   // const departments = JSON?.parse(dep?.innerData || "[]");

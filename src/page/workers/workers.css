@@ -1,0 +1,124 @@
+:root {
+  --bwh: 35px;
+}
+
+.workers_header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc6;
+  line-height: 1.5;
+}
+
+.workers_header > p {
+  font-size: var(--fs3);
+}
+
+.workers_header > button {
+  padding: 0.5% 2%;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gap5);
+  background: #787aff;
+  color: #fff;
+  font-size: var(--fs6);
+  border-radius: 10px;
+}
+
+.worker {
+  width: 100%;
+  padding: 1% 2%;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs9);
+}
+
+.worker > :first-child {
+  width: 4%;
+  padding-top: 0.5%;
+  cursor: pointer;
+}
+
+.worker > :first-child span {
+  font-size: var(--fs4);
+}
+
+.worker > :nth-child(2) {
+  width: 27%;
+}
+
+.worker > :nth-child(3) {
+  width: 17%;
+}
+
+.worker > :nth-child(4) > span {
+  padding: 0.5% 5% 1%;
+  border-radius: 20px;
+}
+
+.worker > :nth-child(4) {
+  width: 22%;
+}
+
+.worker > :nth-child(5) {
+  width: 15%;
+}
+
+.worker > :nth-child(6) {
+  width: 15%;
+}
+
+.worker input {
+  width: 70%;
+  height: var(--bwh);
+  padding: 0% 1%;
+  border: none;
+  background: #eee;
+  color: #222;
+  font-size: var(--fs6);
+}
+
+.workers_body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.workers_body > :nth-child(odd) {
+  background: #eee2;
+}
+
+.w_pin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.w_pin > :nth-child(2) {
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.w_pin:hover > :nth-child(2) {
+  opacity: 1;
+}
+
+.w_btns {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap6);
+}
+
+.w_btns > button {
+  width: var(--bwh);
+  height: var(--bwh);
+  border: none;
+  background: #787aff;
+  color: #fff;
+  font-size: var(--fs5);
+  border-radius: 10px;
+}

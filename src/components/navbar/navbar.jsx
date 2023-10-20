@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
 import { Link, useNavigate } from "react-router-dom";
+import { acSearch } from "../../redux/search";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
@@ -26,6 +27,10 @@ export const Navbar = () => {
     dispatch(acCloseModal());
   };
 
+  const handleSort = (value) => {
+    dispatch(acSearch(value));
+  };
+
   const log_out = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("department");
@@ -36,7 +41,13 @@ export const Navbar = () => {
     <div className="navbar">
       <form className="search">
         <BsSearch />
-        <input type="search" name="search" placeholder="search" required />
+        <input
+          type="search"
+          name="search"
+          placeholder="search"
+          required
+          onChange={(e) => handleSort(e.target.value)}
+        />
       </form>
       <div className="profile">
         {department === "admin" && (

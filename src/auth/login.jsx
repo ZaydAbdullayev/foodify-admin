@@ -72,11 +72,11 @@ export const Login = () => {
         <div className="role">
           <p style={err ? { color: "tomato" } : {}}>Boshqaruvchi:</p>
           <label>
-            <input type="radio" name="role" value="restaurant" required />
-            <p>Restaurant</p>
+            <input type="radio" name="role" value="worker" required />
+            <p>Ishchi</p>
           </label>
           <label>
-            <input type="radio" name="role" value="owner" required />
+            <input type="radio" name="role" value="restaurant" required />
             <p>Owner</p>
           </label>
         </div>
