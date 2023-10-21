@@ -11,7 +11,7 @@ export const userApi = createApi({
     // path for add product
     loginUser: builder.mutation({
       query: (value) => ({
-        url: "login/admin",
+        url: "/login/admin",
         method: "POST",
         headers: {},
         body: value,
@@ -21,14 +21,24 @@ export const userApi = createApi({
     // path for update product info by id
     checkDep: builder.mutation({
       query: (id) => ({
-        url: `get/department/${user.user.id}/${id}`,
+        url: `/get/department/${user.user.id}/${id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
     }),
+
+    //path for login department
+    loginDep: builder.mutation({
+      query: (value) => ({
+        url: "/login/worker",
+        method: "POST",
+        headers: {},
+        body: value,
+      }),
+    }),
   }),
 });
 
-export const { useLoginUserMutation, useCheckDepMutation } = userApi;
+export const { useLoginUserMutation, useCheckDepMutation, useLoginDepMutation } = userApi;

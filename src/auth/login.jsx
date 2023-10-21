@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { ClearForm } from "../service/form.service";
 import { useLoginUserMutation } from "../service/user.service";
 import { useCheckDepMutation } from "../service/user.service";
+import { useLoginDepMutation } from "../service/user.service";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [err, setErr] = useState(false);
   const [loginUser] = useLoginUserMutation();
+  const [loginDep] = useLoginDepMutation();
   const [show, setShow] = useState(true);
 
   const handleSubmit = async (e) => {
@@ -18,10 +20,25 @@ export const Login = () => {
     const loginData = Object.fromEntries(formData.entries());
     loginData.username = loginData?.username?.split(" ").join("_");
 
+    if (loginData.role === "worker") {
+      handleWorkerLogin(loginData);
+    } else {
+      handleUserLogin(loginData);
+    }
+  };
+
+  const handleWorkerLogin = async (loginData) => {
+    const { error, data } = await loginDep(loginData);
+    if (error) {
+      handleLoginError();
+      return;
+    }
+  };
+
+  const handleUserLogin = async (loginData) => {
     const { data, error } = await loginUser(loginData);
     if (error) {
-      setErr(true);
-      ClearForm("#form");
+      handleLoginError();
       return;
     }
     const user = data.innerData.user;
@@ -31,6 +48,11 @@ export const Login = () => {
     }
     navigate("/");
     setErr(false);
+  };
+
+  const handleLoginError = () => {
+    setErr(true);
+    ClearForm("#form");
   };
 
   const handleShow = () => {
