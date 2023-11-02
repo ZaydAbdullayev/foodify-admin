@@ -1,0 +1,141 @@
+.navbar {
+  position: relative;
+  width: 100%;
+  padding: var(--pd5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #cccccf56;
+}
+
+.search {
+  width: 50%;
+  padding: 0 2%;
+  background: #17b2ea18;
+  border-radius: 20px;
+}
+
+.search > input {
+  width: 90%;
+  height: 100%;
+  font-size: var(--fs5);
+  padding: 0 2% 1%;
+  background: none;
+  border: none;
+  color: #17b1ea;
+}
+
+.search > input::placeholder {
+  color: #17b1eaaa;
+}
+
+.navbar svg {
+  font-size: var(--fs5);
+  color: #17b1ea;
+  cursor: pointer;
+}
+
+.search,
+.profile {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: var(--gap3);
+}
+
+.profile > img {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.profile > img,
+.user > figure > img {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ===================== Style of modal ===================== */
+.modal_box {
+  position: fixed;
+  right: 15px;
+  top: 1.5%;
+  max-width: 400px;
+  width: 100%;
+  padding: 2% 1.5% 3%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  background: #444;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  gap: 10px;
+  transition: all 0.5s ease;
+  z-index: 9999;
+}
+
+.close_modal {
+  top: -100%;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4%;
+}
+
+.user > b {
+  max-width: 300px;
+  text-overflow: ellipsis;
+  font-size: var(--fs4);
+  color: #fff;
+  letter-spacing: 1px;
+  overflow: hidden;
+}
+
+.user > figure {
+  position: relative;
+}
+
+.user > figure > img {
+  width: 35px;
+  height: 35px;
+}
+
+.user > figure > button {
+  position: absolute;
+  top: -50%;
+  right: -70%;
+  width: 20px;
+  height: 20px;
+  padding-bottom: 30%;
+  background: tomato;
+  color: #fff;
+  border-radius: 50%;
+  border: none;
+}
+
+.modal_box > ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 10px;
+}
+
+.modal_box > ul > a,
+.modal_box > ul > li {
+  inline-size: 100%;
+  padding: 0 4%;
+  line-height: 2.5;
+  color: #fff;
+  font-size: var(--fs5);
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.modal_box > ul > a:hover,
+.modal_box > ul > li:hover {
+  background: #17b1ee80;
+}
