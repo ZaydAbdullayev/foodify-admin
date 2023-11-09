@@ -35,11 +35,14 @@ a {
   text-decoration: none;
 }
 
-button, select {
+button,
+select {
   cursor: pointer;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   outline: none;
 }
 
@@ -78,6 +81,31 @@ input, select, textarea {
   color: #eee;
 }
 
+.no_result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap1);
+}
+
+.no_result>img {
+  width: 35%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
+.relative {
+  position: relative;
+  overflow: hidden;
+}
+
+.loader_box {
+  width: 10vw;
+  height: 10vw;
+  margin: auto;
+  color: #eee;
+}
 @keyframes mtanimation {
   from {
     transform: scale(0.2);

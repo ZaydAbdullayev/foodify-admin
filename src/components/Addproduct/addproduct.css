@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .add_product {
   width: 80%;
   height: 90%;
@@ -33,12 +34,12 @@
   color: #eee;
 }
 
-.departments > p {
+.departments>p {
   inline-size: 100%;
   font-size: var(--fs5);
 }
 
-.departments > label {
+.departments>label {
   display: flex;
   padding: 0 3% 1%;
   border: 2px solid #17b1ed;
@@ -62,7 +63,7 @@
   align-items: center;
 }
 
-.add_paroduct_body > div {
+.add_paroduct_body>div {
   width: 400px;
   display: flex;
   flex-direction: column;
@@ -82,16 +83,16 @@
   overflow: hidden;
 }
 
-.product_img > input {
+.product_img>input {
   display: none;
 }
 
-.product_img > svg {
+.product_img>svg {
   font-size: 200px;
   color: #fff6;
 }
 
-.add_paroduct_body > div > input {
+.add_paroduct_body>div :where(input, button) {
   width: 100%;
   height: 45px;
   padding: 0 2%;
@@ -102,20 +103,20 @@
   font-size: var(--fs5);
 }
 
-.add_paroduct_body > div > input[type="submit"] {
+.add_paroduct_body>div>button {
   cursor: pointer;
   background: #17b1ed;
   color: #fff;
 }
 
-.add_paroduct_body > div > input[type="submit"]:active {
+.add_paroduct_body>div>input[type="submit"]:active {
   background: #17b2ea4f;
 }
 
-.add_paroduct_body > div > input::placeholder {
+.add_paroduct_body>div>input::placeholder {
   color: #fff3;
 }
-.form-add-product > div > label > input[type="file"] {
+.form-add-product>div>label>input[type="file"] {
   display: none;
 }
 
@@ -124,6 +125,7 @@
   height: 100%;
   object-fit: cover;
 }
+
 .view-product-img {
   width: 100%;
   display: flex;
@@ -131,7 +133,7 @@
   gap: 10px;
 }
 
-.view-product-img > figure > img {
+.view-product-img>figure>img {
   width: 130px;
   height: 220px;
   object-fit: cover;

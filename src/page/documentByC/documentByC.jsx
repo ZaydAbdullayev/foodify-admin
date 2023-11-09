@@ -3,6 +3,7 @@ import "./documentByC.css";
 import { useLocation } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { useGetDepProductsQuery } from "../../service/product.service";
+import { LoadingBtn } from "../../components/loading/loading";
 
 export const DocumentByC = memo(({ open, setOpen }) => {
   const ct = useLocation().search.split("?cp=").pop();
@@ -13,7 +14,7 @@ export const DocumentByC = memo(({ open, setOpen }) => {
     start: date.split("&").shift(),
     end: date.split("&").pop(),
   };
-  const { data = [] } = useGetDepProductsQuery(dData);
+  const { data = [], isLoading } = useGetDepProductsQuery(dData);
 
   return (
     <div className={open ? "document_conatainer open" : "document_conatainer"}>
@@ -25,20 +26,24 @@ export const DocumentByC = memo(({ open, setOpen }) => {
           bo'limi uchun hisobot
         </h1>
         <div className="category_body">
-          {data?.departmentProfit?.map((item) => {
-            return (
-              <div className="category_item">
-                <h3>{item?.product}</h3>
-                <span>{item?.totalQuantity} ta</span>
-                <NumericFormat
-                  value={item?.totalPrice}
-                  displayType={"text"}
-                  thousandSeparator=" "
-                  suffix={" so'm"}
-                />
-              </div>
-            );
-          })}
+          {isLoading ? (
+            <LoadingBtn />
+          ) : (
+            data?.departmentProfit?.map((item) => {
+              return (
+                <div className="category_item">
+                  <h3>{item?.product}</h3>
+                  <span>{item?.totalQuantity} ta</span>
+                  <NumericFormat
+                    value={item?.totalPrice}
+                    displayType={"text"}
+                    thousandSeparator=" "
+                    suffix={" so'm"}
+                  />
+                </div>
+              );
+            })
+          )}
         </div>
         <div className="category_footer">
           <button onClick={() => setOpen(false)}>Orqaga</button>

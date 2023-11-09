@@ -6,6 +6,9 @@ import { LuArrowLeftRight } from "react-icons/lu";
 import AnimatedNumber from "animated-number-react";
 import { useGetByDateQuery } from "../../service/product.service";
 import { DocumentByC } from "../documentByC/documentByC";
+import { LoadingBtn } from "../../components/loading/loading";
+
+import noResult from "../../assets/images/20231109_144621.png";
 
 export const Document = () => {
   const navigate = useNavigate();
@@ -14,7 +17,7 @@ export const Document = () => {
     fdate: new Date().toISOString().split("T")[0],
     tdate: new Date().toISOString().split("T")[0],
   });
-  const { data = [] } = useGetByDateQuery(date);
+  const { data = [], isLoading } = useGetByDateQuery(date);
 
   const getCategry = (name) => {
     navigate(`/historical/?cp=${name}|dateby=${date.fdate}&${date.tdate}`);
@@ -49,36 +52,46 @@ export const Document = () => {
         </form>
       </div>
       <div className="document_body">
-        {data?.departmentSales?.map((item, index) => {
-          return (
-            <div
-              className="document_item"
-              key={index}
-              onClick={() => getCategry(item?.department)}
-            >
-              <p>
-                <MdDateRange />
-                <span>bugun:</span>
-                <span style={{ textTransform: "lowercase" }}>
+        {isLoading ? (
+          <span className="loader_box relative">
+            <LoadingBtn />
+          </span>
+        ) : data?.departmentSales?.length ? (
+          data?.departmentSales?.map((item, index) => {
+            return (
+              <div
+                className="document_item"
+                key={index}
+                onClick={() => getCategry(item?.department)}
+              >
+                <p>
+                  <MdDateRange />
+                  <span>bugun:</span>
+                  <span style={{ textTransform: "lowercase" }}>
+                    <AnimatedNumber
+                      value={item?.totalQuantity}
+                      formatValue={formatValue}
+                    />{" "}
+                    ta
+                  </span>
+                </p>
+                <h3>{item?.department}</h3>
+                <span>
+                  $ :{" "}
                   <AnimatedNumber
-                    value={item?.totalQuantity}
+                    value={item?.totalSales}
                     formatValue={formatValue}
                   />{" "}
-                  ta
+                  sum
                 </span>
-              </p>
-              <h3>{item?.department}</h3>
-              <span>
-                $ :{" "}
-                <AnimatedNumber
-                  value={item?.totalSales}
-                  formatValue={formatValue}
-                />{" "}
-                sum
-              </span>
-            </div>
-          );
-        })}
+              </div>
+            );
+          })
+        ) : (
+          <figure className="no_result">
+            <img src={noResult} alt="foto" />
+          </figure>
+        )}
       </div>
       <DocumentByC open={open} setOpen={setOpen} />
     </div>

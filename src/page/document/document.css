@@ -14,7 +14,7 @@
   justify-content: space-between;
 }
 
-.document_header > h1 {
+.document_header>h1 {
   font-size: var(--fs2);
   font-weight: 400;
   padding-left: 1%;
@@ -26,18 +26,18 @@
   gap: var(--gap5);
 }
 
-.filter_date > label {
+.filter_date>label {
   height: var(--us);
   display: flex;
   align-items: center;
   gap: var(--gap5);
 }
 
-.filter_date > :first-child > span {
+.filter_date> :first-child>span {
   margin-left: 10px;
 }
 
-.filter_date > label > span {
+.filter_date>label>span {
   height: 100%;
   padding: 6px 10px 10px;
   display: flex;
@@ -47,7 +47,7 @@
   border-radius: 20px;
 }
 
-.filter_date > label input {
+.filter_date>label input {
   position: relative;
   width: var(--us);
   height: var(--us);
@@ -93,7 +93,7 @@
   /* line-height: 1.6; */
 }
 
-.document_item > p {
+.document_item>p {
   inline-size: 100%;
   display: flex;
   padding: var(--pd2);
@@ -102,16 +102,16 @@
   gap: var(--gap5);
   background: #333;
   border-bottom: 1px solid #555;
-  > svg {
+>svg {
     font-size: var(--fs6);
   }
 }
 
-.document_item > p > :nth-child(2) {
+.document_item>p> :nth-child(2) {
   flex: 1;
 }
 
-.document_item > span {
+.document_item>span {
   inline-size: 100%;
   padding: 0 5% 5%;
   display: flex;
@@ -119,6 +119,6 @@
   gap: var(--gap5);
 }
 
-.document_item > h3 {
+.document_item>h3 {
   line-height: 2;
 }

@@ -14,6 +14,7 @@ import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
 import { FaPen, FaCheck } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
+import { LoadingBtn } from "../../components/loading/loading";
 
 export const Products = () => {
   const user_id = JSON.parse(localStorage.getItem("user"))?.user?.id;
@@ -21,7 +22,7 @@ export const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [update, setUpdate] = useState(false);
   const [info, setInfo] = useState({});
-  const { data: products = [] } = useGetAllProductQuery(user_id);
+  const { data: products = [], isLoading } = useGetAllProductQuery(user_id);
   const [updatePbyId] = useUpdatePbyIdMutation();
   const [deleteProduct] = useDeleteProductMutation();
 
@@ -74,18 +75,6 @@ export const Products = () => {
       });
   };
 
-  // const updateImg = async (product, imgFile) => {
-  //   const { data } = await updatePimgById({
-  //     id: product.id,
-  //     img: JSON.stringify(imgFile),
-  //     deleteImg: product?.img,
-  //   });
-  //   if (data) {
-  //     const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
-  //     es(msg, { variant: "success" });
-  //   }
-  // };
-
   const filteredProducts = products?.innerData?.filter((product) => {
     const categoryMatches =
       category === "" ||
@@ -127,101 +116,109 @@ export const Products = () => {
       </div>
 
       <div className="all_products">
-        {filteredProducts?.map((product) => (
-          <div className="item" key={product.id}>
-            <label className="img_box">
-              <span className="upload_img">Mahsulot rasmini o'zgartirish</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => updateImg(product, e.target.files[0])}
-              />
-              <img src={product?.img} alt="foto" />
-            </label>
-            {update === product?.id ? (
-              <>
+        {isLoading ? (
+          <span className="loader_box relative">
+            <LoadingBtn />
+          </span>
+        ) : (
+          filteredProducts?.map((product) => (
+            <div className="item" key={product.id}>
+              <label className="img_box">
+                <span className="upload_img">
+                  Mahsulot rasmini o'zgartirish
+                </span>
                 <input
-                  type="text"
-                  defaultValue={product.name}
-                  style={{ textTransform: "capitalize" }}
-                  autoFocus
-                  onChange={(e) => handleInfoChange("name", e.target.value)}
-                  autoComplete="off"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => updateImg(product, e.target.files[0])}
                 />
-                <input
-                  type="text"
-                  defaultValue={product.description}
-                  style={{ flex: "1" }}
-                  onChange={(e) =>
-                    handleInfoChange("description", e.target.value)
-                  }
-                  autoComplete="off"
-                />
-              </>
-            ) : (
-              <>
-                <p className="name">{product.name}</p>
-                <p style={{ flex: "1" }}>{product.description}</p>
-              </>
-            )}
-
-            <NumericFormat
-              displayType={update === product?.id ? "input" : "text"}
-              defaultValue={product.price}
-              thousandSeparator=" "
-              suffix=" so'm"
-              onChange={(e) =>
-                handleInfoChange("price", e.target.value.split(" ").join(""))
-              }
-            />
-            <div className="status">
-              <span
-                style={
-                  product.status === 1
-                    ? { background: "#33ff0989" }
-                    : { color: "#aaaa" }
-                }
-                onClick={() => handleUpdate({ id: product.id, status: 1 })}
-              >
-                active
-              </span>
-              <span
-                style={
-                  product.status === 0
-                    ? { background: "#d82" }
-                    : { color: "#aaaa" }
-                }
-                onClick={() => handleUpdate({ id: product.id, status: 0 })}
-              >
-                passive
-              </span>
-            </div>
-            <button className="update_btn">
+                <img src={product?.img} alt="foto" />
+              </label>
               {update === product?.id ? (
                 <>
-                  <span
-                    onClick={() => handleUpdate({ ...info, id: product.id })}
-                  >
-                    <FaCheck />
-                  </span>{" "}
-                  <span onClick={() => setUpdate(false)}>
-                    <ImCancelCircle />
-                  </span>
+                  <input
+                    type="text"
+                    defaultValue={product.name}
+                    style={{ textTransform: "capitalize" }}
+                    autoFocus
+                    onChange={(e) => handleInfoChange("name", e.target.value)}
+                    autoComplete="off"
+                  />
+                  <input
+                    type="text"
+                    defaultValue={product.description}
+                    style={{ flex: "1" }}
+                    onChange={(e) =>
+                      handleInfoChange("description", e.target.value)
+                    }
+                    autoComplete="off"
+                  />
                 </>
               ) : (
-                <span onClick={() => setUpdate(product.id)}>
-                  <FaPen />
-                </span>
+                <>
+                  <p className="name">{product.name}</p>
+                  <p style={{ flex: "1" }}>{product.description}</p>
+                </>
               )}
-            </button>
-            <button
-              style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
-              onClick={() => handleDelete(product.id)}
-            >
-              <AiFillDelete />
-            </button>
-          </div>
-        ))}
+
+              <NumericFormat
+                displayType={update === product?.id ? "input" : "text"}
+                defaultValue={product.price}
+                thousandSeparator=" "
+                suffix=" so'm"
+                onChange={(e) =>
+                  handleInfoChange("price", e.target.value.split(" ").join(""))
+                }
+              />
+              <div className="status">
+                <span
+                  style={
+                    product.status === 1
+                      ? { background: "#33ff0989" }
+                      : { color: "#aaaa" }
+                  }
+                  onClick={() => handleUpdate({ id: product.id, status: 1 })}
+                >
+                  active
+                </span>
+                <span
+                  style={
+                    product.status === 0
+                      ? { background: "#d82" }
+                      : { color: "#aaaa" }
+                  }
+                  onClick={() => handleUpdate({ id: product.id, status: 0 })}
+                >
+                  passive
+                </span>
+              </div>
+              <button className="update_btn">
+                {update === product?.id ? (
+                  <>
+                    <span
+                      onClick={() => handleUpdate({ ...info, id: product.id })}
+                    >
+                      <FaCheck />
+                    </span>{" "}
+                    <span onClick={() => setUpdate(false)}>
+                      <ImCancelCircle />
+                    </span>
+                  </>
+                ) : (
+                  <span onClick={() => setUpdate(product.id)}>
+                    <FaPen />
+                  </span>
+                )}
+              </button>
+              <button
+                style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
+                onClick={() => handleDelete(product.id)}
+              >
+                <AiFillDelete />
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

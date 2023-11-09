@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./restaurant.css";
 import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
+import { LoadingBtn } from "../../components/loading/loading";
 
 import { MdOutlineAddBusiness } from "react-icons/md";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
@@ -11,12 +12,14 @@ import { AiOutlineCheck } from "react-icons/ai";
 export const Restaurant = () => {
   const [files, setFiles] = useState([]);
   const [show, setShow] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const data = Object.fromEntries(formdata.entries());
     data.username = data?.username?.split(" ").join("_");
+    setLoading(true);
 
     ApiService.fetching("add/restaurant", data)
       .then((res) => {
@@ -29,7 +32,8 @@ export const Restaurant = () => {
         const msg = "Restoran qo'shishda qandaydir xatolik yuz berdi";
         es(msg, { variant: "error" });
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleShow = () => {
@@ -110,7 +114,15 @@ export const Restaurant = () => {
         </div>
         <input type="hidden" name="role" value="restaurant" />
         <button>
-          Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
+          <button className="relative">
+            {loading ? (
+              <LoadingBtn />
+            ) : (
+              <>
+                Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
+              </>
+            )}
+          </button>
         </button>
       </form>
     </div>

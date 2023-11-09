@@ -3,6 +3,8 @@ import "./payment.css";
 import { useNavigate } from "react-router-dom";
 import { AddPayment } from "./addPayment/addPayment";
 
+import noResult from "../../assets/images/20231109_144621.png";
+
 export const Payment = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -22,60 +24,66 @@ export const Payment = () => {
           <option value="purchse">To'lanmagan</option>
         </select>
       </div>
-      {orderData.map((item) => {
-        return (
-          <div className="payment_item" key={item.id}>
-            <span>{item.type}</span>
-            <p>
-              <span>{item.type === "online" ? "ID" : "Stoll"}</span>
-              <span className="p_name">
-                {item.type === "ofline" ? (
-                  <span>{item.table}</span>
-                ) : (
-                  <span>{item.id}</span>
-                )}
-              </span>
-              <span>{item.number || "#6"}</span>
-            </p>
-            <p>
-              <span
-                className="p_name"
-                style={{ color: "#eee9", lineHeight: "2.3" }}
-              >
-                Status
-              </span>
-              {item.status ? (
-                <span style={{ background: "#11b911" }}>To'landi</span>
-              ) : (
-                <span style={{ background: "#fe0" }}>To'lanmadi</span>
-              )}
-            </p>
-            <ul className="p_data_box">
+      {orderData.length ? (
+        orderData.map((item) => {
+          return (
+            <div className="payment_item" key={item.id}>
+              <span>{item.type}</span>
               <p>
-                <span>QT</span> <span className="p_name">Menu</span>{" "}
-                <span>price</span>
+                <span>{item.type === "online" ? "ID" : "Stoll"}</span>
+                <span className="p_name">
+                  {item.type === "ofline" ? (
+                    <span>{item.table}</span>
+                  ) : (
+                    <span>{item.id}</span>
+                  )}
+                </span>
+                <span>{item.number || "#6"}</span>
               </p>
-              {item.payment_data.map((product) => {
-                return (
-                  <li key={product.id}>
-                    <span>{product.quantity} ta</span>
-                    <span className="p_name">{product.name}</span>
-                    <span>{product.price} so'm</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <p style={{ lineHeight: "2" }}>
-              <span className="p_name">To'lov narxi</span>
-              <span>{item.total_price || "142455"} so'm</span>
-            </p>
-            <div className="p_btn__box">
-              <button onClick={() => getDetails(item.id)}>Edit</button>
-              <button onClick={() => getDetails(item.id)}>Payment</button>
+              <p>
+                <span
+                  className="p_name"
+                  style={{ color: "#eee9", lineHeight: "2.3" }}
+                >
+                  Status
+                </span>
+                {item.status ? (
+                  <span style={{ background: "#11b911" }}>To'landi</span>
+                ) : (
+                  <span style={{ background: "#fe0" }}>To'lanmadi</span>
+                )}
+              </p>
+              <ul className="p_data_box">
+                <p>
+                  <span>QT</span> <span className="p_name">Menu</span>{" "}
+                  <span>price</span>
+                </p>
+                {item.payment_data.map((product) => {
+                  return (
+                    <li key={product.id}>
+                      <span>{product.quantity} ta</span>
+                      <span className="p_name">{product.name}</span>
+                      <span>{product.price} so'm</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p style={{ lineHeight: "2" }}>
+                <span className="p_name">To'lov narxi</span>
+                <span>{item.total_price || "142455"} so'm</span>
+              </p>
+              <div className="p_btn__box">
+                <button onClick={() => getDetails(item.id)}>Edit</button>
+                <button onClick={() => getDetails(item.id)}>Payment</button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <figure className="no_result">
+          <img src={noResult} alt="foto" />
+        </figure>
+      )}
       <AddPayment setOpen={setOpen} open={open} />
     </div>
   );

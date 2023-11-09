@@ -6,20 +6,17 @@ import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
-import {
-  useGetDepartmentsQuery,
-} from "../../service/product.service";
+import { useGetDepQuery } from "../../service/user.service";
+import { LoadingBtn } from "../loading/loading";
 
 export const Addproduct = memo(() => {
   const user = JSON.parse(localStorage.getItem("user") || []);
   const [files, setFiles] = useState([]);
   const [img, setImg] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState(null);
   const navigate = useNavigate();
-  const { data: departments = [] } = useGetDepartmentsQuery(user?.user?.id);
-  console.log("user", departments);
-  // const departments = JSON?.parse(dep?.innerData || "[]");
-  // console.log("dep", departments);
+  const { data: departments = [] } = useGetDepQuery(user?.user?.id);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,19 +24,8 @@ export const Addproduct = memo(() => {
     const value = Object.fromEntries(formdata.entries());
     value.price = value?.price?.split(" ")?.join("");
     value.img = img;
-    console.log(value);
-    // const { error, data } = await addProduct(value);
-    // if (error) {
-    //   console.error("Sunucu Hata:", error); // Sunucudan gelen hata mesajını görüntüle
-    //   es("Qo'shishda xatolik yuz berdi", { variant: "error" });
-    // } else if (data) {
-    //   es("Maxsulot muaffaqiyatli qo'shildi", { variant: "success" });
-    //   ClearForm(".add_product");
-    //   setFiles([]);
-    //   navigate("/product");
-    // } else {
-    //   console.log("failed");
-    // }
+    setLoading(true);
+
     ApiService.fetching("add/product", value)
       .then((res) => {
         es("Maxsulot muaffaqiyatli qo'shildi", { variant: "success" });
@@ -50,7 +36,8 @@ export const Addproduct = memo(() => {
       })
       .catch((err) => {
         es("Qo'shishda xatolik yuz berdi", { variant: "error" });
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const takeImg = (e) => {
@@ -119,7 +106,9 @@ export const Addproduct = memo(() => {
               name="restaurant"
               defaultValue={user?.user?.id}
             />
-            <input type="submit" value="Qo'shish" />
+            <button className="relative">
+              {loading ? <LoadingBtn /> : "Q'shish"}
+            </button>
           </div>
         </div>
         <div className="departments">
