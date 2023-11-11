@@ -48,6 +48,7 @@ export const Navbar = () => {
           placeholder="search"
           required
           onChange={(e) => handleSort(e.target.value)}
+          autoComplete="off"
         />
       </form>
       <div className="profile">

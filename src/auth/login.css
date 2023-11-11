@@ -11,7 +11,7 @@
 }
 
 .login > form {
-  width: 600px;
+  width: calc(310px + (650 - 310) * (100vw - 320px) / (1440 - 320));
   padding: 4%;
   display: flex;
   flex-direction: column;

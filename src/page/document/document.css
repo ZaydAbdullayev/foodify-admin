@@ -15,11 +15,14 @@
 }
 
 .document_header>h1 {
-  font-size: var(--fs2);
+  font-size: var(--fs3);
   font-weight: 400;
   padding-left: 1%;
 }
 
+.document_header>h1>span {
+  font-size: var(--fs5);
+}
 .filter_date {
   display: flex;
   align-items: center;
@@ -102,7 +105,8 @@
   gap: var(--gap5);
   background: #333;
   border-bottom: 1px solid #555;
->svg {
+
+  >svg {
     font-size: var(--fs6);
   }
 }

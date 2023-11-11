@@ -25,7 +25,7 @@ main > :first-child {
 }
 
 .short_aside {
-  width: 6%;
+  width: var(--nwh);
   z-index: 999999;
 }
 

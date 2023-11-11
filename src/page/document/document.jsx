@@ -7,6 +7,7 @@ import AnimatedNumber from "animated-number-react";
 import { useGetByDateQuery } from "../../service/product.service";
 import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
+import { useSelector } from "react-redux";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -18,6 +19,7 @@ export const Document = () => {
     tdate: new Date().toISOString().split("T")[0],
   });
   const { data = [], isLoading } = useGetByDateQuery(date);
+  const search = useSelector((state) => state.search);
 
   const getCategry = (name) => {
     navigate(`/historical/?cp=${name}|dateby=${date.fdate}&${date.tdate}`);
@@ -25,6 +27,10 @@ export const Document = () => {
   };
 
   const formatValue = (value) => value.toFixed(0);
+
+  const filteredData = data?.departmentSales?.filter((item) => {
+    return item?.department?.toLowerCase().includes(search?.toLowerCase());
+  });
 
   return (
     <div className="container_box document_box">
@@ -56,8 +62,8 @@ export const Document = () => {
           <span className="loader_box relative">
             <LoadingBtn />
           </span>
-        ) : data?.departmentSales?.length ? (
-          data?.departmentSales?.map((item, index) => {
+        ) : filteredData?.length ? (
+          filteredData?.map((item, index) => {
             return (
               <div
                 className="document_item"

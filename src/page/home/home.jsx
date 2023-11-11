@@ -9,7 +9,7 @@ import { enqueueSnackbar as es } from "notistack";
 
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
-import noResult from "../../assets/images/1699454722009.png";
+import noResult from "../../assets/images/20231109_144621.png";
 
 // const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
@@ -22,12 +22,13 @@ export const Home = () => {
   const [situation, setSituation] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState({});
+  const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}/0`
-      : `get/depOrders/${id}/${department}/1`;
+      : `get/depOrders/${id}/${department}/2`;
   const sPoint =
     department === "kassir" || department === "owner"
       ? `/get/newOrders/${id}`
@@ -96,13 +97,24 @@ export const Home = () => {
     }
   };
 
+  const filteredData = orders?.filter((item) => {
+    return (
+      item?.id?.toLowerCase().includes(search?.toLowerCase()) ||
+      item?.address
+        ?.split("&")
+        ?.pop()
+        .toLowerCase()
+        .includes(search?.toLowerCase())
+    );
+  });
+
   return (
     <div className="home_page container_box">
       <div className="oreders">
         <h1>Yangi Buyurtmalar</h1>
-        {orders.length ? (
+        {filteredData.length ? (
           <div className="orders_body">
-            {orders?.map((order) => {
+            {filteredData?.map((order) => {
               const products =
                 order?.product_data && JSON?.parse(order?.product_data);
               const time = new Date(order?.receivedAt)?.toLocaleString(

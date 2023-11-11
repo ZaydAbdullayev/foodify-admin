@@ -1,12 +1,22 @@
 import React from "react";
 import "./addPayment.css";
 import { NumericFormat } from "react-number-format";
+import { useGetpOrderQuery } from "../../../service/user.service";
+import { useLocation } from "react-router-dom";
+import { LoadingBtn } from "../../../components/loading/loading";
+
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { BsFillCreditCard2BackFill } from "react-icons/bs";
 import { GiCardExchange } from "react-icons/gi";
 
 export const AddPayment = ({ open, setOpen }) => {
+  const id = useLocation().search.split("?dt=").pop();
+  const { data: order = [], isLoading } = useGetpOrderQuery(id);
+
+  const orderData = order?.innerData;
+  const payment_data = orderData && JSON?.parse(orderData?.product_data);
+
   return (
     <div
       className={
@@ -19,41 +29,45 @@ export const AddPayment = ({ open, setOpen }) => {
             <p>Payment</p>
             <p>
               <span className="p_name">
-                {data.type === "ofline" ? (
-                  <span>Table {data.table}</span>
+                {orderData?.order_type === "Restoran" ? (
+                  <span>Table {orderData?.table_name}</span>
                 ) : (
-                  <span>ID {data.id}</span>
+                  <span>ID {orderData?.id}</span>
                 )}
               </span>
             </p>
           </pre>
           <button>Change</button>
         </div>
-        <div className="add_payment__body">
-          {data.payment_data.map((item) => {
-            return (
-              <div className="add_payment__item" key={item.id}>
-                <p>
-                  <span>{item.quantity} ta</span>
-                  <span className="p_name">{item.name}</span>
-                  <NumericFormat
-                    value={item.price}
-                    displayType={"text"}
-                    thousandSeparator=","
-                    suffix={" so'm"}
-                  />
-                </p>
-                <div className="change_payment">
-                  <button>
-                    <FiEdit />
-                  </button>
-                  <button>
-                    <MdDelete />
-                  </button>
+        <div className="add_payment__body relative">
+          {isLoading ? (
+            <LoadingBtn />
+          ) : (
+            payment_data?.map((item) => {
+              return (
+                <div className="add_payment__item" key={item?.id}>
+                  <p>
+                    <span>{item?.quantity} ta</span>
+                    <span className="p_name">{item?.name}</span>
+                    <NumericFormat
+                      value={item?.price}
+                      displayType={"text"}
+                      thousandSeparator=","
+                      suffix={" so'm"}
+                    />
+                  </p>
+                  <div className="change_payment">
+                    <button>
+                      <FiEdit />
+                    </button>
+                    <button>
+                      <MdDelete />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
         <div className="add_payment__footer">
           <p>

@@ -17,6 +17,7 @@ export const MakingFoods = () => {
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
   const [stution, setStution] = useState(null);
+  const search = useSelector((state) => state.search);
   const id = user?.user?.id;
 
   useEffect(() => {
@@ -41,18 +42,22 @@ export const MakingFoods = () => {
     dispatch(acUpload());
   };
 
-  const newOrders = orders?.sort((a, b) => {
-    const dateA = new Date(a.receivedAt);
-    const dateB = new Date(b.receivedAt);
-    return dateB - dateA;
+  // const newOrders = orders?.sort((a, b) => {
+  //   const dateA = new Date(a.receivedAt);
+  //   const dateB = new Date(b.receivedAt);
+  //   return dateB - dateA;
+  // });
+
+  const filteredData = orders?.filter((item) => {
+    return item?.id?.toLowerCase().includes(search?.toLowerCase());
   });
 
   return (
     <div className="making_foods_box container_box">
       <h1>Tayyorlanayotgan taomlar</h1>
       <div className="orders_body">
-        {newOrders.length ? (
-          newOrders?.map((order) => {
+        {filteredData.length ? (
+          filteredData?.map((order) => {
             const products =
               order?.product_data && JSON.parse(order?.product_data);
             const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
@@ -76,12 +81,12 @@ export const MakingFoods = () => {
                       onClick={() =>
                         orderAccept({
                           id: order.id,
-                          status: 3,
+                          status: 6,
                           user_id: order?.user_id,
                         })
                       }
                     >
-                      Buyurtma tayyor
+                      Bekor qilish
                     </button>
                   </div>
                   {products.length &&

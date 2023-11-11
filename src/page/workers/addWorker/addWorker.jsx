@@ -55,7 +55,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
     <div className={open ? "addWorker_container open" : "addWorker_container"}>
       <div className="add_worker_box">
         {state === 1 ? (
-          <form className="add_worker" onSubmit={addWorker}>
+          <form className="add_worker relative" onSubmit={addWorker}>
             <p>Yangi ishchi qo'shish</p>
             <input
               type="text"
@@ -97,6 +97,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
             <button className="relative">
               {loading ? <LoadingBtn /> : "Qo'shish"}
             </button>
+            <span className="close_btn">×</span>
           </form>
         ) : (
           <form className="add_worker" onSubmit={create_login}>

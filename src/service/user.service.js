@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // const base_url = "https://backend.foodify.uz";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
-const user = JSON?.parse(localStorage.getItem("user"))?.user || [];
+const user = JSON?.parse(localStorage.getItem("user")) || [];
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -53,12 +53,33 @@ export const userApi = createApi({
 
     permission: builder.mutation({
       query: (value) => ({
-        url: `/add/loginInfo/${user.id}`,
+        url: `/add/loginInfo/${user?.user?.id}`,
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: value,
+      }),
+    }),
+
+    // /get/resOrders/:resId/:start/:end
+    getPaymentOrder: builder.query({
+      query: (date) => ({
+        url: `/get/resOrders/${user?.user?.id}/${date.start}/${date.end}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }),
+    }),
+
+    getpOrder: builder.query({
+      query: (id) => ({
+        url: `/get/oneOrder/${id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
       }),
     }),
   }),
@@ -70,4 +91,6 @@ export const {
   useLoginDepMutation,
   useGetDepQuery,
   usePermissionMutation,
+  useGetPaymentOrderQuery,
+  useGetpOrderQuery,
 } = userApi;

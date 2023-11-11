@@ -91,3 +91,16 @@
 .add_worker > button:active {
   opacity: 0.7;
 }
+
+.close_btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d12c2c;
+  color: #fff;
+  font-size: var(--fs6);
+  cursor: pointer;
+}

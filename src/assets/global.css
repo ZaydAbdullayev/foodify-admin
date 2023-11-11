@@ -106,6 +106,7 @@ textarea {
   margin: auto;
   color: #eee;
 }
+
 @keyframes mtanimation {
   from {
     transform: scale(0.2);
