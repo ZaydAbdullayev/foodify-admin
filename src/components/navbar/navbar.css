@@ -142,25 +142,28 @@
   background: #17b1ee80;
 }
 
+.nav_menu {
+  display: none;
+}
+
+.nav_menu > img {
+  height: calc(var(--nwh) - 15px);
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
 @media (max-width: 500px) {
   .search {
-    width: 75%;
-    height: 50px;
-    padding: 0 3%;
-    border-radius: 13px;
+    display: none;
+  }
+
+  .nav_menu {
+    display: flex;
   }
 
   .profile > img {
     width: 45px;
     height: 45px;
     border: 1px solid #ccc;
-  }
-}
-
-@media (max-width: 450px) {
-  .search {
-    width: 75%;
-    height: 45px;
-    border-radius: 13px;
   }
 }

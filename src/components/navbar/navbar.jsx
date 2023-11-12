@@ -10,6 +10,7 @@ import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
+import logo from "../../assets/images/logo.png";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -40,6 +41,9 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
+      <div className="nav_menu">
+        <img src={logo} alt="" />
+      </div>
       <form className="search">
         <BsSearch />
         <input

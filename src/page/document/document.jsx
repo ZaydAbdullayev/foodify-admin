@@ -29,7 +29,7 @@ export const Document = () => {
   const formatValue = (value) => value.toFixed(0);
 
   const filteredData = data?.departmentSales?.filter((item) => {
-    return item?.department?.toLowerCase().includes(search?.toLowerCase());
+    return item?.department?.toLowerCase()?.includes(search?.toLowerCase());
   });
 
   return (

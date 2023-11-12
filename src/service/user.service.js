@@ -6,7 +6,7 @@ const user = JSON?.parse(localStorage.getItem("user")) || [];
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["user"],
+  tagTypes: ["user", "order"],
   endpoints: (builder) => ({
     // path for add product
     loginUser: builder.mutation({
@@ -71,6 +71,7 @@ export const userApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
+      providesTags: ["order"],
     }),
 
     getpOrder: builder.query({
@@ -81,6 +82,26 @@ export const userApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
+      providesTags: ["order"],
+    }),
+
+    paymentOrder: builder.mutation({
+      query: (data) => ({
+        url: `/update/payment/status/${data?.id}`,
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: {
+          payment_status: data?.status,
+          payment_type: data?.payment_type,
+          payment: data?.payment,
+          role: data.role,
+          cashier: data.cashier,
+        },
+      }),
+      invalidatesTags: ["order"],
     }),
   }),
 });
@@ -93,4 +114,5 @@ export const {
   usePermissionMutation,
   useGetPaymentOrderQuery,
   useGetpOrderQuery,
+  usePaymentOrderMutation,
 } = userApi;

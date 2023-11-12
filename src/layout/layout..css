@@ -36,3 +36,26 @@ main > :first-child {
 .long_main {
   width: 96%;
 }
+
+@media (max-width: 500px) {
+  .short_aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--nwh);
+    height: var(--nwh);
+    z-index: 9999;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.5s ease;
+    border-radius: 0 0 30px 30px;
+  }
+
+  .short_aside.active {
+    height: auto;
+  }
+
+  .long_main {
+    width: 100%;
+  }
+}

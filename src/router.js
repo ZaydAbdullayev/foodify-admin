@@ -17,6 +17,7 @@ import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
+import { PaymentCheck } from "./components/payment-check/check";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -65,6 +66,7 @@ export const Router = () => {
                 />
                 <Route path="statistics" element={<Statistics />} />
                 <Route path="product/add" element={<Addproduct />} />
+                <Route path="get/check/:id" element={<PaymentCheck />} />
               </>
             ) : (
               <></>

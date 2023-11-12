@@ -182,4 +182,12 @@
   .shrink_box {
     display: none;
   }
+
+  .sidebar_container{
+    background: #2225;
+  }
+
+  .shrink{
+    background: #2225;
+  }
 }
