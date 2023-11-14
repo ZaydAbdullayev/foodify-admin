@@ -33,9 +33,7 @@ export const Navbar = () => {
   };
 
   const log_out = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("department");
-    localStorage.removeItem("check");
+    localStorage.clear();
     navigate("/login");
   };
 

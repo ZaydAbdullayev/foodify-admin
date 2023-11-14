@@ -113,16 +113,14 @@ export const Restaurant = () => {
           </div>
         </div>
         <input type="hidden" name="role" value="restaurant" />
-        <button>
-          <button className="relative">
-            {loading ? (
-              <LoadingBtn />
-            ) : (
-              <>
-                Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
-              </>
-            )}
-          </button>
+        <button className="relative">
+          {loading ? (
+            <LoadingBtn />
+          ) : (
+            <>
+              Add <AiOutlineCheck style={{ marginLeft: "1%" }} />
+            </>
+          )}
         </button>
       </form>
     </div>

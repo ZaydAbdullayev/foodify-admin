@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+const base_url = "https://backend.foodify.uz";
+// const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 
 const user = JSON.parse(localStorage.getItem("user")) || [];
 

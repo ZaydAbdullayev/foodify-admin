@@ -5,6 +5,7 @@ import { ClearForm } from "../service/form.service";
 import { useLoginUserMutation } from "../service/user.service";
 import { useCheckDepMutation } from "../service/user.service";
 import { useLoginDepMutation } from "../service/user.service";
+import { enqueueSnackbar as es } from "notistack";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 export const Login = () => {
@@ -134,7 +135,8 @@ export const CheackDepartment = () => {
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
-      const { data } = await checkDep(pass);
+      const { data, error } = await checkDep(pass);
+      if (error) return es("Xatolik", { variant: "error" });
 
       const dep = data?.innerData?.user?.user?.department;
       const mergedUser = {

@@ -100,7 +100,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
             <span className="close_btn">×</span>
           </form>
         ) : (
-          <form className="add_worker" onSubmit={create_login}>
+          <form className="add_worker relative" onSubmit={create_login}>
             <input
               type="text"
               name="workers"
@@ -118,6 +118,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
             <button className="relative">
               {loading ? <LoadingBtn /> : "Qo'shish"}
             </button>
+            <span className="close_btn"></span>
           </form>
         )}
 

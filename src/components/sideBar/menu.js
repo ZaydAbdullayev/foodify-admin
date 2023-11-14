@@ -9,7 +9,7 @@ import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FiPlusCircle } from "react-icons/fi";
-const dep = JSON.parse(localStorage.getItem("department")) || false;
+const dep = JSON?.parse(localStorage?.getItem("department")) || null;
 
 export const Menu = [
   {
