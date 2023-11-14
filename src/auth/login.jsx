@@ -135,8 +135,7 @@ export const CheackDepartment = () => {
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
-      const { data, error } = await checkDep(pass);
-      if (error) return es("Xatolik", { variant: "error" });
+      const { data } = await checkDep(pass).unwrap();
 
       const dep = data?.innerData?.user?.user?.department;
       const mergedUser = {
