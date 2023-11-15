@@ -27,7 +27,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
   const addPayment = async (data) => {
     setLoading(true);
     try {
-      const res = await paymentOrder(data).unwrap();
+      const res = await paymentOrder(data);
       if (res === 200) {
         es("To'lov qilindi!", { variant: "success" });
       }

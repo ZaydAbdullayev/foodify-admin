@@ -41,7 +41,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
     const value = Object.fromEntries(formData);
     try {
       setLoading(true);
-      const { data } = await permissionMutation(value).unwrap();
+      const { data } = await permissionMutation(value);
       localStorage.setItem("permission", JSON.stringify(data));
       window.location.reload();
     } catch (err) {

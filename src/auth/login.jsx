@@ -5,7 +5,6 @@ import { ClearForm } from "../service/form.service";
 import { useLoginUserMutation } from "../service/user.service";
 import { useCheckDepMutation } from "../service/user.service";
 import { useLoginDepMutation } from "../service/user.service";
-import { enqueueSnackbar as es } from "notistack";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 export const Login = () => {
@@ -131,12 +130,17 @@ export const CheackDepartment = () => {
   const [pass, setPass] = useState("");
   const [err, setErr] = useState(false);
   const [checkDep] = useCheckDepMutation();
+  const navigate = useNavigate();
 
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
-      const { data } = await checkDep(pass).unwrap();
-
+      const { data, error } = await checkDep(pass);
+      if (error) {
+        setErr(true);
+        setPass("");
+        return;
+      }
       const dep = data?.innerData?.user?.user?.department;
       const mergedUser = {
         ...user,
@@ -144,7 +148,7 @@ export const CheackDepartment = () => {
       };
       localStorage.setItem("department", JSON.stringify(dep));
       localStorage.setItem("user", JSON.stringify(mergedUser));
-      window.location.href = "/";
+      navigate("/");
     } catch (error) {
       setErr(true);
       setPass("");
