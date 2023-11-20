@@ -77,7 +77,7 @@ export const Workers = () => {
         className="worker"
         style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}
       >
-        <p></p>
+        <p>a/p</p>
         <p>Ismi</p>
         <p>Parol</p>
         <p>Bo'limi</p>

@@ -105,7 +105,7 @@ export const Sidebar = () => {
                 >
                   <Link
                     className={
-                      location === item.path
+                      location.startsWith(item.path)
                         ? "menu_box_item active_menu"
                         : "menu_box_item"
                     }
@@ -113,11 +113,7 @@ export const Sidebar = () => {
                     onClick={() => handleCategoryClick(item.id)}
                   >
                     <span>{item.icon}</span> <p>{item.name}</p>
-                    <i
-                      style={
-                        item.list && !isShrinkView ? {} : { display: "none" }
-                      }
-                    >
+                    <i style={item.list ? {} : { display: "none" }}>
                       {activeCategoryId === item.id ? (
                         <RiArrowDownSLine />
                       ) : (
@@ -135,7 +131,7 @@ export const Sidebar = () => {
                             to={`${item.path}${catItem.path}`}
                             style={
                               location === `${item.path}${catItem.path}`
-                                ? { color: "#17b1ea" }
+                                ? { color: "#787aff" }
                                 : {}
                             }
                           >

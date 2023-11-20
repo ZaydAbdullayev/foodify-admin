@@ -9,7 +9,11 @@ import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FiPlusCircle } from "react-icons/fi";
-const dep = JSON?.parse(localStorage?.getItem("department")) || null;
+import { MdStorage } from "react-icons/md";
+import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
+import { FaLayerGroup } from "react-icons/fa6";
+
+const dep = JSON.parse(localStorage.getItem("department")) || null;
 
 export const Menu = [
   {
@@ -96,15 +100,15 @@ export const Menu_customer = [
     path: "/workers",
     name: "Ishchilar",
     icon: <HiMiniUserGroup />,
-    list: true,
+    list: false,
     permission: dep === "owner" ? true : false,
   },
   {
     id: "765433",
-    path: "/settings",
-    name: "Settings",
-    icon: <AiFillSetting />,
-    list: false,
+    path: "/storage",
+    name: "Ombor",
+    icon: <FaLayerGroup />,
+    list: true,
     permission: dep ? true : false,
   },
 ];
@@ -133,5 +137,29 @@ export const Category = [
     name: "Taom qo'shish",
     path: dep === "kassir" ? "/add" : "",
     icon: <FiPlusCircle />,
+  },
+  {
+    id: "765433",
+    name: "Bo'limlar",
+    path: "/departments",
+    icon: <BiSolidComponent />,
+  },
+  {
+    id: "765433",
+    name: "Categoriyalar",
+    path: "/categories",
+    icon: <BiSolidCategory />,
+  },
+  {
+    id: "765433",
+    name: "Ingredientlar",
+    path: "/ingredients",
+    icon: <MdStorage />,
+  },
+  {
+    id: "765433",
+    name: "List",
+    path: "",
+    icon: <HiOutlineClipboardList />,
   },
 ];

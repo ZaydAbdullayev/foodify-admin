@@ -11,9 +11,9 @@ import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import noResult from "../../assets/images/20231109_144621.png";
 
-const socket = io("https://backup.foodify.uz");
+// const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-// const socket = io("https://799twrl4-80.euw.devtunnels.ms");
+const socket = io("https://799twrl4-80.euw.devtunnels.ms");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];

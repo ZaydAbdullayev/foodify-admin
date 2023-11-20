@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-const base_url = "https://backend.foodify.uz";
-// const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+// const base_url = "https://backend.foodify.uz";
+const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
 export const universalAPi = createApi({

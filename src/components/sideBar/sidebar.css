@@ -24,11 +24,11 @@
   font-size: var(--fs3);
 }
 
-.shrink a > p {
+.shrink a>p {
   display: none;
 }
 
-.shrink > :first-child {
+.shrink> :first-child {
   height: var(--nwh);
   border-bottom: none;
   text-align: center;
@@ -41,16 +41,16 @@
   justify-content: center;
 }
 
-.sidebar_container > div,
-.shrink > div {
+.sidebar_container>div,
+.shrink>div {
   display: flex;
   align-items: center;
   font-size: calc(var(--fs3) + 1px);
-  color: #fff;
+  color: #fff !important;
   border-bottom: 1px solid #cccccc2f;
   padding: 3% 5%;
 
-  > div {
+  >div {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -68,7 +68,7 @@
   height: 43px;
 }
 
-.shrink > a {
+.shrink>a {
   padding: 0;
 }
 
@@ -81,21 +81,27 @@
   border-bottom: 1px solid #cccccc2f;
 }
 
-.shrink_box > button {
+.shrink_box>button {
   padding-top: 5%;
   background: none;
   border: none;
   font-size: var(--fs4);
-  color: #fff;
+  color: #fff !important;
 }
 
 .menu_box {
   width: 100%;
+  height: calc(100vh - calc(var(--nwh) + 11%));
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
-.shrink_box > h3 {
+.menu_box::-webkit-scrollbar {
+  width: 0;
+}
+
+.shrink_box>h3 {
   font-size: var(--fs4);
   font-weight: 500;
   padding: var(--pd2);
@@ -103,7 +109,7 @@
 }
 
 .menu_box_item,
-.inner_menu > li > a {
+.inner_menu>li>a {
   position: relative;
   width: 100%;
   padding: var(--pd2);
@@ -117,12 +123,12 @@
   text-align: center;
 }
 
-.menu_box > a > span {
+.menu_box>a>span {
   font-size: var(--fs4);
 }
 
 .menu_box_item::after,
-.shrink > div::after {
+.shrink>div::after {
   content: "";
   position: absolute;
   top: 0;
@@ -146,14 +152,24 @@
   display: none;
 }
 
-.menu_box_item > i {
+.menu_box_item>i {
   position: absolute;
   top: 50%;
   right: 4%;
   transform: translate(-50%, -50%);
 }
 
-.menu_box > div > a:hover::after {
+.shrink .menu_box_item>i {
+  top: 40%;
+  right: 0;
+  transform: translate(-50%, -50%);
+}
+
+.shrink .menu_box_item>i svg {
+  font-size: var(--fs6);
+}
+
+.menu_box>div>a:hover::after {
   width: 100%;
   transition: all 0.4s;
 }
@@ -164,17 +180,17 @@
   flex-direction: column;
 }
 
-.inner_menu > li {
+.inner_menu>li {
   width: 100%;
   padding-left: 10%;
 }
 
-.inner_menu > li > a {
+.inner_menu>li>a {
   font-size: var(--fs6);
-  border-bottom: 1px solid #17b2ea63;
+  border-bottom: 1px solid #787aff;
 }
 
-.inner_menu > li > a:hover {
+.inner_menu>li>a:hover {
   color: #17b1ea;
 }
 
@@ -183,11 +199,11 @@
     display: none;
   }
 
-  .sidebar_container{
+    .sidebar_container {
     background: #2225;
   }
 
-  .shrink{
+    .shrink {
     background: #2225;
   }
 }

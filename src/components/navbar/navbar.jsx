@@ -3,11 +3,14 @@ import "./navbar.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { acSearch } from "../../redux/search";
+import { acOpenUModal } from "../../redux/u-modal";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
+import { BiEdit, BiPlus } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
@@ -18,7 +21,9 @@ export const Navbar = () => {
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation().pathname;
   const name = user?.user?.username?.split("_").join(" ");
+  const acItem = useSelector((state) => state.active);
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -32,6 +37,10 @@ export const Navbar = () => {
     dispatch(acSearch(value));
   };
 
+  const openUModal = () => {
+    dispatch(acOpenUModal());
+  };
+
   const log_out = () => {
     localStorage.clear();
     navigate("/login");
@@ -42,6 +51,23 @@ export const Navbar = () => {
       <div className="nav_menu">
         <img src={logo} alt="" />
       </div>
+      {location.startsWith("/storage") && (
+        <div className="short_hands">
+          <button onClick={openUModal}>
+            <BiPlus />
+          </button>
+          <button
+            style={acItem ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
+          >
+            <BiEdit />
+          </button>
+          <button
+            style={acItem ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
+          >
+            <MdDelete />
+          </button>
+        </div>
+      )}
       <form className="search">
         <BsSearch />
         <input

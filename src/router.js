@@ -18,10 +18,15 @@ import { Payment } from "./page/payment/payment";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
+import { useSelector } from "react-redux";
+import { Storage, StorageBlog } from "./page/storage/storage";
+import { StorageDep } from "./page/storage/store-pages/department";
+import { StorageCatgegories } from "./page/storage/store-pages/categories";
+import { StorageGroups } from "./page/storage/store-pages/groups";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
-  const department = JSON.parse(localStorage.getItem("department")) || [];
+  const department = useSelector((state) => state.permission);
   const span = document.createElement("span");
   span.classList.add("stm-animate");
   document.body.appendChild(span);
@@ -65,6 +70,12 @@ export const Router = () => {
                   element={<Document />}
                 />
                 <Route path="statistics" element={<Statistics />} />
+                <Route path="storage" element={<StorageBlog />}>
+                  <Route index element={<Storage />} />
+                  <Route path="departments" element={<StorageDep />} />
+                  <Route path="categories" element={<StorageCatgegories />} />
+                  <Route path="ingredients" element={<StorageGroups />} />
+                </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />
               </>

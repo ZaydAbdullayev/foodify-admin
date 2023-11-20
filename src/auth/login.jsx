@@ -6,6 +6,8 @@ import { useLoginUserMutation } from "../service/user.service";
 import { useCheckDepMutation } from "../service/user.service";
 import { useLoginDepMutation } from "../service/user.service";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { acPermission } from "../redux/permission";
+import { useDispatch } from "react-redux";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ export const Login = () => {
   const [loginUser] = useLoginUserMutation();
   const [loginDep] = useLoginDepMutation();
   const [show, setShow] = useState(true);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +53,7 @@ export const Login = () => {
     localStorage.setItem("user", JSON.stringify(data.innerData.user));
     if (loginData.role !== "owner") {
       localStorage.setItem("department", JSON.stringify("owner"));
+      dispatch(acPermission("owner"));
     }
     if (data?.innerData?.user?.user?.workers) {
       localStorage.setItem("permission", JSON.stringify(true));
@@ -131,6 +135,7 @@ export const CheackDepartment = () => {
   const [err, setErr] = useState(false);
   const [checkDep] = useCheckDepMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -146,8 +151,9 @@ export const CheackDepartment = () => {
         ...user,
         user: { ...user?.user, ...data?.innerData?.user?.user },
       };
-      localStorage.setItem("department", JSON.stringify(dep));
+      dispatch(acPermission(dep));
       localStorage.setItem("user", JSON.stringify(mergedUser));
+      localStorage.setItem("department", JSON.stringify(dep));
       navigate("/");
     } catch (error) {
       setErr(true);

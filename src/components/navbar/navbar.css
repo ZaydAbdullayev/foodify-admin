@@ -1,3 +1,7 @@
+:root {
+  --nbwh: 40px;
+}
+
 .navbar {
   position: relative;
   width: 100%;
@@ -7,6 +11,26 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #cccccf56;
+}
+
+.short_hands {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap5);
+}
+
+.short_hands > button {
+  width: var(--nbwh);
+  height: var(--nbwh);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #333;
+  color: #fff;
+  font-size: var(--fs4);
 }
 
 .search {
