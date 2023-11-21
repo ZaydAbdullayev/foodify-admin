@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import "./storage.css";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalModal } from "../../components/modal/modal";
+import { UniversalModal, UniversalUModal } from "../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../redux/active";
-import { storageD } from "./store-data";
 import { Outlet } from "react-router-dom";
 import { useGetStoreQuery } from "../../service/store.service";
 import { LoadingBtn } from "../../components/loading/loading";
@@ -16,7 +15,6 @@ export const Storage = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data = [], isLoading } = useGetStoreQuery();
-  console.log(data?.data);
 
   const sortData =
     data?.data &&
@@ -53,7 +51,7 @@ export const Storage = () => {
         </div>
         <div className="storage_body_box">
           {isLoading ? (
-            <span className="loading_box relative">
+            <span className="loader_box relative">
               <LoadingBtn />
             </span>
           ) : (
@@ -61,14 +59,30 @@ export const Storage = () => {
               return (
                 <div
                   className={
-                    acItem === item.id
+                    acItem.id === item.id
                       ? "storage_body_item active"
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onClick={() => dispatch(acActive(item.id))}
+                  onDoubleClick={() =>
+                    dispatch(
+                      acActive({
+                        id: !acItem.id ? item.id : null,
+                        name: !acItem.name ? item.name : "",
+                      })
+                    )
+                  }
                 >
-                  <label>
+                  <label
+                    onClick={() =>
+                      dispatch(
+                        acActive({
+                          id: !acItem.id ? item.id : null,
+                          name: !acItem.name ? item.name : "",
+                        })
+                      )
+                    }
+                  >
                     {checked ? (
                       <input type="checkbox" name="id" checked />
                     ) : (
@@ -88,6 +102,18 @@ export const Storage = () => {
         <input type="text" name="name" placeholder="Ombor nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
+      <UniversalUModal type="main">
+        <p>Taxrirlash</p>
+        <input
+          type="text"
+          name="name"
+          defaultValue={acItem.name}
+          placeholder="Ombor nomi*"
+          required
+        />
+        <input type="hidden" name="res_id" value={user?.id} />
+        <input type="hidden" name="id" value={acItem.id} />
+      </UniversalUModal>
     </div>
   );
 };

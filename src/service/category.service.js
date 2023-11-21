@@ -3,12 +3,12 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const storeApi = createApi({
-  reducerPath: "storeApi",
+export const CategoryApi = createApi({
+  reducerPath: "CategoryApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["store"],
+  tagTypes: ["category"],
   endpoints: (builder) => ({
-    getStore: builder.query({
+    getStCategory: builder.query({
       query: () => ({
         url: `get/storage/${user?.user?.id}`,
         method: "GET",
@@ -16,10 +16,10 @@ export const storeApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["store"],
+      providesTags: ["category"],
     }),
 
-    addStore: builder.mutation({
+    addStCategory: builder.mutation({
       query: (value) => ({
         url: "add/storage",
         method: "POST",
@@ -29,10 +29,10 @@ export const storeApi = createApi({
         },
         body: JSON.stringify(value),
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["category"],
     }),
 
-    updateStore: builder.mutation({
+    updateStCategory: builder.mutation({
       query: (value) => ({
         url: `update/storage/${value.id}`,
         method: "PATCH",
@@ -42,10 +42,13 @@ export const storeApi = createApi({
         },
         body: { res_id: value.res_id, name: value.name },
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["category"],
     }),
   }),
 });
 
-export const { useAddStoreMutation, useUpdateStoreMutation, useGetStoreQuery } =
-  storeApi;
+export const {
+  useAddStCategoryMutation,
+  useUpdateStCategoryMutation,
+  useGetStCategoryQuery,
+} = CategoryApi;

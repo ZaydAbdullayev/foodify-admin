@@ -6,7 +6,7 @@ import { storageD } from "../store-data";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageDep = () => {
+export const StorageGroups = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.active);
@@ -24,7 +24,7 @@ export const StorageDep = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Bo'limlar</p>
+        <p>Guruhlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -36,9 +36,9 @@ export const StorageDep = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
+            style={{ "--data-line-size": "60%" }}
           >
-            <p>Bo'limlar</p>
+            <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -47,9 +47,9 @@ export const StorageDep = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
+            style={{ "--data-line-size": "30%" }}
           >
-            <p>Ombor</p>
+            <p>Ingredientlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -77,18 +77,22 @@ export const StorageDep = () => {
                   )}
                 </label>
                 <p>{item.id}</p>
-                <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
-                <p style={{ "--data-line-size": "40%" }}>{item.dep}</p>
+                <p style={{ "--data-line-size": "60%", textAlign: "center" }}>
+                  {item.category}
+                </p>
+                <p style={{ "--data-line-size": "30%" }}>
+                  <u>ingredientlar</u>
+                </p>
               </div>
             );
           })}
         </div>
       </div>
       <UniversalModal>
-        <p>Bo'lim qo'shish</p>
+        <p>Guruh qo'shish</p>
         <input type="text" name="name" placeholder="Bo'lim nomi*" required />
         <select name="department">
-          <option value="default">Ombor tanlang*</option>
+          <option value="default">Categoriya tanlang*</option>
           {storageD.map((item, index) => {
             return (
               <option value={item.name} key={index}>

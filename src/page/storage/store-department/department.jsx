@@ -3,14 +3,19 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { storageD } from "../store-data";
+import { useGetStoreDepQuery } from "../../../service/dep.service";
+import { useGetStoreQuery } from "../../../service/store.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageGroups = () => {
+export const StorageDep = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
+  const { data: depData = [] } = useGetStoreDepQuery();
+  const { data: storeData = [] } = useGetStoreQuery();
+  console.log(depData);
 
   const sortData = storageD.sort((a, b) => {
     if (sort.state) {
@@ -24,7 +29,7 @@ export const StorageGroups = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Guruhlar</p>
+        <p>Bo'limlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -36,9 +41,9 @@ export const StorageGroups = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "60%" }}
+            style={{ "--data-line-size": "40%" }}
           >
-            <p>Nomi</p>
+            <p>Bo'limlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -47,9 +52,9 @@ export const StorageGroups = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
+            style={{ "--data-line-size": "40%" }}
           >
-            <p>Ingredientlar</p>
+            <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -77,26 +82,22 @@ export const StorageGroups = () => {
                   )}
                 </label>
                 <p>{item.id}</p>
-                <p style={{ "--data-line-size": "60%", textAlign: "center" }}>
-                  {item.category}
-                </p>
-                <p style={{ "--data-line-size": "30%" }}>
-                  <u>ingredientlar</u>
-                </p>
+                <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
+                <p style={{ "--data-line-size": "40%" }}>{item.dep}</p>
               </div>
             );
           })}
         </div>
       </div>
-      <UniversalModal>
+      <UniversalModal type="dep">
         <p>Bo'lim qo'shish</p>
         <input type="text" name="name" placeholder="Bo'lim nomi*" required />
         <select name="department">
           <option value="default">Ombor tanlang*</option>
-          {storageD.map((item, index) => {
+          {storeData?.data?.map((item) => {
             return (
-              <option value={item.name} key={index}>
-                {item.name}
+              <option value={item?.name} key={item.id}>
+                {item?.name}
               </option>
             );
           })}

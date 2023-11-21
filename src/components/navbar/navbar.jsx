@@ -5,7 +5,7 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { acSearch } from "../../redux/search";
-import { acOpenUModal } from "../../redux/u-modal";
+import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
@@ -57,12 +57,17 @@ export const Navbar = () => {
             <BiPlus />
           </button>
           <button
-            style={acItem ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
+            style={
+              acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
+            }
+            onClick={() => dispatch(acOpenUModalU())}
           >
             <BiEdit />
           </button>
           <button
-            style={acItem ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
+            style={
+              acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
+            }
           >
             <MdDelete />
           </button>
@@ -73,7 +78,7 @@ export const Navbar = () => {
         <input
           type="search"
           name="search"
-          placeholder="search"
+          placeholder="Qidirish..."
           required
           onChange={(e) => handleSort(e.target.value)}
           autoComplete="off"

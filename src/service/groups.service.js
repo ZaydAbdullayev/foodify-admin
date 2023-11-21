@@ -3,12 +3,12 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const storeApi = createApi({
-  reducerPath: "storeApi",
+export const GroupsApi = createApi({
+  reducerPath: "GroupsApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["store"],
+  tagTypes: ["groups"],
   endpoints: (builder) => ({
-    getStore: builder.query({
+    getStGroups: builder.query({
       query: () => ({
         url: `get/storage/${user?.user?.id}`,
         method: "GET",
@@ -16,10 +16,10 @@ export const storeApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["store"],
+      providesTags: ["groups"],
     }),
 
-    addStore: builder.mutation({
+    addStGroups: builder.mutation({
       query: (value) => ({
         url: "add/storage",
         method: "POST",
@@ -29,10 +29,10 @@ export const storeApi = createApi({
         },
         body: JSON.stringify(value),
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["groups"],
     }),
 
-    updateStore: builder.mutation({
+    updateStGroups: builder.mutation({
       query: (value) => ({
         url: `update/storage/${value.id}`,
         method: "PATCH",
@@ -42,10 +42,13 @@ export const storeApi = createApi({
         },
         body: { res_id: value.res_id, name: value.name },
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["groups"],
     }),
   }),
 });
 
-export const { useAddStoreMutation, useUpdateStoreMutation, useGetStoreQuery } =
-  storeApi;
+export const {
+  useAddStGroupsMutation,
+  useUpdateStGroupsMutation,
+  useGetStGroupsQuery,
+} = GroupsApi;

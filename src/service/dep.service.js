@@ -3,36 +3,36 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const storeApi = createApi({
-  reducerPath: "storeApi",
+export const departmentApi = createApi({
+  reducerPath: "departmentApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["store"],
+  tagTypes: ["department"],
   endpoints: (builder) => ({
-    getStore: builder.query({
+    getStoreDep: builder.query({
       query: () => ({
-        url: `get/storage/${user?.user?.id}`,
+        url: `get/${user?.user?.id}/departments`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["store"],
+      providesTags: ["department"],
     }),
 
-    addStore: builder.mutation({
+    addStoreDep: builder.mutation({
       query: (value) => ({
-        url: "add/storage",
+        url: "add/department",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(value),
+        body: value,
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["department"],
     }),
 
-    updateStore: builder.mutation({
+    updateDep: builder.mutation({
       query: (value) => ({
         url: `update/storage/${value.id}`,
         method: "PATCH",
@@ -42,10 +42,13 @@ export const storeApi = createApi({
         },
         body: { res_id: value.res_id, name: value.name },
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["department"],
     }),
   }),
 });
 
-export const { useAddStoreMutation, useUpdateStoreMutation, useGetStoreQuery } =
-  storeApi;
+export const {
+  useAddStoreDepMutation,
+  useUpdateDepMutation,
+  useGetStoreDepQuery,
+} = departmentApi;

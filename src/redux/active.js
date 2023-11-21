@@ -1,4 +1,9 @@
-export const reActive = (state = null, action) => {
+const user = JSON?.parse(localStorage.getItem("user"))?.user || null;
+
+export const reActive = (
+  state = { res_id: user?.id, id: null, name: "" },
+  action
+) => {
   switch (action.type) {
     case "ACTIVE_ITEM":
       return action.payload;

@@ -12,9 +12,10 @@ import { universalAPi } from "../service/product.service";
 import { userApi } from "../service/user.service";
 import { workerService } from "../service/workers.service";
 import { rePermission } from "./permission";
-import { reUModal } from "./u-modal";
+import { reUModal, reUModalU } from "./u-modal";
 import { reActive } from "./active";
 import { storeApi } from "../service/store.service";
+import { departmentApi } from "../service/dep.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -25,18 +26,21 @@ export const store = configureStore({
     search: reSearch,
     permission: rePermission,
     uModal: reUModal,
+    uModalU: reUModalU,
     active: reActive,
     [universalAPi.reducerPath]: universalAPi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [workerService.reducerPath]: workerService.reducer,
     [storeApi.reducerPath]: storeApi.reducer,
+    [departmentApi.reducerPath]: departmentApi.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       universalAPi.middleware,
       userApi.middleware,
       workerService.middleware,
-      storeApi.middleware
+      storeApi.middleware,
+      departmentApi.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

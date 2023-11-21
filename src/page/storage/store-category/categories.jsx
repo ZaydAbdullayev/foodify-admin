@@ -24,7 +24,7 @@ export const StorageCatgegories = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Bo'limlar</p>
+        <p>Categoriyalar</p>
         <div className="storage_body_item">
           <label>
             <input

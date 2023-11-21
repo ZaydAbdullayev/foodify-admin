@@ -20,9 +20,9 @@ import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
 import { useSelector } from "react-redux";
 import { Storage, StorageBlog } from "./page/storage/storage";
-import { StorageDep } from "./page/storage/store-pages/department";
-import { StorageCatgegories } from "./page/storage/store-pages/categories";
-import { StorageGroups } from "./page/storage/store-pages/groups";
+import { StorageDep } from "./page/storage/store-department/department";
+import { StorageCatgegories } from "./page/storage/store-category/categories";
+import { StorageGroups } from "./page/storage/store-groups/groups";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
