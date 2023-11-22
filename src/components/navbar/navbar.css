@@ -20,7 +20,7 @@
   gap: var(--gap5);
 }
 
-.short_hands > button {
+.short_hands button {
   width: var(--nbwh);
   height: var(--nbwh);
   border-radius: 50%;
@@ -33,6 +33,25 @@
   font-size: var(--fs4);
 }
 
+.short_hands button:active {
+  background: #222;
+}
+
+.short-hands_sort__box {
+  display: flex;
+  align-items: center;
+  gap: var(--gap5);
+  margin-left: 20px;
+}
+
+.short-hands_sort__box input {
+  padding: 5px 10px;
+  background: #333;
+  border: none;
+  color: #fff;
+  font-size: var(--fs6);
+  border-radius: 6px;
+}
 .search {
   width: 50%;
   height: 60px;

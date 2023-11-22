@@ -16,6 +16,9 @@ import { reUModal, reUModalU } from "./u-modal";
 import { reActive } from "./active";
 import { storeApi } from "../service/store.service";
 import { departmentApi } from "../service/dep.service";
+import { categoryApi } from "../service/category.service";
+import { groupsApi } from "../service/groups.service";
+import { ingredientApi } from "../service/ingredient.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -33,6 +36,9 @@ export const store = configureStore({
     [workerService.reducerPath]: workerService.reducer,
     [storeApi.reducerPath]: storeApi.reducer,
     [departmentApi.reducerPath]: departmentApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [groupsApi.reducerPath]: groupsApi.reducer,
+    [ingredientApi.reducerPath]: ingredientApi.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -40,7 +46,10 @@ export const store = configureStore({
       userApi.middleware,
       workerService.middleware,
       storeApi.middleware,
-      departmentApi.middleware
+      departmentApi.middleware,
+      categoryApi.middleware,
+      groupsApi.middleware,
+      ingredientApi.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

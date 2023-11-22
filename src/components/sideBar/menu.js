@@ -152,14 +152,14 @@ export const Category = [
   },
   {
     id: "765433",
-    name: "Ingredientlar",
-    path: "/ingredients",
+    name: "Guruhlar",
+    path: "/groups",
     icon: <MdStorage />,
   },
   {
     id: "765433",
-    name: "List",
-    path: "",
+    name: "Ingredientlar",
+    path: "/ingredients",
     icon: <HiOutlineClipboardList />,
   },
 ];

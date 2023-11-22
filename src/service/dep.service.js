@@ -34,7 +34,7 @@ export const departmentApi = createApi({
 
     updateDep: builder.mutation({
       query: (value) => ({
-        url: `update/storage/${value.id}`,
+        url: `update/department/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,

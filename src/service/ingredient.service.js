@@ -3,12 +3,12 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const categoryApi = createApi({
-  reducerPath: "categoryApi",
+export const ingredientApi = createApi({
+  reducerPath: "ingredientApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["category"],
+  tagTypes: ["ingredient"],
   endpoints: (builder) => ({
-    getStCategory: builder.query({
+    getStIngredients: builder.query({
       query: () => ({
         url: `get/${user?.user?.id}/categories`,
         method: "GET",
@@ -16,10 +16,10 @@ export const categoryApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["category"],
+      providesTags: ["ingredient"],
     }),
 
-    addStCategory: builder.mutation({
+    addStIngredients: builder.mutation({
       query: (value) => ({
         url: "add/category",
         method: "POST",
@@ -29,10 +29,10 @@ export const categoryApi = createApi({
         },
         body: JSON.stringify(value),
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["ingredient"],
     }),
 
-    updateStCategory: builder.mutation({
+    updateStIngredients: builder.mutation({
       query: (value) => ({
         url: `update/category/${value.id}`,
         method: "PATCH",
@@ -46,10 +46,10 @@ export const categoryApi = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["ingredient"],
     }),
 
-    deleteStCategory: builder.mutation({
+    deleteStIngredients: builder.mutation({
       query: (id) => ({
         url: `delete/category/${id}`,
         method: "DELETE",
@@ -58,14 +58,14 @@ export const categoryApi = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["ingredient"],
     }),
   }),
 });
 
 export const {
-  useAddStCategoryMutation,
-  useUpdateStCategoryMutation,
-  useGetStCategoryQuery,
-  useDeleteStCategoryMutation,
-} = categoryApi;
+  useAddStIngredientsMutation,
+  useUpdateStIngredientsMutation,
+  useGetStIngredientsQuery,
+  useDeleteStIngredientsMutation,
+} = ingredientApi;

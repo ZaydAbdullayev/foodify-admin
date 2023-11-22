@@ -7,43 +7,69 @@ import { useUpdateStoreMutation } from "../../service/store.service";
 import { useAddStoreDepMutation } from "../../service/dep.service";
 import { enqueueSnackbar as es } from "notistack";
 import { LoadingBtn } from "../../components/loading/loading";
+import { useAddStCategoryMutation } from "../../service/category.service";
+import { useUpdateStCategoryMutation } from "../../service/category.service";
+import { acActive } from "../../redux/active";
+import { useAddStGroupsMutation } from "../../service/groups.service";
+import { useUpdateStGroupsMutation } from "../../service/groups.service";
+import { useUpdateDepMutation } from "../../service/dep.service";
+import { useAddStIngredientsMutation } from "../../service/ingredient.service";
+import { useUpdateStIngredientsMutation } from "../../service/ingredient.service";
 
-export const UniversalModal = ({ children, type }) => {
+export const UniversalModal = ({ children, type, newGrData }) => {
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const [addStorage] = useAddStoreMutation();
   const [addStorageDep] = useAddStoreDepMutation();
+  const [addStCategory] = useAddStCategoryMutation();
+  const [addStGroups] = useAddStGroupsMutation();
+  const [addStIngredients] = useAddStIngredientsMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const value = Object.fromEntries(formdata.entries());
+
     if (value.department === "default") {
       return es({ message: "Taxrirlash tugallanmadi!", variant: "warning" });
     }
-    console.log(value);
+
     try {
-      if (type === "main") {
-        const { data, error } = await addStorage(value);
-        if (error) return es({ message: "Xatolik", variant: "error" });
-        if (data) {
-          dispatch(acCloseUModal());
-          e.target.reset();
-          return;
-        }
+      let result;
+
+      switch (type) {
+        case "main":
+          result = await addStorage(value);
+          break;
+        case "dep":
+          result = await addStorageDep(value);
+          break;
+        case "category":
+          result = await addStCategory(value);
+          break;
+        case "group":
+          result = await addStGroups(value);
+          break;
+        case "ing":
+          result = await addStIngredients(value);
+          break;
+        case "newIngGr":
+          result = await addStGroups(newGrData);
+          result = await addStIngredients(value);
+          break;
+        default:
+          break;
       }
-      if (type === "dep") {
-        const { data, error } = await addStorageDep(value);
-        if (error) return es({ message: "Xatolik", variant: "error" });
-        if (data) {
-          dispatch(acCloseUModal());
-          e.target.reset();
-          return;
-        }
+
+      if (result?.error) {
+        es({ message: "Xatolik", variant: "error" });
+      } else if (result?.data) {
+        dispatch(acCloseUModal());
+        e.target.reset();
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -71,6 +97,10 @@ export const UniversalUModal = ({ children, type }) => {
   const open = useSelector((state) => state.uModalU);
   const dispatch = useDispatch();
   const [updateStorage] = useUpdateStoreMutation();
+  const [updateStCategory] = useUpdateStCategoryMutation();
+  const [updateStGroups] = useUpdateStGroupsMutation();
+  const [updateDep] = useUpdateDepMutation();
+  const [updateStIngredients] = useUpdateStIngredientsMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -79,18 +109,38 @@ export const UniversalUModal = ({ children, type }) => {
     const value = Object.fromEntries(formdata.entries());
 
     try {
-      if (type === "main") {
-        const { data, error } = await updateStorage(value);
-        if (error) return es({ message: "Xatolik", variant: "error" });
-        if (data) {
-          dispatch(acCloseUModal());
-          e.target.reset();
-          es({ message: "Taxrirlash muvoffaqiyatli!", variant: "success" });
-          return;
-        }
+      let result;
+
+      switch (type) {
+        case "main":
+          result = await updateStorage(value);
+          break;
+        case "dep":
+          result = await updateDep(value);
+          break;
+        case "category":
+          result = await updateStCategory(value);
+          break;
+        case "group":
+          result = await updateStGroups(value);
+          break;
+        case "ing":
+          result = await updateStIngredients(value);
+          break;
+        default:
+          break;
+      }
+
+      if (result?.error) {
+        es({ message: "Xatolik", variant: "error" });
+      } else if (result?.data) {
+        dispatch(acCloseUModalU());
+        dispatch(acActive({ id: null }));
+        e.target.reset();
+        es({ message: "Taxrirlash muvoffaqiyatli!", variant: "success" });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -3,22 +3,24 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-import { storageD } from "../store-data";
-import { useGetStoreDepQuery } from "../../../service/dep.service";
-import { useGetStCategoryQuery } from "../../../service/category.service";
+// import { storageD } from "../store-data";
+import { useGetStGroupsQuery } from "../../../service/groups.service";
+import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 
-export const StorageCatgegories = () => {
+export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
+  const [newIngGr, setNewIngGr] = useState(null);
   const [showMore, setShowMore] = useState(null);
+  const [newGrData, setNewGrData] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: depData = [] } = useGetStoreDepQuery();
-  const { data: storeData = [], isLoading } = useGetStCategoryQuery();
+  const { data: groupData = [] } = useGetStGroupsQuery();
+  const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
 
   // const sortData = storageD.sort((a, b) => {
   //   if (sort.state) {
@@ -29,8 +31,8 @@ export const StorageCatgegories = () => {
   // });
 
   const sortData =
-    storeData?.data &&
-    [...storeData?.data]?.sort((a, b) => {
+    ingredientData?.data &&
+    [...ingredientData?.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -42,7 +44,7 @@ export const StorageCatgegories = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Categoriyalar</p>
+        <p>Ingridientlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -65,9 +67,9 @@ export const StorageCatgegories = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
+            style={{ "--data-line-size": "20%" }}
           >
-            <p>Bo'limlar</p>
+            <p>O'lchov birligi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -78,22 +80,35 @@ export const StorageCatgegories = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "30%" }}
           >
-            <p>Ombor</p>
+            <p>Guruh</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
               <RiArrowDownSLine />
             )}
           </label>
-          <p style={{ "--data-line-size": "10%" }}>Oyqatlar</p>
+          <label
+            onClick={() => setSort({ id: 1, state: !sort.state })}
+            style={{ "--data-line-size": "20%" }}
+          >
+            <p>Narxi</p>
+            {sort.id === 1 && sort.state ? (
+              <RiArrowUpSLine />
+            ) : (
+              <RiArrowDownSLine />
+            )}
+          </label>
+          <p style={{ "--data-line-size": "20%", justifyContent: "center" }}>
+            Oyqatlar
+          </p>
         </div>
         <div className="storage_body_box">
           {isLoading ? (
-            <span>
+            <span className="loader_box relative">
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
+            sortData?.map((item) => {
               return (
                 <div
                   className={
@@ -114,7 +129,6 @@ export const StorageCatgegories = () => {
                         acActive({
                           id: !acItem.id ? item.id : null,
                           name: !acItem.name ? item.name : "",
-                          category: !acItem.category ? item.category : "",
                         })
                       )
                     }
@@ -125,7 +139,6 @@ export const StorageCatgegories = () => {
                           acActive({
                             id: !acItem.id ? item.id : null,
                             name: !acItem.name ? item.name : "",
-                            category: !acItem.category ? item.category : "",
                           })
                         )
                       }
@@ -136,14 +149,23 @@ export const StorageCatgegories = () => {
                         <input type="checkbox" name="id" />
                       )}
                     </label>
-                    <p>{index + 1}</p>
-                    <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
-                    <p style={{ "--data-line-size": "30%" }}>
-                      {item.department}
-                    </p>
-                    <p style={{ "--data-line-size": "30%" }}>{item.storage}</p>
+                    <p>{item.id}</p>
+                    <p style={{ "--data-line-size": "40%" }}>{item.category}</p>
+                    <p style={{ "--data-line-size": "20%" }}>{item.dep}</p>
+                    <p style={{ "--data-line-size": "30%" }}>{item.name}</p>
                     <p
-                      style={{ "--data-line-size": "10%" }}
+                      style={{
+                        "--data-line-size": "20%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "20%",
+                        justifyContent: "center",
+                      }}
                       onClick={() =>
                         setShowMore(showMore === item.id ? null : item.id)
                       }
@@ -192,7 +214,7 @@ export const StorageCatgegories = () => {
                     </div>
                     {item?.data?.map((product, ind) => {
                       return (
-                        <div className="storage_body_item inner_item">
+                        <div className="storage_body_item inner_item" key={ind}>
                           <p
                             style={{
                               borderRight: "1px solid #ccc5",
@@ -222,47 +244,73 @@ export const StorageCatgegories = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="category">
+      <UniversalModal
+        type={newIngGr === "new" ? "newIngGr" : "ing"}
+        newGrData={{ name: newGrData, res_id: user?.id }}
+      >
         <p>Categoriya qo'shish</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Categoriya nomi*"
-          required
-        />
+        <input type="text" name="name" placeholder="Guruh nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
-        <select name="department">
-          <option value="default">Bo'lim tanlang*</option>
-          {depData?.data?.map((item, index) => {
+        <select name="unit">
+          <option value="default">O'lchov birligi tanlang*</option>
+          <option value="kg">kg</option>
+          <option value="l">litr</option>
+          <option value="ta">ta</option>
+        </select>
+        <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
+          <option value="default">Guruh tanlang*</option>
+          {groupData?.data?.map((item, index) => {
             return (
               <option value={item.name} key={index}>
                 {item.name}
               </option>
             );
           })}
+          <option value="new">Yangi guruh</option>
         </select>
+        {newIngGr === "new" && (
+          <input
+            type="text"
+            name="name"
+            placeholder="Yangi guruh nomi*"
+            required
+            onChange={(e) => setNewGrData(e.target.value)}
+          />
+        )}
       </UniversalModal>
-      <UniversalUModal type="category">
-        <p>Taxrirlash</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Categoriya nomi*"
-          defaultValue={acItem.name}
-          required
-        />
-        <select name="department">
-          <option value={acItem.category}>{acItem.category}</option>
-          {depData?.data?.map((item, index) => {
+      <UniversalUModal
+        type={newIngGr === "new" ? "newIngGr" : "ing"}
+        newGrData={{ name: newGrData, res_id: user?.id }}
+      >
+        <p>Categoriya qo'shish</p>
+        <input type="text" name="name" placeholder="Guruh nomi*" required />
+        <input type="hidden" name="res_id" value={user?.id} />
+        <select name="unit">
+          <option value="default">O'lchov birligi tanlang*</option>
+          <option value="kg">kg</option>
+          <option value="l">litr</option>
+          <option value="ta">ta</option>
+        </select>
+        <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
+          <option value="default">Guruh tanlang*</option>
+          {groupData?.data?.map((item, index) => {
             return (
               <option value={item.name} key={index}>
                 {item.name}
               </option>
             );
           })}
+          <option value="new">Yangi guruh</option>
         </select>
-        <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem.id} />
+        {newIngGr === "new" && (
+          <input
+            type="text"
+            name="name"
+            placeholder="Yangi guruh nomi*"
+            required
+            onChange={(e) => setNewGrData(e.target.value)}
+          />
+        )}
       </UniversalUModal>
     </div>
   );

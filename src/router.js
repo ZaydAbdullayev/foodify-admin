@@ -23,6 +23,7 @@ import { Storage, StorageBlog } from "./page/storage/storage";
 import { StorageDep } from "./page/storage/store-department/department";
 import { StorageCatgegories } from "./page/storage/store-category/categories";
 import { StorageGroups } from "./page/storage/store-groups/groups";
+import { StorageIngredients } from "./page/storage/store-ingredients/ingredients";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -74,7 +75,8 @@ export const Router = () => {
                   <Route index element={<Storage />} />
                   <Route path="departments" element={<StorageDep />} />
                   <Route path="categories" element={<StorageCatgegories />} />
-                  <Route path="ingredients" element={<StorageGroups />} />
+                  <Route path="groups" element={<StorageGroups />} />
+                  <Route path="ingredients" element={<StorageIngredients />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

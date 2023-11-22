@@ -19,6 +19,7 @@ export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const department = JSON.parse(localStorage.getItem("department")) || [];
   const modal = useSelector((state) => state.modal);
+  const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation().pathname;
@@ -41,6 +42,10 @@ export const Navbar = () => {
     dispatch(acOpenUModal());
   };
 
+  const openUModalU = () => {
+    dispatch(acOpenUModalU());
+  };
+
   const log_out = () => {
     localStorage.clear();
     navigate("/login");
@@ -60,7 +65,7 @@ export const Navbar = () => {
             style={
               acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
             }
-            onClick={() => dispatch(acOpenUModalU())}
+            onClick={openUModalU}
           >
             <BiEdit />
           </button>
@@ -71,19 +76,54 @@ export const Navbar = () => {
           >
             <MdDelete />
           </button>
+          {location.startsWith("/storage/ingredients") && (
+            <div className="short-hands_sort__box">
+              <label>
+                <input
+                  type="search"
+                  name="groups"
+                  placeholder="Guruh'yicha qdirish..."
+                  onChange={(e) =>
+                    setSearch({ ...search, groups: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                <input
+                  type="search"
+                  name="name"
+                  placeholder="Nomi bo'yicha qdirish..."
+                  onChange={(e) =>
+                    setSearch({ ...search, name: e.target.value })
+                  }
+                />
+              </label>
+              <button
+                style={
+                  search.length
+                    ? {}
+                    : { opacity: "0.4", border: "1px solid #ccc6" }
+                }
+              >
+                <BsSearch />
+              </button>
+            </div>
+          )}
         </div>
       )}
-      <form className="search">
-        <BsSearch />
-        <input
-          type="search"
-          name="search"
-          placeholder="Qidirish..."
-          required
-          onChange={(e) => handleSort(e.target.value)}
-          autoComplete="off"
-        />
-      </form>
+      {!location.startsWith("/storage") && (
+        <form className="search">
+          <BsSearch />
+          <input
+            type="search"
+            name="search"
+            placeholder="Qidirish..."
+            required
+            onChange={(e) => handleSort(e.target.value)}
+            autoComplete="off"
+          />
+        </form>
+      )}
       <div className="profile">
         {department === "owner" && (
           <span onClick={() => navigate("/statistics")}>
