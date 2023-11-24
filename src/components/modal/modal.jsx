@@ -93,7 +93,7 @@ export const UniversalModal = ({ children, type, newGrData }) => {
   );
 };
 
-export const UniversalUModal = ({ children, type }) => {
+export const UniversalUModal = ({ children, type, newGrData }) => {
   const open = useSelector((state) => state.uModalU);
   const dispatch = useDispatch();
   const [updateStorage] = useUpdateStoreMutation();
@@ -101,6 +101,7 @@ export const UniversalUModal = ({ children, type }) => {
   const [updateStGroups] = useUpdateStGroupsMutation();
   const [updateDep] = useUpdateDepMutation();
   const [updateStIngredients] = useUpdateStIngredientsMutation();
+  const [addStGroups] = useAddStGroupsMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -125,6 +126,10 @@ export const UniversalUModal = ({ children, type }) => {
           result = await updateStGroups(value);
           break;
         case "ing":
+          result = await updateStIngredients(value);
+          break;
+        case "newIngGr":
+          result = await addStGroups(newGrData);
           result = await updateStIngredients(value);
           break;
         default:

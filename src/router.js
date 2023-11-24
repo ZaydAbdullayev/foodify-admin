@@ -24,6 +24,8 @@ import { StorageDep } from "./page/storage/store-department/department";
 import { StorageCatgegories } from "./page/storage/store-category/categories";
 import { StorageGroups } from "./page/storage/store-groups/groups";
 import { StorageIngredients } from "./page/storage/store-ingredients/ingredients";
+import { StorageProducts } from "./page/storage/store-products/products";
+import { UniversalControlModal } from "./components/modal-calc/modal-calc";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -77,6 +79,8 @@ export const Router = () => {
                   <Route path="categories" element={<StorageCatgegories />} />
                   <Route path="groups" element={<StorageGroups />} />
                   <Route path="ingredients" element={<StorageIngredients />} />
+                  <Route path="s-products" element={<StorageProducts />} />
+                  <Route path="controls" element={<UniversalControlModal />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

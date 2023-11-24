@@ -2,7 +2,7 @@ import { MdDashboard, MdFastfood } from "react-icons/md";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
 import { AiFillSetting } from "react-icons/ai";
-import { GiCook } from "react-icons/gi";
+import { GiCook, GiRiceCooker } from "react-icons/gi";
 import { BsCashCoin } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
 import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
@@ -161,5 +161,11 @@ export const Category = [
     name: "Ingredientlar",
     path: "/ingredients",
     icon: <HiOutlineClipboardList />,
+  },
+  {
+    id: "765433",
+    name: "Mahsulotlar",
+    path: "/s-products",
+    icon: <GiRiceCooker />,
   },
 ];

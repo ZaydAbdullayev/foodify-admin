@@ -3,12 +3,12 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const ingredientApi = createApi({
-  reducerPath: "ingredientApi",
+export const s_productApi = createApi({
+  reducerPath: "s_productApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["ingredient"],
+  tagTypes: ["category"],
   endpoints: (builder) => ({
-    getStIngredients: builder.query({
+    getStProduct: builder.query({
       query: () => ({
         url: `get/${user?.user?.id}/categories`,
         method: "GET",
@@ -16,10 +16,10 @@ export const ingredientApi = createApi({
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["ingredient"],
+      providesTags: ["category"],
     }),
 
-    addStIngredients: builder.mutation({
+    addStProduct: builder.mutation({
       query: (value) => ({
         url: "add/category",
         method: "POST",
@@ -29,10 +29,10 @@ export const ingredientApi = createApi({
         },
         body: JSON.stringify(value),
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
 
-    updateStIngredients: builder.mutation({
+    updateStProduct: builder.mutation({
       query: (value) => ({
         url: `update/category/${value.id}`,
         method: "PATCH",
@@ -43,14 +43,13 @@ export const ingredientApi = createApi({
         body: {
           res_id: value.res_id,
           name: value.name,
-          unit: value.unit,
-          group: value.group,
+          department: value.department,
         },
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
 
-    deleteStIngredients: builder.mutation({
+    deleteStProduct: builder.mutation({
       query: (id) => ({
         url: `delete/category/${id}`,
         method: "DELETE",
@@ -59,14 +58,14 @@ export const ingredientApi = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
   }),
 });
 
 export const {
-  useAddStIngredientsMutation,
-  useUpdateStIngredientsMutation,
-  useGetStIngredientsQuery,
-  useDeleteStIngredientsMutation,
-} = ingredientApi;
+  useAddStProductMutation,
+  useUpdateStProductMutation,
+  useGetStProductQuery,
+  useDeleteStProductMutation,
+} = s_productApi;

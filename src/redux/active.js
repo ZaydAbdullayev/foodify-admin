@@ -1,7 +1,15 @@
 const user = JSON?.parse(localStorage.getItem("user"))?.user || null;
 
 export const reActive = (
-  state = { res_id: user?.id, id: null, name: "", storage: "", department: "" },
+  state = {
+    res_id: user?.id,
+    id: null,
+    name: "",
+    storage: "",
+    department: "",
+    unit: "",
+    group: "",
+  },
   action
 ) => {
   switch (action.type) {

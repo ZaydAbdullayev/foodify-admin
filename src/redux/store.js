@@ -19,6 +19,7 @@ import { departmentApi } from "../service/dep.service";
 import { categoryApi } from "../service/category.service";
 import { groupsApi } from "../service/groups.service";
 import { ingredientApi } from "../service/ingredient.service";
+import { s_productApi } from "../service/s-products.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -39,6 +40,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
     [ingredientApi.reducerPath]: ingredientApi.reducer,
+    [s_productApi.reducerPath]: s_productApi.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -49,7 +51,8 @@ export const store = configureStore({
       departmentApi.middleware,
       categoryApi.middleware,
       groupsApi.middleware,
-      ingredientApi.middleware
+      ingredientApi.middleware,
+      s_productApi.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

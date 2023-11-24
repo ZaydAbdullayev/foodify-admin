@@ -42,6 +42,13 @@
   cursor: pointer;
 }
 
+.storage_body>:nth-child(2)>:where(label, p):hover {
+  background: linear-gradient(to bottom, #333, #ccc5);
+}
+
+.storage_body>:nth-child(2)>label {
+  transition: all 0.5s ease-in-out;
+}
 .storage_body__box {
   width: 100%;
   height: var(--univslH);
@@ -57,6 +64,7 @@
   height: auto;
   padding-bottom: 1%;
 }
+
 .storage_body_item {
   width: 100%;
   display: flex;
@@ -98,6 +106,7 @@
   background: #333;
   color: #fff;
 }
+
 .storage-body_inner_item {
   width: 50%;
   border: 1px solid #ccc5;

@@ -3,7 +3,7 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-// import { storageD } from "../store-data";
+import { storageD } from "../store-data";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 
@@ -22,23 +22,23 @@ export const StorageIngredients = () => {
   const { data: groupData = [] } = useGetStGroupsQuery();
   const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
 
-  // const sortData = storageD.sort((a, b) => {
-  //   if (sort.state) {
-  //     return a.name.localeCompare(b.name);
-  //   } else {
-  //     return b.name.localeCompare(a.name);
-  //   }
-  // });
+  const sortData = storageD.sort((a, b) => {
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
 
-  const sortData =
-    ingredientData?.data &&
-    [...ingredientData?.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  // const sortData =
+  //   ingredientData?.data &&
+  //   [...ingredientData?.data].sort((a, b) => {
+  //     if (sort.state) {
+  //       return a.name.localeCompare(b.name);
+  //     } else {
+  //       return b.name.localeCompare(a.name);
+  //     }
+  //   });
 
   return (
     <div className="storage_container">
@@ -129,6 +129,8 @@ export const StorageIngredients = () => {
                         acActive({
                           id: !acItem.id ? item.id : null,
                           name: !acItem.name ? item.name : "",
+                          group: !acItem.group ? item.group : "",
+                          unit: !acItem.unit ? item.unit : "",
                         })
                       )
                     }
@@ -139,6 +141,8 @@ export const StorageIngredients = () => {
                           acActive({
                             id: !acItem.id ? item.id : null,
                             name: !acItem.name ? item.name : "",
+                            group: !acItem.group ? item.group : "",
+                            unit: !acItem.unit ? item.unit : "",
                           })
                         )
                       }
@@ -248,7 +252,7 @@ export const StorageIngredients = () => {
         type={newIngGr === "new" ? "newIngGr" : "ing"}
         newGrData={{ name: newGrData, res_id: user?.id }}
       >
-        <p>Categoriya qo'shish</p>
+        <p>Ingredient qo'shish</p>
         <input type="text" name="name" placeholder="Guruh nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
         <select name="unit">
@@ -283,7 +287,12 @@ export const StorageIngredients = () => {
         newGrData={{ name: newGrData, res_id: user?.id }}
       >
         <p>Categoriya qo'shish</p>
-        <input type="text" name="name" placeholder="Guruh nomi*" required />
+        <input
+          type="text"
+          name="name"
+          placeholder="Ingredient nomi*"
+          required
+        />
         <input type="hidden" name="res_id" value={user?.id} />
         <select name="unit">
           <option value="default">O'lchov birligi tanlang*</option>

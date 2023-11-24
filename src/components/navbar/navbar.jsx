@@ -8,7 +8,7 @@ import { acSearch } from "../../redux/search";
 import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
 
 import { BsSearch } from "react-icons/bs";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaCalculator } from "react-icons/fa";
 import { BiEdit, BiPlus } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { ImStatsBars } from "react-icons/im";
@@ -76,6 +76,7 @@ export const Navbar = () => {
           >
             <MdDelete />
           </button>
+
           {location.startsWith("/storage/ingredients") && (
             <div className="short-hands_sort__box">
               <label>
