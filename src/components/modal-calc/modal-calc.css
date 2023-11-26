@@ -9,8 +9,11 @@
 }
 
 .u-control-container {
-  width: 100%;
-  height: 85%;
+  position: fixed;
+  left: var(--nwh);
+  bottom: -100vh;
+  width: calc(100% - var(--nwh));
+  height: calc(100vh - var(--nwh));
   padding: var(--pd3);
   display: flex;
   flex-wrap: wrap;
@@ -19,6 +22,12 @@
   gap: var(--gap1);
   overflow: hidden;
   background: #555;
+  transition: all 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.u-control-container.open {
+  bottom: 0;
 }
 
 .u-control_form_box {
@@ -34,14 +43,14 @@
   font-size: var(--fs6);
 }
 
-.u-control_form_box > :where(select, input) {
+.u-control_form_box :where(select, input, label) {
   width: var(--input-width);
   height: var(--univh);
-  padding: 0 1%;
+  padding: 0 0.5%;
   border: 1px solid #ccc;
   border-radius: 6px;
   background: #eee;
-  font-size: var(--fs6);
+  font-size: var(--fs7);
   letter-spacing: 1px;
 }
 
@@ -67,7 +76,7 @@
 
 .section_u {
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -225,8 +234,9 @@
 }
 
 .product_box_item > p > input {
-  width: 80px;
+  width: 80%;
   padding: 0% 5%;
+  text-align: end;
 }
 
 /* =========== universal control calculator box =========== */
@@ -246,7 +256,7 @@
 
 .u-control_calc_body {
   width: 100%;
-  flex: 1;
+  height: 65%;
   display: flex;
   flex-direction: column;
   gap: var(--gap6);
@@ -255,11 +265,16 @@
 
 .u-control_action__box {
   position: fixed;
-  bottom: 30px;
+  bottom: -100%;
   right: 30px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--gap6);
+  transition: all 0.5s ease;
+}
+
+.u-control_action__box.active {
+  bottom: 20px;
 }
 
 .u-control_action__box > button {
@@ -267,7 +282,6 @@
   width: calc(var(--univh) + 10px);
   display: flex;
   align-items: center;
-  padding-right: 10px;
   border: none;
   border-radius: 25px;
   background: #333;
@@ -285,9 +299,18 @@
   border: 1px solid #ccc6;
 }
 
+.u-control_action__box > button > i {
+  transition: all 0.5s ease;
+  width: 0;
+}
+
+.u-control_action__box > button:hover > i {
+  width: 100px;
+}
+
 .u-control_action__box > button:hover > span {
   border: 1px solid #ccc;
-  border-left: transparent;
+  border-right: transparent;
 }
 
 .u-control_action__box > button > span {
@@ -300,4 +323,24 @@
   color: #fff;
   border-radius: 50%;
   font-size: var(--fs6);
+}
+
+.product_box_footer {
+  height: calc(var(--univh) * 3);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product_box_footer > p {
+  inline-size: 100%;
+  height: var(--univh);
+  padding: 0 2%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs6);
+  color: #fff;
+  border-top: 1px solid #ccc6;
+  background: #333;
 }

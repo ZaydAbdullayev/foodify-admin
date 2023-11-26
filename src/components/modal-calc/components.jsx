@@ -288,3 +288,19 @@ export const data = [
     group: "test",
   },
 ];
+
+export const calculateTotal = (data) => {
+  let total = 0;
+
+  data.ingredients.forEach((ingredient) => {
+    const amount = ingredient.amount || 0;
+    const price = ingredient.price || 0;
+
+    total += amount * price;
+  });
+
+  const remainingPrice = data.price - total;
+
+  const result = data.price / total || 0;
+  return { markup: result, prime_cost: total, profit: remainingPrice };
+};

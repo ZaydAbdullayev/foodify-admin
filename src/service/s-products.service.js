@@ -10,7 +10,7 @@ export const s_productApi = createApi({
   endpoints: (builder) => ({
     getStProduct: builder.query({
       query: () => ({
-        url: `get/${user?.user?.id}/categories`,
+        url: `get/foods/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -21,20 +21,20 @@ export const s_productApi = createApi({
 
     addStProduct: builder.mutation({
       query: (value) => ({
-        url: "add/category",
+        url: "add/food",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(value),
+        body: value,
       }),
       invalidatesTags: ["category"],
     }),
 
     updateStProduct: builder.mutation({
       query: (value) => ({
-        url: `update/category/${value.id}`,
+        url: `update/foods/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -51,7 +51,7 @@ export const s_productApi = createApi({
 
     deleteStProduct: builder.mutation({
       query: (id) => ({
-        url: `delete/category/${id}`,
+        url: `delete/foods/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,

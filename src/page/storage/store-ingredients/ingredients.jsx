@@ -22,23 +22,15 @@ export const StorageIngredients = () => {
   const { data: groupData = [] } = useGetStGroupsQuery();
   const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
 
-  const sortData = storageD.sort((a, b) => {
-    if (sort.state) {
-      return a.name.localeCompare(b.name);
-    } else {
-      return b.name.localeCompare(a.name);
-    }
-  });
-
-  // const sortData =
-  //   ingredientData?.data &&
-  //   [...ingredientData?.data].sort((a, b) => {
-  //     if (sort.state) {
-  //       return a.name.localeCompare(b.name);
-  //     } else {
-  //       return b.name.localeCompare(a.name);
-  //     }
-  //   });
+  const sortData =
+    ingredientData?.data &&
+    [...ingredientData?.data].sort((a, b) => {
+      if (sort.state) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
 
   return (
     <div className="storage_container">
@@ -108,7 +100,7 @@ export const StorageIngredients = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item) => {
+            sortData?.map((item, index) => {
               return (
                 <div
                   className={
@@ -153,17 +145,17 @@ export const StorageIngredients = () => {
                         <input type="checkbox" name="id" />
                       )}
                     </label>
-                    <p>{item.id}</p>
-                    <p style={{ "--data-line-size": "40%" }}>{item.category}</p>
-                    <p style={{ "--data-line-size": "20%" }}>{item.dep}</p>
-                    <p style={{ "--data-line-size": "30%" }}>{item.name}</p>
+                    <p>{index + 1}</p>
+                    <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
+                    <p style={{ "--data-line-size": "20%" }}>{item.unit}</p>
+                    <p style={{ "--data-line-size": "30%" }}>{item.group}</p>
                     <p
                       style={{
                         "--data-line-size": "20%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item.remain}
+                      {item.price}
                     </p>
                     <p
                       style={{
@@ -253,7 +245,7 @@ export const StorageIngredients = () => {
         newGrData={{ name: newGrData, res_id: user?.id }}
       >
         <p>Ingredient qo'shish</p>
-        <input type="text" name="name" placeholder="Guruh nomi*" required />
+        <input type="text" name="name" placeholder="Mahsulot nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
         <select name="unit">
           <option value="default">O'lchov birligi tanlang*</option>

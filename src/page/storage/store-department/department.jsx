@@ -109,7 +109,7 @@ export const StorageDep = () => {
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
-                  <p style={{ "--data-line-size": "40%" }}>{item.dep}</p>
+                  <p style={{ "--data-line-size": "40%" }}>{item.storage}</p>
                 </div>
               );
             })

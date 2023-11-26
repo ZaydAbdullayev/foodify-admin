@@ -3,25 +3,25 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const ingredientApi = createApi({
-  reducerPath: "ingredientApi",
+export const invoices_Api = createApi({
+  reducerPath: "invoices_Api",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["ingredient"],
+  tagTypes: ["category"],
   endpoints: (builder) => ({
-    getStIngredients: builder.query({
+    getStInvoice: builder.query({
       query: () => ({
-        url: `get/ingredients/${user?.user?.id}`,
+        url: `get/foods/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["ingredient"],
+      providesTags: ["category"],
     }),
 
-    addStIngredients: builder.mutation({
+    addStInvoice: builder.mutation({
       query: (value) => ({
-        url: "add/ingredient",
+        url: "add/food",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const ingredientApi = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
 
-    updateStIngredients: builder.mutation({
+    updateStInvoice: builder.mutation({
       query: (value) => ({
-        url: `update/ingredient/${value.id}`,
+        url: `update/foods/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -43,30 +43,29 @@ export const ingredientApi = createApi({
         body: {
           res_id: value.res_id,
           name: value.name,
-          unit: value.unit,
-          group: value.group,
+          department: value.department,
         },
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
 
-    deleteStIngredients: builder.mutation({
+    deleteStInvoice: builder.mutation({
       query: (id) => ({
-        url: `delete/ingredient/${id}`,
+        url: `delete/foods/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["ingredient"],
+      invalidatesTags: ["category"],
     }),
   }),
 });
 
 export const {
-  useAddStIngredientsMutation,
-  useUpdateStIngredientsMutation,
-  useGetStIngredientsQuery,
-  useDeleteStIngredientsMutation,
-} = ingredientApi;
+  useAddStInvoiceMutation,
+  useUpdateStInvoiceMutation,
+  useGetStInvoiceQuery,
+  useDeleteStInvoiceMutation,
+} = invoices_Api;

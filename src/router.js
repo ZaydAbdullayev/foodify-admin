@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./assets/global.css";
 import "./assets/root.css";
 import { Route, Routes } from "react-router-dom";
@@ -18,22 +18,30 @@ import { Payment } from "./page/payment/payment";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Storage, StorageBlog } from "./page/storage/storage";
 import { StorageDep } from "./page/storage/store-department/department";
 import { StorageCatgegories } from "./page/storage/store-category/categories";
 import { StorageGroups } from "./page/storage/store-groups/groups";
 import { StorageIngredients } from "./page/storage/store-ingredients/ingredients";
 import { StorageProducts } from "./page/storage/store-products/products";
-import { UniversalControlModal } from "./components/modal-calc/modal-calc";
+import { useLocation } from "react-router-dom";
+import { acCloseUModal } from "./redux/u-modal";
+import { StorageInvoices } from "./page/storage/store-invoices/invoices";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
   const department = useSelector((state) => state.permission);
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(acCloseUModal());
+  }, [dispatch, location]); // Move the closing parenthesis to the correct position
+
   const span = document.createElement("span");
   span.classList.add("stm-animate");
   document.body.appendChild(span);
-
   document.addEventListener("click", function (event) {
     const x = event.clientX;
     const y = event.clientY;
@@ -41,7 +49,6 @@ export const Router = () => {
     span.style.left = `${x - 30}px`;
     span.classList.add("active");
   });
-
   span.addEventListener("animationend", function () {
     span.classList.remove("active");
   });
@@ -80,7 +87,7 @@ export const Router = () => {
                   <Route path="groups" element={<StorageGroups />} />
                   <Route path="ingredients" element={<StorageIngredients />} />
                   <Route path="s-products" element={<StorageProducts />} />
-                  <Route path="controls" element={<UniversalControlModal />} />
+                  <Route path="invoices" element={<StorageInvoices />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

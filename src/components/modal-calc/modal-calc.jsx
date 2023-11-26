@@ -1,23 +1,36 @@
 import React, { useState } from "react";
 import "./modal-calc.css";
 import { enqueueSnackbar as es } from "notistack";
-import { data } from "./components";
-// import { LoadingBtn } from "../../components/loading/loading";
+import { useSelector, useDispatch } from "react-redux";
+import { acCloseUModal } from "../../redux/u-modal";
+import { calculateTotal } from "./components";
+import { acCalc } from "../../redux/calc";
+import { LoadingBtn } from "../../components/loading/loading";
+import { useAddStProductMutation } from "../../service/s-products.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
+const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
-export const UniversalControlModal = ({ children, type }) => {
-  const fetchValues = async (e) => {
-    e.preventDefault();
-    const formdata = new FormData(e.target);
-    const value = Object.fromEntries(formdata.entries());
-    console.log(value);
+export const UniversalControlModal = ({ children, type, Pdata, name }) => {
+  const open = useSelector((state) => state.uModal);
+  const [fetchdata, setFetchdata] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [addStProduct] = useAddStProductMutation();
+  const dispatch = useDispatch();
+
+  const fetchValues = async (values) => {
+    setLoading(true);
+    if (values.ingredients && Array.isArray(values.ingredients)) {
+      values.ingredients = JSON.stringify(values.ingredients);
+    }
 
     try {
       let result;
-
       switch (type) {
+        case "product":
+          result = await addStProduct(values);
+          break;
         default:
           break;
       }
@@ -25,37 +38,56 @@ export const UniversalControlModal = ({ children, type }) => {
       if (result?.error) {
         es({ message: "Xatolik", variant: "error" });
       } else if (result?.data) {
-        e.target.reset();
-        es({ message: "Taxrirlash muvoffaqiyatli!", variant: "success" });
+        es({ message: "Qo'shildi", variant: "success" });
+        dispatch(acCloseUModal());
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const getValues = async (e) => {
+    e.preventDefault();
+    const formdata = new FormData(e.target);
+    const value = Object.fromEntries(formdata.entries());
+    const data = { ...value, ingredients: Pdata };
+    data.res_id = user.id;
+    delete data.amount;
+    const result = calculateTotal(data);
+    dispatch(acCalc(result));
+    setFetchdata({ ...data, ...result });
+  };
+
   return (
-    <form className="u-control-container" onSubmit={fetchValues}>
-      <UniversalForm />
-      <UniversalProductControl />
-      <CalcResult />
-      <div className="u-control_action__box">
-        <button type="submit">
-          <span>
-            <FaCheck />
-          </span>
+    <form
+      className={open ? "u-control-container open" : "u-control-container"}
+      onSubmit={getValues}
+    >
+      {children}
+      <div
+        className={
+          open ? "u-control_action__box active" : "u-control_action__box"
+        }
+      >
+        <button type="button" onClick={() => fetchValues(fetchdata)}>
           <i>qo'shish</i>
+          <span className="relative">
+            {loading ? <LoadingBtn /> : <FaCheck />}
+          </span>
         </button>
-        <button type="button">
+        <button type="submit">
+          <i>hisoblash</i>
           <span>
             <FaCalculator />
           </span>
-          <i>hisoblash</i>
         </button>
-        <button type="button">
+        <button type="button" onClick={() => dispatch(acCloseUModal())}>
+          <i>bekor qilish</i>
           <span>
             <TbArrowBarLeft />
           </span>
-          <i>bekor qilish</i>
         </button>
       </div>
     </form>
@@ -63,27 +95,11 @@ export const UniversalControlModal = ({ children, type }) => {
 };
 
 export const UniversalForm = ({ children }) => {
-  return (
-    <div className="wdfaic u-control_form_box">
-      <input type="text" placeholder="test" name="salom" />
-      <input type="text" placeholder="test" name="kalom" />
-      <input type="text" placeholder="test" name="salim" />
-      <input type="date" name="date" />
-      {children}
-    </div>
-  );
+  return <div className="wdfaic u-control_form_box">{children}</div>;
 };
 
 export const UniversalProductControl = ({ children }) => {
-  const [checkedData, setCheckedData] = useState([]);
   const [activePart, setActivePart] = useState(1);
-
-  const getProduct = (item) => {
-    const isChecked = checkedData.some((i) => i.id === item.id);
-    setCheckedData((prevData) =>
-      isChecked ? prevData.filter((i) => i.id !== item.id) : [...prevData, item]
-    );
-  };
 
   return (
     <div className="u-control_add_box">
@@ -121,142 +137,70 @@ export const UniversalProductControl = ({ children }) => {
             </>
           )}
         </div>
-        <div className="u-control_product_box">
-          <div className="product_box_item">
-            <label>
-              <input
-                type="checkbox"
-                name="id"
-                onClick={() => getProduct(data)}
-              />
-            </label>
-            <p style={{ "--data-line-size": "35%" }}>Nomi</p>
-            <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
-            <p style={{ "--data-line-size": "20%" }}>Guruh</p>
-            <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-            <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-          </div>
-          <div className="product_box_body">
-            {data.map((item) => {
-              const checked = checkedData.some((i) => i.id === item.id);
-              return (
-                <div
-                  className={`product_box_item ${checked ? "active" : ""}`}
-                  key={item.id}
-                >
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onClick={() => getProduct(item)}
-                    />
-                  </label>
-                  <p style={{ "--data-line-size": "35%" }}>{item.name}</p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.unit}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.group}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    {item.price * item.id - 300}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {checked && (
-                      <input type="text" name={`${item.name}-quantity`} />
-                    )}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <div className="u-control_product_box">{children}</div>
       </div>
     </div>
   );
 };
 
-export const CalcResult = ({ data, status }) => {
+export const CalcResult = ({ children, data, status }) => {
+  const calculatedData = useSelector((state) => state.calc);
   return (
     <div className="u-control_calc_box">
-      <p>Bir taom narxining hisob kitobi</p>
-      <div className="u-control_calc_body">
-        <CalcResultHeader />
-        <CalcResultBody data={data} status={status} />
-      </div>
+      <div className="u-control_calc_body">{children}</div>
+      {status === "cr" && (
+        <div className="product_box_footer">
+          <p>
+            Tan narx: <span>{calculatedData?.prime_cost}</span>
+          </p>
+          <p>
+            Foyda: <span>{calculatedData?.profit}</span>
+          </p>
+          <p>
+            Foyda(%): <span>{calculatedData?.markup?.toFixed(2)}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
 export const CalcResultHeader = ({ children }) => {
-  return (
-    <div className="product_box_item">
-      <p>№</p>
-      <p style={{ "--data-line-size": "30%" }}>Nomi</p>
-      <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-      <p style={{ "--data-line-size": "20%" }}>Tan narxi</p>
-      <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-      {children}
-    </div>
-  );
+  return <div className="product_box_item">{children}</div>;
 };
 
-export const CalcResultBody = ({ children, data }) => {
+export const CalcResultBody = ({ data = [], displayKeys }) => {
+  console.log("calc-data", data);
   return (
     <div className="product_box_body">
-      {data?.map((item, index) => {
-        return (
-          <div className="product_box_item" key={item.id}>
-            <label>{index + 1}</label>
-            <p style={{ "--data-line-size": "30%" }}>{item.name}</p>
+      {data?.map((item, index) => (
+        <div className="product_box_item" key={item.id}>
+          <label>{index + 1}</label>
+          {displayKeys?.map(({ name, size, position }) => (
             <p
+              key={name}
               style={{
-                "--data-line-size": "20%",
-                justifyContent: "center",
+                "--data-line-size": size,
+                justifyContent: position
+                  ? position === 1
+                    ? "center"
+                    : "end"
+                  : "start",
               }}
             >
-              {item.unit}
+              {item[name]}
             </p>
-            <p
-              style={{
-                "--data-line-size": "20%",
-                justifyContent: "center",
-              }}
-            >
-              {item.quantity || 32}
-            </p>
-            <p
-              style={{
-                "--data-line-size": "20%",
-                justifyContent: "center",
-              }}
-            >
-              {item.quantity || 32}
-            </p>
-            {children}
-          </div>
-        );
-      })}
+          ))}
+          <p
+            style={{
+              "--data-line-size": "18%",
+              justifyContent: "end",
+            }}
+          >
+            {item.price * item.amount}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 import { FiPlusCircle } from "react-icons/fi";
 import { MdStorage } from "react-icons/md";
 import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
-import { FaLayerGroup } from "react-icons/fa6";
+import { FaLayerGroup, FaFileInvoiceDollar } from "react-icons/fa6";
 
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 
@@ -167,5 +167,11 @@ export const Category = [
     name: "Mahsulotlar",
     path: "/s-products",
     icon: <GiRiceCooker />,
+  },
+  {
+    id: "765433",
+    name: "To'lovlar",
+    path: "/invoices",
+    icon: <FaFileInvoiceDollar />,
   },
 ];

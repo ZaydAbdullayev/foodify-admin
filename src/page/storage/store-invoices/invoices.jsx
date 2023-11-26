@@ -1,38 +1,34 @@
 import React, { useState } from "react";
+// import { UniversalModal } from "../../../components/modal/modal";
+// import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-import { useGetStProductQuery } from "../../../service/s-products.service";
-import { LoadingBtn } from "../../../components/loading/loading";
-import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
-import { UniversalForm } from "../../../components/modal-calc/modal-calc";
-import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
-import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
-import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
-import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { data } from "../../../components/modal-calc/components";
-import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
+import { storageD } from "../store-data";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { LoadingBtn } from "../../../components/loading/loading";
+import { data } from "../../../components/modal-calc/components";
+import { InvoicesModal } from "./invoices.modal";
+import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
+import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 
-export const StorageProducts = () => {
+export const StorageInvoices = () => {
   //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const today = new Date().toISOString().split("T")[0];
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: products = [], isLoading } = useGetStProductQuery();
-  const { data: ingredients = [] } = useGetStIngredientsQuery();
-  console.log(products);
+  const { data: ingredientData = [] } = useGetStIngredientsQuery();
+  const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
 
   const getProduct = (item, amount) => {
     const isChecked = checkedData.some((i) => i.id === item.id);
     if (isChecked) {
       setCheckedData((prevData) =>
         prevData.map((i) =>
-          i.id === item.id ? { ...i, amount: parseInt(amount, 10) || 0 } : i
+          i.id === item.id ? { ...item, amount: parseInt(amount, 10) || 0 } : i
         )
       );
     } else {
@@ -43,9 +39,17 @@ export const StorageProducts = () => {
     }
   };
 
+  // const sortData = storageD.sort((a, b) => {
+  //   if (sort.state) {
+  //     return a.name.localeCompare(b.name);
+  //   } else {
+  //     return b.name.localeCompare(a.name);
+  //   }
+  // });
+
   const sortData =
-    products?.data &&
-    [...products?.data].sort((a, b) => {
+    invoiceData?.data &&
+    [...invoiceData?.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -53,24 +57,11 @@ export const StorageProducts = () => {
       }
     });
 
-  // const udb = {
-  //   category: "default",
-  //   date: "2023-11-24T19:00:00.000Z",
-  //   id: "f483d1",
-  //   ingredients: "[object Object]",
-  //   markup: 0,
-  //   name: "aq",
-  //   price: "100000",
-  //   prime_cost: "",
-  //   profit: "",
-  //   res_id: "2899b5",
-  // };
-
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Mahsulotlar</p>
+        <p>To'lovlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -84,7 +75,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "15%" }}
           >
-            <p>Nomi</p>
+            <p>Kun</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -95,7 +86,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "10%" }}
           >
-            <p>Narxi</p>
+            <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -106,7 +97,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "11%" }}
           >
-            <p>Tan narxi</p>
+            <p>Yetkazuvchi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -117,7 +108,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "10%" }}
           >
-            <p>Foyda</p>
+            <p>Summa</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -128,7 +119,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "10%" }}
           >
-            <p>Foyda%</p>
+            <p>To'langan</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -139,7 +130,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "12%" }}
           >
-            <p>Kategoriya</p>
+            <p>To'lanishi k/k</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -150,7 +141,7 @@ export const StorageProducts = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "12%" }}
           >
-            <p>Ombor</p>
+            <p>Javobgar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -158,10 +149,10 @@ export const StorageProducts = () => {
             )}
           </label>
           <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Hisoblash
+            Tavsif
           </p>
           <p style={{ "--data-line-size": "8%", justifyContent: "center" }}>
-            Tarix
+            Tafsilot
           </p>
         </div>
         <div className="storage_body_box">
@@ -170,7 +161,7 @@ export const StorageProducts = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
+            sortData?.map((item) => {
               return (
                 <div
                   className={
@@ -209,7 +200,7 @@ export const StorageProducts = () => {
                         <input type="checkbox" name="id" />
                       )}
                     </label>
-                    <p>{index + 1}</p>
+                    <p>{item.id}</p>
                     <p style={{ "--data-line-size": "15%" }}>{item.name}</p>
                     <p
                       style={{
@@ -217,7 +208,7 @@ export const StorageProducts = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item.price}
+                      {item.remain}
                     </p>
                     <p
                       style={{
@@ -225,7 +216,7 @@ export const StorageProducts = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item.prime_cost}
+                      {item.remain}
                     </p>
                     <p
                       style={{
@@ -233,7 +224,7 @@ export const StorageProducts = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item.profit}
+                      {item.remain}
                     </p>
                     <p
                       style={{
@@ -241,10 +232,10 @@ export const StorageProducts = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item.markup}
+                      {item.remain}
                     </p>
+                    <p style={{ "--data-line-size": "12%" }}>{item.dep}</p>
                     <p style={{ "--data-line-size": "12%" }}>{item.category}</p>
-                    <p style={{ "--data-line-size": "12%" }}>{item.storage}</p>
                     <p
                       style={{
                         "--data-line-size": "10%",
@@ -343,129 +334,12 @@ export const StorageProducts = () => {
           )}
         </div>
       </div>
-      <UniversalControlModal type="product" Pdata={checkedData}>
-        <UniversalForm>
-          <input
-            type="text"
-            name="name"
-            placeholder="Nomi*"
-            required
-            autoComplete="off"
-            style={{ "--input-width": "15%" }}
-          />
-          <select name="category" style={{ "--input-width": "15%" }}>
-            <option value="default">Kategoriya tanlang*</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-          <input
-            type="number"
-            name="price"
-            placeholder="Narxi*"
-            style={{ "--input-width": "12%" }}
-          />
-          <input
-            type="date"
-            name="date"
-            style={{ "--input-width": "12%" }}
-            defaultValue={today}
-          />
-        </UniversalForm>
-        <UniversalProductControl
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-        >
-          <div className="product_box_item">
-            <label>
-              <input
-                type="checkbox"
-                name="id"
-                onClick={() => getProduct(data)}
-              />
-            </label>
-            <p style={{ "--data-line-size": "35%" }}>Nomi</p>
-            <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
-            <p style={{ "--data-line-size": "20%" }}>Guruh</p>
-            <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-            <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-          </div>
-          <div className="product_box_body">
-            {ingredients?.data?.map((item, index) => {
-              const checked = checkedData.some((i) => i.id === item.id);
-              return (
-                <div
-                  className={`product_box_item ${checked ? "active" : ""}`}
-                  key={item.id}
-                >
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onClick={() => getProduct(item)}
-                    />
-                  </label>
-                  <p style={{ "--data-line-size": "35%" }}>{item.name}</p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.unit}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.group}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    {item.price}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {checked && (
-                      <input
-                        type="text"
-                        name="amount"
-                        onChange={(e) => getProduct(item, e.target.value)}
-                      />
-                    )}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </UniversalProductControl>
-        <CalcResult data={checkedData} status="cr">
-          <CalcResultHeader>
-            <p>№</p>
-            <p style={{ "--data-line-size": "30%" }}>Nomi</p>
-            <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-            <p style={{ "--data-line-size": "20%" }}>Tan narxi</p>
-            <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-          </CalcResultHeader>
-          <CalcResultBody
-            data={checkedData}
-            displayKeys={[
-              { name: "name", size: "30%" },
-              { name: "amount", size: "20%" },
-              { name: "price", size: "20%" },
-            ]}
-          />
-        </CalcResult>
-      </UniversalControlModal>
+      <InvoicesModal
+        data={ingredientData?.data}
+        checkedData={checkedData}
+        setCheckedData={setChecked}
+        getProduct={getProduct}
+      />
     </div>
   );
 };

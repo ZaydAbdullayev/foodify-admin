@@ -20,6 +20,9 @@ import { categoryApi } from "../service/category.service";
 import { groupsApi } from "../service/groups.service";
 import { ingredientApi } from "../service/ingredient.service";
 import { s_productApi } from "../service/s-products.service";
+import { reCalc } from "./calc";
+import { invoices_Api } from "../service/invoices.service";
+import { suplierApi } from "../service/suplier.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -32,6 +35,7 @@ export const store = configureStore({
     uModal: reUModal,
     uModalU: reUModalU,
     active: reActive,
+    calc: reCalc,
     [universalAPi.reducerPath]: universalAPi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [workerService.reducerPath]: workerService.reducer,
@@ -41,6 +45,8 @@ export const store = configureStore({
     [groupsApi.reducerPath]: groupsApi.reducer,
     [ingredientApi.reducerPath]: ingredientApi.reducer,
     [s_productApi.reducerPath]: s_productApi.reducer,
+    [invoices_Api.reducerPath]: invoices_Api.reducer,
+    [suplierApi.reducerPath]: suplierApi.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -52,7 +58,9 @@ export const store = configureStore({
       categoryApi.middleware,
       groupsApi.middleware,
       ingredientApi.middleware,
-      s_productApi.middleware
+      s_productApi.middleware,
+      invoices_Api.middleware,
+      suplierApi.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

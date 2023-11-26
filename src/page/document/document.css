@@ -61,7 +61,7 @@
   overflow: visible;
 }
 
-::-webkit-calendar-picker-indicator {
+.filter_date ::-webkit-calendar-picker-indicator {
   position: absolute;
   top: -5px;
   left: 0;
