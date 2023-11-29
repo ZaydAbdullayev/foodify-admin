@@ -15,6 +15,7 @@ import { useUpdateStGroupsMutation } from "../../service/groups.service";
 import { useUpdateDepMutation } from "../../service/dep.service";
 import { useAddStIngredientsMutation } from "../../service/ingredient.service";
 import { useUpdateStIngredientsMutation } from "../../service/ingredient.service";
+import { useAddStSuplierMutation } from "../../service/suplier.service";
 
 export const UniversalModal = ({ children, type, newGrData }) => {
   const open = useSelector((state) => state.uModal);
@@ -24,6 +25,7 @@ export const UniversalModal = ({ children, type, newGrData }) => {
   const [addStCategory] = useAddStCategoryMutation();
   const [addStGroups] = useAddStGroupsMutation();
   const [addStIngredients] = useAddStIngredientsMutation();
+  const [addStSuplier] = useAddStSuplierMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -33,6 +35,10 @@ export const UniversalModal = ({ children, type, newGrData }) => {
 
     if (value.department === "default") {
       return es({ message: "Taxrirlash tugallanmadi!", variant: "warning" });
+    }
+
+    if (type === "supp") {
+      value.number.split(" ").join("");
     }
 
     try {
@@ -57,6 +63,9 @@ export const UniversalModal = ({ children, type, newGrData }) => {
         case "newIngGr":
           result = await addStGroups(newGrData);
           result = await addStIngredients(value);
+          break;
+        case "supp":
+          result = await addStSuplier(value);
           break;
         default:
           break;

@@ -28,6 +28,10 @@ import { StorageProducts } from "./page/storage/store-products/products";
 import { useLocation } from "react-router-dom";
 import { acCloseUModal } from "./redux/u-modal";
 import { StorageInvoices } from "./page/storage/store-invoices/invoices";
+import { StorageExpenditures } from "./page/storage/store-expenditures/expenditures";
+import { StorageSupplier } from "./page/storage/store-supplier/supplier";
+import { StorageCutting } from "./page/storage/store-cutting/cutting";
+import { StorageDamaged } from "./page/storage/store-damaged/damaged";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -87,7 +91,11 @@ export const Router = () => {
                   <Route path="groups" element={<StorageGroups />} />
                   <Route path="ingredients" element={<StorageIngredients />} />
                   <Route path="s-products" element={<StorageProducts />} />
+                  <Route path="suppliers" element={<StorageSupplier />} />
                   <Route path="invoices" element={<StorageInvoices />} />
+                  <Route path="expenses" element={<StorageExpenditures />} />
+                  <Route path="cutting" element={<StorageCutting />} />
+                  <Route path="damaget-items" element={<StorageDamaged />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

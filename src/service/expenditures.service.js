@@ -3,25 +3,25 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const s_productApi = createApi({
-  reducerPath: "s_productApi",
+export const expenditures_Api = createApi({
+  reducerPath: "expenditures_Api",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["s-products"],
+  tagTypes: ["expenditure"],
   endpoints: (builder) => ({
-    getStProduct: builder.query({
+    getStExpenditure: builder.query({
       query: () => ({
-        url: `get/foods/${user?.user?.id}`,
+        url: `get/usedGoods/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["s-products"],
+      providesTags: ["expenditure"],
     }),
 
-    addStProduct: builder.mutation({
+    addStExpenditure: builder.mutation({
       query: (value) => ({
-        url: "add/food",
+        url: "add/usedGoods",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const s_productApi = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["expenditure"],
     }),
 
-    updateStProduct: builder.mutation({
+    updateStExpenditure: builder.mutation({
       query: (value) => ({
-        url: `update/foods/${value.id}`,
+        url: `update/usedGoods/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -46,26 +46,26 @@ export const s_productApi = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["expenditure"],
     }),
 
-    deleteStProduct: builder.mutation({
+    deleteStExpenditure: builder.mutation({
       query: (id) => ({
-        url: `delete/foods/${id}`,
+        url: `delete/usedGoods/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["expenditure"],
     }),
   }),
 });
 
 export const {
-  useAddStProductMutation,
-  useUpdateStProductMutation,
-  useGetStProductQuery,
-  useDeleteStProductMutation,
-} = s_productApi;
+  useAddStExpenditureMutation,
+  useUpdateStExpenditureMutation,
+  useGetStExpenditureQuery,
+  useDeleteStExpenditureMutation,
+} = expenditures_Api;

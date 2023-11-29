@@ -7,6 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useGetStGroupsQuery } from "../../../service/groups.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -17,21 +18,24 @@ export const InvoicesModal = ({
 }) => {
   const today = new Date().toISOString().split("T")[0];
   const [id, setId] = useState(null);
+  const [pId, setPId] = useState(null);
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: storageItems = [] } = useGetStorageItemsQuery(id);
+  const { data: groupsData = [] } = useGetStGroupsQuery();
 
   const parsedData = JSON.parse(storageItems?.data || "[]");
 
-  const updatedData = checkedData.map((newItem) => {
-    const oldData = parsedData?.find((old) => old.id === newItem.id);
+  const updatedData = checkedData?.map((newItem) => {
+    const oldData = parsedData?.find((old) => old.id === newItem.id) || {};
 
     if (oldData) {
       return {
         ...newItem,
-        old_quantity: oldData?.total_quantity,
+        old_quantity: oldData?.total_quantity || 0,
         total_quantity: oldData?.total_quantity
           ? oldData?.total_quantity + newItem?.amount
           : newItem?.amount,
+        total_price: newItem?.amount * newItem?.price,
       };
     }
 
@@ -49,34 +53,55 @@ export const InvoicesModal = ({
     setId(selectedId);
   };
 
+  const handleSelectIDChange = (event) => {
+    const selectedName = event.target.value;
+    const selectedItem = data?.find((item) => item.name === selectedName);
+    const selectedId =
+      selectedName === "default" || !selectedItem ? null : selectedItem.id;
+
+    setPId(selectedId);
+  };
+
   return (
-    <UniversalControlModal
-      type="invoice"
-      Pdata={checkedData}
-      Udata={updatedData}
-      id={id}
-    >
+    <UniversalControlModal type="cutting" Pdata={checkedData}>
       <UniversalForm>
         <input
           type="number"
           name="order"
           placeholder="Tartib raqam*"
+          defaultValue={NUM.num}
           required
           autoComplete="off"
-          defaultValue={NUM.num}
+          style={{ "--input-width": "12%" }}
+        />
+
+        <select
+          name="ingredient"
+          onChange={handleSelectIDChange}
           style={{ "--input-width": "15%" }}
+        >
+          <option value="default">Mahsulot tanlang*</option>
+          {data?.map((item) => {
+            return (
+              <option key={item.id} value={item.name}>
+                {item.name}
+              </option>
+            );
+          })}
+        </select>
+        <input
+          type="text"
+          name="amount"
+          placeholder="Miqdori"
+          required
+          autoComplete="off"
+          style={{ "--input-width": "12%" }}
         />
         <input
           type="date"
           name="date"
-          style={{ "--input-width": "12%" }}
+          style={{ "--input-width": "15%" }}
           defaultValue={today}
-        />
-        <input
-          type="text"
-          name="supplier"
-          placeholder="Yetkazuvchi*"
-          style={{ "--input-width": "12%" }}
         />
         <select
           name="storage"
@@ -92,18 +117,25 @@ export const InvoicesModal = ({
             );
           })}
         </select>
-        <input
-          type="text"
-          name="responsible"
-          placeholder="Javobgar*"
-          style={{ "--input-width": "12%" }}
-        />
+        <select name="ingredient_group">
+          <option value="default">Guruh tanlang*</option>
+          {groupsData?.data?.map((item) => {
+            return (
+              <option key={item.id} value={item.name}>
+                {item.name}
+              </option>
+            );
+          })}
+        </select>
         <input
           type="text"
           name="description"
           placeholder="Tavsif*"
           style={{ "--input-width": "12%" }}
         />
+        <input type="hidden" name="storage_id" value={id} />
+        <input type="hidden" name="ingredient_id" value={pId} />
+        <input type="hidden" name="waste" value={3844} />
       </UniversalForm>
       <UniversalProductControl
         checkedData={checkedData}
@@ -117,8 +149,8 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>
           <p style={{ "--data-line-size": "15%" }}>Guruh</p>
           <p style={{ "--data-line-size": "15%" }}>Narxi</p>
+          <p style={{ "--data-line-size": "15%" }}>Turi</p>
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
-          <p style={{ "--data-line-size": "15%" }}>Jami</p>
         </div>
         <div className="product_box_body">
           {data?.map((item) => {
@@ -158,17 +190,15 @@ export const InvoicesModal = ({
                     justifyContent: "flex-end",
                   }}
                 >
-                  {checked ? (
-                    <input
-                      type="number"
-                      defaultValue={item.price}
-                      onChange={(e) =>
-                        getProduct({ ...item, price: e.target.value }, 0, 1)
-                      }
-                    />
-                  ) : (
-                    item.price
-                  )}
+                  {item.price}
+                </p>
+                <p
+                  style={{
+                    "--data-line-size": "15%",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.type}
                 </p>
                 <p
                   style={{
@@ -184,20 +214,6 @@ export const InvoicesModal = ({
                     />
                   )}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}
-                >
-                  {checked && (
-                    <input
-                      type="number"
-                      name="total"
-                      onChange={(e) => getProduct(item, e.target.value, 1)}
-                    />
-                  )}
-                </p>
               </div>
             );
           })}
@@ -206,21 +222,25 @@ export const InvoicesModal = ({
       <CalcResult data={checkedData}>
         <CalcResultHeader>
           <p>№</p>
-          <p style={{ "--data-line-size": "20%" }}>Nomi</p>
-          <p style={{ "--data-line-size": "18%" }}>O'lchov</p>
-          <p style={{ "--data-line-size": "18%" }}>Oldingi miqdor</p>
-          <p style={{ "--data-line-size": "18%" }}>Miqdor</p>
-          <p style={{ "--data-line-size": "18%" }}>Keyingi miqdor</p>
+          <p style={{ "--data-line-size": "15%" }}>Nomi</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Tur</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Eski miqdor</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Miqdor</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Yangi miqdor</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Narx</p>
+          <p style={{ "--data-line-size": "13.33%" }}>Jami</p>
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "20%" },
-            { name: "unit", size: "18%", position: 1 },
-            { name: "old_quantity", size: "18%", position: 2 },
-            { name: "amount", size: "18%", position: 2 },
-            { name: "total_quantity", size: "18%", position: 2 },
+            { name: "name", size: "15%" },
+            { name: "type", size: "13.33%", position: 1 },
+            { name: "old_quantity", size: "13.33%", position: 2 },
+            { name: "amount", size: "13.33%", position: 2 },
+            { name: "total_quantity", size: "13.33%", position: 2 },
+            { name: "price", size: "13.33%", position: 2 },
+            { name: "total_price", size: "13.33%", position: 2 },
           ]}
         />
       </CalcResult>

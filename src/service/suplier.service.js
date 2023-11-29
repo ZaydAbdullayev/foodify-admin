@@ -6,22 +6,22 @@ const user = JSON?.parse(localStorage.getItem("user")) || [];
 export const suplierApi = createApi({
   reducerPath: "suplierApi",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["category"],
+  tagTypes: ["suplier"],
   endpoints: (builder) => ({
     getStSuplier: builder.query({
       query: () => ({
-        url: `get/foods/${user?.user?.id}`,
+        url: `get/suppliers/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["category"],
+      providesTags: ["suplier"],
     }),
 
     addStSuplier: builder.mutation({
       query: (value) => ({
-        url: "add/food",
+        url: `add/supplier`,
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const suplierApi = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["suplier"],
     }),
 
     updateStSuplier: builder.mutation({
       query: (value) => ({
-        url: `update/foods/${value.id}`,
+        url: `update/suppliers/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -46,19 +46,19 @@ export const suplierApi = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["suplier"],
     }),
 
     deleteStSuplier: builder.mutation({
       query: (id) => ({
-        url: `delete/foods/${id}`,
+        url: `delete/suppliers/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["category"],
+      invalidatesTags: ["suplier"],
     }),
   }),
 });

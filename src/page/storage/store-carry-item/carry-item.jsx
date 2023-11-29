@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./invoices.modal";
+import { InvoicesModal } from "./carry-item.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
-import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+import { useGetStCuttingQuery } from "../../../service/cutting.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageInvoices = () => {
+export const StorageCutting = () => {
   //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
@@ -17,7 +17,7 @@ export const StorageInvoices = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
-  const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
+  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
 
   const getProduct = (item, amount, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -28,20 +28,20 @@ export const StorageInvoices = () => {
     if (isChecked) {
       setCheckedData((prevData) =>
         prevData.map((i) =>
-          i.id === item?.id ? { ...item, amount: parseInt(amount, 10) || 0 } : i
+          i.id === item?.id ? { ...item, amount: amount || 0 } : i
         )
       );
     } else {
       setCheckedData((prevData) => [
         ...prevData,
-        { ...item, amount: parseInt(amount, 10) || 0 },
+        { ...item, amount: amount || 0 },
       ]);
     }
   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
+    cuttingData?.data &&
+    [...cuttingData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -53,7 +53,7 @@ export const StorageInvoices = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>To'lovlar</p>
+        <p>Ko'chirib o'tkazish</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -65,7 +65,7 @@ export const StorageInvoices = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15%" }}
+            style={{ "--data-line-size": "14%" }}
           >
             <p>Kun</p>
             {sort.id === 1 && sort.state ? (
@@ -76,9 +76,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>Ombor</p>
+            <p>Ombordan</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -87,9 +87,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "11%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>Yetkazuvchi</p>
+            <p>Omborga</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -98,9 +98,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>Summa</p>
+            <p>Miqdor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -109,9 +109,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>To'langan</p>
+            <p>Guruh</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -120,20 +120,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>Qarzdorlik</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Javobgar</p>
+            <p>Tavsif</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -141,9 +130,6 @@ export const StorageInvoices = () => {
             )}
           </label>
           <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tavsif
-          </p>
-          <p style={{ "--data-line-size": "8%", justifyContent: "center" }}>
             Tafsilot
           </p>
         </div>
@@ -198,47 +184,43 @@ export const StorageInvoices = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "13%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "14%" }}>{date}</p>
                     <p
                       style={{
-                        "--data-line-size": "12%",
+                        "--data-line-size": "14%",
                       }}
                     >
                       {item?.storage}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "11%",
+                        "--data-line-size": "14%",
                       }}
                     >
-                      {item?.supplier}
+                      {item?.ingredient}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "14%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.cost || 0}
+                      {item?.amount || 0}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "14%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.paid || 0}
+                      {item?.waste || 0}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "12%",
-                        justifyContent: "flex-end",
+                        "--data-line-size": "14%",
                       }}
                     >
-                      {item?.leftover || 0}
-                    </p>
-                    <p style={{ "--data-line-size": "12%" }}>
-                      {item?.responsible}
+                      {item?.ingredient_group}
                     </p>
                     <p
                       style={{
@@ -250,24 +232,11 @@ export const StorageInvoices = () => {
                       }
                     >
                       <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
+                        style={
+                          showMore === item?.id ? { color: "#787aff" } : {}
+                        }
                       >
-                        hisoblash
-                      </u>
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "8%",
-                        justifyContent: "center",
-                      }}
-                      onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
-                      <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
-                      >
-                        tarix
+                        tafsilot
                       </u>
                     </p>
                   </div>
@@ -343,7 +312,11 @@ export const StorageInvoices = () => {
         checkedData={checkedData}
         setCheckedData={setChecked}
         getProduct={getProduct}
-        NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
+        NUM={
+          !isLoading && {
+            num: JSON.parse(cuttingData?.data[0]?.order || 0) + 1,
+          }
+        }
       />
     </div>
   );

@@ -7,16 +7,25 @@ import { calculateTotal } from "./components";
 import { acCalc } from "../../redux/calc";
 import { LoadingBtn } from "../../components/loading/loading";
 import { useAddStProductMutation } from "../../service/s-products.service";
+import { useGetStoreQuery } from "../../service/store.service";
+import { useGetStGroupsQuery } from "../../service/groups.service";
+import { useAddStInvoiceMutation } from "../../service/invoices.service";
+import { useUpdateStItemsMutation } from "../../service/store.service";
+import { useAddStCuttingMutation } from "../../service/cutting.service";
+import { ClearForm } from "../../service/clear-form.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
-export const UniversalControlModal = ({ children, type, Pdata, name }) => {
+export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
   const open = useSelector((state) => state.uModal);
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [addStProduct] = useAddStProductMutation();
+  const [addStInvoice] = useAddStInvoiceMutation();
+  const [updateStItems] = useUpdateStItemsMutation();
+  const [addStCutting] = useAddStCuttingMutation();
   const dispatch = useDispatch();
 
   const fetchValues = async (values) => {
@@ -24,12 +33,29 @@ export const UniversalControlModal = ({ children, type, Pdata, name }) => {
     if (values.ingredients && Array.isArray(values.ingredients)) {
       values.ingredients = JSON.stringify(values.ingredients);
     }
+    console.log("values", values);
+
+    if (type === "invoice") {
+      values.cost = values.prime_cost;
+      values.leftover = values.prime_cost;
+      delete values.markup;
+      delete values.profit;
+      delete values.prime_cost;
+      delete values.total;
+    }
 
     try {
       let result;
       switch (type) {
         case "product":
           result = await addStProduct(values);
+          break;
+        case "invoice":
+          result = await addStInvoice(values);
+          await updateStItems({ id, ingredients: Udata });
+          break;
+        case "cutting":
+          result = await addStCutting(values);
           break;
         default:
           break;
@@ -39,6 +65,7 @@ export const UniversalControlModal = ({ children, type, Pdata, name }) => {
         es({ message: "Xatolik", variant: "error" });
       } else if (result?.data) {
         es({ message: "Qo'shildi", variant: "success" });
+        ClearForm("u-control-form");
         dispatch(acCloseUModal());
       }
     } catch (err) {
@@ -54,16 +81,25 @@ export const UniversalControlModal = ({ children, type, Pdata, name }) => {
     const value = Object.fromEntries(formdata.entries());
     const data = { ...value, ingredients: Pdata };
     data.res_id = user.id;
-    delete data.amount;
+    if (type !== "cutting") {
+      delete data.amount;
+    }
+    console.log("data", data);
+
     const result = calculateTotal(data);
     dispatch(acCalc(result));
-    setFetchdata({ ...data, ...result });
+    if (type === "invoice" || type === "product") {
+      setFetchdata({ ...data, ...result });
+    } else {
+      setFetchdata({ ...data });
+    }
   };
 
   return (
     <form
       className={open ? "u-control-container open" : "u-control-container"}
       onSubmit={getValues}
+      id="u-control-form"
     >
       {children}
       <div
@@ -100,6 +136,8 @@ export const UniversalForm = ({ children }) => {
 
 export const UniversalProductControl = ({ children }) => {
   const [activePart, setActivePart] = useState(1);
+  const { data: store = [] } = useGetStoreQuery();
+  const { data: groups = [] } = useGetStGroupsQuery();
 
   return (
     <div className="u-control_add_box">
@@ -124,15 +162,23 @@ export const UniversalProductControl = ({ children }) => {
             <>
               <select>
                 <option value="default">Guruh tanlang</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                {groups?.data?.map((item) => {
+                  return (
+                    <option key={item.id} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
               <select>
                 <option value="default">Ombor tanlang</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                {store?.data?.map((item) => {
+                  return (
+                    <option key={item.id} value={item.name}>
+                      {item.name}
+                    </option>
+                  );
+                })}
               </select>
             </>
           )}
@@ -169,8 +215,7 @@ export const CalcResultHeader = ({ children }) => {
   return <div className="product_box_item">{children}</div>;
 };
 
-export const CalcResultBody = ({ data = [], displayKeys }) => {
-  console.log("calc-data", data);
+export const CalcResultBody = ({ data = [], status, displayKeys }) => {
   return (
     <div className="product_box_body">
       {data?.map((item, index) => (
@@ -191,14 +236,16 @@ export const CalcResultBody = ({ data = [], displayKeys }) => {
               {item[name]}
             </p>
           ))}
-          <p
-            style={{
-              "--data-line-size": "18%",
-              justifyContent: "end",
-            }}
-          >
-            {item.price * item.amount}
-          </p>
+          {status !== "inv" && (
+            <p
+              style={{
+                "--data-line-size": "18%",
+                justifyContent: "end",
+              }}
+            >
+              {item.price * item.amount}
+            </p>
+          )}
         </div>
       ))}
     </div>

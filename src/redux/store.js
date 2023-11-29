@@ -23,6 +23,8 @@ import { s_productApi } from "../service/s-products.service";
 import { reCalc } from "./calc";
 import { invoices_Api } from "../service/invoices.service";
 import { suplierApi } from "../service/suplier.service";
+import { cutting_Api } from "../service/cutting.service";
+import { damaged_Api } from "../service/damaged.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -47,6 +49,8 @@ export const store = configureStore({
     [s_productApi.reducerPath]: s_productApi.reducer,
     [invoices_Api.reducerPath]: invoices_Api.reducer,
     [suplierApi.reducerPath]: suplierApi.reducer,
+    [cutting_Api.reducerPath]: cutting_Api.reducer,
+    [damaged_Api.reducerPath]: damaged_Api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -60,7 +64,9 @@ export const store = configureStore({
       ingredientApi.middleware,
       s_productApi.middleware,
       invoices_Api.middleware,
-      suplierApi.middleware
+      suplierApi.middleware,
+      cutting_Api.middleware,
+      damaged_Api.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

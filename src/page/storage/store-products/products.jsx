@@ -11,6 +11,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { data } from "../../../components/modal-calc/components";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
+import { useGetStCategoryQuery } from "../../../service/category.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -25,10 +26,15 @@ export const StorageProducts = () => {
   const dispatch = useDispatch();
   const { data: products = [], isLoading } = useGetStProductQuery();
   const { data: ingredients = [] } = useGetStIngredientsQuery();
+  const { data: category = [] } = useGetStCategoryQuery();
   console.log(products);
 
-  const getProduct = (item, amount) => {
+  const getProduct = (item, amount, status) => {
     const isChecked = checkedData.some((i) => i.id === item.id);
+    if (status === 0) {
+      setCheckedData((prevData) => prevData.filter((i) => i.id !== item.id));
+      return;
+    }
     if (isChecked) {
       setCheckedData((prevData) =>
         prevData.map((i) =>
@@ -355,8 +361,13 @@ export const StorageProducts = () => {
           />
           <select name="category" style={{ "--input-width": "15%" }}>
             <option value="default">Kategoriya tanlang*</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
+            {category?.data?.map((item) => {
+              return (
+                <option value={item.name} key={item.id}>
+                  {item.name}
+                </option>
+              );
+            })}
           </select>
           <input
             type="number"
@@ -391,7 +402,7 @@ export const StorageProducts = () => {
           </div>
           <div className="product_box_body">
             {ingredients?.data?.map((item, index) => {
-              const checked = checkedData.some((i) => i.id === item.id);
+              const checked = checkedData?.some((i) => i.id === item.id);
               return (
                 <div
                   className={`product_box_item ${checked ? "active" : ""}`}
@@ -401,7 +412,7 @@ export const StorageProducts = () => {
                     <input
                       type="checkbox"
                       checked={checked}
-                      onClick={() => getProduct(item)}
+                      onClick={() => getProduct(item, 0, checked ? 0 : 1)}
                     />
                   </label>
                   <p style={{ "--data-line-size": "35%" }}>{item.name}</p>
@@ -439,7 +450,7 @@ export const StorageProducts = () => {
                       <input
                         type="text"
                         name="amount"
-                        onChange={(e) => getProduct(item, e.target.value)}
+                        onChange={(e) => getProduct(item, e.target.value, 1)}
                       />
                     )}
                   </p>

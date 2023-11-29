@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./invoices.modal";
+import { InvoicesModal } from "./expenditures.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageInvoices = () => {
+export const StorageExpenditures = () => {
   //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
@@ -28,13 +28,13 @@ export const StorageInvoices = () => {
     if (isChecked) {
       setCheckedData((prevData) =>
         prevData.map((i) =>
-          i.id === item?.id ? { ...item, amount: parseInt(amount, 10) || 0 } : i
+          i.id === item?.id ? { ...item, amount: amount || 0 } : i
         )
       );
     } else {
       setCheckedData((prevData) => [
         ...prevData,
-        { ...item, amount: parseInt(amount, 10) || 0 },
+        { ...item, amount: amount || 0 },
       ]);
     }
   };
@@ -49,11 +49,13 @@ export const StorageInvoices = () => {
       }
     });
 
+  console.log("sortData", sortData);
+
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>To'lovlar</p>
+        <p>Chiqimlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -65,7 +67,7 @@ export const StorageInvoices = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15%" }}
+            style={{ "--data-line-size": "15.6%" }}
           >
             <p>Kun</p>
             {sort.id === 1 && sort.state ? (
@@ -76,7 +78,7 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "15.6%" }}
           >
             <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
@@ -87,9 +89,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "11%" }}
+            style={{ "--data-line-size": "15.6%" }}
           >
-            <p>Yetkazuvchi</p>
+            <p>Miqdor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -98,9 +100,9 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "15.6%" }}
           >
-            <p>Summa</p>
+            <p>Guruh</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -109,41 +111,16 @@ export const StorageInvoices = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
+            style={{ "--data-line-size": "15.6%" }}
           >
-            <p>To'langan</p>
+            <p>Tavsif</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
               <RiArrowDownSLine />
             )}
           </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Qarzdorlik</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Javobgar</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tavsif
-          </p>
-          <p style={{ "--data-line-size": "8%", justifyContent: "center" }}>
+          <p style={{ "--data-line-size": "15.6%", justifyContent: "center" }}>
             Tafsilot
           </p>
         </div>
@@ -153,12 +130,7 @@ export const StorageInvoices = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
+            sortData?.map((item, index) => {
               return (
                 <div
                   className={
@@ -198,51 +170,42 @@ export const StorageInvoices = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "13%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "15.6%" }}>{item?.name}</p>
                     <p
                       style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.storage}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "11%",
-                      }}
-                    >
-                      {item?.supplier}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "15.6%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.cost || 0}
+                      {item?.remain}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "15.6%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.paid || 0}
+                      {item?.remain}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "12%",
+                        "--data-line-size": "15.6%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.leftover || 0}
-                    </p>
-                    <p style={{ "--data-line-size": "12%" }}>
-                      {item?.responsible}
+                      {item?.remain}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "15.6%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item?.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "15.6%",
                         justifyContent: "center",
                       }}
                       onClick={() =>
@@ -250,22 +213,9 @@ export const StorageInvoices = () => {
                       }
                     >
                       <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
-                      >
-                        hisoblash
-                      </u>
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "8%",
-                        justifyContent: "center",
-                      }}
-                      onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
-                      <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
+                        style={
+                          showMore === item?.id ? { color: "#787aff" } : {}
+                        }
                       >
                         tarix
                       </u>

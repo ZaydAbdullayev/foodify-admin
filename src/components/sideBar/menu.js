@@ -11,7 +11,11 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 import { FiPlusCircle } from "react-icons/fi";
 import { MdStorage } from "react-icons/md";
 import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
-import { FaLayerGroup, FaFileInvoiceDollar } from "react-icons/fa6";
+import { FaLayerGroup, FaMoneyCheckDollar } from "react-icons/fa6";
+import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { RiFileDamageFill } from "react-icons/ri";
+import { GiPizzaCutter } from "react-icons/gi";
+import { GiBoxCutter } from "react-icons/gi";
 
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 
@@ -170,8 +174,32 @@ export const Category = [
   },
   {
     id: "765433",
+    name: "Yetkazuvchilar",
+    path: "/suppliers",
+    icon: <TbTruckDelivery />,
+  },
+  {
+    id: "765433",
     name: "To'lovlar",
     path: "/invoices",
-    icon: <FaFileInvoiceDollar />,
+    icon: <FaMoneyCheckDollar />,
+  },
+  {
+    id: "765433",
+    name: "Chiqimlar",
+    path: "/expenses",
+    icon: <TbFileInvoice />,
+  },
+  {
+    id: "765433",
+    name: "Taqsimlash",
+    path: "/cutting",
+    icon: <GiPizzaCutter />,
+  },
+  {
+    id: "765433",
+    name: "Zararlangan taomlar",
+    path: "/damaget-items",
+    icon: <RiFileDamageFill />,
   },
 ];

@@ -3,25 +3,25 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const s_productApi = createApi({
-  reducerPath: "s_productApi",
+export const damaged_Api = createApi({
+  reducerPath: "damaged_Api",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["s-products"],
+  tagTypes: ["damaged"],
   endpoints: (builder) => ({
-    getStProduct: builder.query({
+    getStDamaged: builder.query({
       query: () => ({
-        url: `get/foods/${user?.user?.id}`,
+        url: `get/cutting/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["s-products"],
+      providesTags: ["damaged"],
     }),
 
-    addStProduct: builder.mutation({
+    addStDamaged: builder.mutation({
       query: (value) => ({
-        url: "add/food",
+        url: "add/cutting",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const s_productApi = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["damaged"],
     }),
 
-    updateStProduct: builder.mutation({
+    updateStDamaged: builder.mutation({
       query: (value) => ({
-        url: `update/foods/${value.id}`,
+        url: `update/cutting/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -46,26 +46,26 @@ export const s_productApi = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["damaged"],
     }),
 
-    deleteStProduct: builder.mutation({
+    deleteStDamaged: builder.mutation({
       query: (id) => ({
-        url: `delete/foods/${id}`,
+        url: `delete/cutting/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["s-products"],
+      invalidatesTags: ["damaged"],
     }),
   }),
 });
 
 export const {
-  useAddStProductMutation,
-  useUpdateStProductMutation,
-  useGetStProductQuery,
-  useDeleteStProductMutation,
-} = s_productApi;
+  useAddStDamagedMutation,
+  useUpdateStDamagedMutation,
+  useGetStDamagedQuery,
+  useDeleteStDamagedMutation,
+} = damaged_Api;

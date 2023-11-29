@@ -44,8 +44,36 @@ export const storeApi = createApi({
       }),
       invalidatesTags: ["store"],
     }),
+
+    updateStItems: builder.mutation({
+      query: (value) => ({
+        url: `update/storageItems/${value.id}`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+          "Content-Type": "application/json",
+        },
+        body: { ingredients: JSON.stringify(value.ingredients) },
+      }),
+    }),
+
+    deleteStore: builder.mutation({
+      query: (value) => ({
+        url: `delete/storage/${value}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      }),
+      invalidatesTags: ["store"],
+    }),
   }),
 });
 
-export const { useAddStoreMutation, useUpdateStoreMutation, useGetStoreQuery } =
-  storeApi;
+export const {
+  useAddStoreMutation,
+  useUpdateStoreMutation,
+  useGetStoreQuery,
+  useUpdateStItemsMutation,
+  useDeleteStoreMutation,
+} = storeApi;
