@@ -6,8 +6,9 @@ import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
+import { CalculateTotalP } from "../../../service/calc.service";
+import { CalculateTotalQuantity } from "../../../service/calc.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -15,32 +16,42 @@ export const InvoicesModal = ({
   data,
   getProduct,
   NUM,
+  setId,
+  id,
 }) => {
   const today = new Date().toISOString().split("T")[0];
-  const [id, setId] = useState(null);
   const [pId, setPId] = useState(null);
+  const [qty, setQty] = useState(0);
   const { data: storeData = [] } = useGetStoreQuery();
-  const { data: storageItems = [] } = useGetStorageItemsQuery(id);
   const { data: groupsData = [] } = useGetStGroupsQuery();
 
-  const parsedData = JSON.parse(storageItems?.data || "[]");
+  // displayKeys={[
+  //           { name: "tittle", size: "24%" },
+  //           { name: "waste", size: "24%", position: 2 },
+  //           { name: "get_amount", size: "24%", position: 2 },
+  //           { name: "total_price", size: "24%", position: 2 },
+  //         ]}
+  const akd = {
+    amount: "",
+    group: "sabzavotlar",
+    id: "2941f6",
+    name: "kartoshka",
+    price: 100000,
+    res_id: "2899b5",
+    type: "Ingredient",
+    unit: "kg",
+  };
 
-  const updatedData = checkedData?.map((newItem) => {
-    const oldData = parsedData?.find((old) => old.id === newItem.id) || {};
-
-    if (oldData) {
-      return {
-        ...newItem,
-        old_quantity: oldData?.total_quantity || 0,
-        total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + newItem?.amount
-          : newItem?.amount,
-        total_price: newItem?.amount * newItem?.price,
-      };
-    }
-
-    return newItem;
-  });
+  const total_quantity = CalculateTotalQuantity(checkedData);
+  const total_price = CalculateTotalP(checkedData, "price", "amount");
+  const updatedData = [
+    {
+      tittle: "Umumiy",
+      waste: qty - total_quantity || 0,
+      get_amount: total_quantity || 0,
+      total_price: total_price || 0,
+    },
+  ];
 
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
@@ -48,7 +59,7 @@ export const InvoicesModal = ({
       (item) => item.name === selectedName
     );
     const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem.id;
+      selectedName === "default" || !selectedItem ? 0 : selectedItem.id;
 
     setId(selectedId);
   };
@@ -96,6 +107,7 @@ export const InvoicesModal = ({
           required
           autoComplete="off"
           style={{ "--input-width": "12%" }}
+          onChange={(e) => setQty(e.target.value)}
         />
         <input
           type="date"
@@ -149,7 +161,7 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>
           <p style={{ "--data-line-size": "15%" }}>Guruh</p>
           <p style={{ "--data-line-size": "15%" }}>Narxi</p>
-          <p style={{ "--data-line-size": "15%" }}>Turi</p>
+          <p style={{ "--data-line-size": "15%" }}>Ombor</p>
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
@@ -164,7 +176,9 @@ export const InvoicesModal = ({
                   <input
                     type="checkbox"
                     checked={checked}
-                    onClick={() => getProduct(item, 0, checked ? 0 : 1)}
+                    onClick={() =>
+                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
+                    }
                   />
                 </label>
                 <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
@@ -198,7 +212,23 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.type}
+                  {checked && (
+                    <select
+                      name="storage"
+                      onChange={(e) =>
+                        getProduct({ ...item, storage: e.target.value }, 1)
+                      }
+                    >
+                      <option value="default">Ombor tanlang*</option>
+                      {storeData?.data?.map((item) => {
+                        return (
+                          <option key={item.id} value={item.name}>
+                            {item.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
                 </p>
                 <p
                   style={{
@@ -210,7 +240,9 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      onChange={(e) => getProduct(item, e.target.value, 1)}
+                      onChange={(e) =>
+                        getProduct({ ...item, amount: e.target.value }, 1)
+                      }
                     />
                   )}
                 </p>
@@ -222,25 +254,19 @@ export const InvoicesModal = ({
       <CalcResult data={checkedData}>
         <CalcResultHeader>
           <p>№</p>
-          <p style={{ "--data-line-size": "15%" }}>Nomi</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Tur</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Eski miqdor</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Miqdor</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Yangi miqdor</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Narx</p>
-          <p style={{ "--data-line-size": "13.33%" }}>Jami</p>
+          <p style={{ "--data-line-size": "24%" }}>Umumiy</p>
+          <p style={{ "--data-line-size": "24%" }}>Qoldiq</p>
+          <p style={{ "--data-line-size": "24%" }}>Olingan miqdor</p>
+          <p style={{ "--data-line-size": "24%" }}>Jami mablag'</p>
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "15%" },
-            { name: "type", size: "13.33%", position: 1 },
-            { name: "old_quantity", size: "13.33%", position: 2 },
-            { name: "amount", size: "13.33%", position: 2 },
-            { name: "total_quantity", size: "13.33%", position: 2 },
-            { name: "price", size: "13.33%", position: 2 },
-            { name: "total_price", size: "13.33%", position: 2 },
+            { name: "tittle", size: "24%" },
+            { name: "waste", size: "24%", position: 2 },
+            { name: "get_amount", size: "24%", position: 2 },
+            { name: "total_price", size: "24%", position: 2 },
           ]}
         />
       </CalcResult>

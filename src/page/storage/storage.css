@@ -10,7 +10,6 @@
   align-items: center;
   gap: var(--gap6);
   padding: var(--pd3);
-
 }
 
 .storage_body {
@@ -26,7 +25,7 @@
   color: #eee;
 }
 
-.storage_body>p {
+.storage_body > p {
   inline-size: 100%;
   height: var(--univslH);
   display: flex;
@@ -42,11 +41,11 @@
   cursor: pointer;
 }
 
-.storage_body>:nth-child(2)>:where(label, p):hover {
+.storage_body > :nth-child(2) > :where(label, p):hover {
   background: linear-gradient(to bottom, #333, #ccc5);
 }
 
-.storage_body>:nth-child(2)>label {
+.storage_body > :nth-child(2) > label {
   transition: all 0.5s ease-in-out;
 }
 .storage_body__box {
@@ -58,6 +57,7 @@
   gap: var(--gap6);
   overflow: hidden;
   transition: all 0.3s ease-in-out;
+  border-bottom: 1px solid #eee2;
 }
 
 .storage_body__box.active {
@@ -73,8 +73,7 @@
   cursor: pointer;
 }
 
-
-.storage_body_item> :where(:first-child, :nth-child(2)) {
+.storage_body_item > :where(:first-child, :nth-child(2)) {
   height: var(--univslH);
   aspect-ratio: 1/1;
   display: flex;
@@ -83,12 +82,12 @@
   border-right: 1px solid #ccc5;
 }
 
-.storage_body> :nth-child(2) {
-  background: #333333d8;
-  border-bottom: 1px solid #ccc;
+.storage_body > :nth-child(2) {
+  background: #3335;
+  border-bottom: 1px solid #eee2;
 }
 
-.storage_body_item> :where(p, label) {
+.storage_body_item > :where(p, label) {
   inline-size: var(--data-line-size);
   height: var(--univslH);
   padding: 0 calc(var(--univslH) / 3);
@@ -97,11 +96,15 @@
   gap: var(--gap6);
 }
 
-.storage_body_box> :nth-child(even) {
+/* .storage_body_box > :nth-child(even) {
   background: #3337;
+} */
+
+.storage_body__box:last-child {
+  border-bottom: none;
 }
 
-.storage_body_box>.storage_body_item:hover,
+.storage_body_box > .storage_body_item:hover,
 .storage_body_item.active {
   background: #333;
   color: #fff;
@@ -112,14 +115,14 @@
   border: 1px solid #ccc5;
 }
 
-.storage-body_inner_item>.storage_body_item>p {
+.storage-body_inner_item > .storage_body_item > p {
   border: none;
 }
 
-.inner_item>p {
+.inner_item > p {
   justify-content: flex-end;
 }
 
-.inner_item>:nth-child(2) {
+.inner_item > :nth-child(2) {
   justify-content: flex-start;
 }

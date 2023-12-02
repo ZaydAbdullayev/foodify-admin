@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./damaged.modal";
-import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
+import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -13,12 +13,13 @@ export const StorageDamaged = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
+  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: ingredientData = [] } = useGetStIngredientsQuery();
+  const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
 
-  const getProduct = (item, amount, status) => {
+  const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
@@ -26,15 +27,10 @@ export const StorageDamaged = () => {
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) =>
-          i.id === item?.id ? { ...item, amount: amount || 0 } : i
-        )
+        prevData.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...item, amount: amount || 0 },
-      ]);
+      setCheckedData((prevData) => [...prevData, item]);
     }
   };
 
@@ -293,9 +289,13 @@ export const StorageDamaged = () => {
         getProduct={getProduct}
         NUM={
           !isLoading && {
-            num: JSON.parse(cuttingData?.data[0]?.order || 0) + 1,
+            num:
+              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
+              1,
           }
         }
+        setId={setId}
+        id={id}
       />
     </div>
   );

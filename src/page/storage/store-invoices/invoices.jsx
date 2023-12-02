@@ -19,7 +19,7 @@ export const StorageInvoices = () => {
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
   const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
 
-  const getProduct = (item, amount, status) => {
+  const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
@@ -27,15 +27,10 @@ export const StorageInvoices = () => {
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) =>
-          i.id === item?.id ? { ...item, amount: parseInt(amount, 10) || 0 } : i
-        )
+        prevData.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...item, amount: parseInt(amount, 10) || 0 },
-      ]);
+      setCheckedData((prevData) => [...prevData, item]);
     }
   };
 
@@ -250,7 +245,9 @@ export const StorageInvoices = () => {
                       }
                     >
                       <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
+                        style={
+                          showMore === item?.id ? { color: "#787aff" } : {}
+                        }
                       >
                         hisoblash
                       </u>
@@ -265,7 +262,9 @@ export const StorageInvoices = () => {
                       }
                     >
                       <u
-                        style={showMore === item?.id ? { color: "#787aff" } : {}}
+                        style={
+                          showMore === item?.id ? { color: "#787aff" } : {}
+                        }
                       >
                         tarix
                       </u>

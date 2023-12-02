@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import "../../storage/storage.css";
+import "../universal.css";
 import { UniversalModal } from "../../../components/modal/modal";
 import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
+import { storageD } from "../../storage/store-data";
 import { useGetStoreDepQuery } from "../../../service/dep.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 
-export const StorageCatgegories = () => {
+export const ReportOrders = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
@@ -18,22 +21,99 @@ export const StorageCatgegories = () => {
   const dispatch = useDispatch();
   const { data: depData = [] } = useGetStoreDepQuery();
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
+  console.log(storeData);
 
-  const sortData =
-    storeData?.data &&
-    [...storeData?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  const sortData = storageD.sort((a, b) => {
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  //   const sortData =
+  //     storeData?.data &&
+  //     [...storeData?.data]?.sort((a, b) => {
+  //       if (sort.state) {
+  //         return a.name.localeCompare(b.name);
+  //       } else {
+  //         return b.name.localeCompare(a.name);
+  //       }
+  //     });
+
+  const headerData = [
+    {
+      id: 2,
+      name: "Turi",
+      size: "3.7%",
+    },
+    {
+      id: 3,
+      name: "Olindi",
+      size: "9.3%",
+    },
+    {
+      id: 4,
+      name: "Yopildi",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Offitsant",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Stoll",
+      size: "3.8%",
+    },
+    {
+      id: 5,
+      name: "Buyurtma narxi",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Tan narx",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Foyda",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Xizmat",
+      size: "5.1%",
+    },
+    {
+      id: 5,
+      name: "Chegirma",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Jami narx",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Olindi",
+      size: "9.3%",
+    },
+    {
+      id: 5,
+      name: "Tafsilot",
+      size: "8%",
+    },
+  ];
 
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Categoriyalar</p>
+        <p>Buyurtmalar uchun hisobot</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -43,44 +123,26 @@ export const StorageCatgegories = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
-          >
-            <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
-            <p>Bo'limlar</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%" }}>Oyqatlar</p>
+          {headerData?.map((item) => {
+            return (
+              <label
+                onClick={() => setSort({ id: 1, state: !sort.state })}
+                style={{ "--data-line-size": item.size }}
+                key={item.id}
+              >
+                <p>{item.name}</p>
+                {sort.id === 1 && sort.state ? (
+                  <RiArrowUpSLine />
+                ) : (
+                  <RiArrowDownSLine />
+                )}
+              </label>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
-            <span>
+            <span className="loader_box relative">
               <LoadingBtn />
             </span>
           ) : (
@@ -129,13 +191,74 @@ export const StorageCatgegories = () => {
                       )}
                     </label>
                     <p>{index + 1}</p>
-                    <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
-                    <p style={{ "--data-line-size": "30%" }}>
-                      {item.department}
+                    <p style={{ "--data-line-size": "4%" }}>{item.remain}</p>
+                    <p style={{ "--data-line-size": "9.3%" }}>
+                      01-12-2023 13:31
                     </p>
-                    <p style={{ "--data-line-size": "30%" }}>{item.storage}</p>
+                    <p style={{ "--data-line-size": "9.3%" }}>{item.remain}</p>
+                    <p style={{ "--data-line-size": "9.1%" }}>{item.remain}</p>
+                    <p style={{ "--data-line-size": "4%" }}>{item.remain}</p>
                     <p
-                      style={{ "--data-line-size": "10%" }}
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "5.5%",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.remain}%
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.remain}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.dep}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "9.3%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {item.dep}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "8%",
+                        justifyContent: "center",
+                      }}
                       onClick={() =>
                         setShowMore(showMore === item.id ? null : item.id)
                       }

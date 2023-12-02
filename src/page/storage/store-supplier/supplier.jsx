@@ -14,7 +14,6 @@ export const StorageSupplier = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [type, setType] = useState("default");
   const [checked, setChecked] = useState(false);
-  const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: suplierData = [], isLoading } = useGetStSuplierQuery();
@@ -96,14 +95,7 @@ export const StorageSupplier = () => {
           ) : (
             sortData?.map((item, index) => {
               return (
-                <div
-                  key={item.id}
-                  className={
-                    showMore === item.id
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
-                >
+                <div key={item.id} className={"storage_body__box"}>
                   <div
                     className={
                       acItem === item.id
@@ -156,62 +148,6 @@ export const StorageSupplier = () => {
                         />
                       </a>
                     </p>
-                  </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Mahsulot turi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                        }}
-                      >
-                        O'lchov birligi
-                      </p>
-                    </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.code}
-                          </p>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               );

@@ -132,7 +132,9 @@ export const InvoicesModal = ({
                   <input
                     type="checkbox"
                     checked={checked}
-                    onClick={() => getProduct(item, 0, checked ? 0 : 1)}
+                    onClick={() =>
+                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
+                    }
                   />
                 </label>
                 <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
@@ -163,7 +165,7 @@ export const InvoicesModal = ({
                       type="number"
                       defaultValue={item.price}
                       onChange={(e) =>
-                        getProduct({ ...item, price: e.target.value }, 0, 1)
+                        getProduct({ ...item, price: e.target.value }, 1)
                       }
                     />
                   ) : (
@@ -180,7 +182,9 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      onChange={(e) => getProduct(item, e.target.value, 1)}
+                      onChange={(e) =>
+                        getProduct({ ...item, amount: e.target.value }, 1)
+                      }
                     />
                   )}
                 </p>

@@ -236,7 +236,7 @@ export const data = [
     name: "test 2",
     price: 10000,
     unit: "kg",
-    group: "test",
+    group: "wfe",
   },
   {
     id: 3,

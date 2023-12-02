@@ -13,6 +13,7 @@ import { useAddStInvoiceMutation } from "../../service/invoices.service";
 import { useUpdateStItemsMutation } from "../../service/store.service";
 import { useAddStCuttingMutation } from "../../service/cutting.service";
 import { ClearForm } from "../../service/clear-form.service";
+import { useAddStDamagedMutation } from "../../service/damaged.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -26,6 +27,7 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
   const [addStInvoice] = useAddStInvoiceMutation();
   const [updateStItems] = useUpdateStItemsMutation();
   const [addStCutting] = useAddStCuttingMutation();
+  const [addStDamaged] = useAddStDamagedMutation();
   const dispatch = useDispatch();
 
   const fetchValues = async (values) => {
@@ -34,15 +36,6 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
       values.ingredients = JSON.stringify(values.ingredients);
     }
     console.log("values", values);
-
-    if (type === "invoice") {
-      values.cost = values.prime_cost;
-      values.leftover = values.prime_cost;
-      delete values.markup;
-      delete values.profit;
-      delete values.prime_cost;
-      delete values.total;
-    }
 
     try {
       let result;
@@ -56,6 +49,9 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
           break;
         case "cutting":
           result = await addStCutting(values);
+          break;
+        case "damaged":
+          result = await addStDamaged(values);
           break;
         default:
           break;
@@ -88,10 +84,21 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
 
     const result = calculateTotal(data);
     dispatch(acCalc(result));
-    if (type === "invoice" || type === "product") {
+    if (type === "product") {
       setFetchdata({ ...data, ...result });
-    } else {
+    }
+    if (type === "invoice") {
+      setFetchdata({
+        ...data,
+        cost: result.prime_cost,
+        leftover: result.prime_cost,
+      });
+    }
+    if (type === "cutting") {
       setFetchdata({ ...data });
+    }
+    if (type === "damaged") {
+      setFetchdata({ ...data, cost: result.prime_cost });
     }
   };
 
@@ -189,7 +196,7 @@ export const UniversalProductControl = ({ children }) => {
   );
 };
 
-export const CalcResult = ({ children, data, status }) => {
+export const CalcResult = ({ children, status }) => {
   const calculatedData = useSelector((state) => state.calc);
   return (
     <div className="u-control_calc_box">

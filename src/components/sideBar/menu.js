@@ -15,7 +15,8 @@ import { FaLayerGroup, FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
 import { RiFileDamageFill } from "react-icons/ri";
 import { GiPizzaCutter } from "react-icons/gi";
-import { GiBoxCutter } from "react-icons/gi";
+import { MdMoveUp } from "react-icons/md";
+import { TbReport } from "react-icons/tb";
 
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 
@@ -115,6 +116,14 @@ export const Menu_customer = [
     list: true,
     permission: dep ? true : false,
   },
+  // {
+  //   id: "765444",
+  //   path: "/reports",
+  //   name: "Hisobotlar",
+  //   icon: <TbReport />,
+  //   list: true,
+  //   permission: dep ? true : false,
+  // },
 ];
 
 export const Category = [
@@ -201,5 +210,17 @@ export const Category = [
     name: "Zararlangan taomlar",
     path: "/damaget-items",
     icon: <RiFileDamageFill />,
+  },
+  {
+    id: "765433",
+    name: "Ko'chirib o'tkazish",
+    path: "/carry-up",
+    icon: <MdMoveUp />,
+  },
+  {
+    id: "765433",
+    name: "Hisobotlar",
+    path: "/report/orders",
+    icon: <TbReport />,
   },
 ];

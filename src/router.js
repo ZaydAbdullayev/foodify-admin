@@ -32,6 +32,8 @@ import { StorageExpenditures } from "./page/storage/store-expenditures/expenditu
 import { StorageSupplier } from "./page/storage/store-supplier/supplier";
 import { StorageCutting } from "./page/storage/store-cutting/cutting";
 import { StorageDamaged } from "./page/storage/store-damaged/damaged";
+import { StorageCarryUp } from "./page/storage/store-carry-item/carry-item";
+import { ReportOrders } from "./page/reports/report-orders/report-orders";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -96,6 +98,8 @@ export const Router = () => {
                   <Route path="expenses" element={<StorageExpenditures />} />
                   <Route path="cutting" element={<StorageCutting />} />
                   <Route path="damaget-items" element={<StorageDamaged />} />
+                  <Route path="carry-up" element={<StorageCarryUp />} />
+                  <Route path="report/orders" element={<ReportOrders />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

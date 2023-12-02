@@ -233,10 +233,14 @@
   border: 1px solid #ddd8;
 }
 
-.product_box_item > p > input {
+.product_box_item > p > :where(input, select) {
   width: 80%;
   padding: 0% 5%;
   text-align: end;
+}
+
+.product_box_item > p >select {
+  width: 95%;
 }
 
 /* =========== universal control calculator box =========== */

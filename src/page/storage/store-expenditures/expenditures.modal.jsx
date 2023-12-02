@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -6,7 +6,6 @@ import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
 
 export const InvoicesModal = ({
@@ -15,16 +14,15 @@ export const InvoicesModal = ({
   data,
   getProduct,
   NUM,
+  setId,
+  id,
 }) => {
   const today = new Date().toISOString().split("T")[0];
-  const [id, setId] = useState(null);
   const { data: storeData = [] } = useGetStoreQuery();
-  const { data: storageItems = [] } = useGetStorageItemsQuery(id);
   const { data: groupsData = [] } = useGetStGroupsQuery();
-  const parsedData = JSON.parse(storageItems?.data || "[]");
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = parsedData?.find((old) => old.id === newItem.id) || {};
+    const oldData = data?.find((old) => old.id === newItem.id) || {};
 
     if (oldData) {
       return {
@@ -129,7 +127,9 @@ export const InvoicesModal = ({
                   <input
                     type="checkbox"
                     checked={checked}
-                    onClick={() => getProduct(item, 0, checked ? 0 : 1)}
+                    onClick={() =>
+                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
+                    }
                   />
                 </label>
                 <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
@@ -175,7 +175,9 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      onChange={(e) => getProduct(item, e.target.value, 1)}
+                      onChange={(e) =>
+                        getProduct({ ...item, amount: e.target.value }, 1)
+                      }
                     />
                   )}
                 </p>

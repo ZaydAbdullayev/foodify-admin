@@ -58,17 +58,21 @@ export const Navbar = () => {
       </div>
       {location.startsWith("/storage") && (
         <div className="short_hands">
-          <button onClick={openUModal}>
-            <BiPlus />
-          </button>
-          <button
-            style={
-              acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
-            }
-            onClick={openUModalU}
-          >
-            <BiEdit />
-          </button>
+          {!location.startsWith("/storage/report") && (
+            <>
+              <button onClick={openUModal}>
+                <BiPlus />
+              </button>
+              <button
+                style={
+                  acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
+                }
+                onClick={openUModalU}
+              >
+                <BiEdit />
+              </button>
+            </>
+          )}
           <button
             style={
               acItem.id ? {} : { opacity: "0.4", border: "1px solid #ccc6" }

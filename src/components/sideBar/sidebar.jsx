@@ -135,7 +135,14 @@ export const Sidebar = () => {
                                 : {}
                             }
                           >
-                            {isShrinkView ? catItem.icon : catItem.name}
+                            {isShrinkView ? (
+                              catItem.icon
+                            ) : (
+                              <>
+                                {catItem.icon}
+                                {catItem.name}
+                              </>
+                            )}
                           </Link>
                         </li>
                       ))}

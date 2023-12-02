@@ -3,23 +3,23 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./expenditures.modal";
-import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 export const StorageExpenditures = () => {
-  //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
+  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: ingredientData = [] } = useGetStIngredientsQuery();
+  const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
 
-  const getProduct = (item, amount, status) => {
+  const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
@@ -27,15 +27,10 @@ export const StorageExpenditures = () => {
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) =>
-          i.id === item?.id ? { ...item, amount: amount || 0 } : i
-        )
+        prevData.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...item, amount: amount || 0 },
-      ]);
+      setCheckedData((prevData) => [...prevData, item]);
     }
   };
 
@@ -294,6 +289,8 @@ export const StorageExpenditures = () => {
         setCheckedData={setChecked}
         getProduct={getProduct}
         NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
+        setId={setId}
+        id={id}
       />
     </div>
   );

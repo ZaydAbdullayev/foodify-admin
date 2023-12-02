@@ -63,13 +63,12 @@ export const invoices_Api = createApi({
 
     getStorageItems: builder.query({
       query: (id) => ({
-        url: `get/storageItems/${id}`,
+        url: `get/storageItems/${user?.user?.id}/${id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["invoices"],
     }),
   }),
 });

@@ -1,0 +1,21 @@
+.storage_body_item > :where(label, p) {
+  font-size: var(--fs7);
+  text-align: center;
+  gap: 0;
+}
+
+.storage_body_item > p {
+  border-right: 1px solid #eee2;
+}
+
+.storage_body_item > p:last-child {
+  border-right: none;
+}
+
+.storage_body_item {
+  border-bottom: 1px solid #eee2;
+}
+
+.storage_body_item:last-child {
+  border-bottom: none;
+}

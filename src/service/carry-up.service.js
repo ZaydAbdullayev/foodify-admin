@@ -3,25 +3,25 @@ import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const damaged_Api = createApi({
-  reducerPath: "damaged_Api",
+export const carryUp_Api = createApi({
+  reducerPath: "carryUp_Api",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["damaged"],
+  tagTypes: ["carry-up"],
   endpoints: (builder) => ({
-    getStDamaged: builder.query({
+    getStCarryUp: builder.query({
       query: () => ({
-        url: `get/damagedGoods/${user?.user?.id}`,
+        url: `get/carry-up/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["damaged"],
+      providesTags: ["carry-up"],
     }),
 
-    addStDamaged: builder.mutation({
+    addStCarryUp: builder.mutation({
       query: (value) => ({
-        url: "add/damagedGoods",
+        url: "add/carry-up",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const damaged_Api = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["damaged"],
+      invalidatesTags: ["carry-up"],
     }),
 
-    updateStDamaged: builder.mutation({
+    updateStCarryUp: builder.mutation({
       query: (value) => ({
-        url: `update/damagedGoods/${value.id}`,
+        url: `update/carry-up/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -46,26 +46,26 @@ export const damaged_Api = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["damaged"],
+      invalidatesTags: ["carry-up"],
     }),
 
-    deleteStDamaged: builder.mutation({
+    deleteStCarryUp: builder.mutation({
       query: (id) => ({
-        url: `delete/damagedGoods/${id}`,
+        url: `delete/carry-up/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["damaged"],
+      invalidatesTags: ["carry-up"],
     }),
   }),
 });
 
 export const {
-  useAddStDamagedMutation,
-  useUpdateStDamagedMutation,
-  useGetStDamagedQuery,
-  useDeleteStDamagedMutation,
-} = damaged_Api;
+  useAddStCarryUpMutation,
+  useUpdateStCarryUpMutation,
+  useGetStCarryUpQuery,
+  useDeleteStCarryUpMutation,
+} = carryUp_Api;
