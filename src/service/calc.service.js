@@ -6,9 +6,9 @@ export const CalculateTotalPrice = (cart) => {
   return totalPrice;
 };
 
-export const CalculateTotalQuantity = (cart) => {
+export const CalculateTotalQuantity = (cart, key) => {
   const totalPrice = cart?.reduce(
-    (accumulator, item) => accumulator + parseInt(item?.amount, 10),
+    (accumulator, item) => accumulator + parseInt(item[key], 10),
     0
   );
   return totalPrice;

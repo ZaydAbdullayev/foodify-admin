@@ -4,6 +4,8 @@ export const storageD = [
     name: "Bar Ombori",
     total: 10,
     remain: 10,
+    profit: -80,
+    items: { a_price: 230, qty: 21 },
     category: "test 1",
     data: [
       {
@@ -59,6 +61,8 @@ export const storageD = [
     name: "Oshxona Ombori",
     total: 10,
     remain: 10,
+    profit: 100,
+    items: { a_price: 230, qty: 21 },
     category: "test 2",
     data: [
       {
@@ -114,6 +118,8 @@ export const storageD = [
     name: "Salat Ombori",
     total: 10,
     remain: 10,
+    profit: -10,
+    items: { a_price: 230, qty: 21 },
     category: "test 3",
     data: [
       {
@@ -169,6 +175,8 @@ export const storageD = [
     name: "Idish Ombori",
     total: 10,
     remain: 10,
+    profit: 100,
+    items: { a_price: 230, qty: 21 },
     category: "test 4",
     data: [
       {

@@ -39,3 +39,18 @@ export const ApiDeleteService = {
     return response;
   },
 };
+
+//  export const getProduct = (checkedData, item, status) => {
+//    const isChecked = checkedData.some((i) => i.id === item?.id);
+//    if (status === 0) {
+//      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+//      return;
+//    }
+//    if (isChecked) {
+//      setCheckedData((prevData) =>
+//        prevData.map((i) => (i.id === item?.id ? item : i))
+//      );
+//    } else {
+//      setCheckedData((prevData) => [...prevData, item]);
+//    }
+//  };

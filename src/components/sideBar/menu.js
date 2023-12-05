@@ -219,8 +219,14 @@ export const Category = [
   },
   {
     id: "765433",
-    name: "Hisobotlar",
+    name: "Buyurtmalar hisoboti",
     path: "/report/orders",
+    icon: <TbReport />,
+  },
+  {
+    id: "765433",
+    name: "Taomlar hisoboti",
+    path: "/report/items",
     icon: <TbReport />,
   },
 ];

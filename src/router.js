@@ -34,6 +34,8 @@ import { StorageCutting } from "./page/storage/store-cutting/cutting";
 import { StorageDamaged } from "./page/storage/store-damaged/damaged";
 import { StorageCarryUp } from "./page/storage/store-carry-item/carry-item";
 import { ReportOrders } from "./page/reports/report-orders/report-orders";
+import { ReportItems } from "./page/reports/report-items/report-items";
+import { ReportRejects } from "./page/reports/report-rejects/report-rejects";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -100,6 +102,8 @@ export const Router = () => {
                   <Route path="damaget-items" element={<StorageDamaged />} />
                   <Route path="carry-up" element={<StorageCarryUp />} />
                   <Route path="report/orders" element={<ReportOrders />} />
+                  <Route path="report/items" element={<ReportItems />} />
+                  <Route path="report/rejects" element={<ReportRejects />} />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

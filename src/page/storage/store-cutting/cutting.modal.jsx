@@ -42,7 +42,7 @@ export const InvoicesModal = ({
     unit: "kg",
   };
 
-  const total_quantity = CalculateTotalQuantity(checkedData);
+  const total_quantity = CalculateTotalQuantity(checkedData, "amount");
   const total_price = CalculateTotalP(checkedData, "price", "amount");
   const updatedData = [
     {

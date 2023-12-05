@@ -13,7 +13,7 @@
 }
 
 .storage_body {
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   overflow: hidden;
 }
 
@@ -95,10 +95,6 @@
   align-items: center;
   gap: var(--gap6);
 }
-
-/* .storage_body_box > :nth-child(even) {
-  background: #3337;
-} */
 
 .storage_body__box:last-child {
   border-bottom: none;
