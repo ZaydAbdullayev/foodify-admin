@@ -9,7 +9,6 @@ import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 export const StorageInvoices = () => {
-  //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
@@ -20,14 +19,14 @@ export const StorageInvoices = () => {
   const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData?.some((i) => i.id === item?.id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData?.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
       setCheckedData((prevData) => [...prevData, item]);

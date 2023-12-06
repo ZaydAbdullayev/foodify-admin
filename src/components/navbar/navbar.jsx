@@ -25,6 +25,7 @@ export const Navbar = () => {
   const location = useLocation().pathname;
   const name = user?.user?.username?.split("_").join(" ");
   const acItem = useSelector((state) => state.active);
+  const today = new Date().toISOString().split("T")[0];
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -81,39 +82,68 @@ export const Navbar = () => {
             <MdDelete />
           </button>
 
-          {location.startsWith("/storage/ingredients") && (
-            <div className="short-hands_sort__box">
-              <label>
-                <input
-                  type="search"
-                  name="groups"
-                  placeholder="Guruh'yicha qdirish..."
-                  onChange={(e) =>
-                    setSearch({ ...search, groups: e.target.value })
+          {location.startsWith("/storage/ingredients") ||
+            (location.startsWith("/storage/report") && (
+              <div className="short-hands_sort__box">
+                <label>
+                  <input
+                    type="search"
+                    name="groups"
+                    placeholder={
+                      location.startsWith("/storage/ingredients")
+                        ? "Guruh bo'yicha qidirish..."
+                        : "Sotilgan bo'yicha qidirish..."
+                    }
+                    onChange={(e) =>
+                      setSearch({ ...search, groups: e.target.value })
+                    }
+                  />
+                </label>
+                <label>
+                  <input
+                    type="search"
+                    name="name"
+                    placeholder="Nomi bo'yicha qidirish..."
+                    onChange={(e) =>
+                      setSearch({ ...search, name: e.target.value })
+                    }
+                  />
+                </label>
+                {location.startsWith("/storage/report") && (
+                  <>
+                    <label>
+                      <input
+                        type="date"
+                        name="from"
+                        defaultValue={today}
+                        onChange={(e) =>
+                          setSearch({ ...search, from: e.target.value })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <input
+                        type="date"
+                        name="to"
+                        defaultValue={today}
+                        onChange={(e) =>
+                          setSearch({ ...search, to: e.target.value })
+                        }
+                      />
+                    </label>
+                  </>
+                )}
+                <button
+                  style={
+                    search.length
+                      ? {}
+                      : { opacity: "0.4", border: "1px solid #ccc6" }
                   }
-                />
-              </label>
-              <label>
-                <input
-                  type="search"
-                  name="name"
-                  placeholder="Nomi bo'yicha qdirish..."
-                  onChange={(e) =>
-                    setSearch({ ...search, name: e.target.value })
-                  }
-                />
-              </label>
-              <button
-                style={
-                  search.length
-                    ? {}
-                    : { opacity: "0.4", border: "1px solid #ccc6" }
-                }
-              >
-                <BsSearch />
-              </button>
-            </div>
-          )}
+                >
+                  <BsSearch />
+                </button>
+              </div>
+            ))}
         </div>
       )}
       {!location.startsWith("/storage") && (

@@ -7,6 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useGetStSuplierQuery } from "../../../service/suplier.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -19,6 +20,7 @@ export const InvoicesModal = ({
   const [id, setId] = useState(null);
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: storageItems = [] } = useGetStorageItemsQuery(id);
+  const { data: suplierData = [] } = useGetStSuplierQuery();
 
   const parsedData = JSON.parse(storageItems?.data || "[]");
 
@@ -72,12 +74,16 @@ export const InvoicesModal = ({
           style={{ "--input-width": "12%" }}
           defaultValue={today}
         />
-        <input
-          type="text"
-          name="supplier"
-          placeholder="Yetkazuvchi*"
-          style={{ "--input-width": "12%" }}
-        />
+        <select name="supplier" style={{ "--input-width": "12%" }}>
+          <option value="default">Yetkazuvchi tanlang*</option>
+          {suplierData?.data?.map((item) => {
+            return (
+              <option key={item.id} value={item.name}>
+                {item.name}
+              </option>
+            );
+          })}
+        </select>
         <select
           name="storage"
           style={{ "--input-width": "15%" }}

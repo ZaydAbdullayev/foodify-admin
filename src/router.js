@@ -36,6 +36,7 @@ import { StorageCarryUp } from "./page/storage/store-carry-item/carry-item";
 import { ReportOrders } from "./page/reports/report-orders/report-orders";
 import { ReportItems } from "./page/reports/report-items/report-items";
 import { ReportRejects } from "./page/reports/report-rejects/report-rejects";
+import { ReportIngredients } from "./page/reports/report-ingredients/report-ingredients";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -104,6 +105,10 @@ export const Router = () => {
                   <Route path="report/orders" element={<ReportOrders />} />
                   <Route path="report/items" element={<ReportItems />} />
                   <Route path="report/rejects" element={<ReportRejects />} />
+                  <Route
+                    path="report/ingredients"
+                    element={<ReportIngredients />}
+                  />
                 </Route>
                 <Route path="product/add" element={<Addproduct />} />
                 <Route path="get/check/:id" element={<PaymentCheck />} />

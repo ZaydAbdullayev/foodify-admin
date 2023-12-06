@@ -15,8 +15,9 @@ import { FaLayerGroup, FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
 import { RiFileDamageFill } from "react-icons/ri";
 import { GiPizzaCutter } from "react-icons/gi";
-import { MdMoveUp } from "react-icons/md";
-import { TbReport } from "react-icons/tb";
+import { MdMoveUp, MdRestaurantMenu } from "react-icons/md";
+import { TbReport, TbPlaylistX } from "react-icons/tb";
+import { PiDotsNineFill } from "react-icons/pi";
 
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 
@@ -227,6 +228,18 @@ export const Category = [
     id: "765433",
     name: "Taomlar hisoboti",
     path: "/report/items",
-    icon: <TbReport />,
+    icon: <MdRestaurantMenu />,
+  },
+  {
+    id: "765433",
+    name: "Bekor qilindan taomlar",
+    path: "/report/rejects",
+    icon: <TbPlaylistX />,
+  },
+  {
+    id: "765433",
+    name: "Mahsulotlar hisoboti",
+    path: "/report/ingredients",
+    icon: <PiDotsNineFill />,
   },
 ];
