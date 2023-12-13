@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./expenditures.modal";
-import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+import { InvoicesModal } from "./carry-item.modal";
+import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageExpenditures = () => {
+export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
@@ -17,7 +17,7 @@ export const StorageExpenditures = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
+  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -35,8 +35,8 @@ export const StorageExpenditures = () => {
   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
+    cuttingData?.data &&
+    [...cuttingData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -44,13 +44,11 @@ export const StorageExpenditures = () => {
       }
     });
 
-  console.log("sortData", sortData);
-
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Chiqimlar</p>
+        <p>Ko'chirib o'tkazish</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -62,7 +60,7 @@ export const StorageExpenditures = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15.6%" }}
+            style={{ "--data-line-size": "14%" }}
           >
             <p>Kun</p>
             {sort.id === 1 && sort.state ? (
@@ -73,9 +71,9 @@ export const StorageExpenditures = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15.6%" }}
+            style={{ "--data-line-size": "14%" }}
           >
-            <p>Ombor</p>
+            <p>Ombordan</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -84,7 +82,18 @@ export const StorageExpenditures = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15.6%" }}
+            style={{ "--data-line-size": "14%" }}
+          >
+            <p>Omborga</p>
+            {sort.id === 1 && sort.state ? (
+              <RiArrowUpSLine />
+            ) : (
+              <RiArrowDownSLine />
+            )}
+          </label>
+          <label
+            onClick={() => setSort({ id: 1, state: !sort.state })}
+            style={{ "--data-line-size": "14%" }}
           >
             <p>Miqdor</p>
             {sort.id === 1 && sort.state ? (
@@ -95,7 +104,7 @@ export const StorageExpenditures = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15.6%" }}
+            style={{ "--data-line-size": "14%" }}
           >
             <p>Guruh</p>
             {sort.id === 1 && sort.state ? (
@@ -106,7 +115,7 @@ export const StorageExpenditures = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15.6%" }}
+            style={{ "--data-line-size": "14%" }}
           >
             <p>Tavsif</p>
             {sort.id === 1 && sort.state ? (
@@ -115,7 +124,7 @@ export const StorageExpenditures = () => {
               <RiArrowDownSLine />
             )}
           </label>
-          <p style={{ "--data-line-size": "15.6%", justifyContent: "center" }}>
+          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
             Tafsilot
           </p>
         </div>
@@ -125,7 +134,12 @@ export const StorageExpenditures = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
+            sortData?.map((item) => {
+              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
+                day: "numeric",
+                month: "numeric",
+                year: "numeric",
+              });
               return (
                 <div
                   className={
@@ -165,42 +179,47 @@ export const StorageExpenditures = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "15.6%" }}>{item?.name}</p>
+                    <p style={{ "--data-line-size": "14%" }}>{date}</p>
                     <p
                       style={{
-                        "--data-line-size": "15.6%",
-                        justifyContent: "flex-end",
+                        "--data-line-size": "14%",
                       }}
                     >
-                      {item?.remain}
+                      {item?.storage}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "15.6%",
-                        justifyContent: "flex-end",
+                        "--data-line-size": "14%",
                       }}
                     >
-                      {item?.remain}
+                      {item?.ingredient}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "15.6%",
+                        "--data-line-size": "14%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.remain}
+                      {item?.amount || 0}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "15.6%",
+                        "--data-line-size": "14%",
                         justifyContent: "flex-end",
                       }}
                     >
-                      {item?.remain}
+                      {item?.waste || 0}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "15.6%",
+                        "--data-line-size": "14%",
+                      }}
+                    >
+                      {item?.ingredient_group}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "10%",
                         justifyContent: "center",
                       }}
                       onClick={() =>
@@ -212,7 +231,7 @@ export const StorageExpenditures = () => {
                           showMore === item?.id ? { color: "#787aff" } : {}
                         }
                       >
-                        tarix
+                        tafsilot
                       </u>
                     </p>
                   </div>
@@ -286,9 +305,15 @@ export const StorageExpenditures = () => {
       <InvoicesModal
         data={ingredientData?.data}
         checkedData={checkedData}
-        setCheckedData={setChecked}
+        setCheckedData={setCheckedData}
         getProduct={getProduct}
-        NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
+        NUM={
+          !isLoading && {
+            num:
+              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
+              1,
+          }
+        }
         setId={setId}
         id={id}
       />

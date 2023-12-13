@@ -1,27 +1,27 @@
-import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // const base_url = "https://backend.foodify.uz";
 const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const carryUp_Api = createApi({
-  reducerPath: "carryUp_Api",
+export const invoicegr_Api = createApi({
+  reducerPath: "invoicegr_Api",
   baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["carry-up"],
+  tagTypes: ["invoice-group"],
   endpoints: (builder) => ({
-    getStCarryUp: builder.query({
+    getStInvoiceGroup: builder.query({
       query: () => ({
-        url: `get/moved/goods`,
+        url: `get/InvoiceGroups/${user?.user?.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       }),
-      providesTags: ["carry-up"],
+      providesTags: ["invoice-group"],
     }),
 
-    addStCarryUp: builder.mutation({
+    addStInvoiceGroup: builder.mutation({
       query: (value) => ({
-        url: "move/goods",
+        url: "add/invoiceGroup",
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -29,12 +29,12 @@ export const carryUp_Api = createApi({
         },
         body: value,
       }),
-      invalidatesTags: ["carry-up"],
+      invalidatesTags: ["invoice-group"],
     }),
 
-    updateStCarryUp: builder.mutation({
+    updateStInvoiceGroup: builder.mutation({
       query: (value) => ({
-        url: `update/carry-up/${value.id}`,
+        url: `update/invoiceGroup/${value.id}`,
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -46,40 +46,26 @@ export const carryUp_Api = createApi({
           department: value.department,
         },
       }),
-      invalidatesTags: ["carry-up"],
+      invalidatesTags: ["invoice-group"],
     }),
 
-    deleteStCarryUp: builder.mutation({
+    deleteStInvoiceGroup: builder.mutation({
       query: (id) => ({
-        url: `delete/carry-up/${id}`,
+        url: `delete/invoiceGroup/${id}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["carry-up"],
-    }),
-
-    calcStCarryUp: builder.mutation({
-      query: (value) => ({
-        url: `calculate/goods`,
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
-        body: value,
-      }),
-      invalidatesTags: ["carry-up"],
+      invalidatesTags: ["invoice-group"],
     }),
   }),
 });
 
 export const {
-  useAddStCarryUpMutation,
-  useUpdateStCarryUpMutation,
-  useGetStCarryUpQuery,
-  useDeleteStCarryUpMutation,
-  useCalcStCarryUpMutation,
-} = carryUp_Api;
+  useAddStInvoiceGroupMutation,
+  useDeleteStInvoiceGroupMutation,
+  useGetStInvoiceGroupQuery,
+  useUpdateStInvoiceGroupMutation,
+} = invoicegr_Api;

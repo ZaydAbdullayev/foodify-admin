@@ -31,16 +31,16 @@ export const InvoicesModal = ({
   //           { name: "get_amount", size: "24%", position: 2 },
   //           { name: "total_price", size: "24%", position: 2 },
   //         ]}
-  const akd = {
-    amount: "",
-    group: "sabzavotlar",
-    id: "2941f6",
-    name: "kartoshka",
-    price: 100000,
-    res_id: "2899b5",
-    type: "Ingredient",
-    unit: "kg",
-  };
+  // const akd = {
+  //   amount: "",
+  //   group: "sabzavotlar",
+  //   id: "2941f6",
+  //   name: "kartoshka",
+  //   price: 100000,
+  //   res_id: "2899b5",
+  //   type: "Ingredient",
+  //   unit: "kg",
+  // };
 
   const total_quantity = CalculateTotalQuantity(checkedData, "amount");
   const total_price = CalculateTotalP(checkedData, "price", "amount");
@@ -254,19 +254,24 @@ export const InvoicesModal = ({
       <CalcResult data={checkedData}>
         <CalcResultHeader>
           <p>№</p>
-          <p style={{ "--data-line-size": "24%" }}>Umumiy</p>
-          <p style={{ "--data-line-size": "24%" }}>Qoldiq</p>
-          <p style={{ "--data-line-size": "24%" }}>Olingan miqdor</p>
-          <p style={{ "--data-line-size": "24%" }}>Jami mablag'</p>
+          <p style={{ "--data-line-size": "12%" }}>Nomi</p>
+          <p style={{ "--data-line-size": "4%" }}>Turi</p>
+          <p style={{ "--data-line-size": "8%" }}>O'lchov birligi</p>
+          <p style={{ "--data-line-size": "12%" }}>Oldingi stok</p>
+          <p style={{ "--data-line-size": "12%" }}>Keyingi stok</p>
+          <p style={{ "--data-line-size": "12%" }}>M. farq</p>
+          <p style={{ "--data-line-size": "12%" }}>Narx</p>
+          <p style={{ "--data-line-size": "12%" }}>N. farq</p>
+          <p style={{ "--data-line-size": "12%" }}>Foyda</p>
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "tittle", size: "24%" },
-            { name: "waste", size: "24%", position: 2 },
-            { name: "get_amount", size: "24%", position: 2 },
-            { name: "total_price", size: "24%", position: 2 },
+            { name: "tittle", size: "12%" },
+            { name: "waste", size: "12%", position: 2 },
+            { name: "get_amount", size: "12%", position: 2 },
+            { name: "total_price", size: "12%", position: 2 },
           ]}
         />
       </CalcResult>

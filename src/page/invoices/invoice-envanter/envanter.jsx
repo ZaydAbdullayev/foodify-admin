@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./damaged.modal";
+import { InvoicesModal } from "./envanter.modal";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageDamaged = () => {
+export const InvoiceEnvanter = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
@@ -18,6 +18,7 @@ export const StorageDamaged = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  console.log(checkedData);
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -44,11 +45,23 @@ export const StorageDamaged = () => {
       }
     });
 
+  const headerData = [
+    { name: "Kun", size: "25%", position: "center" },
+    { name: "Ombor", size: "25%" },
+    { name: "Ta'rif", size: "22%" },
+    { name: "Tafsilot", size: "22%", position: "center" },
+  ];
+
+  const displayKeys = [
+    { name: "storage", size: "25%" },
+    { name: "description", size: "22%" },
+  ];
+
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Zararlangan ovqatlar</p>
+        <p>Envantarizatsiya</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -58,64 +71,24 @@ export const StorageDamaged = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Kun</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Miqdor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Guruh</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Tavsif</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tafsilot
-          </p>
+          {headerData?.map((item, index) => {
+            return (
+              <p
+                key={index}
+                style={{
+                  "--data-line-size": item?.size,
+                  justifyContent: item?.position,
+                }}
+                onClick={() => {
+                  setSort({ id: index, state: !sort.state });
+                }}
+              >
+                {item?.name}
+                {sort.id === index &&
+                  (sort.state ? <RiArrowUpSLine /> : <RiArrowDownSLine />)}
+              </p>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -131,6 +104,7 @@ export const StorageDamaged = () => {
               });
               return (
                 <div
+                  key={item?.id}
                   className={
                     showMore === item?.id
                       ? "storage_body__box active"
@@ -168,38 +142,30 @@ export const StorageDamaged = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "16.4%" }}>{date}</p>
                     <p
                       style={{
-                        "--data-line-size": "16.4%",
+                        "--data-line-size": "25%",
+                        justifyContent: "center",
                       }}
                     >
-                      {item?.storage}
+                      {date}
                     </p>
+                    {displayKeys?.map((key, index) => {
+                      return (
+                        <p
+                          key={index}
+                          style={{
+                            "--data-line-size": key?.size,
+                            justifyContent: key?.position || "flex-start",
+                          }}
+                        >
+                          {item[key?.name]}
+                        </p>
+                      );
+                    })}
                     <p
                       style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.ingredient}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.ingredient_group}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.description}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "22%",
                         justifyContent: "center",
                       }}
                       onClick={() =>

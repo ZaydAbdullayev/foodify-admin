@@ -14,6 +14,9 @@ import { useUpdateStItemsMutation } from "../../service/store.service";
 import { useAddStCuttingMutation } from "../../service/cutting.service";
 import { ClearForm } from "../../service/clear-form.service";
 import { useAddStDamagedMutation } from "../../service/damaged.service";
+import { useAddStExpenditureMutation } from "../../service/expenditures.service";
+import { useAddStCarryUpMutation } from "../../service/carry-up.service";
+import { useAddMakingFoodMutation } from "../../service/making-food.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -28,6 +31,9 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
   const [updateStItems] = useUpdateStItemsMutation();
   const [addStCutting] = useAddStCuttingMutation();
   const [addStDamaged] = useAddStDamagedMutation();
+  const [addStExpenditure] = useAddStExpenditureMutation();
+  const [addStCarryUp] = useAddStCarryUpMutation();
+  const [addMakingFood] = useAddMakingFoodMutation();
   const dispatch = useDispatch();
 
   const fetchValues = async (values) => {
@@ -52,6 +58,15 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
           break;
         case "damaged":
           result = await addStDamaged(values);
+          break;
+        case "edr":
+          result = await addStExpenditure(values);
+          break;
+        case "carryUp":
+          result = await addStCarryUp(values);
+          break;
+        case "making":
+          result = await addMakingFood(values);
           break;
         default:
           break;
@@ -141,8 +156,11 @@ export const UniversalForm = ({ children }) => {
   return <div className="wdfaic u-control_form_box">{children}</div>;
 };
 
-export const UniversalProductControl = ({ children }) => {
-  const [activePart, setActivePart] = useState(1);
+export const UniversalProductControl = ({
+  children,
+  setActivePart,
+  activePart,
+}) => {
   const { data: store = [] } = useGetStoreQuery();
   const { data: groups = [] } = useGetStGroupsQuery();
 
@@ -161,7 +179,7 @@ export const UniversalProductControl = ({ children }) => {
               className={activePart === 2 ? "active" : "passive"}
               onClick={() => setActivePart(2)}
             >
-              importlar
+              taomlar
             </span>
           </div>
           <input type="search" placeholder="Qidirish..." />

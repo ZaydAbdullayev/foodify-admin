@@ -2,33 +2,31 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./cutting.modal";
-import { useGetStCuttingQuery } from "../../../service/cutting.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { InvoicesModal } from "./making-food.modal";
+import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
+import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageCutting = () => {
+export const InvoicesMakingFood = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
-  console.log(checkedData);
+  const { data: ingredientData = [] } = useGetStIngredientsQuery();
+  const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData?.some((i) => i.id === item?.id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData?.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
       setCheckedData((prevData) => [...prevData, item]);
@@ -36,8 +34,8 @@ export const StorageCutting = () => {
   };
 
   const sortData =
-    cuttingData?.data &&
-    [...cuttingData?.data]?.sort((a, b) => {
+    invoiceData &&
+    [...invoiceData].sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -45,11 +43,33 @@ export const StorageCutting = () => {
       }
     });
 
+  const headerData = [
+    { name: "Kun", size: "12%" },
+    { name: "Mahsulot", size: "12%" },
+    { name: "Bekor q/n ombor", size: "12%" },
+    { name: "Qabul q/n ombor", size: "12%" },
+    { name: "Soni", size: "10%" },
+    { name: "Narxi", size: "10%" },
+    { name: "Jami", size: "10%" },
+    { name: "Tavsif", size: "9%", position: "center" },
+    { name: "Tafsilot", size: "8%", position: "center" },
+  ];
+
+  const displayKeys = [
+    { name: "storage", size: "12%" },
+    { name: "storage", size: "12%" },
+    { name: "storage", size: "12%" },
+    { name: "cost", size: "10%", position: "center" },
+    { name: "leftover", size: "10%", position: "center" },
+    { name: "cost", size: "10%", position: "center" },
+    { name: "description", size: "9%" },
+  ];
+
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Maydalash</p>
+        <p>Mahsulot tayyorlash</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -59,86 +79,29 @@ export const StorageCutting = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Kun</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Mahsulot</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Miqdor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Qoldiq</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Guruh</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Ta'rif</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tafsilot
-          </p>
+          {headerData?.map((item, index) => {
+            return (
+              <p
+                key={index}
+                style={{
+                  "--data-line-size": item?.size,
+                  justifyContent: item?.position || "flex-start",
+                }}
+                onClick={() => {
+                  setSort({ id: index, state: !sort.state });
+                }}
+              >
+                {item?.name}{" "}
+                {sort.id === index ? (
+                  sort.state ? (
+                    <RiArrowUpSLine />
+                  ) : (
+                    <RiArrowDownSLine />
+                  )
+                ) : null}
+              </p>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -154,7 +117,6 @@ export const StorageCutting = () => {
               });
               return (
                 <div
-                  key={item?.id}
                   className={
                     showMore === item?.id
                       ? "storage_body__box active"
@@ -193,53 +155,22 @@ export const StorageCutting = () => {
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "12%" }}>{date}</p>
+                    {displayKeys?.map((key, index) => {
+                      return (
+                        <p
+                          key={index}
+                          style={{
+                            "--data-line-size": key?.size,
+                            justifyContent: key?.position || "flex-start",
+                          }}
+                        >
+                          {item[key?.name]}
+                        </p>
+                      );
+                    })}
                     <p
                       style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.storage}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.ingredient}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.amount || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.waste || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.ingredient_group}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.description}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "8%",
                         justifyContent: "center",
                       }}
                       onClick={() =>
@@ -327,15 +258,7 @@ export const StorageCutting = () => {
         checkedData={checkedData}
         setCheckedData={setChecked}
         getProduct={getProduct}
-        NUM={
-          !isLoading && {
-            num:
-              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
-              1,
-          }
-        }
-        setId={setId}
-        id={id}
+        NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
       />
     </div>
   );

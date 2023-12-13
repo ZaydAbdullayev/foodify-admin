@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./carry-item.modal";
-import { useGetStCuttingQuery } from "../../../service/cutting.service";
+import { InvoicesModal } from "./damaged.modal";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useGetStDamagedQuery } from "../../../service/damaged.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const StorageCarryUp = () => {
+export const StorageDamaged = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
@@ -17,7 +17,7 @@ export const StorageCarryUp = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  const { data: demagedData = [], isLoading } = useGetStDamagedQuery();
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -35,8 +35,8 @@ export const StorageCarryUp = () => {
   };
 
   const sortData =
-    cuttingData?.data &&
-    [...cuttingData?.data]?.sort((a, b) => {
+    demagedData?.data &&
+    [...demagedData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -48,7 +48,7 @@ export const StorageCarryUp = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Ko'chirib o'tkazish</p>
+        <p>Zararlangan ovqatlar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -60,7 +60,7 @@ export const StorageCarryUp = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
+            style={{ "--data-line-size": "16.4%" }}
           >
             <p>Kun</p>
             {sort.id === 1 && sort.state ? (
@@ -71,9 +71,9 @@ export const StorageCarryUp = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
+            style={{ "--data-line-size": "16.4%" }}
           >
-            <p>Ombordan</p>
+            <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
             ) : (
@@ -82,18 +82,7 @@ export const StorageCarryUp = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Omborga</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
+            style={{ "--data-line-size": "16.4%" }}
           >
             <p>Miqdor</p>
             {sort.id === 1 && sort.state ? (
@@ -104,7 +93,7 @@ export const StorageCarryUp = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
+            style={{ "--data-line-size": "16.4%" }}
           >
             <p>Guruh</p>
             {sort.id === 1 && sort.state ? (
@@ -115,7 +104,7 @@ export const StorageCarryUp = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
+            style={{ "--data-line-size": "16.4%" }}
           >
             <p>Tavsif</p>
             {sort.id === 1 && sort.state ? (
@@ -179,43 +168,34 @@ export const StorageCarryUp = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "14%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "16.4%" }}>{date}</p>
                     <p
                       style={{
-                        "--data-line-size": "14%",
+                        "--data-line-size": "16.4%",
                       }}
                     >
                       {item?.storage}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "14%",
+                        "--data-line-size": "16.4%",
                       }}
                     >
                       {item?.ingredient}
                     </p>
                     <p
                       style={{
-                        "--data-line-size": "14%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.amount || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.waste || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
+                        "--data-line-size": "16.4%",
                       }}
                     >
                       {item?.ingredient_group}
+                    </p>
+                    <p
+                      style={{
+                        "--data-line-size": "16.4%",
+                      }}
+                    >
+                      {item?.description}
                     </p>
                     <p
                       style={{
@@ -310,7 +290,7 @@ export const StorageCarryUp = () => {
         NUM={
           !isLoading && {
             num:
-              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
+              JSON.parse(demagedData?.data ? demagedData?.data[0]?.order : 0) +
               1,
           }
         }

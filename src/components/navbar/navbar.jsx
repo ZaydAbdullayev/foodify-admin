@@ -83,7 +83,8 @@ export const Navbar = () => {
           </button>
 
           {location.startsWith("/storage/ingredients") ||
-            (location.startsWith("/storage/report") && (
+            location.startsWith("/storage/report") ||
+            (location.startsWith("/storage/s-products") && (
               <div className="short-hands_sort__box">
                 <label>
                   <input

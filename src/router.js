@@ -27,16 +27,21 @@ import { StorageIngredients } from "./page/storage/store-ingredients/ingredients
 import { StorageProducts } from "./page/storage/store-products/products";
 import { useLocation } from "react-router-dom";
 import { acCloseUModal } from "./redux/u-modal";
-import { StorageInvoices } from "./page/storage/store-invoices/invoices";
-import { StorageExpenditures } from "./page/storage/store-expenditures/expenditures";
-import { StorageSupplier } from "./page/storage/store-supplier/supplier";
-import { StorageCutting } from "./page/storage/store-cutting/cutting";
-import { StorageDamaged } from "./page/storage/store-damaged/damaged";
-import { StorageCarryUp } from "./page/storage/store-carry-item/carry-item";
+import { StorageInvoices } from "./page/invoices/store-invoices/invoices";
+import { StorageExpenditures } from "./page/invoices/store-expenditures/expenditures";
+import { StorageSupplier } from "./page/invoices/store-supplier/supplier";
+import { StorageCutting } from "./page/invoices/store-cutting/cutting";
+import { StorageDamaged } from "./page/invoices/store-damaged/damaged";
+import { StorageCarryUp } from "./page/invoices/store-carry-item/carry-item";
 import { ReportOrders } from "./page/reports/report-orders/report-orders";
 import { ReportItems } from "./page/reports/report-items/report-items";
 import { ReportRejects } from "./page/reports/report-rejects/report-rejects";
 import { ReportIngredients } from "./page/reports/report-ingredients/report-ingredients";
+import { ReportSuppliers } from "./page/reports/report-supplier/report-supplier";
+import { Cashboxes } from "./page/cashbox/cashboxes/cashboxes";
+import { TransactionGroups } from "./page/cashbox/cash-trans-group/cash-trans-group";
+import { InvoicesMakingFood } from "./page/invoices/store-making-food/making-food";
+import { InvoicesGroups } from "./page/invoices/invoice-group/invoice-group";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -105,6 +110,17 @@ export const Router = () => {
                   <Route path="report/orders" element={<ReportOrders />} />
                   <Route path="report/items" element={<ReportItems />} />
                   <Route path="report/rejects" element={<ReportRejects />} />
+                  <Route path="cashbox" element={<Cashboxes />} />
+                  <Route path="making-food" element={<InvoicesMakingFood />} />
+                  <Route path="invoice-group" element={<InvoicesGroups />} />
+                  <Route
+                    path="cashbox/transaction-group"
+                    element={<TransactionGroups />}
+                  />
+                  <Route
+                    path="report/suppliers"
+                    element={<ReportSuppliers />}
+                  />
                   <Route
                     path="report/ingredients"
                     element={<ReportIngredients />}

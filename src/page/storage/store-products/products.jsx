@@ -16,18 +16,17 @@ import { useGetStCategoryQuery } from "../../../service/category.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 export const StorageProducts = () => {
-  //   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const today = new Date().toISOString().split("T")[0];
   const [showMore, setShowMore] = useState(null);
+  const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: products = [], isLoading } = useGetStProductQuery();
   const { data: ingredients = [] } = useGetStIngredientsQuery();
   const { data: category = [] } = useGetStCategoryQuery();
-  console.log(products);
 
   const getProduct = (item, amount, status) => {
     const isChecked = checkedData.some((i) => i.id === item.id);
@@ -59,18 +58,45 @@ export const StorageProducts = () => {
       }
     });
 
-  // const udb = {
-  //   category: "default",
-  //   date: "2023-11-24T19:00:00.000Z",
-  //   id: "f483d1",
-  //   ingredients: "[object Object]",
-  //   markup: 0,
-  //   name: "aq",
-  //   price: "100000",
-  //   prime_cost: "",
-  //   profit: "",
-  //   res_id: "2899b5",
-  // };
+  const headerData = [
+    { name: "Nomi", size: "15%" },
+    { name: "Narxi", size: "10%" },
+    { name: "Tan narxi", size: "11%" },
+    { name: "Foyda", size: "10%" },
+    { name: "Foyda%", size: "10%" },
+    { name: "Kategoriya", size: "12%" },
+    { name: "Ombor", size: "12%" },
+    { name: "Hisoblash", size: "10%" },
+    { name: "Tarix", size: "8%" },
+  ];
+
+  const displayKeys = [
+    { name: "name", size: "15%" },
+    { name: "price", size: "10%", position: 2 },
+    { name: "prime_cost", size: "11%", position: 2 },
+    { name: "profit", size: "10%", position: 2 },
+    { name: "markup", size: "10%", position: 2 },
+    { name: "category", size: "12%" },
+    { name: "storage", size: "12%" },
+  ];
+
+  const innerHeaderData = [
+    { name: "№", size: "", border: "1px solid #ccc4" },
+    { name: "Nomi", size: "30%", border: "1px solid #ccc4" },
+    { name: "O'lchov birligi", size: "16.5%", border: "1px solid #ccc4" },
+    { name: "Miqdori", size: "16.5%", border: "1px solid #ccc4" },
+    { name: "Narxi", size: "16.5%", border: "1px solid #ccc4" },
+    { name: "Jami", size: "16.5%", border: "0" },
+  ];
+
+  const innerDisplayKeys = [
+    { name: "name", size: "30%" },
+    { name: "unit", size: "16.5%", position: 1 },
+    { name: "amount", size: "16.5%", position: 1 },
+    { name: "price", size: "16.5%", position: 2 },
+  ];
+
+  const modalData = activePart === 1 ? ingredients : products;
 
   return (
     <div className="storage_container">
@@ -86,89 +112,22 @@ export const StorageProducts = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15%" }}
-          >
-            <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>Narxi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "11%" }}
-          >
-            <p>Tan narxi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>Foyda</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>Foyda%</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Kategoriya</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Hisoblash
-          </p>
-          <p style={{ "--data-line-size": "8%", justifyContent: "center" }}>
-            Tarix
-          </p>
+          {headerData?.map((item, index) => {
+            return (
+              <label
+                onClick={() => setSort({ id: 1, state: !sort.state })}
+                style={{ "--data-line-size": item.size }}
+                key={index}
+              >
+                <p>{item.name}</p>
+                {sort.id === 1 && sort.state ? (
+                  <RiArrowUpSLine />
+                ) : (
+                  <RiArrowDownSLine />
+                )}
+              </label>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -177,6 +136,11 @@ export const StorageProducts = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const ingredients = item?.ingredients
+                ? JSON.parse(item.ingredients)
+                : [];
+              console.log(ingredients);
+
               return (
                 <div
                   className={
@@ -216,41 +180,21 @@ export const StorageProducts = () => {
                       )}
                     </label>
                     <p>{index + 1}</p>
-                    <p style={{ "--data-line-size": "15%" }}>{item.name}</p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item.price}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "11%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item.prime_cost}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item.profit}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item.markup}
-                    </p>
-                    <p style={{ "--data-line-size": "12%" }}>{item.category}</p>
-                    <p style={{ "--data-line-size": "12%" }}>{item.storage}</p>
+                    {displayKeys?.map(({ name, size, position }) => (
+                      <p
+                        key={name}
+                        style={{
+                          "--data-line-size": size,
+                          justifyContent: position
+                            ? position === 1
+                              ? "center"
+                              : "flex-end"
+                            : "flex-start",
+                        }}
+                      >
+                        {item[name]}
+                      </p>
+                    ))}
                     <p
                       style={{
                         "--data-line-size": "10%",
@@ -263,7 +207,7 @@ export const StorageProducts = () => {
                       <u
                         style={showMore === item.id ? { color: "#787aff" } : {}}
                       >
-                        hisoblash
+                        tafsilot
                       </u>
                     </p>
                     <p
@@ -284,60 +228,52 @@ export const StorageProducts = () => {
                   </div>
                   <div className=" storage-body_inner_item">
                     <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      {innerHeaderData?.map((item, index) => {
+                        return (
+                          <p
+                            style={{
+                              "--data-line-size": item.size,
+                              borderRight: item.border,
+                            }}
+                            key={index}
+                          >
+                            {item.name}
+                          </p>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {ingredients?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
                             style={{
-                              borderRight: "1px solid #ccc5",
+                              borderRight: "1px solid #ccc4",
                             }}
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item.total}
+                          {innerDisplayKeys?.map(({ name, size, position }) => (
+                            <p
+                              key={name}
+                              style={{
+                                "--data-line-size": size,
+                                justifyContent: position
+                                  ? position === 1
+                                    ? "center"
+                                    : "flex-end"
+                                  : "flex-start",
+                                borderRight: "1px solid #ccc4",
+                              }}
+                            >
+                              {product[name]}
+                            </p>
+                          ))}
+                          <p
+                            style={{
+                              "--data-line-size": "16.5%",
+                            }}
+                          >
+                            {product.amount * item.price}
                           </p>
                         </div>
                       );
@@ -383,8 +319,8 @@ export const StorageProducts = () => {
           />
         </UniversalForm>
         <UniversalProductControl
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
+          activePart={activePart}
+          setActivePart={setActivePart}
         >
           <div className="product_box_item">
             <label>
@@ -394,14 +330,20 @@ export const StorageProducts = () => {
                 onClick={() => getProduct(data)}
               />
             </label>
-            <p style={{ "--data-line-size": "35%" }}>Nomi</p>
-            <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
-            <p style={{ "--data-line-size": "20%" }}>Guruh</p>
-            <p style={{ "--data-line-size": "20%" }}>Narxi</p>
+            <p style={{ "--data-line-size": activePart === 1 ? "35%" : "60%" }}>
+              Nomi
+            </p>
+            {activePart === 1 && (
+              <>
+                <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
+                <p style={{ "--data-line-size": "20%" }}>Guruh</p>
+                <p style={{ "--data-line-size": "20%" }}>Narxi</p>
+              </>
+            )}
             <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
           </div>
           <div className="product_box_body">
-            {ingredients?.data?.map((item, index) => {
+            {modalData?.data?.map((item, index) => {
               const checked = checkedData?.some((i) => i.id === item.id);
               return (
                 <div
@@ -415,31 +357,41 @@ export const StorageProducts = () => {
                       onClick={() => getProduct(item, 0, checked ? 0 : 1)}
                     />
                   </label>
-                  <p style={{ "--data-line-size": "35%" }}>{item.name}</p>
                   <p
                     style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
+                      "--data-line-size": activePart === 1 ? "35%" : "60%",
                     }}
                   >
-                    {item.unit}
+                    {item.name}
                   </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.group}
-                  </p>
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    {item.price}
-                  </p>
+                  {activePart === 1 && (
+                    <>
+                      <p
+                        style={{
+                          "--data-line-size": "20%",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {item.unit}
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "20%",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {item.group}
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "20%",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {item.price}
+                      </p>
+                    </>
+                  )}
                   <p
                     style={{
                       "--data-line-size": "20%",

@@ -25,6 +25,10 @@ import { invoices_Api } from "../service/invoices.service";
 import { suplierApi } from "../service/suplier.service";
 import { cutting_Api } from "../service/cutting.service";
 import { damaged_Api } from "../service/damaged.service";
+import { expenditures_Api } from "../service/expenditures.service";
+import { carryUp_Api } from "../service/carry-up.service";
+import { invoicegr_Api } from "../service/invoice-group.service";
+import { makingFood_api } from "../service/making-food.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -51,6 +55,10 @@ export const store = configureStore({
     [suplierApi.reducerPath]: suplierApi.reducer,
     [cutting_Api.reducerPath]: cutting_Api.reducer,
     [damaged_Api.reducerPath]: damaged_Api.reducer,
+    [expenditures_Api.reducerPath]: expenditures_Api.reducer,
+    [carryUp_Api.reducerPath]: carryUp_Api.reducer,
+    [invoicegr_Api.reducerPath]: invoicegr_Api.reducer,
+    [makingFood_api.reducerPath]: makingFood_api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -66,7 +74,11 @@ export const store = configureStore({
       invoices_Api.middleware,
       suplierApi.middleware,
       cutting_Api.middleware,
-      damaged_Api.middleware
+      damaged_Api.middleware,
+      expenditures_Api.middleware,
+      carryUp_Api.middleware,
+      invoicegr_Api.middleware,
+      makingFood_api.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 });

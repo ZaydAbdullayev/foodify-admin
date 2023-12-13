@@ -149,7 +149,7 @@ export const Category = [
   {
     id: "243567",
     name: "Taom qo'shish",
-    path: dep === "kassir" ? "/add" : "",
+    path: dep === "kassir" || dep === "owner" ? "/add" : "",
     icon: <FiPlusCircle />,
   },
   {
@@ -217,6 +217,18 @@ export const Category = [
     name: "Ko'chirib o'tkazish",
     path: "/carry-up",
     icon: <MdMoveUp />,
+  },
+  {
+    id: "765433",
+    name: "To'lov guruhlari",
+    path: "/invoice-group",
+    icon: <MdStorage />,
+  },
+  {
+    id: "765433",
+    name: "Mahsulot tayyorlash",
+    path: "/making-food",
+    icon: <GiRiceCooker />,
   },
   {
     id: "765433",

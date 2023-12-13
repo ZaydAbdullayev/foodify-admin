@@ -16,6 +16,7 @@ import { useUpdateDepMutation } from "../../service/dep.service";
 import { useAddStIngredientsMutation } from "../../service/ingredient.service";
 import { useUpdateStIngredientsMutation } from "../../service/ingredient.service";
 import { useAddStSuplierMutation } from "../../service/suplier.service";
+import { useAddStInvoiceGroupMutation } from "../../service/invoice-group.service";
 
 export const UniversalModal = ({ children, type, newGrData }) => {
   const open = useSelector((state) => state.uModal);
@@ -26,6 +27,7 @@ export const UniversalModal = ({ children, type, newGrData }) => {
   const [addStGroups] = useAddStGroupsMutation();
   const [addStIngredients] = useAddStIngredientsMutation();
   const [addStSuplier] = useAddStSuplierMutation();
+  const [addStInvoiceGroup] = useAddStInvoiceGroupMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -66,6 +68,9 @@ export const UniversalModal = ({ children, type, newGrData }) => {
           break;
         case "supp":
           result = await addStSuplier(value);
+          break;
+        case "invGr":
+          result = await addStInvoiceGroup(value);
           break;
         default:
           break;
