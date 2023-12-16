@@ -23,7 +23,7 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation().pathname;
-  const name = user?.user?.username?.split("_").join(" ");
+  const name = user?.user?.username?.split("_")?.join(" ");
   const acItem = useSelector((state) => state.active);
   const today = new Date().toISOString().split("T")[0];
 

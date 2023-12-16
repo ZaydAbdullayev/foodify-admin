@@ -1,20 +1,12 @@
-import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const ingredientApi = createApi({
-  reducerPath: "ingredientApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["ingredient"],
+export const ingredientApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStIngredients: builder.query({
       query: () => ({
         url: `get/ingredients/${user?.user?.id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["ingredient"],
     }),
@@ -23,10 +15,6 @@ export const ingredientApi = createApi({
       query: (value) => ({
         url: "add/ingredient",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
       invalidatesTags: ["ingredient"],
@@ -36,10 +24,6 @@ export const ingredientApi = createApi({
       query: (value) => ({
         url: `update/ingredient/${value.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: {
           res_id: value.res_id,
           name: value.name,
@@ -54,10 +38,6 @@ export const ingredientApi = createApi({
       query: (id) => ({
         url: `delete/ingredient/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
       }),
       invalidatesTags: ["ingredient"],
     }),

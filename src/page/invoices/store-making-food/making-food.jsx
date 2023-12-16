@@ -5,6 +5,7 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./making-food.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+import { useGetMakedFoodQuery } from "../../../service/making-food.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -16,7 +17,7 @@ export const InvoicesMakingFood = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
-  const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
+  const { data: makedFood = [], isLoading } = useGetMakedFoodQuery();
 
   const getProduct = (item, status) => {
     const isChecked = checkedData?.some((i) => i.id === item?.id);
@@ -34,12 +35,12 @@ export const InvoicesMakingFood = () => {
   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
+    makedFood?.message &&
+    [...makedFood?.message].sort((a, b) => {
+      if (sort?.state) {
+        return a?.name?.localeCompare(b?.name);
       } else {
-        return b?.name?.localeCompare(a.name);
+        return b?.name?.localeCompare(a?.name);
       }
     });
 
@@ -56,12 +57,12 @@ export const InvoicesMakingFood = () => {
   ];
 
   const displayKeys = [
-    { name: "storage", size: "12%" },
-    { name: "storage", size: "12%" },
-    { name: "storage", size: "12%" },
-    { name: "cost", size: "10%", position: "center" },
-    { name: "leftover", size: "10%", position: "center" },
-    { name: "cost", size: "10%", position: "center" },
+    { name: "food_id", size: "12%" },
+    { name: "storage_sender", size: "12%" },
+    { name: "storage_receiver", size: "12%" },
+    { name: "amount", size: "10%", position: "flex-end" },
+    { name: "total_price", size: "10%", position: "flex-end" },
+    { name: "total_price", size: "10%", position: "flex-end" },
     { name: "description", size: "9%" },
   ];
 
@@ -258,7 +259,14 @@ export const InvoicesMakingFood = () => {
         checkedData={checkedData}
         setCheckedData={setChecked}
         getProduct={getProduct}
-        NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
+        NUM={
+          !isLoading && {
+            num:
+              JSON.parse(
+                makedFood?.message ? makedFood?.message[0]?.order : 0
+              ) + 1,
+          }
+        }
       />
     </div>
   );

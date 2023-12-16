@@ -17,6 +17,7 @@ import { useAddStDamagedMutation } from "../../service/damaged.service";
 import { useAddStExpenditureMutation } from "../../service/expenditures.service";
 import { useAddStCarryUpMutation } from "../../service/carry-up.service";
 import { useAddMakingFoodMutation } from "../../service/making-food.service";
+import { useAddPreOrderMutation } from "../../service/pre-order.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -34,6 +35,7 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
   const [addStExpenditure] = useAddStExpenditureMutation();
   const [addStCarryUp] = useAddStCarryUpMutation();
   const [addMakingFood] = useAddMakingFoodMutation();
+  const [addPreOrder] = useAddPreOrderMutation();
   const dispatch = useDispatch();
 
   const fetchValues = async (values) => {
@@ -67,6 +69,9 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
           break;
         case "making":
           result = await addMakingFood(values);
+          break;
+        case "preOrder":
+          result = await addPreOrder(values);
           break;
         default:
           break;
@@ -113,7 +118,13 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
       setFetchdata({ ...data });
     }
     if (type === "damaged") {
-      setFetchdata({ ...data, cost: result.prime_cost });
+      setFetchdata({ ...data, cost: result?.prime_cost });
+    }
+    if (type === "making") {
+      setFetchdata({ ...data, total_price: result?.prime_cost });
+    }
+    if (type === "preOrder") {
+      setFetchdata({ ...data, cost: result?.prime_cost });
     }
   };
 
@@ -160,6 +171,7 @@ export const UniversalProductControl = ({
   children,
   setActivePart,
   activePart,
+  type,
 }) => {
   const { data: store = [] } = useGetStoreQuery();
   const { data: groups = [] } = useGetStGroupsQuery();
@@ -169,18 +181,24 @@ export const UniversalProductControl = ({
       <div className="section_u">
         <div className="add_box__header">
           <div className="wdfaic _header_parts">
-            <span
-              className={activePart === 1 ? "active" : "passive"}
-              onClick={() => setActivePart(1)}
-            >
-              ingredientlar
-            </span>
-            <span
-              className={activePart === 2 ? "active" : "passive"}
-              onClick={() => setActivePart(2)}
-            >
-              taomlar
-            </span>
+            {type === "preOrder" ? (
+              <span className="active">taomlar</span>
+            ) : (
+              <>
+                <span
+                  className={activePart === 1 ? "active" : "passive"}
+                  onClick={() => setActivePart(1)}
+                >
+                  ingredientlar
+                </span>
+                <span
+                  className={activePart === 2 ? "active" : "passive"}
+                  onClick={() => setActivePart(2)}
+                >
+                  taomlar
+                </span>
+              </>
+            )}
           </div>
           <input type="search" placeholder="Qidirish..." />
           {activePart === 1 && (

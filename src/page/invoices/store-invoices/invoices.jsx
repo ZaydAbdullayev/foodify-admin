@@ -341,7 +341,13 @@ export const StorageInvoices = () => {
         checkedData={checkedData}
         setCheckedData={setChecked}
         getProduct={getProduct}
-        NUM={!isLoading && { num: JSON.parse(invoiceData[0]?.order) + 1 }}
+        NUM={
+          !isLoading && {
+            num:
+              JSON.parse(invoiceData?.data ? invoiceData?.data[0]?.order : 0) +
+              1,
+          }
+        }
       />
     </div>
   );

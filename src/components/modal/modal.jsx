@@ -17,6 +17,9 @@ import { useAddStIngredientsMutation } from "../../service/ingredient.service";
 import { useUpdateStIngredientsMutation } from "../../service/ingredient.service";
 import { useAddStSuplierMutation } from "../../service/suplier.service";
 import { useAddStInvoiceGroupMutation } from "../../service/invoice-group.service";
+import { useAddCashboxMutation } from "../../service/cashbox.service";
+import { useAddCashboxGrMutation } from "../../service/cashbox-group.service";
+import { useAddCashTransactionMutation } from "../../service/cash-transaction.service";
 
 export const UniversalModal = ({ children, type, newGrData }) => {
   const open = useSelector((state) => state.uModal);
@@ -28,6 +31,9 @@ export const UniversalModal = ({ children, type, newGrData }) => {
   const [addStIngredients] = useAddStIngredientsMutation();
   const [addStSuplier] = useAddStSuplierMutation();
   const [addStInvoiceGroup] = useAddStInvoiceGroupMutation();
+  const [addCashbox] = useAddCashboxMutation();
+  const [addCashboxGr] = useAddCashboxGrMutation();
+  const [addCashTransaction] = useAddCashTransactionMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -71,6 +77,15 @@ export const UniversalModal = ({ children, type, newGrData }) => {
           break;
         case "invGr":
           result = await addStInvoiceGroup(value);
+          break;
+        case "cashbox":
+          result = await addCashbox(value);
+          break;
+        case "cashboxGr":
+          result = await addCashboxGr(value);
+          break;
+        case "trsn":
+          result = await addCashTransaction(value);
           break;
         default:
           break;

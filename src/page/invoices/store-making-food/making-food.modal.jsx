@@ -19,13 +19,13 @@ export const InvoicesModal = ({
   const today = new Date().toISOString().split("T")[0];
   const [id, setId] = useState(null);
   const [pId, setPId] = useState(null);
+  const [rId, setRId] = useState(null);
   const [qty, setQty] = useState(0);
   const [activePart, setActivePart] = useState(1);
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: storageItems = [] } = useGetStorageItemsQuery(id);
   const { data: productData = [] } = useGetStProductQuery();
-
-  const parsedData = JSON.parse(storageItems?.data || "[]");
+  const parsedData = storageItems?.data;
 
   const updatedData = checkedData.map((newItem) => {
     const oldData = parsedData?.find((old) => old.id === newItem.id);
@@ -43,7 +43,7 @@ export const InvoicesModal = ({
     return newItem;
   });
 
-  const handleSelectChange = (event) => {
+  const selectSenderS = (event) => {
     const selectedName = event.target.value;
     const selectedItem = storeData?.data?.find(
       (item) => item.name === selectedName
@@ -54,7 +54,18 @@ export const InvoicesModal = ({
     setId(selectedId);
   };
 
-  const handleSelectIDChange = (event) => {
+  const selectReceiverS = (event) => {
+    const selectedName = event.target.value;
+    const selectedItem = storeData?.data?.find(
+      (item) => item.name === selectedName
+    );
+    const selectedId =
+      selectedName === "default" || !selectedItem ? 0 : selectedItem.id;
+
+    setRId(selectedId);
+  };
+
+  const selectPId = (event) => {
     const selectedName = event.target.value;
     const selectedItem = data?.find((item) => item.name === selectedName);
     const selectedId =
@@ -63,15 +74,10 @@ export const InvoicesModal = ({
     setPId(selectedId);
   };
 
-  const currentData = activePart === 1 ? data : productData?.data;
+  const currentData = activePart === 1 ? data : storageItems?.data;
 
   return (
-    <UniversalControlModal
-      type="invoice"
-      Pdata={checkedData}
-      Udata={updatedData}
-      id={id}
-    >
+    <UniversalControlModal type="making" Pdata={checkedData} id={id}>
       <UniversalForm>
         <input
           type="number"
@@ -83,11 +89,7 @@ export const InvoicesModal = ({
           style={{ "--input-width": "12%" }}
         />
 
-        <select
-          name="ingredient"
-          onChange={handleSelectIDChange}
-          style={{ "--input-width": "15%" }}
-        >
+        <select onChange={selectPId} style={{ "--input-width": "15%" }}>
           <option value="default">Mahsulot tanlang*</option>
           {data?.map((item) => {
             return (
@@ -112,11 +114,7 @@ export const InvoicesModal = ({
           style={{ "--input-width": "12%" }}
           defaultValue={today}
         />
-        <select
-          name="storage"
-          style={{ "--input-width": "15%" }}
-          onChange={handleSelectChange}
-        >
+        <select style={{ "--input-width": "15%" }} onChange={selectSenderS}>
           <option value="default">Beruvchi ombor*</option>
           {storeData?.data?.map((item) => {
             return (
@@ -126,7 +124,7 @@ export const InvoicesModal = ({
             );
           })}
         </select>
-        <select name="storage" style={{ "--input-width": "15%" }}>
+        <select style={{ "--input-width": "15%" }} onChange={selectReceiverS}>
           <option value="default">Oluvchi ombor*</option>
           {storeData?.data?.map((item, ind) => {
             return (
@@ -142,8 +140,9 @@ export const InvoicesModal = ({
           placeholder="Tavsif*"
           style={{ "--input-width": "12%" }}
         />
-        <input type="hidden" name="storage_id" value={id} />
-        <input type="hidden" name="ingredient_id" value={pId} />
+        <input type="hidden" name="storage_sender" value={id} />
+        <input type="hidden" name="storage_receiver" value={rId} />
+        <input type="hidden" name="food_id" value={pId} />
       </UniversalForm>
       <UniversalProductControl
         activePart={activePart}
@@ -245,7 +244,6 @@ export const InvoicesModal = ({
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
-          status="inv"
           displayKeys={[
             { name: "name", size: "18%" },
             { name: "unit", size: "10%", position: 1 },

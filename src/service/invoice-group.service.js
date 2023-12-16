@@ -1,20 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const invoicegr_Api = createApi({
-  reducerPath: "invoicegr_Api",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["invoice-group"],
+export const invoicegr_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStInvoiceGroup: builder.query({
       query: () => ({
         url: `get/InvoiceGroups/${user?.user?.id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["invoice-group"],
     }),
@@ -23,10 +15,6 @@ export const invoicegr_Api = createApi({
       query: (value) => ({
         url: "add/invoiceGroup",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
       invalidatesTags: ["invoice-group"],
@@ -36,15 +24,7 @@ export const invoicegr_Api = createApi({
       query: (value) => ({
         url: `update/invoiceGroup/${value.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
-        body: {
-          res_id: value.res_id,
-          name: value.name,
-          department: value.department,
-        },
+        body: value,
       }),
       invalidatesTags: ["invoice-group"],
     }),
@@ -53,10 +33,6 @@ export const invoicegr_Api = createApi({
       query: (id) => ({
         url: `delete/invoiceGroup/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
       }),
       invalidatesTags: ["invoice-group"],
     }),

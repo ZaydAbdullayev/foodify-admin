@@ -1,20 +1,12 @@
-import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const categoryApi = createApi({
-  reducerPath: "categoryApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["category"],
+export const categoryApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStCategory: builder.query({
       query: () => ({
         url: `get/${user?.user?.id}/categories`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["category"],
     }),
@@ -23,10 +15,6 @@ export const categoryApi = createApi({
       query: (value) => ({
         url: "add/category",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(value),
       }),
       invalidatesTags: ["category"],
@@ -36,10 +24,6 @@ export const categoryApi = createApi({
       query: (value) => ({
         url: `update/category/${value.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: {
           res_id: value.res_id,
           name: value.name,
@@ -53,10 +37,6 @@ export const categoryApi = createApi({
       query: (id) => ({
         url: `delete/category/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
       }),
       invalidatesTags: ["category"],
     }),

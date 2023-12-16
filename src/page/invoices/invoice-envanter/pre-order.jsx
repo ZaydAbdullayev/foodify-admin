@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./envanter.modal";
-import { useGetStCuttingQuery } from "../../../service/cutting.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { InvoicesModal } from "./pre-order.modal";
+import { useGetStProductQuery } from "../../../service/s-products.service";
+import { useGetPreOrderQuery } from "../../../service/pre-order.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
-export const InvoiceEnvanter = () => {
+export const InvoicePreOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  const { data: ingredientData = [] } = useGetStProductQuery();
+  const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
   console.log(checkedData);
 
   const getProduct = (item, status) => {
@@ -36,8 +35,8 @@ export const InvoiceEnvanter = () => {
   };
 
   const sortData =
-    cuttingData?.data &&
-    [...cuttingData?.data]?.sort((a, b) => {
+    preOrder?.data &&
+    [...preOrder?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -46,22 +45,24 @@ export const InvoiceEnvanter = () => {
     });
 
   const headerData = [
-    { name: "Kun", size: "25%", position: "center" },
-    { name: "Ombor", size: "25%" },
-    { name: "Ta'rif", size: "22%" },
-    { name: "Tafsilot", size: "22%", position: "center" },
+    { name: "Sana", size: "14%" },
+    { name: "Narx", size: "20%" },
+    { name: "Javobgar", size: "22%" },
+    { name: "Tavsif", size: "28%" },
+    { name: "Tafsilot", size: "10%" },
   ];
 
   const displayKeys = [
-    { name: "storage", size: "25%" },
-    { name: "description", size: "22%" },
+    { name: "cost", size: "20%", position: "flex-end" },
+    { name: "responsible", size: "22%" },
+    { name: "description", size: "28%" },
   ];
 
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Envantarizatsiya</p>
+        <p>Oldindan buyurtmalar</p>
         <div className="storage_body_item">
           <label>
             <input
@@ -144,7 +145,7 @@ export const InvoiceEnvanter = () => {
                     <p>{item?.order}</p>
                     <p
                       style={{
-                        "--data-line-size": "25%",
+                        "--data-line-size": "14%",
                         justifyContent: "center",
                       }}
                     >
@@ -165,7 +166,7 @@ export const InvoiceEnvanter = () => {
                     })}
                     <p
                       style={{
-                        "--data-line-size": "22%",
+                        "--data-line-size": "10%",
                         justifyContent: "center",
                       }}
                       onClick={() =>
@@ -255,13 +256,9 @@ export const InvoiceEnvanter = () => {
         getProduct={getProduct}
         NUM={
           !isLoading && {
-            num:
-              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
-              1,
+            num: JSON.parse(preOrder?.data ? preOrder?.data[0]?.order : 0) + 1,
           }
         }
-        setId={setId}
-        id={id}
       />
     </div>
   );

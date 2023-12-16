@@ -4,8 +4,8 @@ import { UniversalUModal } from "../../../components/modal/modal";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-import { useGetStoreQuery } from "../../../service/store.service";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { useGetCashboxQuery } from "../../../service/cashbox.service";
 
 export const Cashboxes = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -13,11 +13,11 @@ export const Cashboxes = () => {
   const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data = [], isLoading } = useGetStoreQuery();
+  const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
 
   const sortData =
-    data?.data &&
-    [...data.data].sort((a, b) => {
+    cashboxData?.data &&
+    [...cashboxData.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {

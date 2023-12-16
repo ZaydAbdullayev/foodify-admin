@@ -38,8 +38,6 @@ export const InvoicesModal = ({
     return newItem;
   });
 
-  console.log(updatedData);
-
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedItem = storeData?.data?.find(

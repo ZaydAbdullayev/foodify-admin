@@ -1,20 +1,12 @@
-import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const departmentApi = createApi({
-  reducerPath: "departmentApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["department"],
+export const departmentApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStoreDep: builder.query({
       query: () => ({
         url: `get/${user?.user?.id}/departments`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["department"],
     }),
@@ -23,10 +15,6 @@ export const departmentApi = createApi({
       query: (value) => ({
         url: "add/department",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
       invalidatesTags: ["department"],
@@ -36,11 +24,7 @@ export const departmentApi = createApi({
       query: (value) => ({
         url: `update/department/${value.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
-        body: { res_id: value.res_id, name: value.name },
+        body: value,
       }),
       invalidatesTags: ["department"],
     }),

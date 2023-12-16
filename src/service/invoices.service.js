@@ -1,20 +1,12 @@
-import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const invoices_Api = createApi({
-  reducerPath: "invoices_Api",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["invoices"],
+export const invoices_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStInvoice: builder.query({
       query: () => ({
         url: `get/receivedGoods/${user?.user?.id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["invoices"],
     }),
@@ -23,10 +15,6 @@ export const invoices_Api = createApi({
       query: (value) => ({
         url: "add/receivedGoods",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
       invalidatesTags: ["invoices"],
@@ -36,15 +24,7 @@ export const invoices_Api = createApi({
       query: (value) => ({
         url: `update/receivedGoods/${value.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
-        body: {
-          res_id: value.res_id,
-          name: value.name,
-          department: value.department,
-        },
+        body: value,
       }),
       invalidatesTags: ["invoices"],
     }),
@@ -53,10 +33,6 @@ export const invoices_Api = createApi({
       query: (id) => ({
         url: `delete/receivedGoods/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
       }),
       invalidatesTags: ["invoices"],
     }),
@@ -65,9 +41,6 @@ export const invoices_Api = createApi({
       query: (id) => ({
         url: `get/storageItems/${user?.user?.id}/${id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
     }),
   }),

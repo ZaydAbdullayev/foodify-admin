@@ -1,37 +1,37 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const expenditures_Api = apiSlice.injectEndpoints({
+export const cashboxGr_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getStExpenditure: builder.query({
+    getCashboxGr: builder.query({
       query: () => ({
-        url: `get/usedGoods/${user?.user?.id}`,
+        url: `get/${user?.user?.id}/transactionGroups`,
         method: "GET",
       }),
       providesTags: ["expenditure"],
     }),
 
-    addStExpenditure: builder.mutation({
+    addCashboxGr: builder.mutation({
       query: (value) => ({
-        url: "add/usedGoods",
+        url: "add/transactionGroups",
         method: "POST",
         body: value,
       }),
       invalidatesTags: ["expenditure"],
     }),
 
-    updateStExpenditure: builder.mutation({
+    updateCashboxGr: builder.mutation({
       query: (value) => ({
-        url: `update/usedGoods/${value.id}`,
+        url: `update/transactionGroups/${value.id}`,
         method: "PATCH",
         body: value,
       }),
       invalidatesTags: ["expenditure"],
     }),
 
-    deleteStExpenditure: builder.mutation({
+    deleteCashboxGr: builder.mutation({
       query: (id) => ({
-        url: `delete/usedGoods/${id}`,
+        url: `delete/transactionGroups/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["expenditure"],
@@ -40,8 +40,8 @@ export const expenditures_Api = apiSlice.injectEndpoints({
 });
 
 export const {
-  useAddStExpenditureMutation,
-  useUpdateStExpenditureMutation,
-  useGetStExpenditureQuery,
-  useDeleteStExpenditureMutation,
-} = expenditures_Api;
+  useAddCashboxGrMutation,
+  useUpdateCashboxGrMutation,
+  useGetCashboxGrQuery,
+  useDeleteCashboxGrMutation,
+} = cashboxGr_Api;

@@ -1,37 +1,37 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const expenditures_Api = apiSlice.injectEndpoints({
+export const cashbox_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getStExpenditure: builder.query({
+    getCashbox: builder.query({
       query: () => ({
-        url: `get/usedGoods/${user?.user?.id}`,
+        url: `get/cashbox/${user?.user?.id}`,
         method: "GET",
       }),
       providesTags: ["expenditure"],
     }),
 
-    addStExpenditure: builder.mutation({
+    addCashbox: builder.mutation({
       query: (value) => ({
-        url: "add/usedGoods",
+        url: "add/cashbox",
         method: "POST",
         body: value,
       }),
       invalidatesTags: ["expenditure"],
     }),
 
-    updateStExpenditure: builder.mutation({
+    updateCashbox: builder.mutation({
       query: (value) => ({
-        url: `update/usedGoods/${value.id}`,
+        url: `update/cashbox/${value.id}`,
         method: "PATCH",
         body: value,
       }),
       invalidatesTags: ["expenditure"],
     }),
 
-    deleteStExpenditure: builder.mutation({
+    deleteCashbox: builder.mutation({
       query: (id) => ({
-        url: `delete/usedGoods/${id}`,
+        url: `delete/cashbox/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["expenditure"],
@@ -40,8 +40,8 @@ export const expenditures_Api = apiSlice.injectEndpoints({
 });
 
 export const {
-  useAddStExpenditureMutation,
-  useUpdateStExpenditureMutation,
-  useGetStExpenditureQuery,
-  useDeleteStExpenditureMutation,
-} = expenditures_Api;
+  useAddCashboxMutation,
+  useUpdateCashboxMutation,
+  useGetCashboxQuery,
+  useDeleteCashboxMutation,
+} = cashbox_Api;

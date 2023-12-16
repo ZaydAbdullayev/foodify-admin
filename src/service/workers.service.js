@@ -1,22 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const workerService = createApi({
-  reducerPath: "workerService",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["worker"],
+export const workerService = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // path for add worker
     addWorker: builder.mutation({
       query: (data) => ({
         url: "/add/worker",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: data,
       }),
       invalidatesTags: ["worker"],
@@ -27,9 +18,6 @@ export const workerService = createApi({
       query: () => ({
         url: `/get/workers/${user?.user?.id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["worker"],
     }),
@@ -39,10 +27,6 @@ export const workerService = createApi({
       query: (worker) => ({
         url: `/update/worker/${worker.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "application/json",
-        },
         body: worker,
       }),
       invalidatesTags: ["worker"],
@@ -53,9 +37,6 @@ export const workerService = createApi({
       query: (id) => ({
         url: `/delete/worker/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       invalidatesTags: ["worker"],
     }),

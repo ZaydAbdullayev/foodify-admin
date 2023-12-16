@@ -1,12 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const userApi = createApi({
-  reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["user", "order"],
+export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // path for add product
     loginUser: builder.mutation({
@@ -23,9 +18,6 @@ export const userApi = createApi({
       query: (pin) => ({
         url: `/check/worker/${user?.user?.id}/${pin}`,
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
     }),
 
@@ -34,9 +26,6 @@ export const userApi = createApi({
       query: (id) => ({
         url: `/get/dep/${id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
     }), //path for login department
 
@@ -44,9 +33,6 @@ export const userApi = createApi({
       query: (value) => ({
         url: "/login/worker",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
     }),
@@ -55,9 +41,6 @@ export const userApi = createApi({
       query: (value) => ({
         url: `/add/loginInfo/${user?.user?.id}`,
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: value,
       }),
     }),
@@ -67,9 +50,6 @@ export const userApi = createApi({
       query: (date) => ({
         url: `/get/resOrders/${user?.user?.id}/${date.start}/${date.end}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["order"],
     }),
@@ -78,9 +58,6 @@ export const userApi = createApi({
       query: (id) => ({
         url: `/get/oneOrder/${id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["order"],
     }),
@@ -89,10 +66,6 @@ export const userApi = createApi({
       query: (data) => ({
         url: `/update/payment/status/${data?.id}`,
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
         body: {
           payment_status: data?.status,
           payment_type: data?.payment_type,

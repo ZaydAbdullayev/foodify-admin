@@ -232,6 +232,12 @@ export const Category = [
   },
   {
     id: "765433",
+    name: "Oldindan buyurtma",
+    path: "/pre-orders",
+    icon: <GiRiceCooker />,
+  },
+  {
+    id: "765433",
     name: "Buyurtmalar hisoboti",
     path: "/report/orders",
     icon: <TbReport />,
@@ -253,5 +259,23 @@ export const Category = [
     name: "Mahsulotlar hisoboti",
     path: "/report/ingredients",
     icon: <PiDotsNineFill />,
+  },
+  {
+    id: "765433",
+    name: "To'lov guruhlari",
+    path: "/cashbox",
+    icon: <MdStorage />,
+  },
+  {
+    id: "765433",
+    name: "To'lov guruhlari",
+    path: "/cashbox/transaction-group",
+    icon: <MdStorage />,
+  },
+  {
+    id: "765433",
+    name: "To'lov guruhlari",
+    path: "/cashbox/transactions",
+    icon: <MdStorage />,
   },
 ];

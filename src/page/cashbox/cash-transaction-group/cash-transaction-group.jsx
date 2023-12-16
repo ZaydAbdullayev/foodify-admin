@@ -4,20 +4,21 @@ import { UniversalUModal } from "../../../components/modal/modal";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-import { useGetStoreQuery } from "../../../service/store.service";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
+  const [status, setStatus] = useState(false);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  const { data = [], isLoading } = useGetStoreQuery();
+  const { data = [], isLoading } = useGetCashboxGrQuery();
 
   const sortData =
     data?.data &&
-    [...data.data].sort((a, b) => {
+    [...data?.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -32,7 +33,7 @@ export const TransactionGroups = () => {
 
   const displayKeys = [
     { name: "name", size: "60%" },
-    { name: "name", size: "34%", position: 1 },
+    { name: "category", size: "34%", position: 1 },
   ];
 
   return (
@@ -128,17 +129,24 @@ export const TransactionGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="cashbox">
+      <UniversalModal type="cashboxGr">
         <p>Kassa qo'shish</p>
         <input type="text" name="name" placeholder="Kassa nomi*" required />
-        <select name="payment_type">
+        <select name="category" onChange={(e) => setStatus(e.target.value)}>
           <option value="default">To'lov turini tanlang*</option>
-          <option value="1">Naqd</option>
-          <option value="2">Plastik</option>
+          <option value="operating">Operativ</option>
+          <option value="finacialy">Moliyaviy</option>
+          <option value="invest">Sarmoya</option>
         </select>
+        {status === "operating" && (
+          <select name="activity_kind">
+            <option value="default">Kategoriya tanlang*</option>
+            <option value="permanent">Doimiy</option>
+          </select>
+        )}
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
-      <UniversalUModal type="cashbox">
+      <UniversalUModal type="cashboxGr">
         <p>Taxrirlash</p>
         <input
           type="text"

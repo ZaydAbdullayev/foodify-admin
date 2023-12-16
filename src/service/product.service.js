@@ -1,21 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// const base_url = "https://backend.foodify.uz";
-const base_url = "https://799twrl4-8081.euw.devtunnels.ms";
+import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const universalAPi = createApi({
-  reducerPath: "universalApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
-  tagTypes: ["product"],
+export const universalAPi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // path for get all products
     getAllProduct: builder.query({
       query: () => ({
         url: `get/products/${user?.user?.id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["product"],
     }),
@@ -25,10 +17,6 @@ export const universalAPi = createApi({
       query: (value) => ({
         url: "add/product",
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "multipart/form-data",
-        },
         body: value,
       }),
       invalidatesTags: ["product"],
@@ -53,10 +41,6 @@ export const universalAPi = createApi({
       query: (product) => ({
         url: `update/productImg/${product.id}`,
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type": "multipart/form-data",
-        },
         body: {
           img: product?.img,
           deleteImg: product.deleteImg,
@@ -70,9 +54,6 @@ export const universalAPi = createApi({
       query: (id) => ({
         url: `delete/product/${id}`,
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
       }),
       invalidatesTags: ["product"],
     }),
@@ -82,9 +63,6 @@ export const universalAPi = createApi({
       query: (id) => ({
         url: `get/departments/${id}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
       providesTags: ["product"],
     }),
@@ -93,9 +71,6 @@ export const universalAPi = createApi({
       query: (point) => ({
         url: `get/departmentSales/${user?.user?.id}/${point?.fdate}/${point?.tdate}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
     }),
 
@@ -104,9 +79,6 @@ export const universalAPi = createApi({
       query: (point) => ({
         url: `get/departmentProfit/${user?.user?.id}/${point?.dep}/${point?.start}/${point?.end}`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
       }),
     }),
   }),
