@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -8,6 +8,7 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStSuplierQuery } from "../../../service/suplier.service";
+import { useSelector } from "react-redux";
 
 export const InvoicesModal = ({
   checkedData,
@@ -17,23 +18,26 @@ export const InvoicesModal = ({
   NUM,
 }) => {
   const today = new Date().toISOString().split("T")[0];
+  const acItem = useSelector((state) => state.activeThing);
   const [id, setId] = useState(null);
+  const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: storageItems = [] } = useGetStorageItemsQuery(id);
   const { data: suplierData = [] } = useGetStSuplierQuery();
+  const acIngredients = acItem?.ingredients
+    ? JSON?.parse(acItem?.ingredients)
+    : [];
 
-  const parsedData = JSON.parse(storageItems?.data || "[]");
-
-  const updatedData = checkedData.map((newItem) => {
-    const oldData = parsedData?.find((old) => old.id === newItem.id);
+  const updatedData = checkedData?.map((newItem) => {
+    const oldData = storageItems?.data?.find((old) => old.id === newItem.id);
 
     if (oldData) {
       return {
         ...newItem,
-        old_quantity: oldData?.total_quantity,
+        old_quantity: oldData?.total_quantity || 0,
         total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + newItem?.amount
-          : newItem?.amount,
+          ? oldData?.total_quantity + parseInt(newItem?.amount)
+          : parseInt(newItem?.amount),
       };
     }
 
@@ -51,12 +55,25 @@ export const InvoicesModal = ({
     setId(selectedId);
   };
 
+  useEffect(() => {
+    if (acItem?.storage) {
+      const selectedItem = storeData?.data?.find(
+        (item) => item.name === acItem?.storage
+      );
+      const selectedId = selectedItem?.id;
+
+      setId(selectedId);
+    }
+  }, []);
+
   return (
     <UniversalControlModal
+      status={acItem?.id ? true : false}
       type="invoice"
-      Pdata={checkedData}
+      Pdata={[...checkedData, ...acIngredients]}
       Udata={updatedData}
       id={id}
+      setCheckedData={setCheckedData}
     >
       <UniversalForm>
         <input
@@ -65,17 +82,23 @@ export const InvoicesModal = ({
           placeholder="Tartib raqam*"
           required
           autoComplete="off"
-          defaultValue={NUM.num}
+          defaultValue={acItem?.order ? acItem?.order : NUM.num}
           style={{ "--input-width": "15%" }}
         />
         <input
           type="date"
           name="date"
-          style={{ "--input-width": "12%" }}
-          defaultValue={today}
+          style={{
+            "--input-width": "12%",
+          }}
+          defaultValue={acItem?.date ? acItem?.date : today}
         />
         <select name="supplier" style={{ "--input-width": "12%" }}>
-          <option value="default">Yetkazuvchi tanlang*</option>
+          {acItem?.supplier ? (
+            <option value={acItem?.supplier}>{acItem?.supplier}</option>
+          ) : (
+            <option value="default">Yetkazuvchi tanlang*</option>
+          )}
           {suplierData?.data?.map((item) => {
             return (
               <option key={item.id} value={item.name}>
@@ -89,7 +112,11 @@ export const InvoicesModal = ({
           style={{ "--input-width": "15%" }}
           onChange={handleSelectChange}
         >
-          <option value="default">Ombor tanlang*</option>
+          {acItem?.storage ? (
+            <option value={acItem?.storage}>{acItem?.storage}</option>
+          ) : (
+            <option value="default">Ombor tanlang*</option>
+          )}
           {storeData?.data?.map((item) => {
             return (
               <option key={item.id} value={item.name}>
@@ -102,18 +129,21 @@ export const InvoicesModal = ({
           type="text"
           name="responsible"
           placeholder="Javobgar*"
+          required
+          defaultValue={acItem?.responsible ? acItem?.responsible : ""}
           style={{ "--input-width": "12%" }}
         />
         <input
           type="text"
           name="description"
           placeholder="Tavsif*"
+          defaultValue={acItem?.description ? acItem?.description : ""}
           style={{ "--input-width": "12%" }}
         />
       </UniversalForm>
       <UniversalProductControl
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
+        setActivePart={setActivePart}
+        activePart={activePart}
       >
         <div className="product_box_item">
           <label>
@@ -128,7 +158,9 @@ export const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.map((item) => {
-            const checked = checkedData.some((i) => i.id === item.id);
+            const checked = [...checkedData, ...acIngredients]?.find(
+              (i) => i.id === item.id
+            );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -188,6 +220,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
+                      defaultValue={checked?.amount ? checked.amount : 0}
                       onChange={(e) =>
                         getProduct({ ...item, amount: e.target.value }, 1)
                       }
@@ -203,8 +236,9 @@ export const InvoicesModal = ({
                   {checked && (
                     <input
                       type="number"
-                      name="total"
-                      onChange={(e) => getProduct(item, e.target.value, 1)}
+                      onChange={(e) =>
+                        getProduct({ ...item, total: e.target.value }, 1)
+                      }
                     />
                   )}
                 </p>
@@ -213,7 +247,7 @@ export const InvoicesModal = ({
           })}
         </div>
       </UniversalProductControl>
-      <CalcResult data={checkedData}>
+      <CalcResult data={[...checkedData, ...acIngredients]}>
         <CalcResultHeader>
           <p>№</p>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>

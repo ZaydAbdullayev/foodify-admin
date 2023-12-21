@@ -8,15 +8,17 @@ import { PatternFormat } from "react-number-format";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const [sort, setSort] = useState({ id: null, state: false });
-  const [type, setType] = useState("default");
-  const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.active);
+  const [sort, setSort] = useState({ id: null, state: false });
+  const [type, setType] = useState();
+  const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const { data: suplierData = [], isLoading } = useGetStSuplierQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     suplierData?.data &&
@@ -104,25 +106,15 @@ export const StorageSupplier = () => {
                     }
                     key={item.id}
                     onDoubleClick={() =>
-                      dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
+                      dispatch(acActive(!acItem.id ? item : {}))
                     }
                   >
                     <label
-                      onClick={() =>
-                        dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                          })
-                        )
-                      }
+                      onClick={() => dispatch(acActive(!acItem.id ? item : {}))}
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem.id === item.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -155,8 +147,8 @@ export const StorageSupplier = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="supp">
-        <p>Guruh qo'shish</p>
+      <UniversalModal type="supp" setChecked={setChecked}>
+        <p>Yetkazuvchi qo'shish</p>
         <input
           type="text"
           name="name"
@@ -290,15 +282,198 @@ export const StorageSupplier = () => {
         )}
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
-      <UniversalUModal type="group">
+      <UniversalUModal type="supp" setChecked={setChecked}>
         <p>Taxrirlash</p>
         <input
           type="text"
           name="name"
-          placeholder="Guruh nomi*"
-          defaultValue={acItem.name}
+          defaultValue={acItem?.name}
+          placeholder="Yetkazuvchi nomi*"
           required
         />
+        <select name="type" onChange={(e) => setType(e.target.value)}>
+          <option value={acItem?.type}>
+            {acItem?.type === "person" ? "Oddiy shaxs" : "Yuridik shaxs"}
+          </option>
+          <option value="person">Oddiy shaxs</option>
+          <option value="juridical">Yuridik shaxs</option>
+        </select>
+        {acItem?.type === "person" ? (
+          <>
+            <input
+              type="text"
+              name="fullname"
+              defaultValue={acItem?.fullname}
+              placeholder="To'liq ism/familiyasi"
+              required
+            />
+            <label>
+              <input
+                type="text"
+                name="passport"
+                defaultValue={acItem?.passport}
+                placeholder="Passport ma'limotlari"
+                required
+              />
+              <input
+                type="text"
+                name="SNILS"
+                defaultValue={acItem?.SNILS}
+                placeholder="SNLS"
+                required
+              />
+            </label>
+            <label>
+              <input
+                type="text"
+                name="code"
+                defaultValue={acItem?.code}
+                placeholder="Bo'lim kodi"
+                required
+              />
+              <input
+                type="text"
+                name="date"
+                defaultValue={acItem?.date}
+                placeholder="Berilgan vaqti"
+                required
+              />
+            </label>
+            <label>
+              <input
+                type="text"
+                name="INN"
+                defaultValue={acItem?.INN}
+                placeholder="INN"
+                required
+              />
+              <input
+                type="text"
+                name="issued_by"
+                defaultValue={acItem?.issued_by}
+                placeholder="Kim tomonidan berilgan"
+                required
+              />
+            </label>
+            <label>
+              <input
+                type="text"
+                name="registered_address"
+                defaultValue={acItem?.registered_address}
+                placeholder="Bazoviy manzili"
+                required
+              />
+              <input
+                type="text"
+                name="residence_address"
+                defaultValue={acItem?.residence_address}
+                placeholder="Yashash manzili"
+                required
+              />
+            </label>
+            <PatternFormat
+              defaultValue={acItem?.number}
+              format="+998 ## ### ## ##"
+              name="number"
+              mask="_"
+              placeholder="+998"
+              required
+            />
+          </>
+        ) : (
+          acItem?.type === "juridical" && (
+            <>
+              <input
+                type="text"
+                name="fullOrganizationName"
+                defaultValue={acItem?.fullOrganizationName}
+                placeholder="Kompaniya to'liq nomi"
+                required
+              />
+              <label>
+                <input
+                  type="text"
+                  name="shortOrganizationName"
+                  defaultValue={acItem?.shortOrganizationName}
+                  placeholder="Kompaniya qisqa nomi"
+                  required
+                />
+                <input
+                  type="text"
+                  name="INN"
+                  defaultValue={acItem?.INN}
+                  placeholder="INN"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="code"
+                  defaultValue={acItem?.code}
+                  placeholder="email"
+                  required
+                />
+                <PatternFormat
+                  defaultValue={acItem?.number}
+                  format="+998 ## ### ####"
+                  name="number"
+                  mask="_"
+                  placeholder="+998"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="KPP"
+                  defaultValue={acItem?.KPP}
+                  placeholder="KPP"
+                  required
+                />
+                <input
+                  type="text"
+                  name="OKPO"
+                  defaultValue={acItem?.OKPO}
+                  placeholder="OKPO"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="ORGN"
+                  defaultValue={acItem?.ORGN}
+                  placeholder="ORGN"
+                  required
+                />
+                <input
+                  type="text"
+                  name="headDirector"
+                  defaultValue={acItem?.headDirector}
+                  placeholder="Direktor ismi"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="Yuridik_address"
+                  defaultValue={acItem?.Yuridik_address}
+                  placeholder="Bazoviy manzili"
+                  required
+                />
+                <input
+                  type="text"
+                  name="ActualAddress"
+                  defaultValue={acItem?.ActualAddress}
+                  placeholder="Yashash manzili"
+                  required
+                />
+              </label>
+            </>
+          )
+        )}
         <input type="hidden" name="res_id" value={user?.id} />
         <input type="hidden" name="id" value={acItem?.id} />
       </UniversalUModal>

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./damaged.modal";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStDamagedQuery } from "../../../service/damaged.service";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -14,10 +15,14 @@ export const StorageDamaged = () => {
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: demagedData = [], isLoading } = useGetStDamagedQuery();
+  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  const acIngredients = acItem?.ingredients
+    ? JSON.parse(acItem?.ingredients)
+    : [];
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -145,20 +150,12 @@ export const StorageDamaged = () => {
                     }
                     key={item?.id}
                     onDoubleClick={() =>
-                      dispatch(
-                        acActive({
-                          id: !acItem?.id ? item?.id : null,
-                        })
-                      )
+                      dispatch(acActiveThing(!acItem?.id ? item : {}))
                     }
                   >
                     <label
                       onClick={() =>
-                        dispatch(
-                          acActive({
-                            id: !acItem?.id ? item?.id : null,
-                          })
-                        )
+                        dispatch(acActiveThing(!acItem?.id ? item : {}))
                       }
                     >
                       {checked ? (
@@ -285,7 +282,7 @@ export const StorageDamaged = () => {
       <InvoicesModal
         data={ingredientData?.data}
         checkedData={checkedData}
-        setCheckedData={setChecked}
+        setCheckedData={setCheckedData}
         getProduct={getProduct}
         NUM={
           !isLoading && {
@@ -296,6 +293,8 @@ export const StorageDamaged = () => {
         }
         setId={setId}
         id={id}
+        acIngredients={acIngredients}
+        acItem={acItem}
       />
     </div>
   );

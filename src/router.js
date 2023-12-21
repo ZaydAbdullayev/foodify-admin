@@ -44,6 +44,8 @@ import { InvoicesMakingFood } from "./page/invoices/store-making-food/making-foo
 import { InvoicesGroups } from "./page/invoices/invoice-group/invoice-group";
 import { CashboxTransaction } from "./page/cashbox/cash-transaction/cash-transaction";
 import { InvoicePreOrders } from "./page/invoices/invoice-envanter/pre-order";
+import { TransactionRapor } from "./page/cashbox/cashbox-report/cashbox-report";
+import { NavigationPanel } from "./page/navigation/navigation";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -96,6 +98,7 @@ export const Router = () => {
                   element={<Document />}
                 />
                 <Route path="statistics" element={<Statistics />} />
+                <Route path="navigation-all" element={<NavigationPanel />} />
                 <Route path="storage" element={<StorageBlog />}>
                   <Route index element={<Storage />} />
                   <Route path="departments" element={<StorageDep />} />
@@ -123,6 +126,10 @@ export const Router = () => {
                   <Route
                     path="cashbox/transaction-group"
                     element={<TransactionGroups />}
+                  />
+                  <Route
+                    path="cashbox/transaction-report"
+                    element={<TransactionRapor />}
                   />
                   <Route
                     path="report/suppliers"

@@ -23,6 +23,7 @@ export const CashboxTransaction = () => {
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
   const { data: cashboxGrData = [] } = useGetCashboxGrQuery();
   const { data: cashTrData = [] } = useGetCashTransactionQuery();
+  console.log("trData", cashTrData);
 
   //   const getProduct = (item, status) => {
   //     const isChecked = checkedData?.some((i) => i.id === item?.id);
@@ -180,17 +181,20 @@ export const CashboxTransaction = () => {
       </div>
       <UniversalModal type="trsn">
         <input type="date" name="date" defaultValue={today} required />
-        <select onChange={(e) => setModalType(e.target.value)}>
+        <select
+          name="transaction_type"
+          onChange={(e) => setModalType(e.target.value)}
+        >
           <option value="default">Tranzaksiya turi</option>
-          <option value="inv">Kirim qilish</option>
-          <option value="exp">Chiqim qilish</option>
-          <option value="tra">Transformatsiya</option>
+          <option value="income">Kirim qilish</option>
+          <option value="expenses">Chiqim qilish</option>
+          <option value="transaction">Transformatsiya</option>
         </select>
         {modalType !== "default" && (
           <>
             <label>
               <select name="transaction_category">
-                {modalType === "inv" && (
+                {modalType === "income" && (
                   <>
                     <option value="send">Kirim</option>
                     <option value="delivery_send">Dastavka kirim</option>
@@ -202,7 +206,7 @@ export const CashboxTransaction = () => {
                     <option value="deposit">Depozit</option>
                   </>
                 )}
-                {modalType === "exp" && (
+                {modalType === "expenses" && (
                   <>
                     <option value="expense">Chiqim</option>
                     <option value="send">Kirim</option>
@@ -214,7 +218,7 @@ export const CashboxTransaction = () => {
                     <option value="deposit">Depozit</option>
                   </>
                 )}
-                {modalType === "tra" && (
+                {modalType === "transaction" && (
                   <>
                     <option value="cash_withdrawal">Kassaga o'tkazish</option>
                     <option value="send">Kirim</option>
@@ -238,7 +242,7 @@ export const CashboxTransaction = () => {
                 })}
               </select>
             </label>
-            {modalType === "exp" || modalType === "inv" ? (
+            {modalType === "expenses" || modalType === "income" ? (
               <select name="cashier_receiver">
                 <option value="cashier">Kassir tanlang*</option>
                 {cashboxData?.data?.map((item) => {

@@ -20,4 +20,14 @@ export const reActive = (
   }
 };
 
+export const reActiveThing = (state = {}, action) => {
+  switch (action.type) {
+    case "ACTIVE_THING":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export const acActive = (payload) => ({ type: "ACTIVE_ITEM", payload });
+export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });

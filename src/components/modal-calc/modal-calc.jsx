@@ -18,12 +18,29 @@ import { useAddStExpenditureMutation } from "../../service/expenditures.service"
 import { useAddStCarryUpMutation } from "../../service/carry-up.service";
 import { useAddMakingFoodMutation } from "../../service/making-food.service";
 import { useAddPreOrderMutation } from "../../service/pre-order.service";
+import { useUpdateStProductMutation } from "../../service/s-products.service";
+import { useUpdateStInvoiceMutation } from "../../service/invoices.service";
+import { useUpdateStCuttingMutation } from "../../service/cutting.service";
+import { useUpdateStDamagedMutation } from "../../service/damaged.service";
+import { useUpdateStExpenditureMutation } from "../../service/expenditures.service";
+import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
+import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
+import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
+import { acActiveThing } from "../../redux/active";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
-export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
+export const UniversalControlModal = ({
+  children,
+  status,
+  type,
+  Pdata,
+  Udata,
+  id,
+  setCheckedData,
+}) => {
   const open = useSelector((state) => state.uModal);
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
@@ -36,45 +53,86 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
   const [addStCarryUp] = useAddStCarryUpMutation();
   const [addMakingFood] = useAddMakingFoodMutation();
   const [addPreOrder] = useAddPreOrderMutation();
+  //update points
+  const [updateStProduct] = useUpdateStProductMutation();
+  const [updateStInvoice] = useUpdateStInvoiceMutation();
+  const [updateStCutting] = useUpdateStCuttingMutation();
+  const [updateStDamaged] = useUpdateStDamagedMutation();
+  const [updateStExpenditure] = useUpdateStExpenditureMutation();
+  const [updateStCarryUp] = useUpdateStCarryUpMutation();
+  const [updateMakedFood] = useUpdateMakedFoodMutation();
+  const [updatePreOrder] = useUpdatePreOrderMutation();
   const dispatch = useDispatch();
+  const acP = useSelector((state) => state.activeThing);
 
   const fetchValues = async (values) => {
     setLoading(true);
     if (values.ingredients && Array.isArray(values.ingredients)) {
       values.ingredients = JSON.stringify(values.ingredients);
     }
-    console.log("values", values);
 
     try {
       let result;
-      switch (type) {
-        case "product":
-          result = await addStProduct(values);
-          break;
-        case "invoice":
-          result = await addStInvoice(values);
-          await updateStItems({ id, ingredients: Udata });
-          break;
-        case "cutting":
-          result = await addStCutting(values);
-          break;
-        case "damaged":
-          result = await addStDamaged(values);
-          break;
-        case "edr":
-          result = await addStExpenditure(values);
-          break;
-        case "carryUp":
-          result = await addStCarryUp(values);
-          break;
-        case "making":
-          result = await addMakingFood(values);
-          break;
-        case "preOrder":
-          result = await addPreOrder(values);
-          break;
-        default:
-          break;
+
+      if (status) {
+        switch (type) {
+          case "product":
+            result = await updateStProduct(values);
+            break;
+          case "invoice":
+            result = await updateStInvoice(values);
+            break;
+          case "cutting":
+            result = await updateStCutting(values);
+            break;
+          case "damaged":
+            result = await updateStDamaged(values);
+            break;
+          case "edr":
+            result = await updateStExpenditure(values);
+            break;
+          case "carryUp":
+            result = await updateStCarryUp(values);
+            break;
+          case "making":
+            result = await updateMakedFood(values);
+            break;
+          case "preOrder":
+            result = await updatePreOrder(values);
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (type) {
+          case "product":
+            result = await addStProduct(values);
+            break;
+          case "invoice":
+            result = await addStInvoice(values);
+            await updateStItems({ id, ingredients: Udata });
+            break;
+          case "cutting":
+            result = await addStCutting(values);
+            break;
+          case "damaged":
+            result = await addStDamaged(values);
+            break;
+          case "edr":
+            result = await addStExpenditure(values);
+            break;
+          case "carryUp":
+            result = await addStCarryUp(values);
+            break;
+          case "making":
+            result = await addMakingFood(values);
+            break;
+          case "preOrder":
+            result = await addPreOrder(values);
+            break;
+          default:
+            break;
+        }
       }
 
       if (result?.error) {
@@ -83,6 +141,8 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
         es({ message: "Qo'shildi", variant: "success" });
         ClearForm("u-control-form");
         dispatch(acCloseUModal());
+        dispatch(acActiveThing({}));
+        setCheckedData([]);
       }
     } catch (err) {
       console.error(err);
@@ -100,32 +160,39 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
     if (type !== "cutting") {
       delete data.amount;
     }
-    console.log("data", data);
 
     const result = calculateTotal(data);
     dispatch(acCalc(result));
     if (type === "product") {
-      setFetchdata({ ...data, ...result });
+      setFetchdata({ ...acP, ...data, ...result });
     }
     if (type === "invoice") {
       setFetchdata({
+        ...acP,
         ...data,
         cost: result.prime_cost,
         leftover: result.prime_cost,
       });
     }
     if (type === "cutting") {
-      setFetchdata({ ...data });
+      setFetchdata({ ...acP, ...data });
     }
     if (type === "damaged") {
-      setFetchdata({ ...data, cost: result?.prime_cost });
+      setFetchdata({ ...acP, ...data, cost: result?.prime_cost });
     }
     if (type === "making") {
-      setFetchdata({ ...data, total_price: result?.prime_cost });
+      setFetchdata({ ...acP, ...data, total_price: result?.prime_cost });
     }
     if (type === "preOrder") {
-      setFetchdata({ ...data, cost: result?.prime_cost });
+      setFetchdata({ ...acP, ...data, cost: result?.prime_cost });
     }
+    console.log("data", data, "result", acP);
+  };
+
+  const closeModal = () => {
+    dispatch(acCloseUModal());
+    dispatch(acActiveThing({}));
+    setCheckedData([]);
   };
 
   return (
@@ -152,7 +219,7 @@ export const UniversalControlModal = ({ children, type, Pdata, Udata, id }) => {
             <FaCalculator />
           </span>
         </button>
-        <button type="button" onClick={() => dispatch(acCloseUModal())}>
+        <button type="button" onClick={() => closeModal()}>
           <i>bekor qilish</i>
           <span>
             <TbArrowBarLeft />

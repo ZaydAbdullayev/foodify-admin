@@ -8,6 +8,7 @@ import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -20,6 +21,7 @@ export const StorageIngredients = () => {
   const dispatch = useDispatch();
   const { data: groupData = [] } = useGetStGroupsQuery();
   const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
+  dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
 
   const sortData =
     ingredientData?.data &&
@@ -139,6 +141,8 @@ export const StorageIngredients = () => {
                       }
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem.id === item.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -276,23 +280,26 @@ export const StorageIngredients = () => {
       <UniversalUModal
         type={newIngGr === "new" ? "newIngGr" : "ing"}
         newGrData={{ name: newGrData, res_id: user?.id }}
+        setChecked={setChecked}
       >
-        <p>Categoriya qo'shish</p>
+        <p>Ingradientni taxrirlash</p>
         <input
           type="text"
           name="name"
+          defaultValue={acItem.name}
           placeholder="Ingredient nomi*"
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
+        <input type="hidden" name="id" value={acItem?.id} />
         <select name="unit">
-          <option value="default">O'lchov birligi tanlang*</option>
+          <option value={acItem.unit}>{acItem.unit}</option>
           <option value="kg">kg</option>
           <option value="l">litr</option>
           <option value="ta">ta</option>
         </select>
         <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
-          <option value="default">Guruh tanlang*</option>
+          <option value={acItem.group}>{acItem.group}</option>
           {groupData?.data?.map((item, index) => {
             return (
               <option value={item.name} key={index}>

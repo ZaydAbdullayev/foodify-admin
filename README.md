@@ -12,3 +12,37 @@ receivedAt:"2023-10-11T12:43:03.000Z"
 status:1
 
 new update
+
+Settings:
+
+Storages (Add/Edit)
+Departments (Add/Edit)
+Categories
+Ingredients' Groups
+Ingredients
+Items
+Modifiers
+Invoice Groups
+Suppliers
+
+Operations:
+
+Invoice (Received Goods)
+Expenses Invoices (Used Goods)
+Seperation Acts (Activity Logs)
+Write-offs (Wasted Goods)
+Movement (Storage Transfer)
+Ingredient Production (Food Production)
+Inventory Checkup
+
+Orders:
+
+Pre Order
+Monitoring (Food Monitoring)
+
+Financials:
+
+Cashboxes (Money Collection)
+Transactions Groups
+Transactions
+Cashbox Report

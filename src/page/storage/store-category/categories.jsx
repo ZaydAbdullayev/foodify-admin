@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { useGetStoreDepQuery } from "../../../service/dep.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -18,6 +19,7 @@ export const StorageCatgegories = () => {
   const dispatch = useDispatch();
   const { data: depData = [] } = useGetStoreDepQuery();
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     storeData?.data &&
@@ -123,6 +125,8 @@ export const StorageCatgegories = () => {
                       }
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem.id === item.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -234,7 +238,7 @@ export const StorageCatgegories = () => {
           })}
         </select>
       </UniversalModal>
-      <UniversalUModal type="category">
+      <UniversalUModal type="category" setChecked={setChecked}>
         <p>Taxrirlash</p>
         <input
           type="text"

@@ -20,8 +20,13 @@ import { useAddStInvoiceGroupMutation } from "../../service/invoice-group.servic
 import { useAddCashboxMutation } from "../../service/cashbox.service";
 import { useAddCashboxGrMutation } from "../../service/cashbox-group.service";
 import { useAddCashTransactionMutation } from "../../service/cash-transaction.service";
+import { useUpdateStSuplierMutation } from "../../service/suplier.service";
+import { useUpdateStInvoiceGroupMutation } from "../../service/invoice-group.service";
+import { useUpdateCashboxMutation } from "../../service/cashbox.service";
+import { useUpdateCashboxGrMutation } from "../../service/cashbox-group.service";
+import { useUpdateCashTransactionMutation } from "../../service/cash-transaction.service";
 
-export const UniversalModal = ({ children, type, newGrData }) => {
+export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const [addStorage] = useAddStoreMutation();
@@ -95,6 +100,7 @@ export const UniversalModal = ({ children, type, newGrData }) => {
         es({ message: "Xatolik", variant: "error" });
       } else if (result?.data) {
         dispatch(acCloseUModal());
+        setChecked(false);
         e.target.reset();
       }
     } catch (err) {
@@ -122,7 +128,7 @@ export const UniversalModal = ({ children, type, newGrData }) => {
   );
 };
 
-export const UniversalUModal = ({ children, type, newGrData }) => {
+export const UniversalUModal = ({ children, type, newGrData, setChecked }) => {
   const open = useSelector((state) => state.uModalU);
   const dispatch = useDispatch();
   const [updateStorage] = useUpdateStoreMutation();
@@ -131,6 +137,11 @@ export const UniversalUModal = ({ children, type, newGrData }) => {
   const [updateDep] = useUpdateDepMutation();
   const [updateStIngredients] = useUpdateStIngredientsMutation();
   const [addStGroups] = useAddStGroupsMutation();
+  const [updateStSuplier] = useUpdateStSuplierMutation();
+  const [updateStInvoiceGroup] = useUpdateStInvoiceGroupMutation();
+  const [updateCashbox] = useUpdateCashboxMutation();
+  const [updateCashboxGr] = useUpdateCashboxGrMutation();
+  const [updateCashTransaction] = useUpdateCashTransactionMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -161,6 +172,21 @@ export const UniversalUModal = ({ children, type, newGrData }) => {
           result = await addStGroups(newGrData);
           result = await updateStIngredients(value);
           break;
+        case "supp":
+          result = await updateStSuplier(value);
+          break;
+        case "invGr":
+          result = await updateStInvoiceGroup(value);
+          break;
+        case "cashbox":
+          result = await updateCashbox(value);
+          break;
+        case "cashboxGr":
+          result = await updateCashboxGr(value);
+          break;
+        case "trsn":
+          result = await updateCashTransaction(value);
+          break;
         default:
           break;
       }
@@ -171,6 +197,7 @@ export const UniversalUModal = ({ children, type, newGrData }) => {
         dispatch(acCloseUModalU());
         dispatch(acActive({ id: null }));
         e.target.reset();
+        setChecked(false);
         es({ message: "Taxrirlash muvoffaqiyatli!", variant: "success" });
       }
     } catch (err) {

@@ -5,15 +5,42 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTransactionRapor: builder.query({
       query: () => ({
-        url: `get/cashbox-trans/${user?.user?.id}`,
+        url: `get/transactions/${user?.user?.id}`,
         method: "GET",
       }),
       providesTags: ["expenditure"],
     }),
-
+    getTransactionIncome: builder.query({
+      query: (date) => ({
+        url: `get/incomeTransactions/${user?.user?.id}/${date?.start}/${date?.end}`,
+        method: "GET",
+      }),
+      providesTags: ["expenditure"],
+    }),
+    getTransactionExpense: builder.query({
+      query: (date) => ({
+        url: `get/expenseTransactions/${user?.user?.id}/${date?.start}/${date?.end}`,
+        method: "GET",
+      }),
+      providesTags: ["expenditure"],
+    }),
+    getTransaction: builder.query({
+      query: (date) => ({
+        url: `get/transactionsTable/${user?.user?.id}/${date.start}/${date.end}`,
+        method: "GET",
+      }),
+      providesTags: ["expenditure"],
+    }),
+    getBalance: builder.query({
+      query: (date) => ({
+        url: `get/balance/${user?.user?.id}/${date?.start}`,
+        method: "GET",
+      }),
+      providesTags: ["expenditure"],
+    }),
     addTransactionRapor: builder.mutation({
       query: (value) => ({
-        url: "add/cashbox-trans",
+        url: "add/transactionTable",
         method: "POST",
         body: value,
       }),
@@ -22,7 +49,7 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
 
     updateTransactionRapor: builder.mutation({
       query: (value) => ({
-        url: `update/cashbox-trans/${value.id}`,
+        url: `update/transactionTable/${value.id}`,
         method: "PATCH",
         body: value,
       }),
@@ -31,7 +58,7 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
 
     deleteTransactionRapor: builder.mutation({
       query: (id) => ({
-        url: `delete/cashbox-trans/${id}`,
+        url: `delete/transaction/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["expenditure"],
@@ -44,4 +71,8 @@ export const {
   useUpdateTransactionRaporMutation,
   useGetTransactionRaporQuery,
   useDeleteTransactionRaporMutation,
+  useGetTransactionExpenseQuery,
+  useGetTransactionIncomeQuery,
+  useGetTransactionQuery,
+  useGetBalanceQuery,
 } = transactionRapor_Api;

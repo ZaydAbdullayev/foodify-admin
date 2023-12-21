@@ -7,6 +7,7 @@ import { acActive } from "../../redux/active";
 import { Outlet } from "react-router-dom";
 import { useGetStoreQuery } from "../../service/store.service";
 import { LoadingBtn } from "../../components/loading/loading";
+import { acNavStatus } from "../../redux/navbar.status";
 
 export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -15,6 +16,7 @@ export const Storage = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data = [], isLoading } = useGetStoreQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     data?.data &&
@@ -85,6 +87,8 @@ export const Storage = () => {
                   >
                     {checked ? (
                       <input type="checkbox" name="id" checked />
+                    ) : acItem.id === item.id ? (
+                      <input type="checkbox" name="id" checked />
                     ) : (
                       <input type="checkbox" name="id" />
                     )}
@@ -102,7 +106,7 @@ export const Storage = () => {
         <input type="text" name="name" placeholder="Ombor nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
-      <UniversalUModal type="main">
+      <UniversalUModal type="main" setChecked={setChecked}>
         <p>Taxrirlash</p>
         <input
           type="text"

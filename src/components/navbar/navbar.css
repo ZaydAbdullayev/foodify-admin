@@ -44,7 +44,7 @@
   margin-left: 20px;
 }
 
-.short-hands_sort__box input {
+.short-hands_sort__box :where(select, option, input) {
   padding: 5px 10px;
   background: #333;
   border: none;

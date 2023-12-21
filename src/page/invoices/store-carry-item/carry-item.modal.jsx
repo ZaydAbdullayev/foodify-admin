@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -20,6 +20,8 @@ export const InvoicesModal = ({
   NUM,
   setId,
   id,
+  acItem,
+  acIngredients,
 }) => {
   const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1);
@@ -40,7 +42,7 @@ export const InvoicesModal = ({
         ...newItem,
         total_quantity: oldData?.total_quantity || 0,
         total_after: oldData?.total_after ? oldData?.total_after : after,
-        total_price: newItem?.amount * newItem?.price,
+        total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
       };
     }
 
@@ -57,6 +59,18 @@ export const InvoicesModal = ({
 
     setId(selectedId);
   };
+
+  useEffect(() => {
+    if (acItem?.storage) {
+      const selectedItem = storeData?.data?.find(
+        (item) => item.name === acItem?.storage
+      );
+      const selectedId = selectedItem?.id;
+
+      setId(selectedId);
+    }
+  }, [acItem?.storage, setId, storeData?.data]);
+
   const revordCalcData = async (data) => {
     if (id === null) return alert("Ombor tanlanmagan");
     const value = await calcStCarryUp(data);
@@ -82,13 +96,18 @@ export const InvoicesModal = ({
   const activeData = activePart === 1 ? data : productData?.data;
 
   return (
-    <UniversalControlModal type="carryUp" Pdata={checkedData}>
+    <UniversalControlModal
+      status={acItem?.id ? true : false}
+      type="carryUp"
+      Pdata={[...checkedData, ...acIngredients]}
+      setCheckedData={setCheckedData}
+    >
       <UniversalForm>
         <input
           type="number"
           name="order"
           placeholder="Tartib raqam*"
-          defaultValue={NUM?.num}
+          defaultValue={acItem?.order ? acItem?.order : NUM?.num}
           required
           autoComplete="off"
           style={{ "--input-width": "8%" }}
@@ -97,38 +116,52 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "15%" }}
-          defaultValue={today}
+          defaultValue={acItem?.date ? acItem?.date : today}
         />
         <select
           name="storage_sender"
           onChange={handleSelectChange}
           style={{ "--input-width": "15%" }}
         >
-          <option value="default">Beruvchi Ombor*</option>
+          {acItem?.storage ? (
+            <option value={acItem?.storage}>{acItem?.storage}</option>
+          ) : (
+            <option value="default">Beruvchi ombor*</option>
+          )}
           {storeData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
         </select>
         <select name="storage_receiver" style={{ "--input-width": "15%" }}>
-          <option value="default">Oluvchi Ombor*</option>
-          {storeData?.data?.map((item, index) => {
+          {acItem?.storage ? (
+            <option value={acItem?.storage}>{acItem?.storage}</option>
+          ) : (
+            <option value="default">Oluvchi ombor*</option>
+          )}
+          {storeData?.data?.map((item) => {
             return (
-              <option key={item.id + index} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
         </select>
         <select name="ingredient_group">
-          <option value="default">Guruh tanlang*</option>
+          {acItem?.ingredient_group ? (
+            <option value={acItem?.ingredient_group}>
+              {acItem?.ingredient_group}
+            </option>
+          ) : (
+            <option value="default">Guruh tanlang*</option>
+          )}
           {groupsData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
@@ -136,6 +169,7 @@ export const InvoicesModal = ({
         <input
           type="text"
           name="description"
+          defaultValue={acItem?.description ? acItem?.description : ""}
           placeholder="Tavsif"
           style={{ "--input-width": "12%" }}
         />
@@ -165,7 +199,9 @@ export const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {activeData?.map((item) => {
-            const checked = checkedData.some((i) => i.id === item.id);
+            const checked = [...checkedData, ...acIngredients]?.find(
+              (i) => i.id === item.id
+            );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -233,6 +269,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
+                      defaultValue={acItem?.amount ? acItem?.amount : ""}
                       onChange={(e) =>
                         activePart === 2
                           ? setCalcData({

@@ -6,6 +6,7 @@ import { acActive } from "../../../redux/active";
 import { useGetStoreDepQuery } from "../../../service/dep.service";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -17,6 +18,7 @@ export const StorageDep = () => {
   const dispatch = useDispatch();
   const { data: depData = [], isLoading } = useGetStoreDepQuery();
   const { data: storeData = [] } = useGetStoreQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     depData?.data &&
@@ -103,6 +105,8 @@ export const StorageDep = () => {
                   >
                     {checked ? (
                       <input type="checkbox" name="id" checked />
+                    ) : acItem.id === item.id ? (
+                      <input type="checkbox" name="id" checked />
                     ) : (
                       <input type="checkbox" name="id" />
                     )}
@@ -131,7 +135,7 @@ export const StorageDep = () => {
           })}
         </select>
       </UniversalModal>
-      <UniversalUModal type="dep">
+      <UniversalUModal type="dep" setChecked={setChecked}>
         <p>Taxrirlash</p>
         <input
           type="text"
@@ -141,6 +145,7 @@ export const StorageDep = () => {
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
+        <input type="hidden" name="id" value={acItem?.id} />
         <select name="storage">
           <option value={acItem.storage}>{acItem.storage}</option>
           {storeData?.data?.map((item) => {

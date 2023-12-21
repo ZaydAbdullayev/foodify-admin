@@ -262,7 +262,7 @@ export const Category = [
   },
   {
     id: "765433",
-    name: "To'lov guruhlari",
+    name: "Kassalar",
     path: "/cashbox",
     icon: <MdStorage />,
   },
@@ -274,8 +274,14 @@ export const Category = [
   },
   {
     id: "765433",
-    name: "To'lov guruhlari",
+    name: "Tranzaksiyalar",
     path: "/cashbox/transactions",
+    icon: <MdStorage />,
+  },
+  {
+    id: "765433",
+    name: "Kassa hisoboti",
+    path: "/cashbox/transaction-report",
     icon: <MdStorage />,
   },
 ];

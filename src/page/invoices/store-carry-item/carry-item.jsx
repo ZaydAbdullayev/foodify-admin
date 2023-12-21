@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActive, acActiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./carry-item.modal";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -14,10 +15,14 @@ export const StorageCarryUp = () => {
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const dispatch = useDispatch();
+  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  const acIngredients = acItem?.ingredients
+    ? JSON.parse(acItem?.ingredients)
+    : [];
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -156,23 +161,17 @@ export const StorageCarryUp = () => {
                     }
                     key={item?.id}
                     onDoubleClick={() =>
-                      dispatch(
-                        acActive({
-                          id: !acItem?.id ? item?.id : null,
-                        })
-                      )
+                      dispatch(acActiveThing(!acItem?.id ? item : {}))
                     }
                   >
                     <label
                       onClick={() =>
-                        dispatch(
-                          acActive({
-                            id: !acItem?.id ? item?.id : null,
-                          })
-                        )
+                        dispatch(acActiveThing(!acItem?.id ? item : {}))
                       }
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem?.id === item?.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -316,6 +315,8 @@ export const StorageCarryUp = () => {
         }
         setId={setId}
         id={id}
+        acItem={acItem}
+        acIngredients={acIngredients}
       />
     </div>
   );

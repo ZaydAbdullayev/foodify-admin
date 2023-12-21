@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -7,6 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
+import { useSelector } from "react-redux";
 
 export const InvoicesModal = ({
   checkedData,
@@ -18,20 +19,24 @@ export const InvoicesModal = ({
   id,
 }) => {
   const today = new Date().toISOString().split("T")[0];
+  const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: groupsData = [] } = useGetStGroupsQuery();
-
+  const acItem = useSelector((state) => state.activeThing);
+  const acIngredients = acItem?.ingredients
+    ? JSON?.parse(acItem?.ingredients)
+    : [];
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem.id) || {};
+    const oldData = data?.find((old) => old.id === newItem?.id) || {};
 
     if (oldData) {
       return {
         ...newItem,
         old_quantity: oldData?.total_quantity || 0,
         total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + newItem?.amount
-          : newItem?.amount,
-        total_price: newItem?.amount * newItem?.price,
+          ? oldData?.total_quantity +  parseInt(newItem?.amount)
+          :  parseInt(newItem?.amount),
+        total_price:  parseInt(newItem?.amount) * newItem?.price,
       };
     }
 
@@ -41,23 +46,38 @@ export const InvoicesModal = ({
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
+      (item) => item?.name === selectedName
     );
     const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem.id;
+      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
 
     setId(selectedId);
   };
+  useEffect(() => {
+    if (acItem?.storage) {
+      const selectedItem = storeData?.data?.find(
+        (item) => item.name === acItem?.storage
+      );
+      const selectedId = selectedItem?.id;
+
+      setId(selectedId);
+    }
+  }, [acItem?.storage, setId, storeData?.data]);
 
   return (
-    <UniversalControlModal type="edr" Pdata={checkedData}>
+    <UniversalControlModal
+      status={acItem?.id ? true : false}
+      type="edr"
+      Pdata={[...checkedData, ...acIngredients]}
+      setCheckedData={setCheckedData}
+    >
       <UniversalForm>
         <input
           type="number"
           name="order"
           placeholder="Tartib raqam*"
           required
-          defaultValue={NUM.num}
+          defaultValue={acItem?.order ? acItem?.order : NUM.num}
           autoComplete="off"
           style={{ "--input-width": "15%" }}
         />
@@ -65,28 +85,36 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "12%" }}
-          defaultValue={today}
+          defaultValue={acItem?.date ? acItem?.date : today}
         />
         <select
           name="storage"
           style={{ "--input-width": "15%" }}
           onChange={handleSelectChange}
         >
-          <option value="default">Ombor tanlang*</option>
+          {acItem?.storage ? (
+            <option value={acItem?.storage}>{acItem?.storage}</option>
+          ) : (
+            <option value="default">Ombor tanlang*</option>
+          )}
           {storeData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
         </select>
         <select name="group">
-          <option value="default">Guruh tanlang*</option>
+          {acItem?.group ? (
+            <option value={acItem?.group}>{acItem?.group}</option>
+          ) : (
+            <option value="default">Guruh tanlang*</option>
+          )}
           {groupsData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
@@ -94,13 +122,14 @@ export const InvoicesModal = ({
         <input
           type="text"
           name="description"
+          defaultValue={acItem?.description ? acItem?.description : ""}
           placeholder="Tavsif*"
           style={{ "--input-width": "12%" }}
         />
       </UniversalForm>
       <UniversalProductControl
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
+        activePart={activePart}
+        setActivePart={setActivePart}
       >
         <div className="product_box_item">
           <label>
@@ -115,11 +144,13 @@ export const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.map((item) => {
-            const checked = checkedData.some((i) => i.id === item.id);
+            const checked = [...checkedData, ...acIngredients]?.find(
+              (i) => i.id === item?.id
+            );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}
+                key={item?.id}
               >
                 <label>
                   <input
@@ -130,14 +161,14 @@ export const InvoicesModal = ({
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
                   }}
                 >
-                  {item.unit}
+                  {item?.unit}
                 </p>
                 <p
                   style={{
@@ -145,7 +176,7 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.group}
+                  {item?.group}
                 </p>
                 <p
                   style={{
@@ -153,7 +184,7 @@ export const InvoicesModal = ({
                     justifyContent: "flex-end",
                   }}
                 >
-                  {item.price}
+                  {item?.price}
                 </p>
                 <p
                   style={{
@@ -161,7 +192,7 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.type}
+                  {item?.type}
                 </p>
                 <p
                   style={{
@@ -173,6 +204,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
+                      defaultValue={checked?.amount ? checked?.amount : ""}
                       onChange={(e) =>
                         getProduct({ ...item, amount: e.target.value }, 1)
                       }

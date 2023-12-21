@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -16,20 +16,24 @@ export const InvoicesModal = ({
   NUM,
   setId,
   id,
+  acIngredients,
+  acItem,
 }) => {
   const today = new Date().toISOString().split("T")[0];
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: groupsData = [] } = useGetStGroupsQuery();
+  const [activePart, setActivePart] = useState(1);
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem.id) || {};
+    const oldData = data?.find((old) => old.id === newItem?.id) || {};
 
     if (oldData) {
       return {
         ...newItem,
         old_quantity: oldData?.total_quantity || 0,
-        total_quantity: newItem?.amount + Number(oldData?.total_quantity) || 0,
-        total_price: newItem?.amount * newItem?.price,
+        total_quantity:
+          parseInt(newItem?.amount) + oldData?.total_quantity || 0,
+        total_price: parseInt(newItem?.amount) * newItem?.price,
       };
     }
 
@@ -41,23 +45,39 @@ export const InvoicesModal = ({
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
+      (item) => item?.name === selectedName
     );
     const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem.id;
+      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
 
     setId(selectedId);
   };
 
+  useEffect(() => {
+    if (acItem?.storage) {
+      const selectedItem = storeData?.data?.find(
+        (item) => item?.name === acItem?.storage
+      );
+      const selectedId = selectedItem?.id;
+
+      setId(selectedId);
+    }
+  }, [acItem?.storage, setId, storeData?.data]);
+
   return (
-    <UniversalControlModal type="damaged" Pdata={checkedData}>
+    <UniversalControlModal
+      status={acItem?.id ? true : false}
+      type="damaged"
+      Pdata={[...checkedData, ...acIngredients]}
+      setCheckedData={setCheckedData}
+    >
       <UniversalForm>
         <input
           type="number"
           name="order"
           placeholder="Tartib raqam*"
           required
-          defaultValue={NUM.num}
+          defaultValue={acItem?.order ? acItem?.order : NUM.num}
           autoComplete="off"
           style={{ "--input-width": "8%" }}
         />
@@ -65,28 +85,38 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "12%" }}
-          defaultValue={today}
+          defaultValue={acItem?.date ? acItem?.date : today}
         />
         <select
           name="storage"
           style={{ "--input-width": "15%" }}
           onChange={handleSelectChange}
         >
-          <option value="default">Ombor tanlang*</option>
+          {acItem?.storage ? (
+            <option value={acItem?.storage}>{acItem?.storage}</option>
+          ) : (
+            <option value="default">Ombor tanlang*</option>
+          )}
           {storeData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
         </select>
         <select name="ingredient_group">
-          <option value="default">Guruh tanlang*</option>
+          {acItem?.ingredient_group ? (
+            <option value={acItem?.ingredient_group}>
+              {acItem?.ingredient_group}
+            </option>
+          ) : (
+            <option value="default">Guruh tanlang*</option>
+          )}
           {groupsData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
@@ -94,14 +124,15 @@ export const InvoicesModal = ({
         <input
           type="text"
           name="description"
+          defaultValue={acItem?.description ? acItem?.description : ""}
           placeholder="Tavsif*"
           style={{ "--input-width": "12%" }}
         />
         <input type="hidden" name="storage_id" value={id} />
       </UniversalForm>
       <UniversalProductControl
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
+        activePart={activePart}
+        setActivePart={setActivePart}
       >
         <div className="product_box_item">
           <label>
@@ -116,11 +147,13 @@ export const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.map((item) => {
-            const checked = checkedData.some((i) => i.id === item.id);
+            const checked = [...checkedData, ...acIngredients]?.find(
+              (i) => i.id === item?.id
+            );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}
+                key={item?.id}
               >
                 <label>
                   <input
@@ -131,14 +164,14 @@ export const InvoicesModal = ({
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
                   }}
                 >
-                  {item.unit}
+                  {item?.unit}
                 </p>
                 <p
                   style={{
@@ -146,7 +179,7 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.group}
+                  {item?.group}
                 </p>
                 <p
                   style={{
@@ -154,7 +187,7 @@ export const InvoicesModal = ({
                     justifyContent: "flex-end",
                   }}
                 >
-                  {item.price}
+                  {item?.price}
                 </p>
                 <p
                   style={{
@@ -162,7 +195,7 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.type}
+                  {item?.type}
                 </p>
                 <p
                   style={{
@@ -174,6 +207,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
+                      defaultValue={acItem?.amount ? acItem?.amount : ""}
                       onChange={(e) =>
                         getProduct({ ...item, amount: e.target.value }, 1)
                       }
@@ -185,7 +219,7 @@ export const InvoicesModal = ({
           })}
         </div>
       </UniversalProductControl>
-      <CalcResult data={checkedData}>
+      <CalcResult>
         <CalcResultHeader>
           <p>№</p>
           <p style={{ "--data-line-size": "15%" }}>Nomi</p>

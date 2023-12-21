@@ -7,6 +7,7 @@ import { useGetStGroupsQuery } from "../../../service/groups.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const StorageGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -16,6 +17,7 @@ export const StorageGroups = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: groupData = [], isLoading } = useGetStGroupsQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     groupData?.data &&
@@ -106,6 +108,8 @@ export const StorageGroups = () => {
                       }
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem.id === item.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -200,7 +204,7 @@ export const StorageGroups = () => {
         <input type="text" name="name" placeholder="Guruh nomi*" required />
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
-      <UniversalUModal type="group">
+      <UniversalUModal type="group" setChecked={setChecked}>
         <p>Taxrirlash</p>
         <input
           type="text"

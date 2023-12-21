@@ -12,8 +12,10 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { data } from "../../../components/modal-calc/components";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
+import { acActiveThing } from "../../../redux/active";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const StorageProducts = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -22,11 +24,15 @@ export const StorageProducts = () => {
   const today = new Date().toISOString().split("T")[0];
   const [showMore, setShowMore] = useState(null);
   const [activePart, setActivePart] = useState(1);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const acIngredients = acItem?.ingredients
+    ? JSON?.parse(acItem?.ingredients)
+    : [];
   const dispatch = useDispatch();
   const { data: products = [], isLoading } = useGetStProductQuery();
   const { data: ingredients = [] } = useGetStIngredientsQuery();
   const { data: category = [] } = useGetStCategoryQuery();
+  dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
 
   const getProduct = (item, amount, status) => {
     const isChecked = checkedData.some((i) => i.id === item.id);
@@ -139,8 +145,6 @@ export const StorageProducts = () => {
               const ingredients = item?.ingredients
                 ? JSON.parse(item.ingredients)
                 : [];
-              console.log(ingredients);
-
               return (
                 <div
                   className={
@@ -157,23 +161,17 @@ export const StorageProducts = () => {
                     }
                     key={item.id}
                     onDoubleClick={() =>
-                      dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                        })
-                      )
+                      dispatch(acActiveThing(!acItem.id ? item : null))
                     }
                   >
                     <label
                       onClick={() =>
-                        dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                          })
-                        )
+                        dispatch(acActiveThing(!acItem?.id ? item : null))
                       }
                     >
                       {checked ? (
+                        <input type="checkbox" name="id" checked />
+                      ) : acItem?.id === item?.id ? (
                         <input type="checkbox" name="id" checked />
                       ) : (
                         <input type="checkbox" name="id" />
@@ -285,18 +283,27 @@ export const StorageProducts = () => {
           )}
         </div>
       </div>
-      <UniversalControlModal type="product" Pdata={checkedData}>
+      <UniversalControlModal
+        status={acItem?.id ? true : false}
+        type="product"
+        Pdata={[...checkedData, ...acIngredients]}
+      >
         <UniversalForm>
           <input
             type="text"
             name="name"
             placeholder="Nomi*"
             required
+            defaultValue={acItem?.id ? acItem?.name : ""}
             autoComplete="off"
             style={{ "--input-width": "15%" }}
           />
           <select name="category" style={{ "--input-width": "15%" }}>
-            <option value="default">Kategoriya tanlang*</option>
+            {acItem?.id ? (
+              <option value={acItem?.category}>{acItem?.category}</option>
+            ) : (
+              <option value="default">Kategoriya tanlang*</option>
+            )}
             {category?.data?.map((item) => {
               return (
                 <option value={item.name} key={item.id}>
@@ -310,12 +317,13 @@ export const StorageProducts = () => {
             name="price"
             placeholder="Narxi*"
             style={{ "--input-width": "12%" }}
+            defaultValue={acItem?.id ? acItem?.price : ""}
           />
           <input
             type="date"
             name="date"
             style={{ "--input-width": "12%" }}
-            defaultValue={today}
+            defaultValue={acItem?.id ? acItem?.date : today}
           />
         </UniversalForm>
         <UniversalProductControl
@@ -344,7 +352,9 @@ export const StorageProducts = () => {
           </div>
           <div className="product_box_body">
             {modalData?.data?.map((item, index) => {
-              const checked = checkedData?.some((i) => i.id === item.id);
+              const checked = [...checkedData, ...acIngredients]?.find(
+                (i) => i.id === item.id
+              );
               return (
                 <div
                   className={`product_box_item ${checked ? "active" : ""}`}
@@ -402,6 +412,7 @@ export const StorageProducts = () => {
                       <input
                         type="text"
                         name="amount"
+                        defaultValue={checked?.amount ? checked.amount : 0}
                         onChange={(e) => getProduct(item, e.target.value, 1)}
                       />
                     )}
@@ -411,7 +422,7 @@ export const StorageProducts = () => {
             })}
           </div>
         </UniversalProductControl>
-        <CalcResult data={checkedData} status="cr">
+        <CalcResult data={[...checkedData, ...acIngredients]} status="cr">
           <CalcResultHeader>
             <p>№</p>
             <p style={{ "--data-line-size": "30%" }}>Nomi</p>
