@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import "../../storage/storage.css";
 import "../universal.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { storageD } from "../../storage/store-data";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const ReportItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([0, 3, 6, 7, 15]));
   const isLoading = false;
   const sortData = storageD.sort((a, b) => {
     if (sort.state) {

@@ -8,6 +8,7 @@ import { useGetStCategoryQuery } from "../../../service/category.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const ReportOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -15,6 +16,7 @@ export const ReportOrders = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
+  dispatch(acNavStatus([0, 3, 6, 7, 15]));
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
   console.log(storeData);
 

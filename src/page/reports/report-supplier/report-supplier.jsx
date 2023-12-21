@@ -10,6 +10,7 @@ import { acOpenUModal } from "../../../redux/u-modal";
 import { useDispatch } from "react-redux";
 
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -22,6 +23,7 @@ export const ReportSuppliers = () => {
   const isLoading = false;
   const depData = [];
   const dispatch = useDispatch();
+  dispatch(acNavStatus([0, 3, 4, 6, 7, 15]));
 
   const sortData = storageD.sort((a, b) => {
     if (sort.state) {

@@ -15,6 +15,7 @@ import {
 } from "../../../service/calc.service";
 import { CalculateTotalByLine } from "../../../service/calc.service";
 import { data } from "../../../components/modal-calc/components";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -29,11 +30,9 @@ export const TransactionRapor = () => {
   const { data: trData = [], isLoading } = useGetTransactionQuery(date);
   const { data: trExpenseData = [] } = useGetTransactionExpenseQuery(date);
   const { data: trIncomeData = [] } = useGetTransactionIncomeQuery(date);
+  dispatch(acNavStatus([0, 6, 7, 15]));
   let total = 0;
-  const startOfDay = 12000;
-  console.log("trData", trData?.data);
-  console.log("trExpenseData", trExpenseData?.data);
-  console.log("trIncomeData", trIncomeData?.data);
+  const startOfDay = 2142322;
 
   const headerData = [
     { name: "Turi", size: "11.3%" },

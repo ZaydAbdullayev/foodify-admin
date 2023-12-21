@@ -9,6 +9,7 @@ import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { useGetCashTransactionQuery } from "../../../service/cash-transaction.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const CashboxTransaction = () => {
   const user = JSON?.parse(localStorage.getItem("user"))?.user || [];
@@ -23,6 +24,7 @@ export const CashboxTransaction = () => {
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
   const { data: cashboxGrData = [] } = useGetCashboxGrQuery();
   const { data: cashTrData = [] } = useGetCashTransactionQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
   console.log("trData", cashTrData);
 
   //   const getProduct = (item, status) => {

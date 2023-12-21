@@ -7,6 +7,7 @@ import { useGetStProductQuery } from "../../../service/s-products.service";
 import { useGetPreOrderQuery } from "../../../service/pre-order.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const InvoicePreOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,6 +18,7 @@ export const InvoicePreOrders = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStProductQuery();
   const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
+  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   console.log(checkedData);
 
   const getProduct = (item, status) => {

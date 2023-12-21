@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useGetCashboxQuery } from "../../../service/cashbox.service";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const Cashboxes = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -14,6 +15,7 @@ export const Cashboxes = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     cashboxData?.data &&

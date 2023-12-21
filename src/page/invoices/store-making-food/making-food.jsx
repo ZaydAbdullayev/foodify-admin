@@ -4,10 +4,11 @@ import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./making-food.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
-import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+// import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 import { useGetMakedFoodQuery } from "../../../service/making-food.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const InvoicesMakingFood = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -18,6 +19,7 @@ export const InvoicesMakingFood = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
   const { data: makedFood = [], isLoading } = useGetMakedFoodQuery();
+  dispatch(acNavStatus([0, 1, 2, 3, 6, 7,15]));
 
   const getProduct = (item, status) => {
     const isChecked = checkedData?.some((i) => i.id === item?.id);

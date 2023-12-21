@@ -7,6 +7,7 @@ import { useGetStInvoiceGroupQuery } from "../../../service/invoice-group.servic
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 export const InvoicesGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -15,6 +16,7 @@ export const InvoicesGroups = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data: groupData = [], isLoading } = useGetStInvoiceGroupQuery();
+  dispatch(acNavStatus([0, 1, 2, 3]));
 
   const sortData =
     groupData?.data &&

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "../../storage/storage.css";
 import "../universal.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { storageD } from "../../storage/store-data";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
+import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -13,6 +14,8 @@ export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([0, 3, 6, 7, 15]));
   const { data: storeData = [] } = useGetStCategoryQuery();
   console.log(storeData);
   const isLoading = false;
