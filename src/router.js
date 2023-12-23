@@ -19,7 +19,7 @@ import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
 import { useSelector, useDispatch } from "react-redux";
-import { Storage, StorageBlog } from "./page/storage/storage";
+import { Storage, Blog } from "./page/storage/storage";
 import { StorageDep } from "./page/storage/store-department/department";
 import { StorageCatgegories } from "./page/storage/store-category/categories";
 import { StorageGroups } from "./page/storage/store-groups/groups";
@@ -91,72 +91,70 @@ export const Router = () => {
               path={department === "owner" ? "orders" : "/"}
               element={<Home />}
             />
-            {department === "owner" || department === "kassir" ? (
-              <>
-                <Route
-                  path={department === "owner" ? "/" : "historical"}
-                  element={<Document />}
-                />
-                <Route path="statistics" element={<Statistics />} />
-                <Route path="navigation-all" element={<NavigationPanel />} />
-                <Route path="storage" element={<StorageBlog />}>
-                  <Route index element={<Storage />} />
-                  <Route path="departments" element={<StorageDep />} />
-                  <Route path="categories" element={<StorageCatgegories />} />
-                  <Route path="groups" element={<StorageGroups />} />
-                  <Route path="ingredients" element={<StorageIngredients />} />
-                  <Route path="s-products" element={<StorageProducts />} />
-                  <Route path="suppliers" element={<StorageSupplier />} />
-                  <Route path="invoices" element={<StorageInvoices />} />
-                  <Route path="expenses" element={<StorageExpenditures />} />
-                  <Route path="cutting" element={<StorageCutting />} />
-                  <Route path="damaget-items" element={<StorageDamaged />} />
-                  <Route path="carry-up" element={<StorageCarryUp />} />
-                  <Route path="report/orders" element={<ReportOrders />} />
-                  <Route path="report/items" element={<ReportItems />} />
-                  <Route path="report/rejects" element={<ReportRejects />} />
-                  <Route path="cashbox" element={<Cashboxes />} />
-                  <Route path="pre-orders" element={<InvoicePreOrders />} />
-                  <Route
-                    path="cashbox/transactions"
-                    element={<CashboxTransaction />}
-                  />
-                  <Route path="making-food" element={<InvoicesMakingFood />} />
-                  <Route path="invoice-group" element={<InvoicesGroups />} />
-                  <Route
-                    path="cashbox/transaction-group"
-                    element={<TransactionGroups />}
-                  />
-                  <Route
-                    path="cashbox/transaction-report"
-                    element={<TransactionRapor />}
-                  />
-                  <Route
-                    path="report/suppliers"
-                    element={<ReportSuppliers />}
-                  />
-                  <Route
-                    path="report/ingredients"
-                    element={<ReportIngredients />}
-                  />
-                </Route>
-                <Route path="product/add" element={<Addproduct />} />
-                <Route path="get/check/:id" element={<PaymentCheck />} />
-              </>
-            ) : (
-              <></>
-            )}
-            <Route path="payment" element={<Payment />} />
+            <Route path="statistics" element={<Statistics />} />
+            <Route path="managment" element={<Blog />}>
+              <Route index element={<NavigationPanel />} />
+              <Route path="product" element={<Products />} />
+              <Route
+                path={department === "owner" ? "" : "historical"}
+                element={<Document />}
+              />
+              <Route path="add" element={<Addproduct />} />
+            </Route>
+            <Route path="orders" element={<Blog />}>
+              <Route
+                path={department === "owner" ? "orders" : ""}
+                element={<Home />}
+              />
+              <Route path="cooking/food" element={<MakingFoods />} />
+              <Route path="prepared/food" element={<MakedFoods />} />
+              <Route path="pre-orders" element={<InvoicePreOrders />} />
+            </Route>
+            <Route path="financial" element={<Blog />}>
+              <Route path="payment" element={<Payment />} />
+              <Route
+                path="cashbox/transactions"
+                element={<CashboxTransaction />}
+              />
+              <Route
+                path="cashbox/transaction-report"
+                element={<TransactionRapor />}
+              />
+              <Route path="get/check/:id" element={<PaymentCheck />} />
+            </Route>
+            <Route path="sections" element={<Blog />}>
+              <Route path="storage" element={<Storage />} />
+              <Route path="departments" element={<StorageDep />} />
+              <Route path="categories" element={<StorageCatgegories />} />
+              <Route path="groups" element={<StorageGroups />} />
+              <Route path="ingredients" element={<StorageIngredients />} />
+              <Route path="s-products" element={<StorageProducts />} />
+              <Route path="suppliers" element={<StorageSupplier />} />
+              <Route path="cashbox" element={<Cashboxes />} />
+              <Route path="invoice-group" element={<InvoicesGroups />} />
+              <Route
+                path="cashbox/transaction-group"
+                element={<TransactionGroups />}
+              />
+              <Route path="workers" element={<Workers />} />
+              <Route path="workers/add" element={<AddWorker />} />
+            </Route>
+            <Route path="storage" element={<Blog />}>
+              <Route path="invoices" element={<StorageInvoices />} />
+              <Route path="expenses" element={<StorageExpenditures />} />
+              <Route path="cutting" element={<StorageCutting />} />
+              <Route path="damaget-items" element={<StorageDamaged />} />
+              <Route path="carry-up" element={<StorageCarryUp />} />
+              <Route path="making-food" element={<InvoicesMakingFood />} />
+            </Route>
+            <Route path="reports" element={<Blog />}>
+              <Route path="orders" element={<ReportOrders />} />
+              <Route path="items" element={<ReportItems />} />
+              <Route path="rejects" element={<ReportRejects />} />
+              <Route path="ingredients" element={<ReportIngredients />} />
+              <Route path="suppliers" element={<ReportSuppliers />} />
+            </Route>
             <Route path="sidebar" element={<Sidebar />} />
-            <Route path="product" element={<Products />} />
-            {department === "owner" && (
-              <>
-                <Route path="workers" element={<Workers />} />
-                <Route path="workers/add" element={<AddWorker />} />
-              </>
-            )}
-            <Route path="cooking/food" element={<MakingFoods />} />
-            <Route path="prepared/food" element={<MakedFoods />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

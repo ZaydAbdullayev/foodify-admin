@@ -4,7 +4,7 @@ import { useAddWorkerMutation } from "../../../service/workers.service";
 import { useGetDepQuery } from "../../../service/user.service";
 import { usePermissionMutation } from "../../../service/user.service";
 import { enqueueSnackbar as es } from "notistack";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../../../components/loading/loading";
 
 export const AddWorker = ({ open, setOpen, state }) => {
@@ -14,7 +14,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
   const [addWorkerMutation] = useAddWorkerMutation();
   const { data: depData = [] } = useGetDepQuery(res.id);
   const [permissionMutation] = usePermissionMutation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const addWorker = async (e) => {
     e.preventDefault();
@@ -26,7 +26,6 @@ export const AddWorker = ({ open, setOpen, state }) => {
       if (data) {
         setOpen(false);
         es("Ishchi qo'shildi", { variant: "success" });
-        navigate("/workers");
       }
     } catch (err) {
       return es("Xatolik", { variant: "error" });

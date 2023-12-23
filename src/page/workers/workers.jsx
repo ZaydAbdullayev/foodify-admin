@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import "./workers.css";
-import {
-  useGetWorkersQuery,
-  useDeleteWorkerMutation,
-  useUpdateWorkerMutation,
-} from "../../service/workers.service";
+import { useDeleteWorkerMutation } from "../../service/workers.service";
+import { useGetWorkersQuery } from "../../service/workers.service";
+import { useUpdateWorkerMutation } from "../../service/workers.service";
 import { enqueueSnackbar as es } from "notistack";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
@@ -16,6 +14,7 @@ import { AddWorker } from "./addWorker/addWorker";
 import { FaCheck } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { FaUserLock } from "react-icons/fa";
+import { acNavStatus } from "../../redux/navbar.status";
 
 export const Workers = () => {
   const permission = JSON.parse(localStorage.getItem("permission")) || null;
@@ -28,6 +27,8 @@ export const Workers = () => {
   const { data: workersData = [] } = useGetWorkersQuery();
   const [deleteWorkerMutation] = useDeleteWorkerMutation();
   const [updateWorkerMutation] = useUpdateWorkerMutation();
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
 
   const handleEdit = async (value) => {
     const { error, data } = await updateWorkerMutation(value);

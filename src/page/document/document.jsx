@@ -7,7 +7,8 @@ import AnimatedNumber from "animated-number-react";
 import { useGetByDateQuery } from "../../service/product.service";
 import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { acNavStatus } from "../../redux/navbar.status";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -20,6 +21,8 @@ export const Document = () => {
   });
   const { data = [], isLoading } = useGetByDateQuery(date);
   const search = useSelector((state) => state.search);
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
 
   const getCategry = (name) => {
     navigate(`/historical/?cp=${name}|dateby=${date.fdate}&${date.tdate}`);

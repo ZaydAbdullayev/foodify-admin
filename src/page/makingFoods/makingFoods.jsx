@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ApiGetService } from "../../service/api.service";
 import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
+import { acNavStatus } from "../../redux/navbar.status";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -19,6 +20,7 @@ export const MakingFoods = () => {
   const [stution, setStution] = useState(null);
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
+  dispatch(acNavStatus([100]));
 
   useEffect(() => {
     setTimeout(() => {

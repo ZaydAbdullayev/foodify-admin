@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AddPayment } from "./addPayment/addPayment";
 import { LuArrowLeftRight } from "react-icons/lu";
 import { useGetPaymentOrderQuery } from "../../service/user.service";
-// import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { acNavStatus } from "../../redux/navbar.status";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -17,9 +18,11 @@ export const Payment = () => {
     end: new Date().toISOString().split("T")[0],
   });
   const { data: ordersData = [] } = useGetPaymentOrderQuery(date);
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
 
   const getDetails = (id) => {
-    navigate(`/payment?dt=${id}`);
+    navigate(`/financial/payment?dt=${id}`);
     setOpen(true);
   };
 

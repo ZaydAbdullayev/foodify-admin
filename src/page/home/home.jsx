@@ -6,6 +6,7 @@ import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
+import { acNavStatus } from "../../redux/navbar.status";
 
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
@@ -25,6 +26,7 @@ export const Home = () => {
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}/0`

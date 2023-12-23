@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./navigation.css";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 export const NavigationPanel = () => {
   const [part, setPart] = useState(0);

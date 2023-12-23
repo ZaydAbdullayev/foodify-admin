@@ -16,6 +16,7 @@ import { reModalType } from "./u-modal";
 import { apiSlice } from "../service/frame.service";
 import { reActiveThing } from "./active";
 import { reNavStatus } from "./navbar.status";
+import { reMedia } from "./media";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -33,6 +34,7 @@ export const store = configureStore({
     activeThing: reActiveThing,
     uSearch: reGetNewData,
     status: reNavStatus,
+    media: reMedia,
     [apiSlice.reducerPath]: apiSlice.reducer,
   }),
   middleware: (getDefaultMiddleware) =>

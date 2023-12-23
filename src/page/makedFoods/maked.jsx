@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ApiGetService } from "../../service/api.service";
+import { useDispatch } from "react-redux";
+import { acNavStatus } from "../../redux/navbar.status";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -9,6 +11,8 @@ export const MakedFoods = () => {
   const newOrder = useSelector((state) => state.upload);
   const [orders, setOrders] = useState([]);
   const id = user?.user?.id;
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
 
   useEffect(() => {
     ApiGetService.fetching(`get/orders/${id}/3`)

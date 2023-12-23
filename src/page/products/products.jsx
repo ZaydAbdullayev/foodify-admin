@@ -4,17 +4,17 @@ import { Link, useLocation } from "react-router-dom";
 import { ApiUpdateService } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
 import { enqueueSnackbar as es } from "notistack";
-import {
-  useUpdatePbyIdMutation,
-  useDeleteProductMutation,
-  useGetAllProductQuery,
-} from "../../service/product.service";
+import { useUpdatePbyIdMutation } from "../../service/product.service";
+import { useDeleteProductMutation } from "../../service/product.service";
+import { useGetAllProductQuery } from "../../service/product.service";
+import { useDispatch } from "react-redux";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
 import { FaPen, FaCheck } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { LoadingBtn } from "../../components/loading/loading";
+import { acNavStatus } from "../../redux/navbar.status";
 
 export const Products = () => {
   const user_id = JSON.parse(localStorage.getItem("user"))?.user?.id;
@@ -25,6 +25,8 @@ export const Products = () => {
   const { data: products = [], isLoading } = useGetAllProductQuery(user_id);
   const [updatePbyId] = useUpdatePbyIdMutation();
   const [deleteProduct] = useDeleteProductMutation();
+  const dispatch = useDispatch();
+  dispatch(acNavStatus([100]));
 
   const getUniqueCategories = () => {
     const uniqueCategories = new Set();

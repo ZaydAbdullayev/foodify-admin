@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./navbar.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
 import { acGetDate } from "../../redux/search";
@@ -19,6 +19,7 @@ import { MdDelete } from "react-icons/md";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
+import { acMedia } from "../../redux/media";
 // import { acNavStatus } from "../../redux/navbar.status";
 
 export const Navbar = () => {
@@ -28,17 +29,13 @@ export const Navbar = () => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation().pathname;
   const name = user?.user?.username?.split("_")?.join(" ");
   const acItem = useSelector((state) => state.active);
   const acP = useSelector((state) => state.activeThing);
   const searchD = useSelector((state) => state.uSearch);
   const status = useSelector((state) => state.status);
+  const media = useSelector((state) => state.media);
   const { data = [] } = useGetCashboxQuery();
-
-  // useEffect(() => {
-  //   dispatch(acNavStatus([]));
-  // }, [dispatch, location]);
 
   const today = getFormattedDate(0);
   const yesterday = getFormattedDate(1);
@@ -80,17 +77,20 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
-      <div className="nav_menu">
+      <div
+        className="nav_menu"
+        onClick={() => dispatch(acMedia(media ? false : true))}
+      >
         <img src={logo} alt="" />
       </div>
       {status?.includes(0) && (
         <div className="short_hands">
-          {status.includes(1) && (
+          {status?.includes(1) && (
             <button onClick={openUModal}>
               <BiPlus />
             </button>
           )}
-          {status.includes(2) && (
+          {status?.includes(2) && (
             <button
               style={
                 acItem.id || acP?.id
@@ -102,7 +102,7 @@ export const Navbar = () => {
               <BiEdit />
             </button>
           )}
-          {status.includes(3) && (
+          {status?.includes(3) && (
             <button
               style={
                 acItem.id || acP?.id
@@ -114,7 +114,7 @@ export const Navbar = () => {
             </button>
           )}
           <div className="short-hands_sort__box">
-            {status.includes(5) && (
+            {status?.includes(5) && (
               <label>
                 <input
                   type="search"
@@ -126,7 +126,7 @@ export const Navbar = () => {
                 />
               </label>
             )}
-            {status.includes(4) && (
+            {status?.includes(4) && (
               <label>
                 <input
                   type="search"
@@ -138,7 +138,7 @@ export const Navbar = () => {
                 />
               </label>
             )}
-            {status.includes(6) && (
+            {status?.includes(6) && (
               <select>
                 <option value={{ start: today }}>Bugun</option>
                 <option value={{ start: yesterday }}>Kecha</option>
@@ -154,7 +154,7 @@ export const Navbar = () => {
                 <option value={{ start: thisYear }}>Bu yil</option>
               </select>
             )}
-            {status.includes(7) && (
+            {status?.includes(7) && (
               <>
                 <label>
                   <input
@@ -188,7 +188,7 @@ export const Navbar = () => {
                 </label>
               </>
             )}
-            {status.includes(8) && (
+            {status?.includes(8) && (
               <select
                 onChange={(e) =>
                   dispatch(
@@ -205,7 +205,7 @@ export const Navbar = () => {
                 ))}
               </select>
             )}
-            {status.includes(9) && (
+            {status?.includes(9) && (
               <select
                 onChange={(e) =>
                   dispatch(
@@ -222,7 +222,7 @@ export const Navbar = () => {
                 ))}
               </select>
             )}
-            {status.includes(15) && (
+            {status?.includes(15) && (
               <button
                 style={
                   search.length
@@ -236,7 +236,7 @@ export const Navbar = () => {
           </div>
         </div>
       )}
-      {!location.startsWith("/storage") && (
+      {status.includes(100) && (
         <form className="search">
           <BsSearch />
           <input

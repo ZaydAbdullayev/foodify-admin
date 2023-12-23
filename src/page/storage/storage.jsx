@@ -122,6 +122,6 @@ export const Storage = () => {
   );
 };
 
-export const StorageBlog = () => {
+export const Blog = () => {
   return <Outlet />;
 };

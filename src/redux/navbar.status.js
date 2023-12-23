@@ -1,4 +1,4 @@
-export const reNavStatus = (state = 0, action) => {
+export const reNavStatus = (state = [], action) => {
   switch (action.type) {
     case "STATUS":
       return action.payload;

@@ -31,9 +31,9 @@ export const AddPayment = memo(({ open, setOpen }) => {
       if (res === 200) {
         es("To'lov qilindi!", { variant: "success" });
       }
-      navigate(window.location.pathname + window.location.search, {
-        replace: true,
-      });
+      // navigate(window.location.pathname + window.location.search, {
+      //   replace: true,
+      // });
 
       setOpen(false);
     } catch (error) {

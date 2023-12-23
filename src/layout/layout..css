@@ -48,11 +48,14 @@ main > :first-child {
     overflow: hidden;
     backdrop-filter: blur(10px);
     transition: all 0.5s ease;
-    border-radius: 0 0 30px 30px;
   }
 
   .short_aside.active {
-    height: auto;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .short_aside.active::-webkit-scrollbar {
+    display: none;
   }
 
   .long_main {
