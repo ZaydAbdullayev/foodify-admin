@@ -100,6 +100,25 @@
   border-radius: 50%;
 }
 
+/* ============== Style of add_table ============== */
+.add_table_btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs2);
+  gap: var(--gap1);
+}
+
+.add_table_btn b {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  margin-left: -10px;
+  font-size: var(--fs4);
+  color: #fff;
+}
+
 /* ===================== Style of modal ===================== */
 .modal_box {
   position: fixed;

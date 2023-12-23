@@ -1,0 +1,41 @@
+.home {
+  max-width: 1440px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-size: var(--fs4);
+}
+
+.home_filter {
+  border-bottom: 1px solid #ccc4;
+}
+
+.home_filter__item {
+  width: calc(100% / 9 - var(--gap3) * 8 / 9);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc6;
+  border-radius: 8px;
+  font-size: var(--fs5);
+  letter-spacing: 1px;
+}
+
+.home_filter__item.active {
+  background: #ccc;
+  color: #333;
+  font-weight: 600;
+}
+
+.home_table_box {
+  width: 100%;
+  padding: var(--pd5);
+  padding-top: 5%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap4);
+}

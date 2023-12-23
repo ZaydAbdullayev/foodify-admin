@@ -11,6 +11,7 @@ import { useGetCashboxQuery } from "../../service/cashbox.service";
 import { calculateMonthRange } from "../../service/calc-date.service";
 import { getFormattedDate } from "../../service/calc-date.service";
 import { calculateWeekRange } from "../../service/calc-date.service";
+import { acMedia } from "../../redux/media";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
@@ -19,8 +20,7 @@ import { MdDelete } from "react-icons/md";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
-import { acMedia } from "../../redux/media";
-// import { acNavStatus } from "../../redux/navbar.status";
+import { MdTableBar } from "react-icons/md";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -235,6 +235,12 @@ export const Navbar = () => {
             )}
           </div>
         </div>
+      )}
+      {status.includes(101) && (
+        <span className="add_table_btn">
+          <b>+</b>
+          <MdTableBar />{" "}
+        </span>
       )}
       {status.includes(100) && (
         <form className="search">

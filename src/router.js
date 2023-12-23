@@ -46,6 +46,7 @@ import { CashboxTransaction } from "./page/cashbox/cash-transaction/cash-transac
 import { InvoicePreOrders } from "./page/invoices/invoice-envanter/pre-order";
 import { TransactionRapor } from "./page/cashbox/cashbox-report/cashbox-report";
 import { NavigationPanel } from "./page/navigation/navigation";
+import { TableBox } from "./page/table-box/table-box";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -92,6 +93,7 @@ export const Router = () => {
               element={<Home />}
             />
             <Route path="statistics" element={<Statistics />} />
+            <Route path="tables" element={<TableBox />} />
             <Route path="managment" element={<Blog />}>
               <Route index element={<NavigationPanel />} />
               <Route path="product" element={<Products />} />
