@@ -90,6 +90,12 @@ export const Navbar = () => {
               <BiPlus />
             </button>
           )}
+          {status.includes(101) && (
+            <button onClick={openUModal}>
+              <b>+</b>
+              <MdTableBar />{" "}
+            </button>
+          )}
           {status?.includes(2) && (
             <button
               style={
@@ -236,12 +242,7 @@ export const Navbar = () => {
           </div>
         </div>
       )}
-      {status.includes(101) && (
-        <span className="add_table_btn">
-          <b>+</b>
-          <MdTableBar />{" "}
-        </span>
-      )}
+
       {status.includes(100) && (
         <form className="search">
           <BsSearch />

@@ -9,12 +9,13 @@
 }
 
 .home_filter {
+  height: var(--nwh);
   border-bottom: 1px solid #ccc4;
 }
 
 .home_filter__item {
-  width: calc(100% / 9 - var(--gap3) * 8 / 9);
-  height: 40px;
+  padding: 0 5%;
+  height: calc(30px + (40 - 30) * (100vw - 320px) / (1440 - 320));
   display: flex;
   align-items: center;
   justify-content: center;

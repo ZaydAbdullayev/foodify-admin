@@ -5,19 +5,33 @@ export const suplierApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getLocation: builder.query({
       query: () => ({
-        url: `get/suppliers/${user?.user?.id}`,
+        url: `/get/tlocations/${user?.user?.id}`,
         method: "GET",
       }),
-      providesTags: ["suplier"],
+      providesTags: ["table"],
+    }),
+    getTables: builder.query({
+      query: (location) => ({
+        url: `/get/tables/${user?.user?.id}/${location}`,
+        method: "GET",
+      }),
+      providesTags: ["table"],
+    }),
+    getTable: builder.query({
+      query: (id) => ({
+        url: `/get/table/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["table"],
     }),
 
-    addStSuplier: builder.mutation({
+    addTable: builder.mutation({
       query: (value) => ({
-        url: `add/supplier`,
+        url: `add/table`,
         method: "POST",
         body: value,
       }),
-      invalidatesTags: ["suplier"],
+      invalidatesTags: ["table"],
     }),
 
     updateStSuplier: builder.mutation({
@@ -26,7 +40,7 @@ export const suplierApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
-      invalidatesTags: ["suplier"],
+      invalidatesTags: ["table"],
     }),
 
     deleteStSuplier: builder.mutation({
@@ -34,13 +48,15 @@ export const suplierApi = apiSlice.injectEndpoints({
         url: `delete/suppliers/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["suplier"],
+      invalidatesTags: ["table"],
     }),
   }),
 });
 
 export const {
-  useAddStSuplierMutation,
+  useAddTableMutation,
+  useGetTableQuery,
+  useGetTablesQuery,
   useUpdateStSuplierMutation,
   useGetLocationQuery,
   useDeleteStSuplierMutation,

@@ -25,6 +25,7 @@ import { useUpdateStInvoiceGroupMutation } from "../../service/invoice-group.ser
 import { useUpdateCashboxMutation } from "../../service/cashbox.service";
 import { useUpdateCashboxGrMutation } from "../../service/cashbox-group.service";
 import { useUpdateCashTransactionMutation } from "../../service/cash-transaction.service";
+import { useAddTableMutation } from "../../service/table.service";
 
 export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
   const open = useSelector((state) => state.uModal);
@@ -39,6 +40,7 @@ export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
   const [addCashbox] = useAddCashboxMutation();
   const [addCashboxGr] = useAddCashboxGrMutation();
   const [addCashTransaction] = useAddCashTransactionMutation();
+  const [addTable] = useAddTableMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
@@ -91,6 +93,9 @@ export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
           break;
         case "trsn":
           result = await addCashTransaction(value);
+          break;
+        case "table":
+          result = await addTable(value);
           break;
         default:
           break;

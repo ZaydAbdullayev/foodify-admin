@@ -47,6 +47,8 @@ import { InvoicePreOrders } from "./page/invoices/invoice-envanter/pre-order";
 import { TransactionRapor } from "./page/cashbox/cashbox-report/cashbox-report";
 import { NavigationPanel } from "./page/navigation/navigation";
 import { TableBox } from "./page/table-box/table-box";
+import { Orders } from "./page/orders/orders";
+import { OrderById } from "./page/order-by-id/order-by-id";
 
 export const Router = () => {
   const login = JSON.parse(localStorage.getItem("user")) || [];
@@ -94,6 +96,8 @@ export const Router = () => {
             />
             <Route path="statistics" element={<Statistics />} />
             <Route path="tables" element={<TableBox />} />
+            <Route path="category/:type/:number/:id" element={<Orders />} />
+            <Route path="/:type/:number/:id" element={<OrderById />} />
             <Route path="managment" element={<Blog />}>
               <Route index element={<NavigationPanel />} />
               <Route path="product" element={<Products />} />

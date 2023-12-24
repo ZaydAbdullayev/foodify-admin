@@ -21,6 +21,7 @@
 }
 
 .short_hands button {
+  position: relative;
   width: var(--nbwh);
   height: var(--nbwh);
   border-radius: 50%;
@@ -101,20 +102,20 @@
 }
 
 /* ============== Style of add_table ============== */
-.add_table_btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  font-size: var(--fs2);
-  gap: var(--gap1);
-}
-
-.add_table_btn b {
+.short_hands button b {
   position: absolute;
-  left: 0;
+  left: 10%;
   top: 50%;
   transform: translate(0, -50%);
-  margin-left: -10px;
+  font-size: var(--fs5);
+  color: #fff;
+}
+
+.short_hands button > :nth-child(2) {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translate(0, -50%);
   font-size: var(--fs4);
   color: #fff;
 }

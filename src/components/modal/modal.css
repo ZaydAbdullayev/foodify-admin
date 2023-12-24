@@ -12,6 +12,7 @@
   -webkit-backdrop-filter: blur(5px);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
+  z-index: 99;
 }
 
 .u_modal_container.open {
