@@ -25,7 +25,7 @@ export const OrderById = () => {
       status: 0,
     };
     socket.emit("/update/table", uData);
-    navigate("/");
+    navigate("/orders/tables");
   };
 
   return (

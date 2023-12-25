@@ -1,9 +1,15 @@
-export const CalculateTotalPrice = (cart) => {
-  const totalPrice = cart?.reduce(
-    (accumulator, item) => accumulator + item?.price * item?.quantity + 5000,
+export const CalculateTotalPrice = (cart = [], percentage = 10) => {
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + (item?.price || 0) * (item?.quantity || 1),
     0
   );
-  return totalPrice;
+  const service = isNaN(totalPrice) ? 0 : (totalPrice / 100) * percentage;
+
+  return {
+    totalPrice,
+    service: service.toFixed(2),
+    total: totalPrice + service.toFixed(2),
+  };
 };
 
 export const CalculateTotalQuantity = (cart, key) => {
@@ -26,7 +32,6 @@ export const CalculateTotalP = (cart, first, second) => {
 export const CalculateTotalByLine = (cart, keyToExclude) => {
   const totalPrice =
     cart?.reduce((accumulator, item) => {
-      // Anahtar hariç tüm öğeleri topla
       if (!item.hasOwnProperty(keyToExclude)) {
         accumulator += parseInt(item[keyToExclude], 10) || 0;
       }

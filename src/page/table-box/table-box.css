@@ -9,19 +9,18 @@
 }
 
 .home_filter {
-  height: var(--nwh);
   border-bottom: 1px solid #ccc4;
 }
 
 .home_filter__item {
-  padding: 0 5%;
-  height: calc(30px + (40 - 30) * (100vw - 320px) / (1440 - 320));
+  padding: 0 3%;
+  height: calc(30px + (35 - 30) * (100vw - 320px) / (1440 - 320));
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #ccc6;
-  border-radius: 8px;
-  font-size: var(--fs5);
+  border-radius: 6px;
+  font-size: var(--fs6);
   letter-spacing: 1px;
 }
 
@@ -34,7 +33,6 @@
 .home_table_box {
   width: 100%;
   padding: var(--pd5);
-  padding-top: 5%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

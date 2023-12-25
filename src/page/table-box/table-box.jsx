@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./table-box.css";
 import { Table } from "../../components/table/table";
 import { useGetLocationQuery } from "../../service/table.service";
@@ -20,25 +20,32 @@ export const TableBox = () => {
   const [type, setType] = useState("stoll");
   const dispatch = useDispatch();
   dispatch(acNavStatus([0, 101, 100]));
-  console.log(category);
   const [tablesData, setTablesData] = useState([]);
   // isLoading: loading, isError: error, data: tables = []
 
-  const filterData = (type) => {
-    setActive(type);
-    const data = {
-      res_id: user?.id,
-      location: type,
-    };
-    socket.emit("/get/tables", data);
-    socket.on(`/get/table/${data.res_id}/${data.location}`, (data) => {
-      setTablesData(data);
-    });
-  };
+  const filterData = useCallback(
+    (type) => {
+      setActive(type);
+      const data = {
+        res_id: user?.id,
+        location: type,
+      };
+      socket.emit("/get/tables", data);
+
+      socket.on(`/get/table/${data.res_id}/${data.location}`, (data) => {
+        setTablesData(data);
+      });
+
+      return () => {
+        socket.off(`/get/table/${data.res_id}/${data.location}`);
+      };
+    },
+    [user?.id]
+  );
 
   useEffect(() => {
     filterData(category?.data?.[0]);
-  }, [category?.data]);
+  }, [category?.data, filterData]);
 
   return (
     <div className="box">
@@ -126,137 +133,3 @@ export const TableBox = () => {
     </div>
   );
 };
-
-// const tables = [
-//   {
-//     id: 1,
-//     type: "tashqari",
-//     name: 1,
-//     people: 4,
-//     status: 0,
-//   },
-//   {
-//     id: 2,
-//     type: "tashqari",
-//     name: 2,
-//     people: 6,
-//     status: 1,
-//   },
-//   {
-//     id: 3,
-//     type: "tashqari",
-//     name: 3,
-//     people: 4,
-//     status: 2,
-//   },
-//   {
-//     id: 4,
-//     type: "tashqari",
-//     name: 4,
-//     people: 8,
-//     status: 0,
-//   },
-//   {
-//     id: 7,
-//     type: "ichkari",
-//     name: 3,
-//     people: 6,
-//     status: 2,
-//   },
-//   {
-//     id: 5,
-//     type: "ichkari",
-//     name: 1,
-//     people: 4,
-//     status: 0,
-//   },
-//   {
-//     id: 6,
-//     type: "ichkari",
-//     name: 2,
-//     people: 8,
-//     status: 1,
-//   },
-//   {
-//     id: 8,
-//     type: "ichkari",
-//     name: 4,
-//     people: 4,
-//     status: 0,
-//   },
-//   {
-//     id: 9,
-//     type: "padval",
-//     name: 1,
-//     people: 6,
-//     status: 0,
-//   },
-//   {
-//     id: 11,
-//     type: "padval",
-//     name: 3,
-//     people: 4,
-//     status: 2,
-//   },
-//   {
-//     id: 10,
-//     type: "padval",
-//     name: 2,
-//     people: 8,
-//     status: 1,
-//   },
-//   {
-//     id: 12,
-//     type: "padval",
-//     name: 4,
-//     people: 4,
-//     status: 0,
-//   },
-//   {
-//     id: 13,
-//     type: "padval",
-//     name: 1,
-//     people: 6,
-//     status: 0,
-//   },
-//   {
-//     id: 14,
-//     type: "padval",
-//     name: 2,
-//     people: 4,
-//     status: 1,
-//   },
-//   {
-//     id: 15,
-//     type: "padval",
-//     name: 3,
-//     people: 6,
-//     status: 2,
-//   },
-//   {
-//     id: 16,
-//     type: "padval",
-//     name: 4,
-//     people: 6,
-//     status: 0,
-//   },
-// ];
-
-// const category = [
-//   {
-//     id: 1,
-//     name: "tashqari",
-//   },
-//   {
-//     id: 2,
-//     name: "ichkari",
-//   },
-//   {
-//     id: 3,
-//     name: "2-qavat",
-//   },
-//   {
-//     id: 4,
-//     name: "padval",
-//   },
-// ];

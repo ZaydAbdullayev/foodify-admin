@@ -116,6 +116,7 @@ export const Sidebar = () => {
               return (
                 <div
                   key={item?.id}
+                  className="menu_container"
                   style={item?.permission ? {} : { display: "none" }}
                 >
                   <Link
@@ -128,41 +129,41 @@ export const Sidebar = () => {
                     onClick={() => handleCategoryClick(item?.id)}
                   >
                     <span>{item?.icon}</span> <p>{item?.name}</p>
-                    <i style={item?.list ? {} : { display: "none" }}>
+                    {/* <i style={item?.list ? {} : { display: "none" }}>
                       {activeCategoryId === item?.id ? (
                         <RiArrowDownSLine />
                       ) : (
                         <RiArrowUpSLine />
                       )}
-                    </i>
+                    </i> */}
+                    {item?.id === activeCategoryId && (
+                      <ul className="inner_menu">
+                        {Category?.filter(
+                          (cat) => cat?.id === activeCategoryId
+                        ).map((catItem) => (
+                          <li key={catItem?.path}>
+                            <Link
+                              to={`${item?.path}${catItem?.path}`}
+                              style={
+                                location === `${item?.path}${catItem?.path}`
+                                  ? { color: "#787aff" }
+                                  : {}
+                              }
+                            >
+                              {isShrinkView ? (
+                                catItem?.icon
+                              ) : (
+                                <>
+                                  {catItem?.icon}
+                                  {catItem?.name}
+                                </>
+                              )}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </Link>
-                  {item?.id === activeCategoryId && (
-                    <ul className="inner_menu">
-                      {Category?.filter(
-                        (cat) => cat?.id === activeCategoryId
-                      ).map((catItem) => (
-                        <li key={catItem?.path}>
-                          <Link
-                            to={`${item?.path}${catItem?.path}`}
-                            style={
-                              location === `${item?.path}${catItem?.path}`
-                                ? { color: "#787aff" }
-                                : {}
-                            }
-                          >
-                            {isShrinkView ? (
-                              catItem?.icon
-                            ) : (
-                              <>
-                                {catItem?.icon}
-                                {catItem?.name}
-                              </>
-                            )}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </div>
               );
             })}

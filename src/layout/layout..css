@@ -3,7 +3,7 @@
   height: 100%;
   display: flex;
   background: #555;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 main {
@@ -45,7 +45,6 @@ main > :first-child {
     width: var(--nwh);
     height: var(--nwh);
     z-index: 9999;
-    overflow: hidden;
     backdrop-filter: blur(10px);
     transition: all 0.5s ease;
   }

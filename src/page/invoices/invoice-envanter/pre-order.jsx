@@ -19,8 +19,7 @@ export const InvoicePreOrders = () => {
   const { data: ingredientData = [] } = useGetStProductQuery();
   const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
   dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
-  console.log(checkedData);
-
+  
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {

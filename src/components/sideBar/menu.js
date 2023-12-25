@@ -1,4 +1,4 @@
-import { MdDashboard, MdFastfood } from "react-icons/md";
+import { MdDashboard, MdFastfood, MdTableBar } from "react-icons/md";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
 import { AiFillSetting } from "react-icons/ai";
@@ -259,6 +259,12 @@ export const Category = [
     name: "Oldindan buyurtma",
     path: "/pre-orders",
     icon: <GiRiceCooker />,
+  },
+  {
+    id: "2",
+    name: "Stollar & Xonalar",
+    path: "/tables",
+    icon: <MdTableBar />,
   },
   {
     id: "765433",

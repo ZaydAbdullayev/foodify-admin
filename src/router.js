@@ -95,9 +95,7 @@ export const Router = () => {
               element={<Home />}
             />
             <Route path="statistics" element={<Statistics />} />
-            <Route path="tables" element={<TableBox />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
-            <Route path="/:type/:number/:id" element={<OrderById />} />
             <Route path="managment" element={<Blog />}>
               <Route index element={<NavigationPanel />} />
               <Route path="product" element={<Products />} />
@@ -115,6 +113,8 @@ export const Router = () => {
               <Route path="cooking/food" element={<MakingFoods />} />
               <Route path="prepared/food" element={<MakedFoods />} />
               <Route path="pre-orders" element={<InvoicePreOrders />} />
+              <Route path="tables" element={<TableBox />} />
+              <Route path="tables/:type/:number/:id" element={<OrderById />} />
             </Route>
             <Route path="financial" element={<Blog />}>
               <Route path="payment" element={<Payment />} />

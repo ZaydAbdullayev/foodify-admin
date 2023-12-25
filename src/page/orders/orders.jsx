@@ -2,7 +2,10 @@ import React, { useState, useMemo } from "react";
 import "./order.css";
 import "./cart.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CalculateTotalPrice } from "../../service/calc.service";
+import {
+  CalculateTotalPrice,
+  CalculateTotalQuantity,
+} from "../../service/calc.service";
 import { useGetStProductQuery } from "../../service/s-products.service";
 import { useGetStCategoryQuery } from "../../service/category.service";
 import io from "socket.io-client";
@@ -37,14 +40,19 @@ export const Orders = () => {
   const cart = useMemo(() => {
     return JSON?.parse(localStorage?.getItem("cart")) || [];
   }, []);
-  const total = CalculateTotalPrice(cart);
+  const total = CalculateTotalPrice(cart, 10);
+  const prime_cost = CalculateTotalQuantity(cart, "prime_cost");
 
   const paymentData = {
     address: `&${position[3]}-stoll`,
     restaurant_id: user?.user?.id,
     user_id: position[4],
     product_data: JSON.stringify(cart),
-    price: total,
+    food_total: total?.totalPrice,
+    service: total?.service,
+    prime_cost: prime_cost,
+    total: total?.total,
+    paid: total?.total,
     payment: "token",
     table_name: position[3],
     worker_name: user?.user?.name,
@@ -84,6 +92,7 @@ export const Orders = () => {
   };
 
   const resieveOrderS = async () => {
+    console.log(paymentData);
     const uData = {
       id: position[4],
       status: 2,
@@ -95,7 +104,7 @@ export const Orders = () => {
     socket.emit("/order", paymentData);
     socket.emit("/update/table", uData);
     localStorage.removeItem("cart");
-    navigate("/");
+    navigate("/orders/tables");
     es("Buyurtma yuborildi!", { variant: "success" });
   };
 
@@ -243,7 +252,7 @@ export const Orders = () => {
           <p>
             <span>Jami:</span>{" "}
             <NumericFormat
-              value={total || 0}
+              value={total?.totalPrice || 0}
               thousandSeparator=" "
               displayType="text"
               suffix=" so'm"
