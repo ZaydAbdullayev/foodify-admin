@@ -1,73 +1,25 @@
 import React, { useState } from "react";
-import { TweenMax, Elastic } from "gsap";
 import "./touch.css";
 
 export const AssistiveTouch = () => {
-  const [assistOn, setAssistOn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const assistiveHandler = () => {
-    // Toggle assistOn state
-    setAssistOn(!assistOn);
-
-    // Animation logic
-    if (!assistOn) {
-      TweenMax.to(".assistiveItems", 0.5, {
-        width: "80%",
-        height: "80%",
-        ease: Elastic.easeOut,
-      });
-
-      TweenMax.staggerTo(
-        ".atItem",
-        0.5,
-        {
-          y: -50,
-          opacity: 1,
-          ease: Elastic.easeOut,
-        },
-        0.1
-      );
-    } else {
-      TweenMax.to(".assistiveItems", 0.5, {
-        width: 0,
-        height: 0,
-        ease: Elastic.easeOut,
-      });
-
-      TweenMax.staggerTo(
-        ".atItem",
-        0.5,
-        {
-          y: 0,
-          opacity: 0,
-          ease: Elastic.easeOut,
-        },
-        0.1
-      );
-    }
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
-    <div
-      className={`assistiveTouch ${assistOn ? "active" : ""}`}
-      onClick={assistiveHandler}
-    >
-      <div className="box"></div>
-      <div className="assistiveItems">
-        <ul>
-          <li className="atItem">
-            <a href="javascript" data-history-back className="btnAtItem">
-              2
-            </a>
-          </li>
-          <li className="atItem">
-            <a href="javascript" className="btnAtItem">
-              1
-            </a>
-          </li>
-          {/* Diğer itemleri buraya ekleyebilirsiniz */}
-        </ul>
+    <div className="menu-container">
+      <div
+        className={`menu-item main-item ${isOpen ? "open" : ""}`}
+        onClick={toggleMenu}
+      >
+        {/* Ana menü düğmesi içeriği, örneğin bir ikon veya metin */}
       </div>
+      <div className={`menu-item item-1 ${isOpen ? "open" : ""}`}>1</div>
+      <div className={`menu-item item-2 ${isOpen ? "open" : ""}`}>2</div>
+      <div className={`menu-item item-3 ${isOpen ? "open" : ""}`}>3</div>
+      <div className={`menu-item item-4 ${isOpen ? "open" : ""}`}>4</div>
     </div>
   );
 };

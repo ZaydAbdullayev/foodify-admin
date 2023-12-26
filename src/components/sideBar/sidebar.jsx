@@ -18,12 +18,28 @@ export const Sidebar = () => {
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [media, setMedia] = useState(true);
   const location = useLocation().pathname;
+  const [dFromTop, setDFromTop] = useState(0);
 
-  const handleCategoryClick = (categoryId) => {
+  const handleCategoryClick = (e, c) => {
     setActiveCategoryId((prevCategoryId) =>
-      prevCategoryId === categoryId ? null : categoryId
+      prevCategoryId === c.id ? null : c.id
     );
+    findDFromTop(e.target);
   };
+
+  function findDFromTop(element) {
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const top = rect.top + scrollTop;
+      setDFromTop(top);
+    }
+
+    return null; // Eğer öğe bulunamazsa null dönebilir
+  }
+
+  console.log("Active elementin ekranın üstünden mesafesi:", dFromTop);
 
   if (!status) {
     setTimeout(() => {
@@ -126,41 +142,41 @@ export const Sidebar = () => {
                         : "menu_box_item"
                     }
                     to={item?.path}
-                    onClick={() => handleCategoryClick(item?.id)}
+                    onClick={(e) => handleCategoryClick(e, { id: item?.id })}
                   >
                     <span>{item?.icon}</span> <p>{item?.name}</p>
-                    {/* <i style={item?.list ? {} : { display: "none" }}>
-                      {activeCategoryId === item?.id ? (
-                        <RiArrowDownSLine />
-                      ) : (
-                        <RiArrowUpSLine />
-                      )}
-                    </i> */}
-                    {item?.id === activeCategoryId && (
-                      <ul className="inner_menu">
-                        {Category?.filter(
-                          (cat) => cat?.id === activeCategoryId
-                        ).map((catItem) => (
-                          <li key={catItem?.path}>
-                            <Link
-                              to={`${item?.path}${catItem?.path}`}
-                              style={
-                                location === `${item?.path}${catItem?.path}`
-                                  ? { color: "#787aff" }
-                                  : {}
-                              }
+                    {item.id === activeCategoryId && (
+                      <ul
+                        className="inner_menu"
+                        style={{ "--top": `${dFromTop}px` }}
+                      >
+                        <div className="inner_menu-box">
+                          {Category.filter(
+                            (cat) => cat.id === activeCategoryId
+                          ).map((catItem) => (
+                            <li
+                              key={catItem.path}
+                              className={`inner_menu-item ${
+                                location === item?.path ? "active" : ""
+                              }`}
+                              style={{
+                                "--value1": `${catItem?.positions[0]}deg`,
+                                "--value2": `${catItem?.positions[1]}deg`,
+                              }}
                             >
-                              {isShrinkView ? (
-                                catItem?.icon
-                              ) : (
-                                <>
-                                  {catItem?.icon}
-                                  {catItem?.name}
-                                </>
-                              )}
-                            </Link>
-                          </li>
-                        ))}
+                              <Link to={`${item.path}${catItem.path}`}>
+                                {isShrinkView ? (
+                                  catItem.icon
+                                ) : (
+                                  <>
+                                    {catItem.icon}
+                                    {catItem.name}
+                                  </>
+                                )}
+                              </Link>
+                            </li>
+                          ))}
+                        </div>
                       </ul>
                     )}
                   </Link>
