@@ -162,6 +162,7 @@ export const Sidebar = () => {
                               style={{
                                 "--value1": `${catItem?.positions[0]}deg`,
                                 "--value2": `${catItem?.positions[1]}deg`,
+                                "--value3": `${catItem?.positions[2]}px`,
                               }}
                             >
                               <Link to={`${item.path}${catItem.path}`}>

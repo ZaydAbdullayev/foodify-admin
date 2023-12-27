@@ -117,7 +117,7 @@ export const Router = () => {
               <Route path="tables/:type/:number/:id" element={<OrderById />} />
             </Route>
             <Route path="financial" element={<Blog />}>
-              <Route path="payment" element={<Payment />} />
+              <Route path="" element={<Payment />} />
               <Route
                 path="cashbox/transactions"
                 element={<CashboxTransaction />}
@@ -142,11 +142,11 @@ export const Router = () => {
                 path="cashbox/transaction-group"
                 element={<TransactionGroups />}
               />
-              <Route path="workers" element={<Workers />} />
+              <Route path="" element={<Workers />} />
               <Route path="workers/add" element={<AddWorker />} />
             </Route>
             <Route path="storage" element={<Blog />}>
-              <Route path="invoices" element={<StorageInvoices />} />
+              <Route path="" element={<StorageInvoices />} />
               <Route path="expenses" element={<StorageExpenditures />} />
               <Route path="cutting" element={<StorageCutting />} />
               <Route path="damaget-items" element={<StorageDamaged />} />

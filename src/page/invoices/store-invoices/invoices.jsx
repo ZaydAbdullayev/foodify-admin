@@ -36,8 +36,8 @@ export const StorageInvoices = () => {
   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
+    invoiceData?.data &&
+    [...invoiceData?.data].sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {

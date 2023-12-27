@@ -27,22 +27,27 @@ export const InvoicesModal = ({
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];
+  
+    
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = storageItems?.data?.find((old) => old.id === newItem.id);
+    const ototal = oldData ? oldData?.total_quantity : 0;
 
     if (oldData) {
       return {
         ...newItem,
-        old_quantity: oldData?.total_quantity || 0,
-        total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + parseInt(newItem?.amount)
+        old_quantity: ototal || 0,
+        total_quantity: ototal
+          ? ototal + parseInt(newItem?.amount)
           : parseInt(newItem?.amount),
       };
     }
 
     return newItem;
   });
+
+  console.log("updatedData", updatedData);
 
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
@@ -203,7 +208,7 @@ export const InvoicesModal = ({
                       type="number"
                       defaultValue={item.price}
                       onChange={(e) =>
-                        getProduct({ ...item, price: e.target.value }, 1)
+                        getProduct({ ...checked, price: e.target.value }, 1)
                       }
                     />
                   ) : (
@@ -222,7 +227,7 @@ export const InvoicesModal = ({
                       name="amount"
                       defaultValue={checked?.amount ? checked.amount : 0}
                       onChange={(e) =>
-                        getProduct({ ...item, amount: e.target.value }, 1)
+                        getProduct({ ...checked, amount: e.target.value }, 1)
                       }
                     />
                   )}
@@ -236,9 +241,7 @@ export const InvoicesModal = ({
                   {checked && (
                     <input
                       type="number"
-                      onChange={(e) =>
-                        getProduct({ ...item, total: e.target.value }, 1)
-                      }
+                      value={checked?.amount * checked?.price}
                     />
                   )}
                 </p>

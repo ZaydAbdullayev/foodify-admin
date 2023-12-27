@@ -34,7 +34,7 @@ export const StorageProducts = () => {
   const { data: category = [] } = useGetStCategoryQuery();
   dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
 
-  const getProduct = (item, amount, status) => {
+  const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item.id));
@@ -42,15 +42,10 @@ export const StorageProducts = () => {
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) =>
-          i.id === item.id ? { ...i, amount: parseInt(amount, 10) || 0 } : i
-        )
+        prevData.map((i) => (i.id === item.id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...item, amount: parseInt(amount, 10) || 0 },
-      ]);
+      setCheckedData((prevData) => [...prevData, item]);
     }
   };
 
@@ -287,6 +282,7 @@ export const StorageProducts = () => {
         status={acItem?.id ? true : false}
         type="product"
         Pdata={[...checkedData, ...acIngredients]}
+        setCheckedData={setCheckedData}
       >
         <UniversalForm>
           <input
@@ -364,7 +360,9 @@ export const StorageProducts = () => {
                     <input
                       type="checkbox"
                       checked={checked}
-                      onClick={() => getProduct(item, 0, checked ? 0 : 1)}
+                      onClick={() =>
+                        getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
+                      }
                     />
                   </label>
                   <p
@@ -413,7 +411,9 @@ export const StorageProducts = () => {
                         type="text"
                         name="amount"
                         defaultValue={checked?.amount ? checked.amount : 0}
-                        onChange={(e) => getProduct(item, e.target.value, 1)}
+                        onChange={(e) =>
+                          getProduct({ ...checked, amount: e.target.value }, 1)
+                        }
                       />
                     )}
                   </p>

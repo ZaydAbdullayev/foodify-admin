@@ -4,25 +4,19 @@ import { IoIosRestaurant } from "react-icons/io";
 import { enqueueSnackbar as es } from "notistack";
 import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
-import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
-import { useGetDepQuery } from "../../service/user.service";
 import { LoadingBtn } from "../loading/loading";
 
 export const Addproduct = memo(() => {
-  const user = JSON.parse(localStorage.getItem("user") || []);
   const [files, setFiles] = useState([]);
   const [img, setImg] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [current, setCurrent] = useState(null);
   const navigate = useNavigate();
-  const { data: departments = [] } = useGetDepQuery(user?.user?.id);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const value = Object.fromEntries(formdata.entries());
-    value.price = value?.price?.split(" ")?.join("");
     value.img = img;
     setLoading(true);
 
@@ -47,86 +41,45 @@ export const Addproduct = memo(() => {
     setFiles([img]);
   };
 
-  // const departs = ["somsa", "manti", "lagman", "non"];
-
   return (
     <div className="product_box">
       <form className="add_product" onSubmit={handleSubmit}>
-        <div className="add_paroduct_body">
-          <div>
-            <label
-              style={files.length ? { border: "none" } : {}}
-              className="product_img"
-            >
-              {files.length ? "" : <IoIosRestaurant />}
-              <input
-                type="file"
-                name="img"
-                accept="image/*"
-                required
-                onChange={takeImg}
-                id="image"
-              />
-              {files.length > 0 && (
-                <img src={files[0]} alt="Selected" className="selected_image" />
-              )}
-            </label>
-          </div>
-          <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="Maxsulot nomini kiriting"
-              required
-              autoComplete="off"
-            />
-            <NumericFormat
-              placeholder="Maxsulot narxini kiriting"
-              suffix=" sum"
-              thousandSeparator=" "
-              allowLeadingZeros
-              displayType="input"
-              name="price"
-              required
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Maxsulot haqida tavsif"
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              name="category"
-              placeholder="Maxsulot turini kiriting"
-              required
-            />
-            <input
-              type="hidden"
-              name="restaurant"
-              defaultValue={user?.user?.id}
-            />
-            <button className="relative">
-              {loading ? <LoadingBtn /> : "Q'shish"}
-            </button>
-          </div>
-        </div>
-        <div className="departments">
-          <p>Bo'limlar</p>
-          {departments?.innerData?.map((item, index) => {
-            return (
-              <label
-                key={index}
-                className={current === item ? "active" : ""}
-                onClick={() => setCurrent(item)}
-              >
-                <span>{item}</span>
-                <input type="radio" value={item} name="department" required />
-              </label>
-            );
-          })}
-        </div>
+        <label
+          style={files.length ? { border: "none" } : {}}
+          className="product_img"
+        >
+          {files.length ? "" : <IoIosRestaurant />}
+          <input
+            type="file"
+            name="img"
+            accept="image/*"
+            required
+            onChange={takeImg}
+            id="image"
+          />
+          {files.length > 0 && (
+            <img src={files[0]} alt="Selected" className="selected_image" />
+          )}
+        </label>
+        <button className="relative">
+          {loading ? <LoadingBtn /> : "Tasdiqlash"}
+        </button>
       </form>
+    </div>
+  );
+});
+
+export const ShowProduct = memo(() => {
+  return (
+    <div className="product_box">
+      <div className="product_item">
+        <h3>Product name</h3>
+        <p>Product description</p>
+        <div className="product_price">
+          <h4>Price</h4>
+          <h4>Price</h4>
+        </div>
+      </div>
     </div>
   );
 });

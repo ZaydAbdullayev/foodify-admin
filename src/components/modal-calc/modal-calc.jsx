@@ -26,10 +26,11 @@ import { useUpdateStExpenditureMutation } from "../../service/expenditures.servi
 import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
 import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
 import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
+import { acActiveThing } from "../../redux/active";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
-import { acActiveThing } from "../../redux/active";
+import { RiImageAddFill } from "react-icons/ri";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
 export const UniversalControlModal = ({
@@ -207,23 +208,23 @@ export const UniversalControlModal = ({
           open ? "u-control_action__box active" : "u-control_action__box"
         }
       >
-        <button type="button" onClick={() => fetchValues(fetchdata)}>
-          <i>qo'shish</i>
-          <span className="relative">
-            {loading ? <LoadingBtn /> : <FaCheck />}
-          </span>
+        {type === "product" && (
+          <button type="button">
+            <RiImageAddFill />
+          </button>
+        )}
+        <button
+          type="button"
+          className="relative"
+          onClick={() => fetchValues(fetchdata)}
+        >
+          {loading ? <LoadingBtn /> : <FaCheck />}
         </button>
         <button type="submit">
-          <i>hisoblash</i>
-          <span>
-            <FaCalculator />
-          </span>
+          <FaCalculator />
         </button>
         <button type="button" onClick={() => closeModal()}>
-          <i>bekor qilish</i>
-          <span>
-            <TbArrowBarLeft />
-          </span>
+          <TbArrowBarLeft />
         </button>
       </div>
     </form>
