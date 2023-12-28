@@ -27,11 +27,9 @@ export const InvoicesModal = ({
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];
-  
-    
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = storageItems?.data?.find((old) => old.id === newItem.id);
+    const oldData = storageItems?.data?.find((old) => old.id === newItem?.id);
     const ototal = oldData ? oldData?.total_quantity : 0;
 
     if (oldData) {
@@ -39,23 +37,25 @@ export const InvoicesModal = ({
         ...newItem,
         old_quantity: ototal || 0,
         total_quantity: ototal
-          ? ototal + parseInt(newItem?.amount)
+          ? parseInt(ototal) + parseInt(newItem?.amount)
           : parseInt(newItem?.amount),
       };
+    } else {
+      return {
+        ...newItem,
+        old_quantity: 0,
+        total_quantity: parseInt(newItem?.amount),
+      };
     }
-
-    return newItem;
   });
-
-  console.log("updatedData", updatedData);
 
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
+      (item) => item?.name === selectedName
     );
     const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem.id;
+      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
 
     setId(selectedId);
   };
@@ -63,13 +63,15 @@ export const InvoicesModal = ({
   useEffect(() => {
     if (acItem?.storage) {
       const selectedItem = storeData?.data?.find(
-        (item) => item.name === acItem?.storage
+        (item) => item?.name === acItem?.storage
       );
       const selectedId = selectedItem?.id;
 
       setId(selectedId);
     }
-  }, []);
+  }, [acItem?.storage, storeData?.data]);
+
+  const ingredientData = storageItems?.data ? storageItems?.data : data;
 
   return (
     <UniversalControlModal
@@ -106,8 +108,8 @@ export const InvoicesModal = ({
           )}
           {suplierData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
@@ -124,8 +126,8 @@ export const InvoicesModal = ({
           )}
           {storeData?.data?.map((item) => {
             return (
-              <option key={item.id} value={item.name}>
-                {item.name}
+              <option key={item?.id} value={item?.name}>
+                {item?.name}
               </option>
             );
           })}
@@ -162,14 +164,14 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>Jami</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {ingredientData?.map((item) => {
             const checked = [...checkedData, ...acIngredients]?.find(
-              (i) => i.id === item.id
+              (i) => i.id === item?.id
             );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}
+                key={item?.id}
               >
                 <label>
                   <input
@@ -180,14 +182,14 @@ export const InvoicesModal = ({
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
                   }}
                 >
-                  {item.unit}
+                  {item?.unit}
                 </p>
                 <p
                   style={{
@@ -195,7 +197,7 @@ export const InvoicesModal = ({
                     justifyContent: "center",
                   }}
                 >
-                  {item.group}
+                  {item?.group}
                 </p>
                 <p
                   style={{
@@ -206,13 +208,13 @@ export const InvoicesModal = ({
                   {checked ? (
                     <input
                       type="number"
-                      defaultValue={item.price}
+                      defaultValue={parseInt(item?.price)}
                       onChange={(e) =>
                         getProduct({ ...checked, price: e.target.value }, 1)
                       }
                     />
                   ) : (
-                    item.price
+                    parseInt(item?.price)
                   )}
                 </p>
                 <p
@@ -225,7 +227,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      defaultValue={checked?.amount ? checked.amount : 0}
+                      defaultValue={checked?.amount ? checked?.amount : 0}
                       onChange={(e) =>
                         getProduct({ ...checked, amount: e.target.value }, 1)
                       }

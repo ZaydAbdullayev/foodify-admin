@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useGetStGroupsQuery } from "../../../service/groups.service";
+import { useNavigate } from "react-router-dom";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { useSwipeable } from "react-swipeable";
+
 import { UniversalModal } from "../../../components/modal/modal";
 import { UniversalUModal } from "../../../components/modal/modal";
-import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
-import { useGetStGroupsQuery } from "../../../service/groups.service";
-
-import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 
@@ -16,8 +18,15 @@ export const StorageGroups = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStGroupsQuery();
   dispatch(acNavStatus([0, 1, 2, 3]));
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => navigate("/sections/invoice-group"),
+    onSwipedRight: () => navigate("/sections/cashbox/transaction-group"),
+    trackMouse: true,
+  });
 
   const sortData =
     groupData?.data &&
@@ -33,7 +42,7 @@ export const StorageGroups = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Guruhlar</p>
+        <p {...handlers}>Ingredient guruhlari</p>
         <div className="storage_body_item">
           <label>
             <input

@@ -8,13 +8,15 @@ import { useUpdatePbyIdMutation } from "../../service/product.service";
 import { useDeleteProductMutation } from "../../service/product.service";
 import { useGetAllProductQuery } from "../../service/product.service";
 import { useDispatch } from "react-redux";
+import { LoadingBtn } from "../../components/loading/loading";
+import { acNavStatus } from "../../redux/navbar.status";
+import { useNavigate } from "react-router-dom";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
-import { FaPen, FaCheck } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
-import { LoadingBtn } from "../../components/loading/loading";
-import { acNavStatus } from "../../redux/navbar.status";
+import { FaPen, FaCheck } from "react-icons/fa";
+import { TbInfoSquareRounded } from "react-icons/tb";
 
 export const Products = () => {
   const user_id = JSON.parse(localStorage.getItem("user"))?.user?.id;
@@ -22,10 +24,12 @@ export const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [update, setUpdate] = useState(false);
   const [info, setInfo] = useState({});
+  // const [detail, setDetail] = useState(false);
   const { data: products = [], isLoading } = useGetAllProductQuery(user_id);
   const [updatePbyId] = useUpdatePbyIdMutation();
   const [deleteProduct] = useDeleteProductMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   dispatch(acNavStatus([100]));
 
   const getUniqueCategories = () => {
@@ -162,7 +166,20 @@ export const Products = () => {
                   <p style={{ flex: "1" }}>{product.description}</p>
                 </>
               )}
-
+              <NumericFormat
+                className={update === product?.id ? "" : "_count"}
+                displayType={update === product?.id ? "input" : "text"}
+                style={{
+                  background:
+                    product?.food_count >= 15 && product?.food_count < !10
+                      ? "#f07167"
+                      : product?.food_count <= 10
+                      ? "#ef233c"
+                      : "",
+                }}
+                defaultValue={product?.food_count || 12}
+                onChange={(e) => handleInfoChange("cost_count")}
+              />
               <NumericFormat
                 displayType={update === product?.id ? "input" : "text"}
                 defaultValue={product.price}
@@ -176,7 +193,7 @@ export const Products = () => {
                 <span
                   style={
                     product.status === 1
-                      ? { background: "#33ff0989" }
+                      ? { background: "#33ff09" }
                       : { color: "#aaaa" }
                   }
                   onClick={() => handleUpdate({ id: product.id, status: 1 })}
@@ -212,11 +229,19 @@ export const Products = () => {
                   </span>
                 )}
               </button>
+
               <button
                 style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
                 onClick={() => handleDelete(product.id)}
               >
                 <AiFillDelete />
+              </button>
+
+              <button
+                style={{ fontSize: "var(--fs4)", color: "#787aff" }}
+                onClick={() => navigate(`/more/info/${product.id}`)}
+              >
+                <TbInfoSquareRounded />
               </button>
             </div>
           ))

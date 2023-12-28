@@ -30,16 +30,13 @@ export const Sidebar = () => {
   function findDFromTop(element) {
     if (element) {
       const rect = element.getBoundingClientRect();
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const top = rect.top + scrollTop;
       setDFromTop(top);
     }
 
-    return null; // Eğer öğe bulunamazsa null dönebilir
+    return null;
   }
-
-  console.log("Active elementin ekranın üstünden mesafesi:", dFromTop);
 
   if (!status) {
     setTimeout(() => {

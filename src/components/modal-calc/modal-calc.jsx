@@ -27,6 +27,7 @@ import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
 import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
 import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
 import { acActiveThing } from "../../redux/active";
+import { useUpdateItemsMutation } from "../../service/store.service";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -63,6 +64,7 @@ export const UniversalControlModal = ({
   const [updateStCarryUp] = useUpdateStCarryUpMutation();
   const [updateMakedFood] = useUpdateMakedFoodMutation();
   const [updatePreOrder] = useUpdatePreOrderMutation();
+  const [updateItems] = useUpdateItemsMutation();
   const dispatch = useDispatch();
   const acP = useSelector((state) => state.activeThing);
 
@@ -111,7 +113,7 @@ export const UniversalControlModal = ({
             break;
           case "invoice":
             result = await addStInvoice(values);
-            await updateStItems({ id, ingredients: Udata });
+            result = await updateItems({ id, ing: Udata });
             break;
           case "cutting":
             result = await addStCutting(values);

@@ -91,7 +91,7 @@ export const Menu_customer = [
 
 export const Category = [
   {
-    id: "1",
+    id: "1453",
     path: dep === "owner" ? "/" : "/historical",
     name: "Dashboard",
     positions: [65, -65, 70],
@@ -99,10 +99,17 @@ export const Category = [
   },
   {
     id: "1",
-    path: "/product",
+    path: "",
     name: "Taomlar",
-    positions: [0, 0, 65],
+    positions: [65, -65, 70],
     icon: <IoIosRestaurant />,
+  },
+  {
+    id: "1",
+    path: "/workers",
+    name: "Ishchilar",
+    positions: [0, 0, 65],
+    icon: <HiMiniUserGroup />,
   },
   {
     id: "1",
@@ -152,22 +159,36 @@ export const Category = [
     id: "3",
     path: "",
     name: "To'lov kiritish",
-    positions: [-65, 65, 70],
+    positions: [90, -90, 90],
     icon: <BsCashCoin />,
   },
   {
     id: "3",
     name: "Tranzaksiyalar",
     path: "/cashbox/transactions",
-    positions: [0, 0, 65],
+    positions: [45, -45, 90],
     icon: <MdStorage />,
   },
   {
     id: "3",
     name: "Kassa hisoboti",
     path: "/cashbox/transaction-report",
-    positions: [65, -65, 70],
+    positions: [0, 0, 90],
     icon: <MdStorage />,
+  },
+  {
+    id: "3",
+    name: "Kassalar",
+    path: "/cashbox",
+    positions: [-45, 45, 90],
+    icon: <MdStorage />,
+  },
+  {
+    id: "3",
+    name: "Buyurtmalar hisoboti",
+    path: "/orders",
+    positions: [-90, 90, 90],
+    icon: <TbReport />,
   },
   {
     id: "4",
@@ -213,10 +234,10 @@ export const Category = [
   },
   {
     id: "5",
-    path: "",
-    name: "Ishchilar",
+    name: "Yetkazuvchilar",
+    path: "/suppliers",
     positions: [90, -90, 90],
-    icon: <HiMiniUserGroup />,
+    icon: <TbTruckDelivery />,
   },
   {
     id: "5",
@@ -262,22 +283,8 @@ export const Category = [
   },
   {
     id: "5",
-    name: "Yetkazuvchilar",
-    path: "/suppliers",
-    positions: [],
-    icon: <TbTruckDelivery />,
-  },
-  {
-    id: "5",
     name: "To'lov guruhlari",
     path: "/invoice-group",
-    positions: [],
-    icon: <MdStorage />,
-  },
-  {
-    id: "5",
-    name: "Kassalar",
-    path: "/cashbox",
     positions: [],
     icon: <MdStorage />,
   },
@@ -287,13 +294,6 @@ export const Category = [
     path: "/cashbox/transaction-group",
     positions: [],
     icon: <MdStorage />,
-  },
-  {
-    id: "765433",
-    name: "Buyurtmalar hisoboti",
-    path: "/orders",
-    positions: [],
-    icon: <TbReport />,
   },
   {
     id: "765433",

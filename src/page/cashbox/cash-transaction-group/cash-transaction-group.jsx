@@ -7,6 +7,8 @@ import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -15,6 +17,7 @@ export const TransactionGroups = () => {
   const [status, setStatus] = useState(false);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data = [], isLoading } = useGetCashboxGrQuery();
   dispatch(acNavStatus([0, 1, 2, 3]));
 
@@ -27,6 +30,11 @@ export const TransactionGroups = () => {
         return b.name.localeCompare(a.name);
       }
     });
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => navigate("/sections/groups"),
+    trackMouse: true,
+  });
 
   const headerData = [
     { name: "Nomi", size: "60%" },
@@ -42,7 +50,7 @@ export const TransactionGroups = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>O'tkazmalar ro'yxati</p>
+        <p {...handlers}>O'tkazma guruhlari</p>
         <div className="storage_body_item">
           <label>
             <input

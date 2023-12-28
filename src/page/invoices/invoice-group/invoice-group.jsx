@@ -4,10 +4,13 @@ import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActive } from "../../../redux/active";
 import { useGetStInvoiceGroupQuery } from "../../../service/invoice-group.service";
-
-import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
+
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { RiExchangeLine } from "react-icons/ri";
 
 export const InvoicesGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -15,6 +18,7 @@ export const InvoicesGroups = () => {
   const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStInvoiceGroupQuery();
   dispatch(acNavStatus([0, 1, 2, 3]));
 
@@ -28,11 +32,16 @@ export const InvoicesGroups = () => {
       }
     });
 
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate("/sections/groups"),
+    trackMouse: true,
+  });
+
   return (
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Guruhlar</p>
+        <p {...handlers}>To'lov guruhlari</p>
         <div className="storage_body_item">
           <label>
             <input

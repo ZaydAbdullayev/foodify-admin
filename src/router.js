@@ -8,7 +8,7 @@ import { Sidebar } from "./components/sideBar/sidebar";
 import { Restaurant } from "./page/restaurants/restaurant";
 import { CheackDepartment, Login } from "./auth/login";
 import { Auth } from "./auth/auth";
-import { Addproduct } from "./components/Addproduct/addproduct";
+import { Addproduct, ShowProduct } from "./components/Addproduct/addproduct";
 import { Products } from "./page/products/products";
 import { MakingFoods } from "./page/makingFoods/makingFoods";
 import { MakedFoods } from "./page/makedFoods/maked";
@@ -94,16 +94,19 @@ export const Router = () => {
               path={department === "owner" ? "orders" : "/"}
               element={<Home />}
             />
+            <Route
+              path={department === "owner" ? "" : "historical"}
+              element={<Document />}
+            />
             <Route path="statistics" element={<Statistics />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
+            <Route path="navigation" element={<NavigationPanel />} />
+            <Route path="add/product" element={<Addproduct />} />
+            <Route path="more/info/:id" element={<ShowProduct />} />
             <Route path="managment" element={<Blog />}>
-              <Route index element={<NavigationPanel />} />
-              <Route path="product" element={<Products />} />
-              <Route
-                path={department === "owner" ? "" : "historical"}
-                element={<Document />}
-              />
-              <Route path="add" element={<Addproduct />} />
+              <Route path="" element={<Products />} />
+              <Route path="workers" element={<Workers />} />
+              <Route path="workers/add" element={<AddWorker />} />
             </Route>
             <Route path="orders" element={<Blog />}>
               <Route
@@ -135,15 +138,13 @@ export const Router = () => {
               <Route path="groups" element={<StorageGroups />} />
               <Route path="ingredients" element={<StorageIngredients />} />
               <Route path="s-products" element={<StorageProducts />} />
-              <Route path="suppliers" element={<StorageSupplier />} />
+              <Route path="" element={<StorageSupplier />} />
               <Route path="cashbox" element={<Cashboxes />} />
               <Route path="invoice-group" element={<InvoicesGroups />} />
               <Route
                 path="cashbox/transaction-group"
                 element={<TransactionGroups />}
               />
-              <Route path="" element={<Workers />} />
-              <Route path="workers/add" element={<AddWorker />} />
             </Route>
             <Route path="storage" element={<Blog />}>
               <Route path="" element={<StorageInvoices />} />
