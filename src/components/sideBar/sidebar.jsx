@@ -11,7 +11,7 @@ import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import logo from "../../assets/images/logo.png";
 
 export const Sidebar = () => {
-  const login = JSON?.parse(localStorage.getItem("user")) || [];
+  const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
   const status = useSelector((state) => state.media);
   const dispatch = useDispatch();

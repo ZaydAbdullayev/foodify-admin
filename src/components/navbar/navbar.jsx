@@ -6,7 +6,7 @@ import { acOpenMadal, acCloseModal } from "../../redux/modal";
 import { Link, useNavigate } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
-import { acGetDate } from "../../redux/search";
+import { acGetNewData } from "../../redux/search";
 import { useGetCashboxQuery } from "../../service/cashbox.service";
 import { calculateMonthRange } from "../../service/calc-date.service";
 import { getFormattedDate } from "../../service/calc-date.service";
@@ -32,7 +32,7 @@ export const Navbar = () => {
   const name = user?.user?.username?.split("_")?.join(" ");
   const acItem = useSelector((state) => state.active);
   const acP = useSelector((state) => state.activeThing);
-  const searchD = useSelector((state) => state.uSearch);
+  const { date } = useSelector((state) => state.uSearch);
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
   const { data = [] } = useGetCashboxQuery();
@@ -75,6 +75,21 @@ export const Navbar = () => {
     navigate("/login");
   };
 
+  const uploadData = (e, fieldName) => {
+    const newValue = e.target.value;
+    if (fieldName === "date")
+      return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
+    const time = {
+      start: date?.start,
+      end: date?.end,
+    };
+    if (fieldName === "start" || fieldName === "end") {
+      time[fieldName] = newValue;
+      dispatch(acGetNewData("date", time));
+    } else {
+      dispatch(acGetNewData(fieldName, newValue));
+    }
+  };
   return (
     <div className="navbar">
       <div
@@ -145,19 +160,30 @@ export const Navbar = () => {
               </label>
             )}
             {status?.includes(6) && (
-              <select>
-                <option value={{ start: today }}>Bugun</option>
-                <option value={{ start: yesterday }}>Kecha</option>
+              <select onChange={(e) => uploadData(e, "date")}>
+                <option value={JSON.stringify({ start: today, end: today })}>
+                  Bugun
+                </option>
                 <option
-                  value={{ start: beforeyesterday, end: beforeyesterday }}
+                  value={JSON.stringify({ start: yesterday, end: today })}
+                >
+                  Kecha
+                </option>
+                <option
+                  value={JSON.stringify({
+                    start: beforeyesterday,
+                    end: beforeyesterday,
+                  })}
                 >
                   Avvalgi kun
                 </option>
-                <option value={thisWeek}>Bu hafta</option>
-                <option value={lastWeek}>O'tgan hafta</option>
-                <option value={thisMonth}>Bu oy</option>
-                <option value={lastMonth}>O'tgan oy</option>
-                <option value={{ start: thisYear }}>Bu yil</option>
+                <option value={JSON.stringify(thisWeek)}>Bu hafta</option>
+                <option value={JSON.stringify(lastWeek)}>O'tgan hafta</option>
+                <option value={JSON.stringify(thisMonth)}>Bu oy</option>
+                <option value={JSON.stringify(lastMonth)}>O'tgan oy</option>
+                <option value={JSON.stringify({ start: thisYear, end: today })}>
+                  Bu yil
+                </option>
               </select>
             )}
             {status?.includes(7) && (
@@ -166,45 +192,22 @@ export const Navbar = () => {
                   <input
                     type="date"
                     name="start"
-                    defaultValue={today}
-                    onChange={(e) =>
-                      dispatch(
-                        acGetDate({
-                          ...searchD.date,
-                          start: e.target.value,
-                        })
-                      )
-                    }
+                    value={date?.start}
+                    onChange={(e) => uploadData(e, "start")}
                   />
                 </label>
                 <label>
                   <input
                     type="date"
-                    name="to"
-                    defaultValue={today}
-                    onChange={(e) =>
-                      dispatch(
-                        acGetDate({
-                          ...searchD.date,
-                          end: e.target.value,
-                        })
-                      )
-                    }
+                    name="end"
+                    value={date?.end}
+                    onChange={(e) => uploadData(e, "end")}
                   />
                 </label>
               </>
             )}
             {status?.includes(8) && (
-              <select
-                onChange={(e) =>
-                  dispatch(
-                    acGetDate({
-                      ...searchD,
-                      cashier: e.target.value,
-                    })
-                  )
-                }
-              >
+              <select onChange={(e) => uploadData(e, "cashier")}>
                 <option value="all">Kassa bo'yicha</option>
                 {data?.data?.map((item) => (
                   <option value={item.id}>{item.name}</option>
@@ -212,16 +215,7 @@ export const Navbar = () => {
               </select>
             )}
             {status?.includes(9) && (
-              <select
-                onChange={(e) =>
-                  dispatch(
-                    acGetDate({
-                      ...searchD,
-                      cashier: e.target.value,
-                    })
-                  )
-                }
-              >
+              <select onChange={(e) => uploadData(e, "storage")}>
                 <option value="all">Ombor bo'yicha</option>
                 {data?.data?.map((item) => (
                   <option value={item.id}>{item.name}</option>

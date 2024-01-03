@@ -43,22 +43,22 @@ import { TransactionGroups } from "./page/cashbox/cash-transaction-group/cash-tr
 import { InvoicesMakingFood } from "./page/invoices/store-making-food/making-food";
 import { InvoicesGroups } from "./page/invoices/invoice-group/invoice-group";
 import { CashboxTransaction } from "./page/cashbox/cash-transaction/cash-transaction";
-import { InvoicePreOrders } from "./page/invoices/invoice-envanter/pre-order";
+import { InvoicePreOrders } from "./page/invoices/invoice-pre-order/pre-order";
 import { TransactionRapor } from "./page/cashbox/cashbox-report/cashbox-report";
 import { NavigationPanel } from "./page/navigation/navigation";
 import { TableBox } from "./page/table-box/table-box";
 import { Orders } from "./page/orders/orders";
 import { OrderById } from "./page/order-by-id/order-by-id";
+import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
 
 export const Router = () => {
-  const login = JSON.parse(localStorage.getItem("user")) || [];
   const department = useSelector((state) => state.permission);
   const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(acCloseUModal());
-  }, [dispatch, location]); // Move the closing parenthesis to the correct position
+  }, [dispatch, location]);
 
   const span = document.createElement("span");
   span.classList.add("stm-animate");
@@ -76,7 +76,7 @@ export const Router = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      {login?.user?.role === "owner" ? (
+      {department === "creator" ? (
         <Route path="/" element={<Auth />}>
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home />} />
@@ -90,14 +90,8 @@ export const Router = () => {
         <Route path="/" element={<Auth />}>
           <Route path="check" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
-            <Route
-              path={department === "owner" ? "orders" : "/"}
-              element={<Home />}
-            />
-            <Route
-              path={department === "owner" ? "" : "historical"}
-              element={<Document />}
-            />
+            <Route path="orders" element={<Home />} />
+            <Route path="" element={<Document />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route path="navigation" element={<NavigationPanel />} />
@@ -107,12 +101,10 @@ export const Router = () => {
               <Route path="" element={<Products />} />
               <Route path="workers" element={<Workers />} />
               <Route path="workers/add" element={<AddWorker />} />
+              <Route path="envantarisation" element={<InvoiceInvantar />} />
             </Route>
             <Route path="orders" element={<Blog />}>
-              <Route
-                path={department === "owner" ? "orders" : ""}
-                element={<Home />}
-              />
+              <Route path="" element={<Home />} />
               <Route path="cooking/food" element={<MakingFoods />} />
               <Route path="prepared/food" element={<MakedFoods />} />
               <Route path="pre-orders" element={<InvoicePreOrders />} />

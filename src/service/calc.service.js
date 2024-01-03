@@ -43,9 +43,9 @@ export const CalculateTotalByLine = (cart, keyToExclude) => {
 
 export const CalculateTotal = (data, key) => {
   let total = 0;
-  data.forEach((inner) => {
+  data?.forEach((inner) => {
     inner[key]?.forEach((tr) => {
-      total += CalculateTotalQuantity(tr?.details, "price");
+      total += CalculateTotalQuantity(tr?.details, "amount");
     });
   });
   return total;

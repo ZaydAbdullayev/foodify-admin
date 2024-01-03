@@ -9,12 +9,10 @@ import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useGetTransactionQuery } from "../../../service/transaction-rapor.service";
 import { useGetTransactionExpenseQuery } from "../../../service/transaction-rapor.service";
 import { useGetTransactionIncomeQuery } from "../../../service/transaction-rapor.service";
-import {
-  CalculateTotal,
-  CalculateTotalQuantity,
-} from "../../../service/calc.service";
+import { useGetBalanceQuery } from "../../../service/transaction-rapor.service";
+import { CalculateTotalQuantity } from "../../../service/calc.service";
+import { CalculateTotal } from "../../../service/calc.service";
 import { CalculateTotalByLine } from "../../../service/calc.service";
-import { data } from "../../../components/modal-calc/components";
 import { acNavStatus } from "../../../redux/navbar.status";
 
 export const TransactionRapor = () => {
@@ -22,17 +20,12 @@ export const TransactionRapor = () => {
   const acItem = useSelector((state) => state.active);
   const search = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
-  const today = new Date().toISOString().split("T")[0];
-  const [date, setDate] = useState({
-    start: today,
-    end: today,
-  });
-  const { data: trData = [], isLoading } = useGetTransactionQuery(date);
-  const { data: trExpenseData = [] } = useGetTransactionExpenseQuery(date);
-  const { data: trIncomeData = [] } = useGetTransactionIncomeQuery(date);
+  const { data: trData = [], isLoading } = useGetTransactionQuery(search?.date);
+  const { data: trExpData = [] } = useGetTransactionExpenseQuery(search?.date);
+  const { data: trIncData = [] } = useGetTransactionIncomeQuery(search?.date);
+  const { data: balance = [] } = useGetBalanceQuery(search?.date);
   dispatch(acNavStatus([0, 6, 7, 15]));
   let total = 0;
-  const startOfDay = 2142322;
 
   const headerData = [
     { name: "Turi", size: "11.3%" },
@@ -69,18 +62,16 @@ export const TransactionRapor = () => {
   ];
 
   const report = {
-    startOfDay: startOfDay,
-    income: CalculateTotal(data, "transaction"),
-    expense: CalculateTotal(data, "transaction"),
+    startOfDay: balance?.data,
+    income: CalculateTotal(trIncData?.data, "transactions"),
+    expense: CalculateTotal(trExpData?.data, "transactions"),
     balance:
-      2142322 +
-      CalculateTotal(data, "transaction") -
-      CalculateTotal(data, "transaction"),
+      CalculateTotal(trIncData?.data, "transactions") -
+      CalculateTotal(trExpData?.data, "transactions"),
     endOfDay:
-      2142322 +
-      CalculateTotal(data, "transaction") -
-      CalculateTotal(data, "transaction") +
-      startOfDay,
+      CalculateTotal(trIncData?.data, "transactions") -
+      CalculateTotal(trExpData?.data, "transactions") +
+      balance?.data,
   };
 
   return (
@@ -122,7 +113,7 @@ export const TransactionRapor = () => {
           ) : (
             trData?.data?.map((item, index) => {
               return (
-                <div className={"storage_body__box"}>
+                <div className={"storage_body__box"} key={index}>
                   <div
                     className={
                       acItem === item?.id
@@ -202,23 +193,26 @@ export const TransactionRapor = () => {
             <pre className="_header">
               <p>Kirim</p>
               <AnimatedNumber
-                value={CalculateTotal(data, "transaction")}
+                value={CalculateTotal(trIncData?.data, "transactions")}
                 formatValue={(value) =>
                   value.toFixed(0).replace(/\d(?=(\d{3})+$)/g, "$&,")
                 }
               />
             </pre>
-            {data?.map((inner, index) => {
+            {trIncData?.data?.map((inner, index) => {
               return (
                 <div className="_body__item" key={index}>
-                  <p>{inner?.name}</p>
+                  <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transaction?.map((tr) => {
+                    {inner?.transactions?.map((tr) => {
                       return (
                         <div className="_details__item" key={tr?.id}>
-                          <p>{tr.name}</p>
+                          <p>{tr?.payment_type}</p>
                           <NumericFormat
-                            value={CalculateTotalQuantity(tr?.details, "price")}
+                            value={CalculateTotalQuantity(
+                              tr?.details,
+                              "amount"
+                            )}
                             displayType="text"
                             thousandSeparator=" "
                           />
@@ -242,23 +236,26 @@ export const TransactionRapor = () => {
             <pre className="_header">
               <p>Chiqim</p>
               <AnimatedNumber
-                value={CalculateTotal(data, "transaction")}
+                value={CalculateTotal(trExpData?.data, "transactions")}
                 formatValue={(value) =>
                   value.toFixed(0).replace(/\d(?=(\d{3})+$)/g, "$&,")
                 }
               />
             </pre>
-            {data?.map((inner, index) => {
+            {trExpData?.data?.map((inner, index) => {
               return (
                 <div className="_body__item" key={index}>
-                  <p>{inner?.name}</p>
+                  <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transaction?.map((tr) => {
+                    {inner?.transactions?.map((tr) => {
                       return (
                         <div className="_details__item" key={tr?.id}>
-                          <p>{tr.name}</p>
+                          <p>{tr?.payment_type}</p>
                           <NumericFormat
-                            value={CalculateTotalQuantity(tr?.details, "price")}
+                            value={CalculateTotalQuantity(
+                              tr?.details,
+                              "amount"
+                            )}
                             displayType="text"
                             thousandSeparator=" "
                           />

@@ -1,14 +1,13 @@
 import { MdDashboard, MdFastfood, MdTableBar } from "react-icons/md";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
-import { AiFillSetting } from "react-icons/ai";
 import { GiCook, GiRiceCooker } from "react-icons/gi";
 import { BsCashCoin } from "react-icons/bs";
 import { RiBoxingFill } from "react-icons/ri";
 import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { HiMiniUserGroup } from "react-icons/hi2";
-import { FiPlusCircle } from "react-icons/fi";
+// import { FiPlusCircle } from "react-icons/fi";
 import { MdStorage } from "react-icons/md";
 import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
 import { FaLayerGroup, FaMoneyCheckDollar } from "react-icons/fa6";
@@ -19,8 +18,7 @@ import { MdMoveUp, MdRestaurantMenu } from "react-icons/md";
 import { TbReport, TbPlaylistX } from "react-icons/tb";
 import { PiDotsNineFill } from "react-icons/pi";
 import { FaSitemap } from "react-icons/fa6";
-
-const dep = JSON.parse(localStorage.getItem("department")) || null;
+import { LiaListAlt } from "react-icons/lia";
 
 export const Menu = [
   {
@@ -92,7 +90,7 @@ export const Menu_customer = [
 export const Category = [
   {
     id: "1453",
-    path: dep === "owner" ? "/" : "/historical",
+    path: "/",
     name: "Dashboard",
     positions: [65, -65, 70],
     icon: <MdDashboard />,
@@ -113,14 +111,14 @@ export const Category = [
   },
   {
     id: "1",
-    name: "Taom qo'shish",
-    path: dep === "kassir" || dep === "owner" ? "/add" : "",
+    name: "Envantarizatsiya",
+    path: "/envantarisation",
     positions: [-65, 65, 70],
-    icon: <FiPlusCircle />,
+    icon: <LiaListAlt />,
   },
   {
     id: "2",
-    path: dep === "owner" ? "/orders" : "/",
+    path: "/orders",
     name: "Buyurtmalar",
     positions: [90, -90, 90],
     icon: <RiBoxingFill />,

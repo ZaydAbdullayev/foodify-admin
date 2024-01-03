@@ -37,7 +37,9 @@ export const Login = () => {
       handleLoginError();
       return;
     }
+    const role = data?.innerData?.user?.user?.role;
     localStorage.setItem("user", JSON.stringify(data.innerData.user));
+    localStorage.setItem("department", JSON.stringify(role));
     localStorage.setItem("check", JSON.stringify(true));
     navigate("/check");
     setErr(false);

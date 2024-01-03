@@ -4,6 +4,8 @@
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
 body {
@@ -100,7 +102,7 @@ textarea {
   gap: var(--gap1);
 }
 
-.no_result>img {
+.no_result > img {
   width: 35%;
   aspect-ratio: 1/1;
   object-fit: cover;

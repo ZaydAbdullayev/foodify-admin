@@ -13,9 +13,7 @@ export const AssistiveTouch = () => {
       <div
         className={`menu-item main-item ${isOpen ? "open" : ""}`}
         onClick={toggleMenu}
-      >
-        {/* Ana menü düğmesi içeriği, örneğin bir ikon veya metin */}
-      </div>
+      ></div>
       <div className={`menu-item item-1 ${isOpen ? "open" : ""}`}>1</div>
       <div className={`menu-item item-2 ${isOpen ? "open" : ""}`}>2</div>
       <div className={`menu-item item-3 ${isOpen ? "open" : ""}`}>3</div>
