@@ -62,7 +62,7 @@ export const OrderById = () => {
           });
         })
       )}
-      <div className="order_footer">
+      <div className="order-footer">
         <button onClick={() => navigate(`/payment/check/${id}`)}>
           Check chiqarish
         </button>

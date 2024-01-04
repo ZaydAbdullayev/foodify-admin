@@ -10,7 +10,6 @@ import { useAddStProductMutation } from "../../service/s-products.service";
 import { useGetStoreQuery } from "../../service/store.service";
 import { useGetStGroupsQuery } from "../../service/groups.service";
 import { useAddStInvoiceMutation } from "../../service/invoices.service";
-import { useUpdateStItemsMutation } from "../../service/store.service";
 import { useAddStCuttingMutation } from "../../service/cutting.service";
 import { ClearForm } from "../../service/clear-form.service";
 import { useAddStDamagedMutation } from "../../service/damaged.service";
@@ -48,7 +47,6 @@ export const UniversalControlModal = ({
   const [loading, setLoading] = useState(false);
   const [addStProduct] = useAddStProductMutation();
   const [addStInvoice] = useAddStInvoiceMutation();
-  const [updateStItems] = useUpdateStItemsMutation();
   const [addStCutting] = useAddStCuttingMutation();
   const [addStDamaged] = useAddStDamagedMutation();
   const [addStExpenditure] = useAddStExpenditureMutation();

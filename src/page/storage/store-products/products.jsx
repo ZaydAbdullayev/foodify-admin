@@ -137,6 +137,7 @@ export const StorageProducts = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              console.log(item?.ingredients);
               const ingredients = item?.ingredients
                 ? JSON.parse(item.ingredients)
                 : [];

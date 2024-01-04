@@ -23,6 +23,7 @@
   line-height: 1.8;
   border-right: 1px solid #ccc4;
   background: #333;
+  z-index: 9999;
 }
 
 .res_category_box {

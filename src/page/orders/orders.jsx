@@ -52,17 +52,22 @@ export const Orders = () => {
     service: total?.service,
     prime_cost: prime_cost,
     total: total?.total,
-    paid: total?.total,
-    payment: "token",
+    paid: 0,
+    online_paymentToken: "token",
     table_name: position[3],
-    worker_name: user?.user?.name,
-    worker_id: user?.user?.user_id,
+    worker_name: user?.user?.name || "owner",
+    worker_id: user?.user?.user_id || user?.user?.id,
     order_type: takeaway ? "Olib ketish" : "Restoran",
     t_location: position[2],
   };
 
   const handleTarget = (item) => {
-    const url = item?.name?.split(" ")?.join("")?.split("'")?.join("");
+    const url = item?.name
+      ?.toLowerCase()
+      ?.split(" ")
+      ?.join("")
+      ?.split("'")
+      ?.join("");
     navigate(`?category=${url}`);
   };
 
@@ -92,7 +97,6 @@ export const Orders = () => {
   };
 
   const resieveOrderS = async () => {
-    console.log(paymentData);
     const uData = {
       id: position[4],
       status: 2,
@@ -101,11 +105,12 @@ export const Orders = () => {
       alert("Savatcha bo'sh");
       return;
     }
+    console.log(paymentData);
     socket.emit("/order", paymentData);
     socket.emit("/update/table", uData);
-    localStorage.removeItem("cart");
-    navigate("/orders/tables");
-    es("Buyurtma yuborildi!", { variant: "success" });
+    // localStorage.removeItem("cart");
+    // navigate("/orders/tables");
+    // es("Buyurtma yuborildi!", { variant: "success" });
   };
 
   const addExtr = (value) => {
@@ -120,7 +125,8 @@ export const Orders = () => {
   };
 
   const filteredData = data?.data?.filter(
-    (item) => item?.category === category
+    (item) =>
+      item?.category?.split(" ")?.join("")?.split("'")?.join("") === category
   );
 
   return (
