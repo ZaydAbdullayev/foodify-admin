@@ -26,11 +26,12 @@ export const Home = () => {
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
+  console.log(orders);
   dispatch(acNavStatus([100]));
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}/0`
-      : `get/depOrders/${id}/${department}/2`;
+      : `get/depOrders/${id}/${department}/0`;
   const sPoint =
     department === "kassir" || department === "owner"
       ? `/get/newOrders/${id}`
@@ -76,7 +77,7 @@ export const Home = () => {
     }
   };
 
-  // to find oreder situation
+  // to find order situation
   const orderSituation = (order) => {
     try {
       setLoading(order);
@@ -137,13 +138,13 @@ export const Home = () => {
                 >
                   <figure className="order_item">
                     <div>
-                      {department === "kassir" && (
+                      {(department === "kassir" || department === "owner") && (
                         <span>
                           Buyurtmachi : {order?.address?.split("&")?.pop()}
                         </span>
                       )}
                       <span>Buyurtma ID № : {order?.id}</span>{" "}
-                      {department === "kassir" && (
+                      {(department === "kassir" || department === "owner") && (
                         <div className="btn_box">
                           <button
                             className="relative"
@@ -181,7 +182,7 @@ export const Home = () => {
                           <p>{product?.quantity} ta</p>
                           <span>{product?.quantity * product?.price} so'm</span>
                           <div className="order_stution">
-                            {product?.status === 2 ? (
+                            {product?.status === 3 ? (
                               <>
                                 <BsCheck2All style={{ color: "#3CE75B" }} />
                               </>
@@ -191,7 +192,7 @@ export const Home = () => {
                               </>
                             ) : (
                               <>
-                                {department === "kassir" && (
+                                {!product?.status && (
                                   <>
                                     <span>
                                       Ushbu buyurtmani qabul qilasizmi?
@@ -221,21 +222,14 @@ export const Home = () => {
                                     orderSituation({
                                       order_id: order?.id,
                                       product_id: product?.id,
-                                      status: 2,
+                                      status: !product?.status ? 2 : 4,
                                       department: department,
                                     })
                                   }
                                   style={{ backgroundColor: "#3CE75B" }}
                                   className="relative"
                                 >
-                                  {loading.id === product.id &&
-                                  loading.status === 2 ? (
-                                    <LoadingBtn />
-                                  ) : department === "kassir" ? (
-                                    "Qabul qilish"
-                                  ) : (
-                                    "Tayyor"
-                                  )}
+                                  {!product?.status ? "Qabul qilish" : "Tayyor"}
                                 </button>
                               </>
                             )}

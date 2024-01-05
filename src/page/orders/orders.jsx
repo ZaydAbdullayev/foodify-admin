@@ -107,6 +107,7 @@ export const Orders = () => {
     }
     console.log(paymentData);
     socket.emit("/order", paymentData);
+    socket.emit("/divide/orders/depart", paymentData);
     socket.emit("/update/table", uData);
     // localStorage.removeItem("cart");
     // navigate("/orders/tables");
@@ -236,7 +237,7 @@ export const Orders = () => {
                   </button>
                   <input
                     type="number"
-                    defaultValue={item?.quantity}
+                    value={item?.quantity}
                     onChange={(e) =>
                       updateCart({
                         id: item.id,

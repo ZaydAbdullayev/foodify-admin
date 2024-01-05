@@ -14,6 +14,7 @@ const socket = io("https://vsxmzbb6-80.euw.devtunnels.ms");
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
+  const department = JSON.parse(localStorage.getItem("department")) || null;
   const newOrder = useSelector((state) => state.upload);
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
@@ -21,17 +22,21 @@ export const MakingFoods = () => {
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   dispatch(acNavStatus([100]));
+  const point =
+    department === "kassir" || department === "owner"
+      ? `get/orders/${id}/1`
+      : `get/depOrders/${id}/${department}/1`;
 
   useEffect(() => {
     setTimeout(() => {
-      ApiGetService.fetching(`get/orders/${id}/2`)
+      ApiGetService.fetching(point)
         .then((res) => {
           console.log(res?.data?.innerData);
           setOrders(res?.data?.innerData);
         })
         .catch((err) => console.log(err));
-    }, 1000);
-  }, [id, newOrder]);
+    }, 800);
+  }, [id, newOrder, point]);
 
   const orderAccept = (order) => {
     socket.emit("/accept/order", {

@@ -42,6 +42,7 @@
   align-items: center;
   font-size: var(--fs6);
   text-wrap: nowrap;
+  white-space: nowrap;
   color: #fff;
   background: #333;
   letter-spacing: 1px;

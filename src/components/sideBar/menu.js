@@ -118,7 +118,7 @@ export const Category = [
   },
   {
     id: "2",
-    path: "/orders",
+    path: "/",
     name: "Buyurtmalar",
     positions: [90, -90, 90],
     icon: <RiBoxingFill />,
