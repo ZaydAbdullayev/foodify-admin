@@ -7,10 +7,14 @@ import { io } from "socket.io-client";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { acNavStatus } from "../../redux/navbar.status";
+import { NumericFormat } from "react-number-format";
 
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
-import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
+import { AiOutlineFullscreen } from "react-icons/ai";
+import { AiOutlineFullscreenExit } from "react-icons/ai";
+import { HiCheck } from "react-icons/hi2";
+import { RxCross2 } from "react-icons/rx";
 import noResult from "../../assets/images/20231109_144621.png";
 
 // const socket = io("https://backup.foodify.uz");
@@ -123,11 +127,11 @@ export const Home = () => {
         <h1>
           Yangi Buyurtmalar{" "}
           <span onClick={() => setFull(!full)}>
-            {full ? <MdFullscreenExit /> : <MdFullscreen />}
+            {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
         {filteredData.length ? (
-          <div className="orders_body">
+          <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
               const products =
                 order?.product_data && JSON?.parse(order?.product_data);
@@ -147,14 +151,15 @@ export const Home = () => {
                   key={order?.id}
                   className={situation === order.id ? "accepted" : ""}
                 >
-                  <figure className="order_item">
-                    <div>
-                      {(department === "kassir" || department === "owner") && (
-                        <span>
-                          Buyurtmachi : {order?.address?.split("&")?.pop()}
-                        </span>
-                      )}
-                      <span>Buyurtma ID № : {order?.id}</span>{" "}
+                  <figure className="order_item new-order_item">
+                    <div className="order_item_header">
+                      <p>
+                        {(department === "kassir" ||
+                          department === "owner") && (
+                          <span>{order?.address?.split("&")?.pop()}</span>
+                        )}
+                        <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
+                      </p>
                       {(department === "kassir" || department === "owner") && (
                         <div className="btn_box">
                           <button
@@ -164,7 +169,7 @@ export const Home = () => {
                             {loading.id === order.id && loading.status === 6 ? (
                               <LoadingBtn />
                             ) : (
-                              "Hammasini bekor qilish"
+                              <RxCross2 />
                             )}
                           </button>
                           <button
@@ -174,40 +179,41 @@ export const Home = () => {
                             {loading.id === order.id && loading.status === 2 ? (
                               <LoadingBtn />
                             ) : (
-                              "Hammasini qabul qilish"
+                              <BsCheck2All />
                             )}
                           </button>
                         </div>
                       )}
                     </div>
-                    {products?.map((product) => {
-                      return (
-                        <figcaption key={product?.id}>
-                          <img src={product.img} alt="foto" />
-                          <pre>
-                            <p style={{ textTransform: "capitalize" }}>
-                              {product?.name}
-                            </p>
-                            <p>{product?.description}</p>
-                          </pre>
-                          <p>{product?.quantity} ta</p>
-                          <span>{product?.quantity * product?.price} so'm</span>
-                          <div className="order_stution">
-                            {product?.status === 3 ? (
-                              <>
-                                <BsCheck2All style={{ color: "#3CE75B" }} />
-                              </>
-                            ) : product?.status === 3 ? (
-                              <>
-                                <RxCross1 style={{ color: "#ff0000" }} />
-                              </>
-                            ) : (
-                              <>
-                                {!product?.status && (
-                                  <>
-                                    <span>
-                                      Ushbu buyurtmani qabul qilasizmi?
-                                    </span>
+                    <div className="order_item-body">
+                      {products?.map((product) => {
+                        return (
+                          <figcaption key={product?.id}>
+                            {/* <img src={product.img} alt="foto" /> */}
+                            <p className="qty">{product?.quantity}</p>
+                            <pre>
+                              <p style={{ textTransform: "capitalize" }}>
+                                {product?.name}
+                              </p>
+                              <p>{product?.description}</p>
+                            </pre>
+                            <NumericFormat
+                              value={product?.quantity * product?.price}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                            />
+                            <div className="order_stution">
+                              {product?.status === 3 ? (
+                                <>
+                                  <BsCheck2All style={{ color: "#3CE75B" }} />
+                                </>
+                              ) : product?.status === 3 ? (
+                                <>
+                                  <RxCross1 style={{ color: "#ff0000" }} />
+                                </>
+                              ) : (
+                                <>
+                                  {!product?.status && (
                                     <button
                                       className="relative"
                                       onClick={() =>
@@ -223,31 +229,31 @@ export const Home = () => {
                                       loading.status === 3 ? (
                                         <LoadingBtn />
                                       ) : (
-                                        "Bekor qilish"
+                                        <RxCross2 />
                                       )}
                                     </button>
-                                  </>
-                                )}
-                                <button
-                                  onClick={() =>
-                                    orderSituation({
-                                      order_id: order?.id,
-                                      product_id: product?.id,
-                                      status: !product?.status ? 2 : 4,
-                                      department: department,
-                                    })
-                                  }
-                                  style={{ backgroundColor: "#3CE75B" }}
-                                  className="relative"
-                                >
-                                  {!product?.status ? "Qabul qilish" : "Tayyor"}
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </figcaption>
-                      );
-                    })}
+                                  )}
+                                  <button
+                                    onClick={() =>
+                                      orderSituation({
+                                        order_id: order?.id,
+                                        product_id: product?.id,
+                                        status: !product?.status ? 2 : 4,
+                                        department: department,
+                                      })
+                                    }
+                                    style={{ backgroundColor: "#3CE75B" }}
+                                    className="relative"
+                                  >
+                                    {!product?.status ? <HiCheck /> : "Tayyor"}
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </figcaption>
+                        );
+                      })}
+                    </div>
                     <p className="time">{time}</p>
                   </figure>
                   {department === "kassir" && (

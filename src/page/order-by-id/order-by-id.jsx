@@ -17,6 +17,7 @@ export const OrderById = () => {
   const location = useLocation().pathname;
   const id = location.split("/").pop();
   const navigate = useNavigate();
+  const newLocation = location.split("/orders/tables").join("");
   const { data = [], isLoading } = useGetOrderQuery(id);
 
   const finish = () => {
@@ -66,7 +67,11 @@ export const OrderById = () => {
         <button onClick={() => navigate(`/payment/check/${id}`)}>
           Check chiqarish
         </button>
-        <button onClick={() => navigate(`/category${location}`)}>
+        <button
+          onClick={() =>
+            navigate(`/update-order${newLocation}/${data?.innerData[0]?.id}`)
+          }
+        >
           Buyutma qo'shish
         </button>
         <button onClick={() => finish()}>Hisobni yakunlash</button>

@@ -94,6 +94,10 @@ export const Router = () => {
             <Route path="" element={<Document />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
+            <Route
+              path="update-order/:type/:number/:id/:ProductId"
+              element={<Orders />}
+            />
             <Route path="navigation" element={<NavigationPanel />} />
             <Route path="add/product" element={<Addproduct />} />
             <Route path="more/info/:id" element={<ShowProduct />} />

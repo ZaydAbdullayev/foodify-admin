@@ -2,16 +2,14 @@ import React, { useState, useMemo } from "react";
 import "./order.css";
 import "./cart.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  CalculateTotalPrice,
-  CalculateTotalQuantity,
-} from "../../service/calc.service";
+import { CalculateTotalPrice } from "../../service/calc.service";
+import { CalculateTotalQuantity } from "../../service/calc.service";
 import { useGetStProductQuery } from "../../service/s-products.service";
 import { useGetStCategoryQuery } from "../../service/category.service";
 import io from "socket.io-client";
 import { NumericFormat } from "react-number-format";
 import { LoadingBtn } from "../../components/loading/loading";
-import { enqueueSnackbar as es } from "notistack";
+// import { enqueueSnackbar as es } from "notistack";
 
 import { LuShoppingBasket } from "react-icons/lu";
 import { BiCircle, BiCheck } from "react-icons/bi";
@@ -34,7 +32,10 @@ export const Orders = () => {
   const { data = [], isLoading } = useGetStProductQuery();
   const { data: categoryData = [] } = useGetStCategoryQuery();
   const position = location.pathname.split("/");
+  // console.log(position);
 
+  // ["", "category", "ichkari", "1", "ed2201"];
+  // ["", "update", "orders", "ichkari", "3", "c3b530", "undefined"];
   const category =
     location.search.split("=")[1] || categoryData?.data?.[0]?.name;
   const cart = useMemo(() => {
@@ -59,6 +60,11 @@ export const Orders = () => {
     worker_id: user?.user?.user_id || user?.user?.id,
     order_type: takeaway ? "Olib ketish" : "Restoran",
     t_location: position[2],
+  };
+
+  const updatePaymentData = {
+    order_id: position[5],
+    product_data: JSON.stringify(cart),
   };
 
   const handleTarget = (item) => {
@@ -106,9 +112,14 @@ export const Orders = () => {
       return;
     }
     console.log(paymentData);
-    socket.emit("/order", paymentData);
-    socket.emit("/divide/orders/depart", paymentData);
-    socket.emit("/update/table", uData);
+    console.log(updatePaymentData);
+    if (position[1] === "update-order") {
+      socket.emit("/addProduct/toOrder", updatePaymentData);
+    } else {
+      socket.emit("/order", paymentData);
+      socket.emit("/divide/orders/depart", paymentData);
+      socket.emit("/update/table", uData);
+    }
     // localStorage.removeItem("cart");
     // navigate("/orders/tables");
     // es("Buyurtma yuborildi!", { variant: "success" });
