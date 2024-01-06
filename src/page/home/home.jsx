@@ -10,6 +10,7 @@ import { acNavStatus } from "../../redux/navbar.status";
 
 import { BsCheck2All } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
+import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import noResult from "../../assets/images/20231109_144621.png";
 
 // const socket = io("https://backup.foodify.uz");
@@ -23,6 +24,7 @@ export const Home = () => {
   const [situation, setSituation] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState({});
+  const [full, setFull] = useState(false);
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
@@ -112,9 +114,18 @@ export const Home = () => {
   });
 
   return (
-    <div className="home_page container_box">
+    <div
+      className={
+        full ? "container_box home_page active" : "container_box home_page"
+      }
+    >
       <div className="oreders">
-        <h1>Yangi Buyurtmalar</h1>
+        <h1>
+          Yangi Buyurtmalar{" "}
+          <span onClick={() => setFull(!full)}>
+            {full ? <MdFullscreenExit /> : <MdFullscreen />}
+          </span>
+        </h1>
         {filteredData.length ? (
           <div className="orders_body">
             {filteredData?.map((order) => {
