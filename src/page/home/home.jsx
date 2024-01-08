@@ -76,17 +76,18 @@ export const Home = () => {
   const orderAccept = (order) => {
     try {
       setLoading(order);
-      const uData = {
-        id: order?.id,
-        status: order?.status,
-        user_id: order?.user_id,
-      };
+      // const uData = {
+      //   id: order?.id,
+      //   status: order?.status,
+      //   user_id: order?.user_id,
+      //   order_type: order?.order_type,
+      // };
       socket.emit("/accept/order", {
         status: true,
         variant: order?.status,
         user_id: order?.user_id,
       });
-      socket.emit("/update/order/status", uData);
+      socket.emit("/update/order/status", order);
       socket.emit("/divide/orders/depart", order);
       setSituation(order?.id);
       dispatch(acUpload());
@@ -163,7 +164,11 @@ export const Home = () => {
               return (
                 <div
                   key={order?.id}
-                  className={situation === order.id ? "accepted" : ""}
+                  className={
+                    situation === order.id && situation.status === 3
+                      ? "accepted"
+                      : ""
+                  }
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": products?.length,
@@ -193,7 +198,12 @@ export const Home = () => {
                           </button>
                           <button
                             className="relative"
-                            onClick={() => orderAccept({ ...order, status: 1 })}
+                            onClick={() =>
+                              orderAccept({
+                                ...order,
+                                status: order?.order_type === "online" ? 2 : 1,
+                              })
+                            }
                           >
                             {loading.id === order.id && loading.status === 1 ? (
                               <LoadingBtn />
@@ -209,6 +219,7 @@ export const Home = () => {
                         return (
                           <figcaption key={product?.id + ind}>
                             {/* <img src={product.img} alt="foto" /> */}
+                            {product?.status === 3 && <i></i>}
                             <p className="qty">{product?.quantity}</p>
                             <pre>
                               <p style={{ textTransform: "capitalize" }}>

@@ -58,7 +58,7 @@ export const Orders = () => {
     table_name: position[3],
     worker_name: user?.user?.name || "owner",
     worker_id: user?.user?.user_id || user?.user?.id,
-    order_type: takeaway ? "Olib ketish" : "Restoran",
+    order_type: "offline",
     t_location: position[2],
   };
 
