@@ -12,6 +12,7 @@
     "animated-number-react": "^0.1.2",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
+    "howler": "^2.2.4",
     "notistack": "^3.0.1",
     "react-icons": "^4.11.0",
     "react-number-format": "^5.2.2",

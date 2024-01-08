@@ -15,7 +15,7 @@ export const storeApi = apiSlice.injectEndpoints({
       query: (value) => ({
         url: "add/storage",
         method: "POST",
-        body: JSON.stringify(value),
+        body: value,
       }),
       invalidatesTags: ["store"],
     }),

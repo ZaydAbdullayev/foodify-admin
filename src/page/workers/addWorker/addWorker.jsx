@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./addWorker.css";
 import { useAddWorkerMutation } from "../../../service/workers.service";
-import { useGetDepQuery } from "../../../service/user.service";
+import { useGetDepWQuery } from "../../../service/user.service";
 import { usePermissionMutation } from "../../../service/user.service";
 import { enqueueSnackbar as es } from "notistack";
 // import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
   const [newDep, setNewDep] = useState(false);
   const [loading, setLoading] = useState(false);
   const [addWorkerMutation] = useAddWorkerMutation();
-  const { data: depData = [] } = useGetDepQuery(res.id);
+  const { data: depData = [] } = useGetDepWQuery(res.id);
   const [permissionMutation] = usePermissionMutation();
   // const navigate = useNavigate();
 

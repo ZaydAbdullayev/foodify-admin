@@ -1,35 +1,32 @@
-.menu-container {
-  position: relative;
-  width: 50px; /* Ana menü öğesi genişliği */
-  height: 50px; /* Ana menü öğesi yüksekliği */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 eşit sütun */
+  grid-template-rows: auto auto; /* Satırların boyutu içeriğe göre ayarlanacak */
+  gap: 10px; /* Öğeler arası 10px boşluk */
 }
 
-.menu-item {
-  position: absolute;
-  width: 50px; /* Menü öğeleri genişliği */
-  height: 50px; /* Menü öğeleri yüksekliği */
-  background-color: orange;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.5s, opacity 0.5s;
-  opacity: 0;
-  cursor: pointer;
+.item_grid {
+  border: 1px solid #333; /* Sınır stili */
+  padding: 10px; /* İç boşluk */
+  text-align: center; /* Metni ortala */
 }
 
-.main-item {
-  z-index: 10;
-  cursor: pointer;
-  opacity: 1; /* Her zaman görünür */
+.item_grid1 {
+  grid-column: span 2; /* 2 sütunu kapla */
+  grid-row: span 1; /* 1 satırı kapla */
 }
 
-.item-1 { transform: translate(0, -60px); }
-.item-2 { transform: translate(60px, 0); }
-.item-3 { transform: translate(0, 60px); }
-.item-4 { transform: translate(-60px, 0); }
+.item_grid2 {
+  grid-column: span 2; /* 2 sütunu kapla */
+  grid-row: span 2; /* 2 satırı kapla */
+}
 
-.menu-item.open {
-  opacity: 1;
-  transform: translate(0, 0); /* Açık menü öğeleri orijinal konumuna geri döner */
+.item_grid3 {
+  grid-column: span 1; /* 1 sütunu kapla */
+  grid-row: span 1; /* 1 satırı kapla */
+}
+
+.item_grid4, .item_grid5 {
+  grid-column: span 1; /* 1 sütunu kapla */
+  grid-row: span 1; /* 1 satırı kapla */
 }

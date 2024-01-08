@@ -15,6 +15,7 @@ import { AiOutlineFullscreen } from "react-icons/ai";
 import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
+import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import noResult from "../../assets/images/20231109_144621.png";
 
 // const socket = io("https://backup.foodify.uz");
@@ -32,12 +33,11 @@ export const Home = () => {
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
-  console.log(orders);
   dispatch(acNavStatus([100]));
   const point =
     department === "kassir" || department === "owner"
-      ? `get/orders/${id}/0`
-      : `get/depOrders/${id}/${department}/0`;
+      ? `get/orders/${id}`
+      : `get/depOrders/${id}/${department}`;
   const sPoint =
     department === "kassir" || department === "owner"
       ? `/get/newOrders/${id}`
@@ -48,6 +48,7 @@ export const Home = () => {
       ApiGetService.fetching(point)
         .then((res) => {
           setOrders(res?.data?.innerData);
+          console.log("normal", res?.data?.innerData);
         })
         .catch((err) => console.log(err));
     }, 800);
@@ -55,7 +56,20 @@ export const Home = () => {
 
   socket.on(sPoint, (data) => {
     setOrders(data);
+    console.log("socket", data);
     socket.off(sPoint);
+  });
+
+  socket.on(`/get/newOrdersOne/${id}`, (newData) => {
+    setOrders((prevOrders) => {
+      const updatedOrders = [...prevOrders];
+      const existingIndex = updatedOrders.findIndex(
+        (order) => order.id === newData.id
+      );
+      updatedOrders[existingIndex] = newData;
+      return updatedOrders;
+    });
+    socket.off(`/get/newOrdersOne/${id}`);
   });
 
   // to accept order's product by id
@@ -150,8 +164,12 @@ export const Home = () => {
                 <div
                   key={order?.id}
                   className={situation === order.id ? "accepted" : ""}
+                  style={{
+                    "--grid-col": full ? 1 : 1.5,
+                    "--grid-row": products?.length,
+                  }}
                 >
-                  <figure className="order_item new-order_item">
+                  <figure className="order_item">
                     <div className="order_item_header">
                       <p>
                         {(department === "kassir" ||
@@ -160,6 +178,7 @@ export const Home = () => {
                         )}
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
+                      <span>{time}</span>
                       {(department === "kassir" || department === "owner") && (
                         <div className="btn_box">
                           <button
@@ -174,9 +193,9 @@ export const Home = () => {
                           </button>
                           <button
                             className="relative"
-                            onClick={() => orderAccept({ ...order, status: 2 })}
+                            onClick={() => orderAccept({ ...order, status: 1 })}
                           >
-                            {loading.id === order.id && loading.status === 2 ? (
+                            {loading.id === order.id && loading.status === 1 ? (
                               <LoadingBtn />
                             ) : (
                               <BsCheck2All />
@@ -186,9 +205,9 @@ export const Home = () => {
                       )}
                     </div>
                     <div className="order_item-body">
-                      {products?.map((product) => {
+                      {products?.map((product, ind) => {
                         return (
-                          <figcaption key={product?.id}>
+                          <figcaption key={product?.id + ind}>
                             {/* <img src={product.img} alt="foto" /> */}
                             <p className="qty">{product?.quantity}</p>
                             <pre>
@@ -238,14 +257,25 @@ export const Home = () => {
                                       orderSituation({
                                         order_id: order?.id,
                                         product_id: product?.id,
-                                        status: !product?.status ? 2 : 4,
+                                        status:
+                                          !product?.status &&
+                                          order?.type !== "online"
+                                            ? 4
+                                            : !product?.status &&
+                                              order?.type === "online"
+                                            ? 2
+                                            : product?.status === 4 && 5,
                                         department: department,
                                       })
                                     }
-                                    style={{ backgroundColor: "#3CE75B" }}
+                                    style={{ color: "#3CE75B" }}
                                     className="relative"
                                   >
-                                    {!product?.status ? <HiCheck /> : "Tayyor"}
+                                    {!product?.status ? (
+                                      <HiCheck />
+                                    ) : (
+                                      <IoCheckmarkDoneCircleSharp />
+                                    )}
                                   </button>
                                 </>
                               )}
@@ -254,7 +284,7 @@ export const Home = () => {
                         );
                       })}
                     </div>
-                    <p className="time">{time}</p>
+                    {/* <p className="time">{time}</p> */}
                   </figure>
                   {department === "kassir" && (
                     <div className="order_footer">

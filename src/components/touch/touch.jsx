@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { Component, useState, useRef, useEffect } from "react";
+import { Howl, Howler } from "howler";
+// import Sound from "react-sound";
 import "./touch.css";
 
 export const AssistiveTouch = () => {
@@ -9,18 +11,36 @@ export const AssistiveTouch = () => {
   };
 
   return (
-    <div className="menu-container">
-      <div
-        className={`menu-item main-item ${isOpen ? "open" : ""}`}
-        onClick={toggleMenu}
-      ></div>
-      <div className={`menu-item item-1 ${isOpen ? "open" : ""}`}>1</div>
-      <div className={`menu-item item-2 ${isOpen ? "open" : ""}`}>2</div>
-      <div className={`menu-item item-3 ${isOpen ? "open" : ""}`}>3</div>
-      <div className={`menu-item item-4 ${isOpen ? "open" : ""}`}>4</div>
+    <div class="grid-container">
+      <div class="item_grid item_grid1">1</div>
+      <div class="item_grid item_grid2">2</div>
+      <div class="item_grid item_grid3">3</div>
+      <div class="item_grid item_grid4">4</div>
+      <div class="item_grid item_grid5">5</div>
     </div>
   );
 };
+
+const SoundButton = () => {
+  const sound = new Howl({
+    src: [
+      "https://proxy.notificationsounds.com/voice-ringtones/new-message-ringtone/download/file-sounds-1323-man-you-have-a-new-message.mp3",
+    ], // Sesi buraya ekleyin
+    html5: true,
+  });
+
+  const oynatSes = () => {
+    sound.play();
+  };
+
+  return (
+    <div>
+      <button onClick={oynatSes}>Ses Çal</button>
+    </div>
+  );
+};
+
+export default SoundButton;
 
 export const gs = [
   {
@@ -83,3 +103,55 @@ export const dep = {
   two: [],
 };
 
+export const Test = () => {
+  const [showContent, setShowContent] = useState(false);
+  const pressTimer = useRef(null);
+
+  const handleMouseDown = () => {
+    pressTimer.current = setTimeout(() => {
+      setShowContent(true);
+    }, 5000);
+  };
+
+  const handleMouseUp = () => {
+    clearTimeout(pressTimer.current);
+    setShowContent(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(pressTimer.current);
+    };
+  }, []);
+
+  return (
+    <div>
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        style={{
+          width: "200px",
+          height: "200px",
+          backgroundColor: "lightgray",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+        }}
+      >
+        {showContent && (
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "white",
+              border: "1px solid black",
+              padding: "10px",
+            }}
+          >
+            İçerik burada görünmelidir.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

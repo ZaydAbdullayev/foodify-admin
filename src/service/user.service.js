@@ -29,6 +29,13 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }), //path for login department
 
+    getDepW: builder.query({
+      query: (id) => ({
+        url: `/get/depW/${id}`,
+        method: "GET",
+      }),
+    }),
+
     loginDep: builder.mutation({
       query: (value) => ({
         url: "/login/worker",
@@ -87,5 +94,6 @@ export const {
   usePermissionMutation,
   useGetPaymentOrderQuery,
   useGetpOrderQuery,
+  useGetDepWQuery,
   usePaymentOrderMutation,
 } = userApi;

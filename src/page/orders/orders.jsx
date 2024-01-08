@@ -146,13 +146,22 @@ export const Orders = () => {
       <div className="res_category">
         <div className="res_category_box">
           {categoryData?.data?.map((item) => {
+            console.log(
+              item?.name?.split(" ")?.join("")?.split("'")?.join(""),
+              category
+            );
             return (
               <span
                 key={item?.id}
                 onClick={() => handleTarget({ id: item?.id, name: item?.name })}
                 className={
                   category ===
-                  item?.name?.split(" ")?.join("")?.split("'")?.join("")
+                  item?.name
+                    ?.toLowerCase()
+                    ?.split(" ")
+                    ?.join("")
+                    ?.split("'")
+                    ?.join("")
                     ? "active"
                     : ""
                 }

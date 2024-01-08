@@ -329,8 +329,8 @@ export const calculateTotal = (data) => {
 
   const result = data.price / total || 0;
   return {
-    markup: result.toFixed(2),
+    markup: result,
     prime_cost: total,
-    profit: remainingPrice.toFixed(2),
+    profit: remainingPrice,
   };
 };

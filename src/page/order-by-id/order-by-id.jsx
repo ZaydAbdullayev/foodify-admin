@@ -3,6 +3,7 @@ import "./order-by-id.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetOrderQuery } from "../../service/order.service";
 import io from "socket.io-client";
+import { NumericFormat } from "react-number-format";
 
 import { GiHotMeal } from "react-icons/gi";
 import { BiSolidTimer } from "react-icons/bi";
@@ -42,8 +43,13 @@ export const OrderById = () => {
             return (
               <div className="order_box__item" key={item.id}>
                 <p>{item.name}</p>
-                <p>{item?.quantity} ta</p>
-                <span>{item?.price} so'm</span>
+                <p>{item?.quantity}x</p>
+                <NumericFormat
+                  value={item?.price * item?.quantity}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" so'm"}
+                />
                 <i className="item_status">
                   {item.status === 1 ? (
                     <span>

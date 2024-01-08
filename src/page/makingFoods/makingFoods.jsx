@@ -24,8 +24,8 @@ export const MakingFoods = () => {
   dispatch(acNavStatus([100]));
   const point =
     department === "kassir" || department === "owner"
-      ? `get/orders/${id}/1`
-      : `get/depOrders/${id}/${department}/1`;
+      ? `get/orders/${id}`
+      : `get/depOrders/${id}/${department}`;
 
   useEffect(() => {
     setTimeout(() => {

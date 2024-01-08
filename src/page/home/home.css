@@ -29,12 +29,19 @@
   gap: var(--gap3);
 }
 
-.orders_body > div {
-  width: calc(100% / 2 - calc(var(--pd3) / 2));
+.orders_body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
 }
 
-.orders_body.fullScreen > div {
-  width: calc(100% / 3 - calc((var(--pd3) * 2) / 3));
+.orders_body.fullScreen {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.orders_body > div {
+  grid-column: span var(--grid-col);
+  grid-row: span var(--grid-row);
 }
 
 .oreders > h1 {
@@ -186,6 +193,7 @@
   height: var(--obtn);
   border-radius: 7px;
   font-size: var(--fs6);
+  background: transparent;
 }
 
 .order_stution > button:hover,
@@ -198,9 +206,13 @@
   opacity: 0.7;
 }
 
-.order_stution > :nth-child(1),
 .btn_box > :first-child {
   background: #ff0000;
+}
+
+.order_stution > button {
+  font-size: var(--fs3);
+  color: #ff0000;
 }
 
 .btn_box > :last-child {

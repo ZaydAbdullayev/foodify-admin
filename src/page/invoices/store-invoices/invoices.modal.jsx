@@ -164,7 +164,7 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>Jami</p>
         </div>
         <div className="product_box_body">
-          {ingredientData?.map((item) => {
+          {data?.map((item) => {
             const checked = [...checkedData, ...acIngredients]?.find(
               (i) => i.id === item?.id
             );
@@ -210,7 +210,10 @@ export const InvoicesModal = ({
                       type="number"
                       defaultValue={parseInt(item?.price)}
                       onChange={(e) =>
-                        getProduct({ ...checked, price: e.target.value }, 1)
+                        getProduct(
+                          { ...checked, price: parseInt(e.target.value) },
+                          1
+                        )
                       }
                     />
                   ) : (

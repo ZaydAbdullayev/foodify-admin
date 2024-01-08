@@ -45,6 +45,7 @@
 }
 
 .order_box__item > span {
+  text-align: end;
   flex: 1;
 }
 

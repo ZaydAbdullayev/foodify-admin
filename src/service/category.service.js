@@ -15,7 +15,7 @@ export const categoryApi = apiSlice.injectEndpoints({
       query: (value) => ({
         url: "add/category",
         method: "POST",
-        body: JSON.stringify(value),
+        body: value,
       }),
       invalidatesTags: ["category"],
     }),
