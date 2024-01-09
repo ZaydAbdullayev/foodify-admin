@@ -309,6 +309,12 @@
   border: 1px solid #ccc9;
 }
 
+.u-control_action__box > img {
+  width: calc(var(--univh) + 10px);
+  height: calc(var(--univh) + 10px);
+  object-fit: cover;
+}
+
 .product_box_footer {
   height: calc(var(--univh) * 3);
   width: 100%;

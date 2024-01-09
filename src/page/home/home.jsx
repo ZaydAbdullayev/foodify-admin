@@ -235,10 +235,6 @@ export const Home = () => {
                             <div className="order_stution">
                               {product?.status === 3 ? (
                                 <>
-                                  <BsCheck2All style={{ color: "#3CE75B" }} />
-                                </>
-                              ) : product?.status === 3 ? (
-                                <>
                                   <RxCross1 style={{ color: "#ff0000" }} />
                                 </>
                               ) : (
@@ -275,7 +271,9 @@ export const Home = () => {
                                             : !product?.status &&
                                               order?.type === "online"
                                             ? 2
-                                            : product?.status === 4 && 5,
+                                            : product?.status === 4
+                                            ? 5
+                                            : 4,
                                         department: department,
                                       })
                                     }

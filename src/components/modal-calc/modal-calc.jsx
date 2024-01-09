@@ -27,6 +27,7 @@ import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
 import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
 import { acActiveThing } from "../../redux/active";
 import { useUpdateItemsMutation } from "../../service/store.service";
+import { acGetUrl } from "../../redux/u-modal";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -43,6 +44,7 @@ export const UniversalControlModal = ({
   setCheckedData,
 }) => {
   const open = useSelector((state) => state.uModal);
+  const image = useSelector((state) => state.image);
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [addStProduct] = useAddStProductMutation();
@@ -143,6 +145,7 @@ export const UniversalControlModal = ({
         ClearForm("u-control-form");
         dispatch(acCloseUModal());
         dispatch(acActiveThing({}));
+        dispatch(acGetUrl({ st: false, img: "" }));
         setCheckedData([]);
       }
     } catch (err) {
@@ -208,8 +211,12 @@ export const UniversalControlModal = ({
           open ? "u-control_action__box active" : "u-control_action__box"
         }
       >
+        {image.img !== "" && <img src={image?.img} alt="." />}
         {type === "product" && (
-          <button type="button">
+          <button
+            type="button"
+            onClick={() => dispatch(acGetUrl({ st: true, img: "" }))}
+          >
             <RiImageAddFill />
           </button>
         )}

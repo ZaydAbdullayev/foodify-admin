@@ -9,7 +9,7 @@ import { reShrink } from "./shrink";
 import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
 import { rePermission } from "./permission";
-import { reUModal, reUModalU } from "./u-modal";
+import { reGetUrl, reUModal, reUModalU } from "./u-modal";
 import { reActive } from "./active";
 import { reCalc } from "./calc";
 import { reModalType } from "./u-modal";
@@ -35,6 +35,7 @@ export const store = configureStore({
     uSearch: reGetNewData,
     status: reNavStatus,
     media: reMedia,
+    image: reGetUrl,
     [apiSlice.reducerPath]: apiSlice.reducer,
   }),
   middleware: (getDefaultMiddleware) =>

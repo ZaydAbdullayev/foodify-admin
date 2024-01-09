@@ -6,27 +6,28 @@ import { ClearForm } from "../../service/form.service";
 import { ApiService } from "../../service/api.service";
 import { useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../loading/loading";
+import { acGetUrl } from "../../redux/u-modal";
+import { useDispatch, useSelector } from "react-redux";
 
 export const Addproduct = memo(() => {
   const [files, setFiles] = useState([]);
   const [img, setImg] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const image = useSelector((state) => state.image);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formdata = new FormData(e.target);
-    const value = Object.fromEntries(formdata.entries());
-    value.img = img;
     setLoading(true);
 
-    ApiService.fetching("add/product", value)
+    ApiService.fetching("get/imgUrl", { img: img })
       .then((res) => {
-        es("Maxsulot muaffaqiyatli qo'shildi", { variant: "success" });
+        const img = res?.data?.data;
+        es("Rasm muaffaqiyatli qo'shildi", { variant: "success" });
         ClearForm(".add_product");
         setFiles([]);
-        navigate("/product");
-        window.location.reload();
+        setImg(null);
+        dispatch(acGetUrl({ st: false, img: img }));
       })
       .catch((err) => {
         es("Qo'shishda xatolik yuz berdi", { variant: "error" });
@@ -42,11 +43,12 @@ export const Addproduct = memo(() => {
   };
 
   return (
-    <div className="product_box">
+    <div className={image.st ? "product_box open" : "product_box"}>
       <form className="add_product" onSubmit={handleSubmit}>
         <label
           style={files.length ? { border: "none" } : {}}
           className="product_img"
+          htmlFor="image"
         >
           {files.length ? "" : <IoIosRestaurant />}
           <input
@@ -61,6 +63,13 @@ export const Addproduct = memo(() => {
             <img src={files[0]} alt="Selected" className="selected_image" />
           )}
         </label>
+        <button
+          type="button"
+          className="product_box_btn"
+          onClick={() => dispatch(acGetUrl({ st: false, img: "" }))}
+        >
+          Chiqish
+        </button>
         <button className="product_box_btn relative">
           {loading ? <LoadingBtn /> : "Tasdiqlash"}
         </button>
@@ -88,7 +97,6 @@ const data = {
 export const ShowProduct = memo(() => {
   const navigate = useNavigate();
   const ingredientData = JSON.parse(data?.ingredients);
-  console.log(ingredientData);
   return (
     <div className="product_box">
       <div className="product_item">

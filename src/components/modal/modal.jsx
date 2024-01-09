@@ -26,6 +26,7 @@ import { useUpdateCashboxMutation } from "../../service/cashbox.service";
 import { useUpdateCashboxGrMutation } from "../../service/cashbox-group.service";
 import { useUpdateCashTransactionMutation } from "../../service/cash-transaction.service";
 import { useAddTableMutation } from "../../service/table.service";
+import { ClearForm } from "../../service/form.service";
 
 export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
   const open = useSelector((state) => state.uModal);
@@ -106,7 +107,7 @@ export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
       } else if (result?.data) {
         dispatch(acCloseUModal());
         setChecked(false);
-        e.target.reset();
+        ClearForm(".u_modal");
       }
     } catch (err) {
       console.error(err);
@@ -117,6 +118,7 @@ export const UniversalModal = ({ children, type, newGrData, setChecked }) => {
 
   const setClose = () => {
     dispatch(acCloseUModal());
+    ClearForm(".u_modal");
   };
   return (
     <div className={open ? "u_modal_container open" : "u_modal_container"}>
@@ -201,7 +203,7 @@ export const UniversalUModal = ({ children, type, newGrData, setChecked }) => {
       } else if (result?.data) {
         dispatch(acCloseUModalU());
         dispatch(acActive({ id: null }));
-        e.target.reset();
+        ClearForm(".u_modal");
         setChecked(false);
         es({ message: "Taxrirlash muvoffaqiyatli!", variant: "success" });
       }

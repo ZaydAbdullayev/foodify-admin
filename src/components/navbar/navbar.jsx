@@ -210,7 +210,9 @@ export const Navbar = () => {
               <select onChange={(e) => uploadData(e, "cashier")}>
                 <option value="all">Kassa bo'yicha</option>
                 {data?.data?.map((item) => (
-                  <option value={item.id}>{item.name}</option>
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
                 ))}
               </select>
             )}
@@ -218,7 +220,9 @@ export const Navbar = () => {
               <select onChange={(e) => uploadData(e, "storage")}>
                 <option value="all">Ombor bo'yicha</option>
                 {data?.data?.map((item) => (
-                  <option value={item.id}>{item.name}</option>
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
                 ))}
               </select>
             )}

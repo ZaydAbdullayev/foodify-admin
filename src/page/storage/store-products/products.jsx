@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+// import { acActive } from "../../../redux/active";
 import { useGetStProductQuery } from "../../../service/s-products.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
@@ -13,6 +13,7 @@ import { data } from "../../../components/modal-calc/components";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acActiveThing } from "../../../redux/active";
+import { Addproduct } from "../../../components/Addproduct/addproduct";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -25,6 +26,7 @@ export const StorageProducts = () => {
   const [showMore, setShowMore] = useState(null);
   const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.activeThing);
+  const img = useSelector((state) => state.image);
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];
@@ -53,9 +55,9 @@ export const StorageProducts = () => {
     products?.data &&
     [...products?.data].sort((a, b) => {
       if (sort.state) {
-        return a.name.localeCompare(b.name);
+        return a?.name?.localeCompare(b?.name);
       } else {
-        return b.name.localeCompare(a.name);
+        return b?.name?.localeCompare(a?.name);
       }
     });
 
@@ -137,7 +139,6 @@ export const StorageProducts = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
-              console.log(item?.ingredients);
               const ingredients = item?.ingredients
                 ? JSON.parse(item.ingredients)
                 : [];
@@ -148,6 +149,7 @@ export const StorageProducts = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
+                  key={item.id}
                 >
                   <div
                     className={
@@ -322,6 +324,7 @@ export const StorageProducts = () => {
             style={{ "--input-width": "12%" }}
             defaultValue={acItem?.id ? acItem?.date : today}
           />
+          <input type="hidden" name="img" value={img?.img} />
         </UniversalForm>
         <UniversalProductControl
           activePart={activePart}
@@ -441,6 +444,7 @@ export const StorageProducts = () => {
           />
         </CalcResult>
       </UniversalControlModal>
+      <Addproduct />
     </div>
   );
 };
