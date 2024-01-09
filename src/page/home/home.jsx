@@ -61,6 +61,7 @@ export const Home = () => {
   });
 
   socket.on(`/get/newOrdersOne/${id}`, (newData) => {
+    console.log("new socket", newData);
     setOrders((prevOrders) => {
       const updatedOrders = [...prevOrders];
       const existingIndex = updatedOrders.findIndex(
@@ -88,9 +89,10 @@ export const Home = () => {
         user_id: order?.user_id,
       });
       socket.emit("/update/order/status", order);
-      socket.emit("/divide/orders/depart", order);
+      if (department === "kassir" || department === "owner") {
+        socket.emit("/divide/orders/depart", order);
+      }
       setSituation(order?.id);
-      dispatch(acUpload());
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
     } finally {
@@ -113,7 +115,6 @@ export const Home = () => {
       ) {
         setSituation(order?.order_id);
       }
-      dispatch(acUpload());
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
     } finally {
@@ -201,7 +202,12 @@ export const Home = () => {
                             onClick={() =>
                               orderAccept({
                                 ...order,
-                                status: order?.order_type === "online" ? 2 : 1,
+                                status:
+                                  order?.order_type === "online"
+                                    ? 2
+                                    : order?.status === 1 || order?.status === 3
+                                    ? 4
+                                    : 1,
                               })
                             }
                           >

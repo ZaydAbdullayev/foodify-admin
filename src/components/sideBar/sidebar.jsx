@@ -55,7 +55,7 @@ export const Sidebar = () => {
 
   return (
     <div className={isShrinkView ? "shrink" : "sidebar_container"}>
-      <div>
+      <div style={{ borderBottom: "1px solid #eee4" }}>
         {isShrinkView ? (
           <img src={logo} alt="" />
         ) : (
@@ -65,7 +65,7 @@ export const Sidebar = () => {
           </div>
         )}
       </div>
-      {media && (
+      {/* {media && (
         <div className="shrink_box">
           <h3 onClick={handleSidebarView}>
             {isShrinkView ? <RiMenu2Line /> : "Dashboard"}
@@ -74,7 +74,7 @@ export const Sidebar = () => {
             {isShrinkView ? <HiChevronRight /> : <HiChevronLeft />}
           </button>
         </div>
-      )}
+      )} */}
       <ul className="menu_box">
         {login?.user?.role === "owner"
           ? Menu.map((item) => {

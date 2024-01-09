@@ -16,6 +16,11 @@
   z-index: 999999;
   background: #555;
   transition: all 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.home_page.active::-webkit-scrollbar {
+  width: 0;
 }
 
 .oreders,

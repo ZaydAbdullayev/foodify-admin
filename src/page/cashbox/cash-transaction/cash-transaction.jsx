@@ -43,8 +43,8 @@ export const CashboxTransaction = () => {
   //   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
+    invoiceData?.data &&
+    [...invoiceData?.data].sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -72,9 +72,9 @@ export const CashboxTransaction = () => {
     { name: "storage", size: "10%" },
     { name: "storage", size: "10%" },
     { name: "storage", size: "10%" },
-    { name: "description", size: "8%" },
-    { name: "cost", size: "10%", position: "center" },
     { name: "description", size: "9%" },
+    { name: "cost", size: "9%", position: "center" },
+    { name: "description", size: "8%" },
   ];
 
   return (
@@ -128,14 +128,13 @@ export const CashboxTransaction = () => {
                 year: "numeric",
               });
               return (
-                <div className={"storage_body__box"}>
+                <div className={"storage_body__box"} key={item?.id}>
                   <div
                     className={
                       acItem === item?.id
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item?.id}
                     onDoubleClick={() =>
                       dispatch(
                         acActive({
