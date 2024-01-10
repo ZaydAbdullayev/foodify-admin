@@ -92,7 +92,7 @@ export const Home = () => {
       if (department === "kassir" || department === "owner") {
         socket.emit("/divide/orders/depart", order);
       }
-      setSituation(order?.id);
+      setSituation({ status: order?.status, id: order?.id });
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
     } finally {
@@ -146,7 +146,7 @@ export const Home = () => {
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
-        {filteredData.length ? (
+        {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
               const products =
@@ -166,32 +166,33 @@ export const Home = () => {
                 <div
                   key={order?.id}
                   className={
-                    situation === order.id && situation.status === 3
+                    situation.id === order.id && situation.status !== 2
                       ? "accepted"
                       : ""
                   }
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": products?.length,
+                    display: order?.status === 4 ? "none" : "flex",
                   }}
                 >
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
-                        {(department === "kassir" ||
+                        {/* {(department === "kassir" ||
                           department === "owner") && (
                           <span>{order?.address?.split("&")?.pop()}</span>
-                        )}
+                        )} */}
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
-                      <span>{time}</span>
+                      <span>{order?.status}</span>
                       {(department === "kassir" || department === "owner") && (
                         <div className="btn_box">
                           <button
                             className="relative"
-                            onClick={() => orderAccept({ ...order, status: 6 })}
+                            onClick={() => orderAccept({ ...order, status: 4 })}
                           >
-                            {loading.id === order.id && loading.status === 6 ? (
+                            {loading.id === order.id && loading.status === 4 ? (
                               <LoadingBtn />
                             ) : (
                               <RxCross2 />
@@ -204,10 +205,11 @@ export const Home = () => {
                                 ...order,
                                 status:
                                   order?.order_type === "online"
+                                    ? 1
+                                    : order?.order_type === "offline" &&
+                                      order?.status === 0
                                     ? 2
-                                    : order?.status === 1 || order?.status === 3
-                                    ? 4
-                                    : 1,
+                                    : 3,
                               })
                             }
                           >
@@ -239,67 +241,66 @@ export const Home = () => {
                               thousandSeparator={true}
                             />
                             <div className="order_stution">
-                              {product?.status === 3 ? (
-                                <>
-                                  <RxCross1 style={{ color: "#ff0000" }} />
-                                </>
-                              ) : (
-                                <>
-                                  {!product?.status && (
-                                    <button
-                                      className="relative"
-                                      onClick={() =>
-                                        orderSituation({
-                                          order_id: order?.id,
-                                          product_id: product?.id,
-                                          status: 3,
-                                          department: department,
-                                        })
-                                      }
-                                    >
-                                      {loading.id === product.id &&
-                                      loading.status === 3 ? (
-                                        <LoadingBtn />
-                                      ) : (
-                                        <RxCross2 />
-                                      )}
-                                    </button>
+                              {product?.status === 1 && (
+                                <button
+                                  className="relative"
+                                  onClick={() =>
+                                    orderSituation({
+                                      order_id: order?.id,
+                                      product_id: product?.id,
+                                      status: 3,
+                                      department: department,
+                                    })
+                                  }
+                                >
+                                  {loading.id === product.id &&
+                                  loading.status === 3 ? (
+                                    <LoadingBtn />
+                                  ) : (
+                                    <RxCross2 />
                                   )}
-                                  <button
-                                    onClick={() =>
-                                      orderSituation({
-                                        order_id: order?.id,
-                                        product_id: product?.id,
-                                        status:
-                                          !product?.status &&
-                                          order?.type !== "online"
-                                            ? 4
-                                            : !product?.status &&
-                                              order?.type === "online"
-                                            ? 2
-                                            : product?.status === 4
-                                            ? 5
-                                            : 4,
-                                        department: department,
-                                      })
-                                    }
-                                    style={{ color: "#3CE75B" }}
-                                    className="relative"
-                                  >
-                                    {!product?.status ? (
-                                      <HiCheck />
-                                    ) : (
-                                      <IoCheckmarkDoneCircleSharp />
-                                    )}
-                                  </button>
-                                </>
+                                </button>
                               )}
+                              <button
+                                onClick={() => {
+                                  let newStatus;
+                                  if (order?.type === "online") {
+                                    newStatus = 2;
+                                  } else {
+                                    newStatus = 4;
+                                  }
+
+                                  orderSituation({
+                                    order_id: order?.id,
+                                    product_id: product?.id,
+                                    status: newStatus,
+                                    department: department,
+                                  });
+
+                                  if (newStatus === 2) {
+                                    // Eğer yeni durum 2 ise
+                                    orderSituation({
+                                      order_id: order?.id,
+                                      product_id: product?.id,
+                                      status: 5,
+                                      department: department,
+                                    });
+                                  }
+                                }}
+                                style={{ color: "#3CE75B" }}
+                                className="relative"
+                              >
+                                {product?.status === 1 ? (
+                                  <HiCheck />
+                                ) : (
+                                  <IoCheckmarkDoneCircleSharp />
+                                )}
+                              </button>
                             </div>
                           </figcaption>
                         );
                       })}
                     </div>
-                    {/* <p className="time">{time}</p> */}
                   </figure>
                   {department === "kassir" && (
                     <div className="order_footer">

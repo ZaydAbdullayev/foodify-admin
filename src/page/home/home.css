@@ -38,6 +38,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto auto;
+  grid-gap: var(--gap2);
 }
 
 .orders_body.fullScreen {
@@ -197,11 +198,6 @@
   opacity: 0.7;
 }
 
-.qty {
-  background: #787aff;
-  font-weight: 600;
-}
-
 .order_stution > button,
 .qty {
   width: var(--obtn);
@@ -209,6 +205,11 @@
   border-radius: 7px;
   font-size: var(--fs6);
   background: transparent;
+}
+
+.qty {
+  background: #787aff;
+  font-weight: 600;
 }
 
 .order_stution > button:hover,

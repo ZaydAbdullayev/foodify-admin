@@ -30,6 +30,8 @@ export const OrderById = () => {
     navigate("/orders/tables");
   };
 
+  console.log(data);
+
   return (
     <div className="order_box">
       {isLoading ? (

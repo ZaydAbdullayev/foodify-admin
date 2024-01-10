@@ -32,10 +32,6 @@ export const Orders = () => {
   const { data = [], isLoading } = useGetStProductQuery();
   const { data: categoryData = [] } = useGetStCategoryQuery();
   const position = location.pathname.split("/");
-  // console.log(position);
-
-  // ["", "category", "ichkari", "1", "ed2201"];
-  // ["", "update", "orders", "ichkari", "3", "c3b530", "undefined"];
   const category =
     location.search.split("=")[1] || categoryData?.data?.[0]?.name;
   const cart = useMemo(() => {
@@ -146,10 +142,6 @@ export const Orders = () => {
       <div className="res_category">
         <div className="res_category_box">
           {categoryData?.data?.map((item) => {
-            console.log(
-              item?.name?.split(" ")?.join("")?.split("'")?.join(""),
-              category
-            );
             return (
               <span
                 key={item?.id}
