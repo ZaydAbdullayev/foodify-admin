@@ -27,12 +27,32 @@ export const Sidebar = () => {
     findDFromTop(e.target);
   };
 
-  function findDFromTop(element) {
+  // function findDFromTop(element) {
+  //   if (element) {
+  //     const rect = element.getBoundingClientRect();
+  //     const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  //     const top = rect.top + scrollTop;
+  //     setDFromTop(top);
+  //   }
+
+  //   return null;
+  // }
+
+  const findDFromTop = (element) => {
     if (element) {
       const rect = element.getBoundingClientRect();
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const top = rect.top + scrollTop;
-      setDFromTop(top);
+      const scrollTop = window.scrollX || document.documentElement.scrollLeft;
+      const leftOrTop = rect.left + scrollTop;
+      console.log("leftten", leftOrTop);
+      setDFromTop(leftOrTop); // State değişkeni güncellenir.
+    }
+  };
+
+  function findDFromLeft(element) {
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const left = rect.left;
+      return left;
     }
 
     return null;

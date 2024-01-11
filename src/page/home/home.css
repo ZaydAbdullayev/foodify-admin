@@ -275,3 +275,17 @@
 .cirscle_container * {
   color: #eee;
 }
+
+@media (max-width: 600px) {
+  .orders_body {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .orders_body.fullScreen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home_page.active {
+    padding: var(--pd3);
+  }
+}

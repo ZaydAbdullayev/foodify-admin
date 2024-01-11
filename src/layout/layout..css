@@ -37,12 +37,41 @@ main > :first-child {
   width: 96%;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+  .layout {
+    height: 100vh;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    overflow: hidden;
+  }
+
+  .main {
+    width: 100%;
+    height: calc(100% - var(--nwh));
+  }
+
+  .long_main {
+    width: 100%;
+    height: calc(100% - var(--nwh));
+  }
+
+  .aside {
+    width: 100%;
+    height: var(--nwh);
+  }
+
+  .short_aside {
+    width: 100%;
+    height: var(--nwh);
+  }
+}
+
+/* @media (max-width: 500px) {
   .short_aside {
     position: fixed;
     top: 0;
     left: 0;
-    width: var(--nwh);
+    width: var(--nwh);         
     height: var(--nwh);
     z-index: 9999;
     backdrop-filter: blur(10px);
@@ -60,4 +89,4 @@ main > :first-child {
   .long_main {
     width: 100%;
   }
-}
+} */

@@ -111,9 +111,11 @@ export const Home = () => {
       });
       socket.emit("/update/ProductSt", order);
       if (
-        orders.find(({ id, status }) => id === order?.order_id && status === 3)
+        orders.find(
+          ({ id, status }) => id === order?.data?.order_id && status === 3
+        )
       ) {
-        setSituation(order?.order_id);
+        setSituation(order?.data?.order_id);
       }
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
@@ -246,7 +248,7 @@ export const Home = () => {
                                   className="relative"
                                   onClick={() =>
                                     orderSituation({
-                                      order_id: order?.id,
+                                      data: order,
                                       product_id: product?.id,
                                       status: 3,
                                       department: department,
@@ -271,6 +273,7 @@ export const Home = () => {
                                   }
 
                                   orderSituation({
+                                    data: order,
                                     order_id: order?.id,
                                     product_id: product?.id,
                                     status: newStatus,
@@ -280,6 +283,7 @@ export const Home = () => {
                                   if (newStatus === 2) {
                                     // Eğer yeni durum 2 ise
                                     orderSituation({
+                                      data: order,
                                       order_id: order?.id,
                                       product_id: product?.id,
                                       status: 5,
