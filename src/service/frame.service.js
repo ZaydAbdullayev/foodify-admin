@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://vsxmzbb6-8081.euw.devtunnels.ms",
+  baseUrl: "https://bvtrj1n0-8081.euw.devtunnels.ms",
   prepareHeaders: (headers, { getState }) => {
     if (user?.token) {
       headers.set("Authorization", `Bearer ${user?.token}`);

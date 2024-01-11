@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { ClearForm } from "../service/form.service";
@@ -77,7 +77,6 @@ export const Login = () => {
     <div className="login">
       <form onSubmit={handleSubmit} id="form">
         <h1>Hisobga kirish</h1>
-
         <input
           type="text"
           name="username"
@@ -139,6 +138,8 @@ export const CheackDepartment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const inputElement = useRef(null); // useRef ile inputElement'i başlatın
+
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
@@ -163,36 +164,57 @@ export const CheackDepartment = () => {
     }
   };
 
+  useEffect(() => {
+    if (inputElement.current) {
+      // null kontrolü ekleyin
+      inputElement.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      const key = e.key;
+      if (/^\d$/.test(key)) {
+        setPass(`${pass}${key}`);
+      } else if (key === "Backspace" && pass.length > 0) {
+        setPass(pass.slice(0, -1));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [pass]);
+
   const removeLastDigit = () => {
     if (pass.length > 0) {
       setPass(pass.slice(0, -1));
     }
   };
 
+  const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+
   return (
     <div className="login">
       <label className="cheack_d">
         <p>Bo'limingiz parolini kiriting</p>
         <label>
-          <span
+          <input
+            type="text"
             style={
               pass.length <= 6 && !err
                 ? {}
                 : { border: "1px solid tomato", color: "tomato" }
             }
-          >
-            {pass}
-          </span>
-          <button onClick={() => setPass(`${pass}1`)}>1</button>
-          <button onClick={() => setPass(`${pass}2`)}>2</button>
-          <button onClick={() => setPass(`${pass}3`)}>3</button>
-          <button onClick={() => setPass(`${pass}4`)}>4</button>
-          <button onClick={() => setPass(`${pass}5`)}>5</button>
-          <button onClick={() => setPass(`${pass}6`)}>6</button>
-          <button onClick={() => setPass(`${pass}7`)}>7</button>
-          <button onClick={() => setPass(`${pass}8`)}>8</button>
-          <button onClick={() => setPass(`${pass}9`)}>9</button>
-          <button onClick={() => setPass(`${pass}0`)}>0</button>
+            ref={inputElement}
+            value={pass}
+          />
+          {digits.map((digit) => (
+            <button key={digit} onClick={() => setPass(`${pass}${digit}`)}>
+              {digit}
+            </button>
+          ))}
           <button onClick={() => setPass("")}>AC</button>
           <button onClick={removeLastDigit}>⨉</button>
         </label>
