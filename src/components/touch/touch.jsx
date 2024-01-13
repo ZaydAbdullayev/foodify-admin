@@ -3,6 +3,8 @@ import { Howl, Howler } from "howler";
 // import Sound from "react-sound";
 import "./touch.css";
 
+import audio from "../../assets/images/ses.mp3";
+
 export const AssistiveTouch = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,15 +25,17 @@ export const AssistiveTouch = () => {
 
 const SoundButton = () => {
   const sound = new Howl({
-    src: [
-      "https://proxy.notificationsounds.com/voice-ringtones/new-message-ringtone/download/file-sounds-1323-man-you-have-a-new-message.mp3",
-    ], // Sesi buraya ekleyin
+    src: [audio], // Sesi buraya ekleyin
     html5: true,
   });
 
   const oynatSes = () => {
     sound.play();
   };
+
+  setTimeout(() => {
+    sound.play();
+  }, 2000);
 
   return (
     <div>
@@ -155,5 +159,3 @@ export const Test = () => {
     </div>
   );
 };
-
-

@@ -50,11 +50,17 @@ import { TableBox } from "./page/table-box/table-box";
 import { Orders } from "./page/orders/orders";
 import { OrderById } from "./page/order-by-id/order-by-id";
 import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
+import { Howl } from "howler";
+import audio from "./assets/images/ses.mp3";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
   const location = useLocation();
   const dispatch = useDispatch();
+  const sound = new Howl({
+    src: [audio], // Sesi buraya ekleyin
+    html5: true,
+  });
 
   useEffect(() => {
     dispatch(acCloseUModal());
@@ -73,6 +79,11 @@ export const Router = () => {
   span.addEventListener("animationend", function () {
     span.classList.remove("active");
   });
+
+  setTimeout(() => {
+    sound.stop();
+  }, 1000);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

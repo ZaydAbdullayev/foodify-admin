@@ -8,9 +8,10 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { acNavStatus } from "../../redux/navbar.status";
 import { NumericFormat } from "react-number-format";
+// import SoundButton from "../../components/touch/touch";
 
 import { BsCheck2All } from "react-icons/bs";
-import { RxCross1 } from "react-icons/rx";
+// import { RxCross1 } from "react-icons/rx";
 import { AiOutlineFullscreen } from "react-icons/ai";
 import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi2";
@@ -64,12 +65,20 @@ export const Home = () => {
     console.log("new socket", newData);
     setOrders((prevOrders) => {
       const updatedOrders = [...prevOrders];
-      const existingIndex = updatedOrders.findIndex(
-        (order) => order.id === newData.id
-      );
-      updatedOrders[existingIndex] = newData;
+      if (newData[0] === "update") {
+        const existingIndex = updatedOrders.findIndex(
+          (order) => order.id === newData[1].id
+        );
+        updatedOrders[existingIndex] = newData[1];
+      } else if (newData[0] === "delete") {
+        const deletedIndex = updatedOrders.findIndex(
+          (order) => order.id === newData[1].id
+        );
+        updatedOrders.splice(deletedIndex, 1);
+      }
       return updatedOrders;
     });
+
     socket.off(`/get/newOrdersOne/${id}`);
   });
 
@@ -174,7 +183,7 @@ export const Home = () => {
                   }
                   style={{
                     "--grid-col": full ? 1 : 1.5,
-                    "--grid-row": products?.length,
+                    "--grid-row": products?.length + 1,
                     display: order?.status === 4 ? "none" : "flex",
                   }}
                 >
@@ -272,21 +281,20 @@ export const Home = () => {
                                     newStatus = 4;
                                   }
 
-                                  orderSituation({
-                                    data: order,
-                                    order_id: order?.id,
-                                    product_id: product?.id,
-                                    status: newStatus,
-                                    department: department,
-                                  });
-
-                                  if (newStatus === 2) {
-                                    // Eğer yeni durum 2 ise
+                                  if (product?.status === 4) {
                                     orderSituation({
                                       data: order,
                                       order_id: order?.id,
                                       product_id: product?.id,
                                       status: 5,
+                                      department: department,
+                                    });
+                                  } else {
+                                    orderSituation({
+                                      data: order,
+                                      order_id: order?.id,
+                                      product_id: product?.id,
+                                      status: newStatus,
                                       department: department,
                                     });
                                   }
@@ -326,6 +334,7 @@ export const Home = () => {
           </figure>
         )}
       </div>
+      {/* <SoundButton /> */}
     </div>
   );
 };

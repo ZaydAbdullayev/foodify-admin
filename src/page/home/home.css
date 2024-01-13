@@ -268,7 +268,7 @@
 }
 
 .accepted {
-  transform: translateX(-250%);
+  transform: translateX(-500%);
   transition: all 1s cubic-bezier(0.895, 0.03, 0.685, 0.22);
 }
 

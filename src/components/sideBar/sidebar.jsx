@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { acShrink } from "../../redux/shrink";
+// import { acShrink } from "../../redux/shrink";
 import { useLocation } from "react-router-dom";
 import { Menu, Menu_customer, Category } from "./menu";
 
-import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
+// import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
 import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import logo from "../../assets/images/logo.png";
 
@@ -14,9 +14,9 @@ export const Sidebar = () => {
   const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
   const status = useSelector((state) => state.media);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const [media, setMedia] = useState(true);
+  const [media, setMedia] = useState(false);
   const location = useLocation().pathname;
   const [dFromTop, setDFromTop] = useState(0);
 
@@ -27,32 +27,20 @@ export const Sidebar = () => {
     findDFromTop(e.target);
   };
 
-  // function findDFromTop(element) {
-  //   if (element) {
-  //     const rect = element.getBoundingClientRect();
-  //     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  //     const top = rect.top + scrollTop;
-  //     setDFromTop(top);
-  //   }
-
-  //   return null;
-  // }
-
-  const findDFromTop = (element) => {
+  function findDFromTop(element) {
     if (element) {
       const rect = element.getBoundingClientRect();
-      const scrollTop = window.scrollX || document.documentElement.scrollLeft;
-      const leftOrTop = rect.left + scrollTop;
-      console.log("leftten", leftOrTop);
-      setDFromTop(leftOrTop); // State değişkeni güncellenir.
-    }
-  };
-
-  function findDFromLeft(element) {
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      const left = rect.left;
-      return left;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      const left = rect.left + scrollLeft;
+      const top = rect.top + scrollTop;
+      if (window.innerWidth < 600) {
+        setDFromTop(left);
+        console.log("left", left);
+      } else {
+        setDFromTop(top);
+        console.log("top", top);
+      }
     }
 
     return null;
@@ -69,9 +57,9 @@ export const Sidebar = () => {
     }, 1);
   }
 
-  const handleSidebarView = () => {
-    dispatch(acShrink(!acShrink));
-  };
+  // const handleSidebarView = () => {
+  //   dispatch(acShrink(!acShrink));
+  // };
 
   return (
     <div className={isShrinkView ? "shrink" : "sidebar_container"}>
@@ -168,11 +156,11 @@ export const Sidebar = () => {
                         style={{ "--top": `${dFromTop}px` }}
                       >
                         <div className="inner_menu-box">
-                          {Category.filter(
-                            (cat) => cat.id === activeCategoryId
+                          {Category?.filter(
+                            (cat) => cat?.id === activeCategoryId
                           ).map((catItem) => (
                             <li
-                              key={catItem.path}
+                              key={catItem?.path}
                               className={`inner_menu-item ${
                                 location === item?.path ? "active" : ""
                               }`}
@@ -182,13 +170,13 @@ export const Sidebar = () => {
                                 "--value3": `${catItem?.positions[2]}px`,
                               }}
                             >
-                              <Link to={`${item.path}${catItem.path}`}>
+                              <Link to={`${item?.path}${catItem?.path}`}>
                                 {isShrinkView ? (
-                                  catItem.icon
+                                  catItem?.icon
                                 ) : (
                                   <>
-                                    {catItem.icon}
-                                    {catItem.name}
+                                    {catItem?.icon}
+                                    {catItem?.name}
                                   </>
                                 )}
                               </Link>

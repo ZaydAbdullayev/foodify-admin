@@ -92,9 +92,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #444;
+  background: #353434;
   color: #fff;
-  border-top: 1px solid #ccc2;
+  border-top: 1px solid #ccc5;
   z-index: 999;
 }
 
@@ -105,16 +105,26 @@
   border: 1px solid #eee4;
   border-radius: 20px;
   color: #fff;
-  box-shadow: 0 0 10px 10px #eee1;
   font-size: var(--fs5);
   letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+  .order-footer {
+    bottom: var(--nwh);
+    width: 100%;
+    z-index: 9999999;
+  }
+
+  .order-footer > button {
+    font-size: var(--fs6);
+  }
 }
 
 @media (max-width: 450px) {
   .order-footer > button {
     width: calc(100% / 3 - var(--gap6));
     border-radius: 12px;
-    font-size: var(--fs5);
   }
 }
 

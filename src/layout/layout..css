@@ -39,7 +39,7 @@ main > :first-child {
 
 @media (max-width: 600px) {
   .layout {
-    height: 100vh;
+    height: 100dvh;
     flex-direction: column-reverse;
     align-items: flex-start;
     overflow: hidden;

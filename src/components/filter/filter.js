@@ -1,3 +1,18 @@
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
+import { acGetNewData } from "../../redux/search";
+import { useGetCashboxQuery } from "../../service/cashbox.service";
+import { calculateMonthRange } from "../../service/calc-date.service";
+import { getFormattedDate } from "../../service/calc-date.service";
+import { calculateWeekRange } from "../../service/calc-date.service";
+
+import { BsSearch } from "react-icons/bs";
+import { BiEdit, BiPlus } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { MdTableBar } from "react-icons/md";
+
 export const UniversalFilter = (data, key, value) => {
   return data.filter((item) => {
     if (Array.isArray(item[key])) {
@@ -10,94 +25,196 @@ export const UniversalFilter = (data, key, value) => {
   });
 };
 
-export const productData = [
-  {
-    id: 1,
-    name: "Ergonomic Office Chair",
-    category: "Furniture",
-    price: 199.99,
-    rating: 4.5,
-    colors: ["Black", "Gray", "Blue"],
-    manufacturer: "ComfortCo",
-  },
-  {
-    id: 2,
-    name: "Wireless Bluetooth Earbuds",
-    category: "Electronics",
-    price: 59.99,
-    rating: 4.2,
-    colors: ["White", "Black", "Red"],
-    manufacturer: "SoundStream",
-  },
-  {
-    id: 3,
-    name: "Organic Matcha Green Tea",
-    category: "Food & Beverages",
-    price: 24.99,
-    rating: 4.8,
-    flavors: ["Traditional", "Mint", "Ginger"],
-    brand: "ZenLife Organics",
-  },
-  {
-    id: 4,
-    name: "Smart Home Security Camera",
-    category: "Home & Garden",
-    price: 129.99,
-    rating: 4.6,
-    resolution: "1080p",
-    brand: "SecureGuard",
-  },
-  {
-    id: 5,
-    name: "Leather Messenger Bag",
-    category: "Fashion",
-    price: 79.99,
-    rating: 4.3,
-    colors: ["Brown", "Black", "Tan"],
-    brand: "UrbanStyle",
-  },
-  {
-    id: 6,
-    name: "Fitness Tracker Watch",
-    category: "Sports & Outdoors",
-    price: 49.99,
-    rating: 4.1,
-    features: ["Heart Rate Monitor", "Step Counter", "Sleep Tracker"],
-    brand: "ActiveLife",
-  },
-  {
-    id: 7,
-    name: "Portable Espresso Maker",
-    category: "Appliances",
-    price: 89.99,
-    rating: 4.7,
-    colors: ["Silver", "Black", "Red"],
-    brand: "BrewMaster",
-  },
-  {
-    id: 8,
-    name: "Digital Drawing Tablet",
-    category: "Art & Craft",
-    price: 159.99,
-    rating: 4.9,
-    features: ["Pressure Sensitivity", "Wireless Connectivity"],
-    brand: "ArtTech",
-  },
-  {
-    id: 9,
-    name: "Memory Foam Mattress",
-    category: "Bedroom",
-    price: 499.99,
-    rating: 4.4,
-    sizes: ["Twin", "Full", "Queen", "King"],
-    brand: "SleepWell",
-  },
-  {
-    id: 10,
-    name: "Vegetarian Cookbook",
-    category: "Books",
-    price: 29.99,
-    rating: 4.0,
-    author: "HealthyChef",
-  },
-];
+export const UniversalFilterBox = () => {
+  const [search, setSearch] = React.useState({});
+  const dispatch = useDispatch();
+  const acItem = useSelector((state) => state.active);
+  const acP = useSelector((state) => state.activeThing);
+  const { date } = useSelector((state) => state.uSearch);
+  const status = useSelector((state) => state.status);
+  const { data = [] } = useGetCashboxQuery();
+
+  const today = getFormattedDate(0);
+  const yesterday = getFormattedDate(1);
+  const beforeyesterday = getFormattedDate(2);
+  const thisWeek = calculateWeekRange(0);
+  const lastWeek = calculateWeekRange(-7);
+  const thisMonth = calculateMonthRange(0);
+  const lastMonth = calculateMonthRange(-1);
+  const thisYear = getFormattedDate(365);
+
+  const openUModal = () => {
+    dispatch(acOpenUModal());
+  };
+
+  const openUModalU = () => {
+    if (acP.id) {
+      dispatch(acOpenUModal());
+    } else {
+      dispatch(acOpenUModalU());
+    }
+  };
+
+  const uploadData = (e, fieldName) => {
+    const newValue = e.target.value;
+    if (fieldName === "date")
+      return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
+    const time = {
+      start: date?.start,
+      end: date?.end,
+    };
+    if (fieldName === "start" || fieldName === "end") {
+      time[fieldName] = newValue;
+      dispatch(acGetNewData("date", time));
+    } else {
+      dispatch(acGetNewData(fieldName, newValue));
+    }
+  };
+
+  return (
+    <>
+      {status?.includes(0) && (
+        <div className="short_hands">
+          {status?.includes(1) && (
+            <button onClick={openUModal}>
+              <BiPlus />
+            </button>
+          )}
+          {status.includes(101) && (
+            <button onClick={openUModal}>
+              <b>+</b>
+              <MdTableBar />{" "}
+            </button>
+          )}
+          {status?.includes(2) && (
+            <button
+              style={
+                acItem.id || acP?.id
+                  ? {}
+                  : { opacity: "0.4", border: "1px solid #ccc6" }
+              }
+              onClick={openUModalU}
+            >
+              <BiEdit />
+            </button>
+          )}
+          {status?.includes(3) && (
+            <button
+              style={
+                acItem.id || acP?.id
+                  ? {}
+                  : { opacity: "0.4", border: "1px solid #ccc6" }
+              }
+            >
+              <MdDelete />
+            </button>
+          )}
+          <div className="short-hands_sort__box">
+            {status?.includes(5) && (
+              <label>
+                <input
+                  type="search"
+                  name="name"
+                  placeholder="Nomi bo'yicha qidirish..."
+                  onChange={(e) =>
+                    setSearch({ ...search, name: e.target.value })
+                  }
+                />
+              </label>
+            )}
+            {status?.includes(4) && (
+              <label>
+                <input
+                  type="search"
+                  name="groups"
+                  placeholder="Guruh bo'yicha qidirish..."
+                  onChange={(e) =>
+                    setSearch({ ...search, groups: e.target.value })
+                  }
+                />
+              </label>
+            )}
+            {status?.includes(6) && (
+              <select onChange={(e) => uploadData(e, "date")}>
+                <option value={JSON.stringify({ start: today, end: today })}>
+                  Bugun
+                </option>
+                <option
+                  value={JSON.stringify({ start: yesterday, end: today })}
+                >
+                  Kecha
+                </option>
+                <option
+                  value={JSON.stringify({
+                    start: beforeyesterday,
+                    end: beforeyesterday,
+                  })}
+                >
+                  Avvalgi kun
+                </option>
+                <option value={JSON.stringify(thisWeek)}>Bu hafta</option>
+                <option value={JSON.stringify(lastWeek)}>O'tgan hafta</option>
+                <option value={JSON.stringify(thisMonth)}>Bu oy</option>
+                <option value={JSON.stringify(lastMonth)}>O'tgan oy</option>
+                <option value={JSON.stringify({ start: thisYear, end: today })}>
+                  Bu yil
+                </option>
+              </select>
+            )}
+            {status?.includes(7) && (
+              <>
+                <label>
+                  <input
+                    type="date"
+                    name="start"
+                    value={date?.start}
+                    onChange={(e) => uploadData(e, "start")}
+                  />
+                </label>
+                <label>
+                  <input
+                    type="date"
+                    name="end"
+                    value={date?.end}
+                    onChange={(e) => uploadData(e, "end")}
+                  />
+                </label>
+              </>
+            )}
+            {status?.includes(8) && (
+              <select onChange={(e) => uploadData(e, "cashier")}>
+                <option value="all">Kassa bo'yicha</option>
+                {data?.data?.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {status?.includes(9) && (
+              <select onChange={(e) => uploadData(e, "storage")}>
+                <option value="all">Ombor bo'yicha</option>
+                {data?.data?.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {status?.includes(15) && (
+              <button
+                style={
+                  search.length
+                    ? {}
+                    : { opacity: "0.4", border: "1px solid #ccc6" }
+                }
+              >
+                <BsSearch />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

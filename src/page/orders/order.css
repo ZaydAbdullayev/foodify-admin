@@ -64,7 +64,7 @@
 
 .res_menu {
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-bottom: calc(var(--wh1) + 10px);
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@
   font-size: var(--fs4);
 }
 
-@media (max-width: 550px) {
+@media (max-width: 600px) {
   :root {
     --wh1: 70px;
     --iwh2: 60px;
@@ -182,6 +182,21 @@
 
   .res_menu_item {
     width: calc(100% / 3 - var(--gap3) * 2 / 3);
+  }
+
+  .book_order {
+    bottom: var(--nwh);
+    width: 100%;
+  }
+
+  .book_order :where(span, button) {
+    font-size: var(--fs4);
+    padding: 1.4% 3%;
+  }
+
+  .book_order > span {
+    font-size: var(--fs1);
+    padding: 2% 3%;
   }
 }
 

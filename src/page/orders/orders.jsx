@@ -32,6 +32,12 @@ export const Orders = () => {
   const { data = [], isLoading } = useGetStProductQuery();
   const { data: categoryData = [] } = useGetStCategoryQuery();
   const position = location.pathname.split("/");
+  const ct = categoryData?.data?.[0]?.name
+    ?.toLowerCase()
+    ?.split(" ")
+    ?.join("")
+    ?.split("'")
+    ?.join("");
   const category =
     location.search.split("=")[1] || categoryData?.data?.[0]?.name;
   const cart = useMemo(() => {

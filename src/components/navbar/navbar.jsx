@@ -5,46 +5,24 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
 import { Link, useNavigate } from "react-router-dom";
 import { acSearch } from "../../redux/search";
-import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
-import { acGetNewData } from "../../redux/search";
-import { useGetCashboxQuery } from "../../service/cashbox.service";
-import { calculateMonthRange } from "../../service/calc-date.service";
-import { getFormattedDate } from "../../service/calc-date.service";
-import { calculateWeekRange } from "../../service/calc-date.service";
 import { acMedia } from "../../redux/media";
+import { UniversalFilterBox } from "../filter/filter";
 
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
-import { BiEdit, BiPlus } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
-import { MdTableBar } from "react-icons/md";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const department = JSON.parse(localStorage.getItem("department")) || [];
   const modal = useSelector((state) => state.modal);
-  const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const name = user?.user?.username?.split("_")?.join(" ");
-  const acItem = useSelector((state) => state.active);
-  const acP = useSelector((state) => state.activeThing);
-  const { date } = useSelector((state) => state.uSearch);
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
-  const { data = [] } = useGetCashboxQuery();
-
-  const today = getFormattedDate(0);
-  const yesterday = getFormattedDate(1);
-  const beforeyesterday = getFormattedDate(2);
-  const thisWeek = calculateWeekRange(0);
-  const lastWeek = calculateWeekRange(-7);
-  const thisMonth = calculateMonthRange(0);
-  const lastMonth = calculateMonthRange(-1);
-  const thisYear = getFormattedDate(365);
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -58,38 +36,11 @@ export const Navbar = () => {
     dispatch(acSearch(value));
   };
 
-  const openUModal = () => {
-    dispatch(acOpenUModal());
-  };
-
-  const openUModalU = () => {
-    if (acP.id) {
-      dispatch(acOpenUModal());
-    } else {
-      dispatch(acOpenUModalU());
-    }
-  };
-
   const log_out = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  const uploadData = (e, fieldName) => {
-    const newValue = e.target.value;
-    if (fieldName === "date")
-      return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
-    const time = {
-      start: date?.start,
-      end: date?.end,
-    };
-    if (fieldName === "start" || fieldName === "end") {
-      time[fieldName] = newValue;
-      dispatch(acGetNewData("date", time));
-    } else {
-      dispatch(acGetNewData(fieldName, newValue));
-    }
-  };
   return (
     <div className="navbar">
       <div
@@ -98,149 +49,7 @@ export const Navbar = () => {
       >
         <img src={logo} alt="" />
       </div>
-      {status?.includes(0) && (
-        <div className="short_hands">
-          {status?.includes(1) && (
-            <button onClick={openUModal}>
-              <BiPlus />
-            </button>
-          )}
-          {status.includes(101) && (
-            <button onClick={openUModal}>
-              <b>+</b>
-              <MdTableBar />{" "}
-            </button>
-          )}
-          {status?.includes(2) && (
-            <button
-              style={
-                acItem.id || acP?.id
-                  ? {}
-                  : { opacity: "0.4", border: "1px solid #ccc6" }
-              }
-              onClick={openUModalU}
-            >
-              <BiEdit />
-            </button>
-          )}
-          {status?.includes(3) && (
-            <button
-              style={
-                acItem.id || acP?.id
-                  ? {}
-                  : { opacity: "0.4", border: "1px solid #ccc6" }
-              }
-            >
-              <MdDelete />
-            </button>
-          )}
-          <div className="short-hands_sort__box">
-            {status?.includes(5) && (
-              <label>
-                <input
-                  type="search"
-                  name="name"
-                  placeholder="Nomi bo'yicha qidirish..."
-                  onChange={(e) =>
-                    setSearch({ ...search, name: e.target.value })
-                  }
-                />
-              </label>
-            )}
-            {status?.includes(4) && (
-              <label>
-                <input
-                  type="search"
-                  name="groups"
-                  placeholder="Guruh bo'yicha qidirish..."
-                  onChange={(e) =>
-                    setSearch({ ...search, groups: e.target.value })
-                  }
-                />
-              </label>
-            )}
-            {status?.includes(6) && (
-              <select onChange={(e) => uploadData(e, "date")}>
-                <option value={JSON.stringify({ start: today, end: today })}>
-                  Bugun
-                </option>
-                <option
-                  value={JSON.stringify({ start: yesterday, end: today })}
-                >
-                  Kecha
-                </option>
-                <option
-                  value={JSON.stringify({
-                    start: beforeyesterday,
-                    end: beforeyesterday,
-                  })}
-                >
-                  Avvalgi kun
-                </option>
-                <option value={JSON.stringify(thisWeek)}>Bu hafta</option>
-                <option value={JSON.stringify(lastWeek)}>O'tgan hafta</option>
-                <option value={JSON.stringify(thisMonth)}>Bu oy</option>
-                <option value={JSON.stringify(lastMonth)}>O'tgan oy</option>
-                <option value={JSON.stringify({ start: thisYear, end: today })}>
-                  Bu yil
-                </option>
-              </select>
-            )}
-            {status?.includes(7) && (
-              <>
-                <label>
-                  <input
-                    type="date"
-                    name="start"
-                    value={date?.start}
-                    onChange={(e) => uploadData(e, "start")}
-                  />
-                </label>
-                <label>
-                  <input
-                    type="date"
-                    name="end"
-                    value={date?.end}
-                    onChange={(e) => uploadData(e, "end")}
-                  />
-                </label>
-              </>
-            )}
-            {status?.includes(8) && (
-              <select onChange={(e) => uploadData(e, "cashier")}>
-                <option value="all">Kassa bo'yicha</option>
-                {data?.data?.map((item) => (
-                  <option value={item.id} key={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            {status?.includes(9) && (
-              <select onChange={(e) => uploadData(e, "storage")}>
-                <option value="all">Ombor bo'yicha</option>
-                {data?.data?.map((item) => (
-                  <option value={item.id} key={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            {status?.includes(15) && (
-              <button
-                style={
-                  search.length
-                    ? {}
-                    : { opacity: "0.4", border: "1px solid #ccc6" }
-                }
-              >
-                <BsSearch />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
+      <UniversalFilterBox />
       {status.includes(100) && (
         <form className="search">
           <BsSearch />
