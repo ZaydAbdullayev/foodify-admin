@@ -1,17 +1,11 @@
-import React, { Component, useState, useRef, useEffect } from "react";
-import { Howl, Howler } from "howler";
+import React, { useState, useRef, useEffect } from "react";
+import { Howl } from "howler";
 // import Sound from "react-sound";
 import "./touch.css";
 
-import audio from "../../assets/images/ses.mp3";
+import audio from "../../assets/images/nothification.mp3";
 
 export const AssistiveTouch = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div class="grid-container">
       <div class="item_grid item_grid1">1</div>
@@ -25,7 +19,7 @@ export const AssistiveTouch = () => {
 
 const SoundButton = () => {
   const sound = new Howl({
-    src: [audio], // Sesi buraya ekleyin
+    src: [audio],
     html5: true,
   });
 

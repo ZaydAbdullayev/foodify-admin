@@ -25,7 +25,7 @@ export const UniversalFilter = (data, key, value) => {
   });
 };
 
-export const UniversalFilterBox = () => {
+export const  UniversalFilterBox = () => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
   const acItem = useSelector((state) => state.active);

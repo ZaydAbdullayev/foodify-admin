@@ -221,6 +221,11 @@
   }
 
   .short_hands {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .short-hands_sort__box {
     flex-wrap: wrap;
   }
 }

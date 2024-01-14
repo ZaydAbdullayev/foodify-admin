@@ -6,6 +6,7 @@ import { InvoicesModal } from "./cutting.modal";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
@@ -69,7 +70,8 @@ export const StorageCutting = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      {/* <UniversalFilterBox /> */}
+      {/* <div className="storage_header"></div> */}
       <div className="storage_body">
         <p>
           <span>Maydalash</span>
