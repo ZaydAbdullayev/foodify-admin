@@ -34,7 +34,9 @@ export const StorageDep = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Bo'limlar</p>
+        <p>
+          <span>Bo'limlar</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

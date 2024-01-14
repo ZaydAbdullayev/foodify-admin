@@ -72,7 +72,9 @@ export const InvoicesMakingFood = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Mahsulot tayyorlash</p>
+        <p>
+          <span>Mahsulot tayyorlash</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

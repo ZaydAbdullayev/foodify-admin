@@ -53,7 +53,9 @@ export const StorageCarryUp = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Ko'chirib o'tkazish</p>
+        <p>
+          <span>Ko'chirib o'tkazish</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

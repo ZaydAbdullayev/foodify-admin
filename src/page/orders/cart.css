@@ -17,6 +17,11 @@
   overflow-y: auto;
   z-index: 9999;
   transition: all 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.cart_box::-webkit-scrollbar{
+  width: 0;
 }
 
 .cart_box.open {

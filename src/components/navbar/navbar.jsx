@@ -23,6 +23,7 @@ export const Navbar = () => {
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
+  const dWidth = useSelector((state) => state.dWidth);
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -49,7 +50,7 @@ export const Navbar = () => {
       >
         <img src={logo} alt="" />
       </div>
-      <UniversalFilterBox />
+      {!dWidth && <UniversalFilterBox />}
       {status.includes(100) && (
         <form className="search">
           <BsSearch />

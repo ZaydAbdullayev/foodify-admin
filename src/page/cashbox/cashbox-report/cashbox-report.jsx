@@ -78,7 +78,9 @@ export const TransactionRapor = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Tranzaksiyalar hisoboti</p>
+        <p>
+          <span>Tranzaksiyalar hisoboti</span>
+        </p>
         <div className="storage_body_item">
           <p>№</p>
           {headerData?.map((item, index) => {

@@ -16,7 +16,8 @@ import { reModalType } from "./u-modal";
 import { apiSlice } from "../service/frame.service";
 import { reActiveThing } from "./active";
 import { reNavStatus } from "./navbar.status";
-import { reMedia } from "./media";
+import { reDeviceWidth, reMedia } from "./media";
+import { reNothification } from "./nothification";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -36,6 +37,8 @@ export const store = configureStore({
     status: reNavStatus,
     media: reMedia,
     image: reGetUrl,
+    dWidth: reDeviceWidth,
+    nothificate: reNothification,
     [apiSlice.reducerPath]: apiSlice.reducer,
   }),
   middleware: (getDefaultMiddleware) =>

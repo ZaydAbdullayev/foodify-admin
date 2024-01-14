@@ -13,6 +13,10 @@
   overflow-x: auto;
 }
 
+.storage_header {
+  width: 100%;
+}
+
 .storage_body,
 .storage_body_box {
   width: 100%;

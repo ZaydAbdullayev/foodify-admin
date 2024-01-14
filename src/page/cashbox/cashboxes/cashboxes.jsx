@@ -31,7 +31,9 @@ export const Cashboxes = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Kassalar ro'yxati</p>
+        <p>
+          <span>Kassalar ro'yxati</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

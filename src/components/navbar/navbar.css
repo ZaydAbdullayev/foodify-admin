@@ -215,6 +215,16 @@
   object-fit: cover;
 }
 
+@media (max-width: 600px) {
+  .navbar .short_hands {
+    display: none;
+  }
+
+  .short_hands {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 500px) {
   .search {
     display: none;

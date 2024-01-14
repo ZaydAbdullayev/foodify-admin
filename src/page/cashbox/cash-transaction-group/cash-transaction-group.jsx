@@ -50,7 +50,9 @@ export const TransactionGroups = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p {...handlers}>O'tkazma guruhlari</p>
+        <p {...handlers}>
+          <span>O'tkazma guruhlari</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

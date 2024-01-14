@@ -18,6 +18,7 @@ import { HiCheck } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import noResult from "../../assets/images/20231109_144621.png";
+import { acNothification } from "../../redux/nothification";
 
 // const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
@@ -57,6 +58,7 @@ export const Home = () => {
 
   socket.on(sPoint, (data) => {
     setOrders(data);
+    dispatch(acNothification(true));
     console.log("socket", data);
     socket.off(sPoint);
   });
@@ -69,16 +71,19 @@ export const Home = () => {
         const existingIndex = updatedOrders.findIndex(
           (order) => order.id === newData[1].id
         );
-        updatedOrders[existingIndex] = newData[1];
+        if (existingIndex !== -1) {
+          updatedOrders[existingIndex] = newData[1];
+        }
       } else if (newData[0] === "delete") {
-        const deletedIndex = updatedOrders.findIndex(
+        const deleted = updatedOrders.findIndex(
           (order) => order.id === newData[1].id
         );
-        updatedOrders.splice(deletedIndex, 1);
+        if (deleted !== -1) {
+          updatedOrders.splice(deleted, 1);
+        }
       }
       return updatedOrders;
     });
-
     socket.off(`/get/newOrdersOne/${id}`);
   });
 
@@ -120,11 +125,9 @@ export const Home = () => {
       });
       socket.emit("/update/ProductSt", order);
       if (
-        orders.find(
-          ({ id, status }) => id === order?.data?.order_id && status === 3
-        )
+        orders.find(({ id, status }) => id === order?.order_id && status === 3)
       ) {
-        setSituation(order?.data?.order_id);
+        setSituation(order?.order_id);
       }
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
@@ -165,9 +168,6 @@ export const Home = () => {
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
-                  year: "numeric",
-                  day: "numeric",
-                  month: "numeric",
                   hour: "numeric",
                   minute: "numeric",
                   hour12: false,
@@ -196,7 +196,7 @@ export const Home = () => {
                         )} */}
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
-                      <span>{order?.status}</span>
+                      <span>{time}</span>
                       {(department === "kassir" || department === "owner") && (
                         <div className="btn_box">
                           <button
@@ -237,7 +237,32 @@ export const Home = () => {
                       {products?.map((product, ind) => {
                         return (
                           <figcaption key={product?.id + ind}>
-                            {/* <img src={product.img} alt="foto" /> */}
+                            <i
+                              onClick={() => {
+                                let newStatus;
+                                if (order?.type === "online") {
+                                  newStatus = 2;
+                                } else {
+                                  newStatus = 4;
+                                }
+
+                                if (product?.status === 4) {
+                                  orderSituation({
+                                    order_id: order?.id,
+                                    product_id: product?.id,
+                                    status: 5,
+                                    department: department,
+                                  });
+                                } else {
+                                  orderSituation({
+                                    order_id: order?.id,
+                                    product_id: product?.id,
+                                    status: newStatus,
+                                    department: department,
+                                  });
+                                }
+                              }}
+                            ></i>
                             {product?.status === 3 && <i></i>}
                             <p className="qty">{product?.quantity}</p>
                             <pre>
@@ -257,7 +282,7 @@ export const Home = () => {
                                   className="relative"
                                   onClick={() =>
                                     orderSituation({
-                                      data: order,
+                                      order_id: order?.id,
                                       product_id: product?.id,
                                       status: 3,
                                       department: department,
@@ -273,6 +298,8 @@ export const Home = () => {
                                 </button>
                               )}
                               <button
+                                style={{ color: "#3CE75B" }}
+                                className="relative"
                                 onClick={() => {
                                   let newStatus;
                                   if (order?.type === "online") {
@@ -283,7 +310,6 @@ export const Home = () => {
 
                                   if (product?.status === 4) {
                                     orderSituation({
-                                      data: order,
                                       order_id: order?.id,
                                       product_id: product?.id,
                                       status: 5,
@@ -291,7 +317,6 @@ export const Home = () => {
                                     });
                                   } else {
                                     orderSituation({
-                                      data: order,
                                       order_id: order?.id,
                                       product_id: product?.id,
                                       status: newStatus,
@@ -299,8 +324,6 @@ export const Home = () => {
                                     });
                                   }
                                 }}
-                                style={{ color: "#3CE75B" }}
-                                className="relative"
                               >
                                 {product?.status === 1 ? (
                                   <HiCheck />
@@ -334,7 +357,6 @@ export const Home = () => {
           </figure>
         )}
       </div>
-      {/* <SoundButton /> */}
     </div>
   );
 };

@@ -93,7 +93,9 @@ export const ReportSuppliers = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Yetkazuvchilar uchun hisobot</p>
+        <p>
+          <span>Yetkazuvchilar uchun hisobot</span>
+        </p>
         <div className="storage_body_item reports_item">
           <p style={{ "--data-line-size": "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {

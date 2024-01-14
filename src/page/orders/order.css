@@ -187,6 +187,7 @@
   .book_order {
     bottom: var(--nwh);
     width: 100%;
+    z-index: 9999999;
   }
 
   .book_order :where(span, button) {

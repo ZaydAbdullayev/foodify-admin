@@ -65,28 +65,3 @@ main > :first-child {
     height: var(--nwh);
   }
 }
-
-/* @media (max-width: 500px) {
-  .short_aside {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--nwh);         
-    height: var(--nwh);
-    z-index: 9999;
-    backdrop-filter: blur(10px);
-    transition: all 0.5s ease;
-  }
-
-  .short_aside.active {
-    height: 100%;
-    overflow-y: auto;
-  }
-  .short_aside.active::-webkit-scrollbar {
-    display: none;
-  }
-
-  .long_main {
-    width: 100%;
-  }
-} */

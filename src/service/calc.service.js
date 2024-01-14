@@ -52,23 +52,23 @@ export const CalculateTotal = (data, key) => {
 };
 
 
-function calculatePositionValue(positions, vw) {
-  const [start, end, base] = positions;
-  const minWidth = 320;
-  const maxWidth = 1440;
-  const minFontSize = 28;
-  const maxFontSize = 40;
+// function calculatePositionValue(positions, vw) {
+//   const [start, end, base] = positions;
+//   const minWidth = 320;
+//   const maxWidth = 1440;
+//   const minFontSize = 28;
+//   const maxFontSize = 40;
 
-  const fontSize = minFontSize + ((maxFontSize - minFontSize) * (vw - minWidth)) / (maxWidth - minWidth);
+//   const fontSize = minFontSize + ((maxFontSize - minFontSize) * (vw - minWidth)) / (maxWidth - minWidth);
 
-  const result = fontSize + start + (end - start) * (vw - minWidth) / (maxWidth - minWidth) + base;
+//   const result = fontSize + start + (end - start) * (vw - minWidth) / (maxWidth - minWidth) + base;
 
-  return result;
-}
+//   return result;
+// }
 
-// Kullanımı
-const positions = [65, -65, 70];
-const vw = window.innerWidth; // pencere genişliğini istediğiniz şekilde alabilirsiniz
+// // Kullanımı
+// const positions = [65, -65, 70];
+// const vw = window.innerWidth; // pencere genişliğini istediğiniz şekilde alabilirsiniz
 
-const cssValue = `calc(${calculatePositionValue(positions, vw)}px)`;
-console.log(cssValue); // Örnek bir çıktı: calc(35.5px)
+// const cssValue = `calc(${calculatePositionValue(positions, vw)}px)`;
+// console.log(cssValue); // Örnek bir çıktı: calc(35.5px)

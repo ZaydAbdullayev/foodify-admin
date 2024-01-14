@@ -71,7 +71,9 @@ export const StorageCutting = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Maydalash</p>
+        <p>
+          <span>Maydalash</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

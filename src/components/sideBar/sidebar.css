@@ -212,10 +212,13 @@
   position: relative;
   width: 200px;
   height: 200px;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
-  /* background: red; */
+}
+
+.active_menu .inner_menu-box {
+  display: flex;
 }
 
 .inner_menu-item {
@@ -355,16 +358,6 @@
     align-items: center;
   }
 
-  .inner_menu-box {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* background: red; */
-  }
-
   .inner_menu {
     top: auto;
     left: calc(var(--top) - 8px);
@@ -375,7 +368,9 @@
     bottom: 18px;
   }
   .menu_box {
+    height: var(--nwh);
     flex-direction: row;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
   }

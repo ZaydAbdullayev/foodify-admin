@@ -105,7 +105,9 @@ export const StorageProducts = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Mahsulotlar</p>
+        <p>
+          <span>Mahsulotlar</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

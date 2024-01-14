@@ -66,7 +66,9 @@ export const StorageExpenditures = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Chiqimlar</p>
+        <p>
+          <span>Chiqimlar</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

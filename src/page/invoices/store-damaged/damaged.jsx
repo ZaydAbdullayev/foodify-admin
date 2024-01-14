@@ -53,7 +53,9 @@ export const StorageDamaged = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Zararlangan ovqatlar</p>
+        <p>
+          <span>Zararlangan ovqatlar</span>
+        </p>
         <div className="storage_body_item">
           <label>
             <input

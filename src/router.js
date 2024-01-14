@@ -51,10 +51,13 @@ import { Orders } from "./page/orders/orders";
 import { OrderById } from "./page/order-by-id/order-by-id";
 import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
 import { Howl } from "howler";
-import audio from "./assets/images/ses.mp3";
+import audio from "./assets/images/nothification.mp3";
+import { acDeviceWidth } from "./redux/media";
+import { acNothification } from "./redux/nothification";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
+  const nothificate = useSelector((state) => state.nothificate);
   const location = useLocation();
   const dispatch = useDispatch();
   const sound = new Howl({
@@ -65,6 +68,12 @@ export const Router = () => {
   useEffect(() => {
     dispatch(acCloseUModal());
   }, [dispatch, location]);
+
+  if (window.innerWidth < 600) {
+    dispatch(acDeviceWidth(true));
+  } else {
+    dispatch(acDeviceWidth(false));
+  }
 
   const span = document.createElement("span");
   span.classList.add("stm-animate");
@@ -80,9 +89,13 @@ export const Router = () => {
     span.classList.remove("active");
   });
 
-  setTimeout(() => {
-    sound.stop();
-  }, 1000);
+  if (nothificate) {
+    sound.play();
+    setTimeout(() => {
+      dispatch(acNothification(false));
+      sound.stop();
+    }, 1000);
+  }
 
   return (
     <Routes>

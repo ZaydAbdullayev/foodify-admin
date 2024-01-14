@@ -76,7 +76,9 @@ export const ReportRejects = () => {
     <div className="storage_container">
       <div className="storage_header"></div>
       <div className="storage_body">
-        <p>Bekor qilingan buyurtmalar</p>
+        <p>
+          <span>Bekor qilingan buyurtmalar</span>
+        </p>
         <div className="storage_body_item">
           <p>№</p>
           {headerData?.map((item, index) => {

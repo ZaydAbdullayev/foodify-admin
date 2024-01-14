@@ -13,6 +13,7 @@ import logo from "../../assets/images/logo.png";
 export const Sidebar = () => {
   const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
+  const dWidth = useSelector((state) => state.dWidth);
   const status = useSelector((state) => state.media);
   // const dispatch = useDispatch();
   const [activeCategoryId, setActiveCategoryId] = useState(null);
@@ -20,31 +21,28 @@ export const Sidebar = () => {
   const location = useLocation().pathname;
   const [dFromTop, setDFromTop] = useState(0);
 
-  const handleCategoryClick = (e, c) => {
+  const handleCategoryClick = (c) => {
     setActiveCategoryId((prevCategoryId) =>
       prevCategoryId === c.id ? null : c.id
     );
-    findDFromTop(e.target);
   };
 
-  function findDFromTop(element) {
+  const findDFromTop = (element) => {
     if (element) {
       const rect = element.getBoundingClientRect();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
       const left = rect.left + scrollLeft;
       const top = rect.top + scrollTop;
-      if (window.innerWidth < 600) {
+      if (dWidth) {
         setDFromTop(left);
-        console.log("left", left);
       } else {
         setDFromTop(top);
-        console.log("top", top);
       }
     }
 
     return null;
-  }
+  };
 
   if (!status) {
     setTimeout(() => {
@@ -147,9 +145,12 @@ export const Sidebar = () => {
                         : "menu_box_item"
                     }
                     to={item?.path}
-                    onClick={(e) => handleCategoryClick(e, { id: item?.id })}
+                    onClick={(e) => handleCategoryClick({ id: item?.id })}
                   >
-                    <span>{item?.icon}</span> <p>{item?.name}</p>
+                    <span onClick={(e) => findDFromTop(e.target)}>
+                      {item?.icon}
+                    </span>{" "}
+                    <p>{item?.name}</p>
                     {item.id === activeCategoryId && (
                       <ul
                         className="inner_menu"

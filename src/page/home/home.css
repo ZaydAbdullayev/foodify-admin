@@ -101,11 +101,12 @@
 
 .order_item-body > figcaption > i {
   position: absolute;
-  top: 35%;
+  top: 0;
   left: 0;
-  width: 100%;
-  height: 2px;
-  background: #ff0000;
+  width: 85%;
+  height: 100%;
+  background: transparent;
+  cursor: pointer;
 }
 
 .order_item-body > :last-child {
@@ -278,7 +279,7 @@
 
 @media (max-width: 600px) {
   .orders_body {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .orders_body.fullScreen {
@@ -287,5 +288,11 @@
 
   .home_page.active {
     padding: var(--pd3);
+  }
+}
+
+@media (max-width: 500px) {
+  .orders_body.fullScreen {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
