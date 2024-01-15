@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { RiExchangeLine } from "react-icons/ri";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const InvoicesGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -20,7 +21,9 @@ export const InvoicesGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStInvoiceGroupQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
 
   const sortData =
     groupData?.data &&
@@ -39,7 +42,7 @@ export const InvoicesGroups = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p {...handlers}>
           <span>To'lov guruhlari</span>

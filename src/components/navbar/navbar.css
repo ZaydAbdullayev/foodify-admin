@@ -20,7 +20,8 @@
   gap: var(--gap5);
 }
 
-.short_hands button {
+.short_hands button,
+.short-hands_sort__box button {
   position: relative;
   width: var(--nbwh);
   height: var(--nbwh);
@@ -217,16 +218,23 @@
 
 @media (max-width: 600px) {
   .navbar .short_hands {
-    display: none;
+    margin-left: 1.5%;
   }
 
   .short_hands {
     width: 100%;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .short-hands_sort__box {
+    position: sticky;
+    left: 0;
     flex-wrap: wrap;
+    margin-left: 0px;
+    justify-content: flex-start;
+    padding-bottom: 1%;
+    border-bottom: 1px solid #cccccf56;
   }
 }
 

@@ -30,7 +30,9 @@ export const Products = () => {
   const [deleteProduct] = useDeleteProductMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  dispatch(acNavStatus([100]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   const getUniqueCategories = () => {
     const uniqueCategories = new Set();

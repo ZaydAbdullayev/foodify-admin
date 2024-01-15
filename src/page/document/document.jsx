@@ -22,7 +22,9 @@ export const Document = () => {
   const { data = [], isLoading } = useGetByDateQuery(date);
   const search = useSelector((state) => state.search);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([100]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   const getCategry = (name) => {
     navigate(`/historical/?cp=${name}|dateby=${date.fdate}&${date.tdate}`);

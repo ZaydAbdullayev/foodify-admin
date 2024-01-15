@@ -318,7 +318,7 @@ export const CalcResult = ({ children, status }) => {
             Tan narx: <span>{calculatedData?.prime_cost}</span>
           </p>
           <p>
-            Foyda: <span>{calculatedData?.profit}</span>
+            Foyda: <span>{calculatedData?.profit?.toFixed(2)}</span>
           </p>
           <p>
             Foyda(%): <span>{calculatedData?.markup?.toFixed(2)}</span>
@@ -337,7 +337,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
   return (
     <div className="product_box_body">
       {data?.map((item, index) => (
-        <div className="product_box_item" key={item.id}>
+        <div className="product_box_item" key={item.id + index}>
           <label>{index + 1}</label>
           {displayKeys?.map(({ name, size, position }) => (
             <p

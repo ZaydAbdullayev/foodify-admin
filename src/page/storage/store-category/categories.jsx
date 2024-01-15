@@ -9,6 +9,7 @@ import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageCatgegories = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -19,8 +20,9 @@ export const StorageCatgegories = () => {
   const dispatch = useDispatch();
   const { data: depData = [] } = useGetStoreDepQuery();
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
-
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
   const sortData =
     storeData?.data &&
     [...storeData?.data]?.sort((a, b) => {
@@ -33,7 +35,7 @@ export const StorageCatgegories = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Categoriyalar</span>

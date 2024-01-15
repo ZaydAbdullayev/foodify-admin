@@ -9,6 +9,7 @@ import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -21,8 +22,9 @@ export const StorageIngredients = () => {
   const dispatch = useDispatch();
   const { data: groupData = [] } = useGetStGroupsQuery();
   const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
-  dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
-
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
+  }, [dispatch]);
   const sortData =
     ingredientData?.data &&
     [...ingredientData?.data].sort((a, b) => {
@@ -35,7 +37,7 @@ export const StorageIngredients = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Ingridientlar</span>

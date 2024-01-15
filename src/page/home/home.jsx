@@ -35,7 +35,10 @@ export const Home = () => {
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
-  dispatch(acNavStatus([100]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, []);
+    
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}`

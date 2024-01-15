@@ -28,7 +28,9 @@ export const Workers = () => {
   const [deleteWorkerMutation] = useDeleteWorkerMutation();
   const [updateWorkerMutation] = useUpdateWorkerMutation();
   const dispatch = useDispatch();
-  dispatch(acNavStatus([100]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   const handleEdit = async (value) => {
     const { error, data } = await updateWorkerMutation(value);
@@ -65,7 +67,7 @@ export const Workers = () => {
     worker?.name?.toLowerCase().includes(search.toLowerCase())
   );
   return (
-    <div className="container_box">
+    <div className="container_box worker_container">
       <div className="workers_header">
         <p>Ishchilar</p>
         {permission && (
@@ -210,71 +212,3 @@ export const Workers = () => {
   );
 };
 
-// const workers = [
-//   {
-//     id: "355335",
-//     name: "Murod",
-//     password: "123456",
-//     department: "kassir",
-//     code: "123456",
-//     active: true,
-//   },
-//   {
-//     id: "765433",
-//     name: "Saidakbar",
-//     password: "123456",
-//     department: "waiter",
-//     code: "123456",
-//   },
-//   {
-//     id: "234567",
-//     name: "Asadbek",
-//     password: "123456",
-//     department: "cheff",
-//     code: "123456",
-//   },
-//   {
-//     id: "355335",
-//     name: "Murod",
-//     password: "123456",
-//     department: "kassir",
-//     code: "123456",
-//     active: true,
-//   },
-//   {
-//     id: "765433",
-//     name: "Saidakbar",
-//     password: "123456",
-//     department: "waiter",
-//     code: "123456",
-//     active: true,
-//   },
-//   {
-//     id: "234567",
-//     name: "Asadbek",
-//     password: "123456",
-//     department: "cheff",
-//     code: "123456",
-//   },
-//   {
-//     id: "355335",
-//     name: "Murod",
-//     password: "123456",
-//     department: "kassir",
-//     code: "123456",
-//   },
-//   {
-//     id: "765433",
-//     name: "Saidakbar",
-//     password: "123456",
-//     department: "waiter",
-//     code: "123456",
-//   },
-//   {
-//     id: "234567",
-//     name: "Asadbek",
-//     password: "123456",
-//     department: "cheff",
-//     code: "123456",
-//   },
-// ];

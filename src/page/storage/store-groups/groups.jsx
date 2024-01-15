@@ -10,6 +10,7 @@ import { UniversalUModal } from "../../../components/modal/modal";
 import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -20,7 +21,9 @@ export const StorageGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStGroupsQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => navigate("/sections/invoice-group"),
@@ -40,7 +43,7 @@ export const StorageGroups = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p {...handlers}>
           <span>Ingredient guruhlari</span>

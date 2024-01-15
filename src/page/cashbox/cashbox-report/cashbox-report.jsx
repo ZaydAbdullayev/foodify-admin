@@ -14,6 +14,7 @@ import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { CalculateTotal } from "../../../service/calc.service";
 import { CalculateTotalByLine } from "../../../service/calc.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -24,7 +25,9 @@ export const TransactionRapor = () => {
   const { data: trExpData = [] } = useGetTransactionExpenseQuery(search?.date);
   const { data: trIncData = [] } = useGetTransactionIncomeQuery(search?.date);
   const { data: balance = [] } = useGetBalanceQuery(search?.date);
-  dispatch(acNavStatus([0, 6, 7, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 6, 7, 15]));
+  }, [dispatch]);
   let total = 0;
 
   const headerData = [
@@ -76,7 +79,7 @@ export const TransactionRapor = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Tranzaksiyalar hisoboti</span>

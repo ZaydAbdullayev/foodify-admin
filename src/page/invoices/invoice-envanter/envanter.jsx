@@ -8,6 +8,7 @@ import { useGetPreOrderQuery } from "../../../service/pre-order.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const InvoiceInvantar = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -18,7 +19,9 @@ export const InvoiceInvantar = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStProductQuery();
   const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
-  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  }, [dispatch]);
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -59,7 +62,7 @@ export const InvoiceInvantar = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Envantarizatsiya</span>

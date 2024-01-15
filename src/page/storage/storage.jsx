@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./storage.css";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalModal, UniversalUModal } from "../../components/modal/modal";
@@ -8,6 +8,7 @@ import { Outlet } from "react-router-dom";
 import { useGetStoreQuery } from "../../service/store.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
+import { UniversalFilterBox } from "../../components/filter/filter";
 
 export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -16,8 +17,9 @@ export const Storage = () => {
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
   const { data = [], isLoading } = useGetStoreQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
-
+  useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
   const sortData =
     data?.data &&
     [...data.data].sort((a, b) => {
@@ -30,7 +32,7 @@ export const Storage = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Omborlar</span>

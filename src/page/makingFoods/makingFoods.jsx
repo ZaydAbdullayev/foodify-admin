@@ -21,7 +21,9 @@ export const MakingFoods = () => {
   const [stution, setStution] = useState(null);
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
-  dispatch(acNavStatus([100]));
+  useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}`

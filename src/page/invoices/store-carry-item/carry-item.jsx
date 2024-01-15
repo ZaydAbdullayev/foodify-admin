@@ -8,6 +8,7 @@ import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,7 +18,9 @@ export const StorageCarryUp = () => {
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  }, [dispatch]);
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
   const acIngredients = acItem?.ingredients
@@ -51,7 +54,7 @@ export const StorageCarryUp = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Ko'chirib o'tkazish</span>

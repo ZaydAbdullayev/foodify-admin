@@ -8,13 +8,16 @@ import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  }, [dispatch]);
   const isLoading = false;
   const sortData = storageD.sort((a, b) => {
     if (sort.state) {
@@ -80,7 +83,7 @@ export const ReportItems = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Taomlar uchun hisobot</span>

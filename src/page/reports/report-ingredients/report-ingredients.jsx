@@ -9,6 +9,7 @@ import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportIngredients = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -16,7 +17,9 @@ export const ReportIngredients = () => {
   const acItem = useSelector((state) => state.active);
   const { data: storeData = [] } = useGetStCategoryQuery();
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  }, [dispatch]);
   console.log(storeData);
   const isLoading = false;
 
@@ -83,7 +86,7 @@ export const ReportIngredients = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Mahsulotlar uchun hisobot</span>

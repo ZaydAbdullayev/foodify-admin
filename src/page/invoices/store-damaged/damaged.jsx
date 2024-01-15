@@ -8,6 +8,7 @@ import { useGetStDamagedQuery } from "../../../service/damaged.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageDamaged = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -19,7 +20,9 @@ export const StorageDamaged = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: demagedData = [], isLoading } = useGetStDamagedQuery();
-  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  }, [dispatch]);
   const acIngredients = acItem?.ingredients
     ? JSON.parse(acItem?.ingredients)
     : [];
@@ -51,7 +54,7 @@ export const StorageDamaged = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Zararlangan ovqatlar</span>

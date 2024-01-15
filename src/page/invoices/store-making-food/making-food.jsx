@@ -9,6 +9,7 @@ import { useGetMakedFoodQuery } from "../../../service/making-food.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const InvoicesMakingFood = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -19,8 +20,9 @@ export const InvoicesMakingFood = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
   const { data: makedFood = [], isLoading } = useGetMakedFoodQuery();
-  dispatch(acNavStatus([0, 1, 2, 3, 6, 7,15]));
-
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 15]));
+  }, [dispatch]);
   const getProduct = (item, status) => {
     const isChecked = checkedData?.some((i) => i.id === item?.id);
     if (status === 0) {
@@ -70,7 +72,7 @@ export const InvoicesMakingFood = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Mahsulot tayyorlash</span>

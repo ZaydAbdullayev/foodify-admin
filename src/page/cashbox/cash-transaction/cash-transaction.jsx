@@ -7,6 +7,7 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useGetCashboxQuery } from "../../../service/cashbox.service";
 import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { useGetCashTransactionQuery } from "../../../service/cash-transaction.service";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -24,7 +25,9 @@ export const CashboxTransaction = () => {
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
   const { data: cashboxGrData = [] } = useGetCashboxGrQuery();
   const { data: cashTrData = [] } = useGetCashTransactionQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
   console.log("trData", cashTrData);
 
   //   const getProduct = (item, status) => {
@@ -79,7 +82,7 @@ export const CashboxTransaction = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Tranzaksiyalar</span>

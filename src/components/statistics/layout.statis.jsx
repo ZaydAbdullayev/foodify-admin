@@ -3,9 +3,10 @@ import "./statistics.css";
 import { DemoDualAxes, DemoPie } from "./statistics";
 
 export const Statistics = memo(() => {
+  const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   return (
     <div className="statistic_box">
-      <h1>Oqtepa Lavash haqida barcha hisobotlar </h1>
+      <h1>{user?.user?.username}ning barcha hisobotlar</h1>
       <div className="wrapper_item">
         <div className="row">
           <div className="dashboard-stat red">

@@ -9,6 +9,7 @@ import { useGetStCategoryQuery } from "../../../service/category.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -16,7 +17,9 @@ export const ReportOrders = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  }, [dispatch]);
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
   console.log(storeData);
 
@@ -71,7 +74,7 @@ export const ReportOrders = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Buyurtmalar uchun hisobot</span>

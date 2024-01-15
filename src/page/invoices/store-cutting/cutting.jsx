@@ -20,7 +20,9 @@ export const StorageCutting = () => {
   const dispatch = useDispatch();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
-  dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
+  }, [dispatch]);
   console.log(checkedData);
 
   const getProduct = (item, status) => {
@@ -70,8 +72,7 @@ export const StorageCutting = () => {
 
   return (
     <div className="storage_container">
-      {/* <UniversalFilterBox /> */}
-      {/* <div className="storage_header"></div> */}
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Maydalash</span>

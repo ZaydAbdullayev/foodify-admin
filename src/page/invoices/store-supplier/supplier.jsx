@@ -9,6 +9,7 @@ import { PatternFormat } from "react-number-format";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -18,8 +19,9 @@ export const StorageSupplier = () => {
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const { data: suplierData = [], isLoading } = useGetStSuplierQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
-
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
   const sortData =
     suplierData?.data &&
     [...suplierData.data].sort((a, b) => {
@@ -32,7 +34,7 @@ export const StorageSupplier = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Yetkazuvchilar</span>
@@ -187,7 +189,7 @@ export const StorageSupplier = () => {
                 required
               />
               <input
-                type="text"
+                type="date"
                 name="date"
                 placeholder="Berilgan vaqti"
                 required

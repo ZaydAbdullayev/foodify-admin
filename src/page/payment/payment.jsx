@@ -19,7 +19,9 @@ export const Payment = () => {
   });
   const { data: ordersData = [] } = useGetPaymentOrderQuery(date);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([100]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   const getDetails = (id) => {
     navigate(`/financial/payment?dt=${id}`);

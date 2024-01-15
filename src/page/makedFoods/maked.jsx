@@ -12,8 +12,9 @@ export const MakedFoods = () => {
   const [orders, setOrders] = useState([]);
   const id = user?.user?.id;
   const dispatch = useDispatch();
-  dispatch(acNavStatus([100]));
-
+  useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
   useEffect(() => {
     ApiGetService.fetching(`get/orders/${id}/3`)
       .then((res) => {

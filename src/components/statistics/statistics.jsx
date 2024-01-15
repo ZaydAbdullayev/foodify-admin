@@ -191,7 +191,7 @@ export const DemoPie = () => {
       value: 27000,
     },
     {
-      type: "Lavsh",
+      type: "Lavash",
       value: 25000,
     },
     {

@@ -9,6 +9,7 @@ import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -19,7 +20,9 @@ export const TransactionGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data = [], isLoading } = useGetCashboxGrQuery();
-  dispatch(acNavStatus([0, 1, 2, 3]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
 
   const sortData =
     data?.data &&
@@ -48,7 +51,7 @@ export const TransactionGroups = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p {...handlers}>
           <span>O'tkazma guruhlari</span>

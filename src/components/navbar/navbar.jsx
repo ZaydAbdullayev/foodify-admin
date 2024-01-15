@@ -7,7 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acMedia } from "../../redux/media";
 import { UniversalFilterBox } from "../filter/filter";
+import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
 
+import { BiEdit, BiPlus } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { MdTableBar } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
 import { ImStatsBars } from "react-icons/im";
@@ -24,6 +28,8 @@ export const Navbar = () => {
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
   const dWidth = useSelector((state) => state.dWidth);
+  const acItem = useSelector((state) => state.active);
+  const acP = useSelector((state) => state.activeThing);
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -31,6 +37,18 @@ export const Navbar = () => {
 
   const closeModal = () => {
     dispatch(acCloseModal());
+  };
+
+  const openUModal = () => {
+    dispatch(acOpenUModal());
+  };
+
+  const openUModalU = () => {
+    if (acP.id) {
+      dispatch(acOpenUModal());
+    } else {
+      dispatch(acOpenUModalU());
+    }
   };
 
   const handleSort = (value) => {
@@ -50,7 +68,46 @@ export const Navbar = () => {
       >
         <img src={logo} alt="" />
       </div>
-      {!dWidth && <UniversalFilterBox />}
+      {status?.includes(0) && (
+        <div className="short_hands">
+          {status?.includes(1) && (
+            <button onClick={openUModal}>
+              <BiPlus />
+            </button>
+          )}
+          {status.includes(101) && (
+            <button onClick={openUModal}>
+              <b>+</b>
+              <MdTableBar />{" "}
+            </button>
+          )}
+          {status?.includes(2) && (
+            <button
+              style={
+                acItem.id || acP?.id
+                  ? {}
+                  : { opacity: "0.4", border: "1px solid #ccc6" }
+              }
+              onClick={openUModalU}
+            >
+              <BiEdit />
+            </button>
+          )}
+          {status?.includes(3) && (
+            <button
+              style={
+                acItem.id || acP?.id
+                  ? {}
+                  : { opacity: "0.4", border: "1px solid #ccc6" }
+              }
+            >
+              <MdDelete />
+            </button>
+          )}
+          {!dWidth && <UniversalFilterBox />}
+        </div>
+      )}
+
       {status.includes(100) && (
         <form className="search">
           <BsSearch />

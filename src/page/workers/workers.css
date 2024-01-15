@@ -3,7 +3,16 @@
   --adwh: 85px;
 }
 
+.worker_container {
+  overflow-x: auto;
+}
+.worker_container::-webkit-scrollbar {
+  display: none;
+}
+
 .workers_header {
+  position: sticky;
+  left: 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -142,4 +151,10 @@
 
 .universal_key > span {
   margin-bottom: 7%;
+}
+
+@media (max-width: 1150px) {
+  .worker {
+    width: 900px;
+  }
 }

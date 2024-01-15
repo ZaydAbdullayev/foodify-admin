@@ -9,13 +9,16 @@ import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.active);
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 3, 6, 7, 15]));
+  }, [dispatch]);
   const { data: storeData = [] } = useGetStCategoryQuery();
   console.log(storeData);
   const isLoading = false;
@@ -74,7 +77,7 @@ export const ReportRejects = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Bekor qilingan buyurtmalar</span>

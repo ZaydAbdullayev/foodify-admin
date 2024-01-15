@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -23,8 +24,9 @@ export const ReportSuppliers = () => {
   const isLoading = false;
   const depData = [];
   const dispatch = useDispatch();
-  dispatch(acNavStatus([0, 3, 4, 6, 7, 15]));
-
+  React.useEffect(() => {
+    dispatch(acNavStatus([0, 3, 4, 6, 7, 15]));
+  }, [dispatch]);
   const sortData = storageD.sort((a, b) => {
     if (sort.state) {
       return a.name.localeCompare(b.name);
@@ -91,7 +93,7 @@ export const ReportSuppliers = () => {
 
   return (
     <div className="storage_container">
-      <div className="storage_header"></div>
+      <UniversalFilterBox />
       <div className="storage_body">
         <p>
           <span>Yetkazuvchilar uchun hisobot</span>
