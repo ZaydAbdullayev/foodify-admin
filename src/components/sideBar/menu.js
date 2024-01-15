@@ -235,7 +235,7 @@ export const Category = [
   {
     id: "5",
     name: "Yetkazuvchilar",
-    path: "/suppliers",
+    path: "",
     positions: width ? [-90, 90, 192] : [90, -90, 90],
     icon: <TbTruckDelivery />,
   },

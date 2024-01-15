@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./home.css";
 import { ApiGetService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
-import { acUpload } from "../../redux/upload";
+// import { acUpload } from "../../redux/upload";
 import { io } from "socket.io-client";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";

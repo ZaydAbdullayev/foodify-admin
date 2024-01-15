@@ -27,7 +27,6 @@ export const Navbar = () => {
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
-  const dWidth = useSelector((state) => state.dWidth);
   const acItem = useSelector((state) => state.active);
   const acP = useSelector((state) => state.activeThing);
 
@@ -104,7 +103,7 @@ export const Navbar = () => {
               <MdDelete />
             </button>
           )}
-          {!dWidth && <UniversalFilterBox />}
+          <UniversalFilterBox />
         </div>
       )}
 

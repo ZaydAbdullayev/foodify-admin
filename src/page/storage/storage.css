@@ -131,7 +131,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .storage_container .short-hands_sort__box {
     display: flex;
   }

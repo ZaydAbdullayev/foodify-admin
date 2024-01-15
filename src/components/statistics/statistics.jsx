@@ -31,6 +31,31 @@ export const DemoDualAxes = () => {
       type: "oylik",
     },
     {
+      time: "2023-08",
+      value: 350,
+      type: "oylik",
+    },
+    {
+      time: "2023-09",
+      value: 900,
+      type: "oylik",
+    },
+    {
+      time: "2023-10",
+      value: 300,
+      type: "oylik",
+    },
+    {
+      time: "2023-11",
+      value: 450,
+      type: "oylik",
+    },
+    {
+      time: "2023-12",
+      value: 470,
+      type: "oylik",
+    },
+    {
       time: "2023-03",
       value: 220,
       type: "haftalik",
@@ -52,6 +77,31 @@ export const DemoDualAxes = () => {
     },
     {
       time: "2023-07",
+      value: 100,
+      type: "haftalik",
+    },
+    {
+      time: "2023-08",
+      value: 220,
+      type: "haftalik",
+    },
+    {
+      time: "2023-09",
+      value: 300,
+      type: "haftalik",
+    },
+    {
+      time: "2023-10",
+      value: 250,
+      type: "haftalik",
+    },
+    {
+      time: "2023-11",
+      value: 220,
+      type: "haftalik",
+    },
+    {
+      time: "2023-12",
       value: 362,
       type: "haftalik",
     },
@@ -79,6 +129,31 @@ export const DemoDualAxes = () => {
     },
     {
       time: "2023-07",
+      count: 20,
+      name: "chiqim",
+    },
+    {
+      time: "2023-08",
+      count: 800,
+      name: "chiqim",
+    },
+    {
+      time: "2023-09",
+      count: 600,
+      name: "chiqim",
+    },
+    {
+      time: "2023-10",
+      count: 400,
+      name: "chiqim",
+    },
+    {
+      time: "2023-11",
+      count: 380,
+      name: "chiqim",
+    },
+    {
+      time: "2023-12",
       count: 220,
       name: "chiqim",
     },
@@ -104,6 +179,31 @@ export const DemoDualAxes = () => {
     },
     {
       time: "2023-07",
+      count: 620,
+      name: "kirim",
+    },
+    {
+      time: "2023-08",
+      count: 750,
+      name: "kirim",
+    },
+    {
+      time: "2023-09",
+      count: 650,
+      name: "kirim",
+    },
+    {
+      time: "2023-10",
+      count: 450,
+      name: "kirim",
+    },
+    {
+      time: "2023-11",
+      count: 400,
+      name: "kirim",
+    },
+    {
+      time: "2023-12",
       count: 320,
       name: "kirim",
     },
@@ -132,6 +232,31 @@ export const DemoDualAxes = () => {
       count: 200,
       name: "foyda",
     },
+    {
+      time: "2023-08",
+      count: 900,
+      name: "foyda",
+    },
+    {
+      time: "2023-09",
+      count: 600,
+      name: "foyda",
+    },
+    {
+      time: "2023-10",
+      count: 450,
+      name: "foyda",
+    },
+    {
+      time: "2023-11",
+      count: 300,
+      name: "foyda",
+    },
+    {
+      time: "2023-12",
+      count: 200,
+      name: "foyda",
+    },
   ];
   const config = {
     data: [uvBillData, transformData],
@@ -142,7 +267,7 @@ export const DemoDualAxes = () => {
         geometry: "line",
         seriesField: "type",
         lineStyle: {
-          lineWidth: 3,
+          lineWidth: 2,
           lineDash: [5, 5],
         },
         smooth: true,

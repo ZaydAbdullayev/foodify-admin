@@ -130,6 +130,7 @@
   height: 80px;
   border-radius: 15px;
   overflow: hidden;
+  background: red;
 }
 
 .img_box > span {
@@ -223,4 +224,12 @@
   border-radius: 50%;
   background: #32ff09a2;
   color: #fff;
+}
+
+@media (max-width: 890px) {
+  /* .item {
+    height: 90px;
+    flex-direction: column;
+    flex-wrap: wrap;
+  } */
 }

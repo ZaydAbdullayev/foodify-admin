@@ -216,9 +216,19 @@
   object-fit: cover;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 2000px) {
+  .navbar .short-hands_sort__box {
+    display: flex;
+  }
+}
+
+@media (max-width: 900px) {
   .navbar .short_hands {
     margin-left: 1.5%;
+  }
+
+  .navbar .short-hands_sort__box {
+    display: none;
   }
 
   .short_hands {
@@ -230,6 +240,7 @@
   .short-hands_sort__box {
     position: sticky;
     left: 0;
+    width: 100%;
     flex-wrap: wrap;
     margin-left: 0px;
     justify-content: flex-start;

@@ -98,7 +98,7 @@ export const ShowProduct = memo(() => {
   const navigate = useNavigate();
   const ingredientData = JSON.parse(data?.ingredients);
   return (
-    <div className="product_box">
+    <div className="product_box open p_info">
       <div className="product_item">
         <h3>{data.name}</h3>
         <span>Product description</span>
@@ -140,6 +140,7 @@ export const ShowProduct = memo(() => {
           Orqaga qaytish
         </button>
       </div>
+      <i onClick={() => navigate("/managment")}></i>
     </div>
   );
 });
