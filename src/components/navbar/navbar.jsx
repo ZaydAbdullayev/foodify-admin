@@ -126,7 +126,7 @@ export const Navbar = () => {
             <ImStatsBars />
           </span>
         )}
-        <span>
+        <span onClick={() => navigate("/nothifications")}>
           <FaBell />
         </span>
         <img

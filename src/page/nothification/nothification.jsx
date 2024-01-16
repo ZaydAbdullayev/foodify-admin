@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./nothification.css";
 import { io } from "socket.io-client";
+import { useDispatch } from "react-redux";
+import { acNavStatus } from "../../redux/navbar.status";
 
 // const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
@@ -8,7 +10,11 @@ const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
 
 export const NothificationPage = () => {
   const [data, setData] = useState(fd);
+  const dispatch = useDispatch();
   console.log(data);
+  useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   socket.on("/get/nothification", (data) => {
     setData(data);
@@ -17,22 +23,47 @@ export const NothificationPage = () => {
     <div className="container_box nothification">
       <p>Bildirishnomalar</p>
       <div className=" container_box nothification_box">
-        {data?.map((item) => (
-          <div className="nothification-item">
-            <span>{item.table_number}</span>
-            <div className="nothification-item-info">
-              <p>{item.position}</p>
-              <span>
-                {item.status === "ready" ? "Tayyor" : "Bekor qilindi"}
-              </span>
-              {item.status === "ready" ? (
-                <p>buyurtmadagi {item.describtion} lar tayyor bo'ldi</p>
-              ) : (
-                <p>buyurtmadagi {item.describtion} lar bekor qilindi</p>
-              )}
+        {data?.map((item) => {
+          const cls =
+            item?.status === "ready"
+              ? "success"
+              : item.status === "cancel"
+              ? "error"
+              : "warning";
+          const seen = item?.type === "seen" ? "seen" : "";
+          return (
+            <div
+              className={`nothification-item ${cls} ${seen}`}
+              // style={{
+              //   background: item?.status === "ready" ? "#2dc650" : "tomato",
+              // }}
+            >
+              <div className="nathification-table">
+                <p>{item.position}</p>
+                <span>{item.table_number}</span>
+                <p>stoll</p>
+              </div>
+              <span className="y-line"></span>
+              <div className="nothification-item-info">
+                <span>
+                  {item.status === "ready" ? "Tayyor" : "Bekor qilindi"}
+                </span>
+                {item.status === "ready" ? (
+                  <p>
+                    buyurtmadagi {item.describtion.join(", ")} lar tayyor bo'ldi
+                    !
+                  </p>
+                ) : (
+                  <p>
+                    buyurtmadagi {item.describtion.join(", ")} lar bekor qilindi
+                    !
+                  </p>
+                )}
+              </div>
+              <p className="time">{item.time}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -46,6 +77,8 @@ const fd = [
     position: "tashqari",
     describtion: ["osh", "shashlik", "salat"],
     status: "cancel",
+    time: "12:00",
+    type: "not_seen",
   },
   {
     id: "w43g3e",
@@ -54,5 +87,7 @@ const fd = [
     position: "ichkari",
     describtion: [],
     status: "ready",
+    time: "12:20",
+    type: "not_seen",
   },
 ];

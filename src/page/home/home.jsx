@@ -38,7 +38,7 @@ export const Home = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
   }, []);
-    
+
   const point =
     department === "kassir" || department === "owner"
       ? `get/orders/${id}`
@@ -204,7 +204,9 @@ export const Home = () => {
                         <div className="btn_box">
                           <button
                             className="relative"
-                            onClick={() => orderAccept({ ...order, status: 4 })}
+                            onClick={() =>
+                              orderAccept({ ...order, status: 4 }, 3)
+                            }
                           >
                             {loading.id === order.id && loading.status === 4 ? (
                               <LoadingBtn />
@@ -214,18 +216,25 @@ export const Home = () => {
                           </button>
                           <button
                             className="relative"
-                            onClick={() =>
-                              orderAccept({
-                                ...order,
-                                status:
-                                  order?.order_type === "online"
-                                    ? 1
-                                    : order?.order_type === "offline" &&
-                                      order?.status === 0
-                                    ? 2
-                                    : 3,
-                              })
-                            }
+                            onClick={() => {
+                              let newStatus;
+                              let pS;
+                              if (order?.order_type === "online") {
+                                newStatus = 1;
+                                pS = 2;
+                              } else if (
+                                order?.order_type === "offline" &&
+                                order?.status === 0
+                              ) {
+                                newStatus = 2;
+                                pS = 4;
+                              } else {
+                                newStatus = 3;
+                                pS = 5;
+                              }
+
+                              orderAccept({ ...order, status: newStatus }, pS);
+                            }}
                           >
                             {loading.id === order.id && loading.status === 1 ? (
                               <LoadingBtn />

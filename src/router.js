@@ -54,6 +54,7 @@ import { Howl } from "howler";
 import audio from "./assets/images/nothification.mp3";
 import { acDeviceWidth } from "./redux/media";
 import { acNothification } from "./redux/nothification";
+import { NothificationPage } from "./page/nothification/nothification.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -61,7 +62,7 @@ export const Router = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const sound = new Howl({
-    src: [audio], // Sesi buraya ekleyin
+    src: [audio],
     html5: true,
   });
 
@@ -124,6 +125,7 @@ export const Router = () => {
             />
             <Route path="navigation" element={<NavigationPanel />} />
             <Route path="add/product" element={<Addproduct />} />
+            <Route path="nothifications" element={<NothificationPage />} />
             <Route path="more/info/:id" element={<ShowProduct />} />
             <Route path="managment" element={<Blog />}>
               <Route path="" element={<Products />} />
