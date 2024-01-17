@@ -37,7 +37,7 @@ export const Home = () => {
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
-  }, []);
+  }, [dispatch]);
 
   const point =
     department === "kassir" || department === "owner"
@@ -209,12 +209,8 @@ export const Home = () => {
                             className="relative"
                             onClick={() =>
                               orderAccept(
-                                {
-                                  ...order,
-                                  id: order?.id?.split("_")[0],
-                                  status: 4,
-                                },
-                                order?.id?.split("_")[1] || order?.receivedAt
+                                { ...order, status: 4 },
+                                products[0]?.received_at
                               )
                             }
                           >
@@ -240,12 +236,8 @@ export const Home = () => {
                               }
 
                               orderAccept(
-                                {
-                                  ...order,
-                                  id: order?.id?.split("_")[0],
-                                  status: newStatus,
-                                },
-                                order?.id?.split("_")[1] || order?.receivedAt
+                                { ...order, status: newStatus },
+                                products[0]?.received_at
                               );
                             }}
                           >
