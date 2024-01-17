@@ -38,6 +38,27 @@ export const StorageInvoices = () => {
     }
   };
 
+  const headerKeys = [
+    { name: "Kun", size: "13%" },
+    { name: "Ombor", size: "12%" },
+    { name: "Yetkazuvchi", size: "11%" },
+    { name: "Summa", size: "10%" },
+    { name: "To'langan", size: "10%" },
+    { name: "Qarzdorlik", size: "12%" },
+    { name: "Javobgar", size: "12%" },
+    { name: "Tavsif", size: "10%" },
+    { name: "Tafsilot", size: "8%" },
+  ];
+
+  const displayKeys = [
+    { name: "storage", size: "12%" },
+    { name: "supplier", size: "11%" },
+    { name: "cost", size: "10%", position: "flex-end" },
+    { name: "paid", size: "10%", position: "flex-end" },
+    { name: "leftover", size: "12%", position: "flex-end" },
+    { name: "responsible", size: "12%" },
+  ];
+
   const sortData =
     invoiceData?.data &&
     [...invoiceData?.data].sort((a, b) => {
@@ -64,89 +85,32 @@ export const StorageInvoices = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "15%" }}
-          >
-            <p>Kun</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "11%" }}
-          >
-            <p>Yetkazuvchi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>Summa</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "10%" }}
-          >
-            <p>To'langan</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Qarzdorlik</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "12%" }}
-          >
-            <p>Javobgar</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tavsif
-          </p>
-          <p style={{ "--data-line-size": "8%", justifyContent: "center" }}>
-            Tafsilot
-          </p>
+          {headerKeys?.map((item) => {
+            return (
+              <p
+                style={{
+                  "--data-line-size": item?.size,
+                }}
+              >
+                {item?.name}
+                {sort.id === item?.name ? (
+                  sort.state ? (
+                    <RiArrowUpSLine
+                      onClick={() => setSort({ id: item?.name, state: false })}
+                    />
+                  ) : (
+                    <RiArrowDownSLine
+                      onClick={() => setSort({ id: item?.name, state: true })}
+                    />
+                  )
+                ) : (
+                  <RiArrowDownSLine
+                    onClick={() => setSort({ id: item?.name, state: true })}
+                  />
+                )}
+              </p>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -194,47 +158,18 @@ export const StorageInvoices = () => {
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "13%" }}>{date}</p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                      }}
-                    >
-                      {item?.storage}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "11%",
-                      }}
-                    >
-                      {item?.supplier}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.cost || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.paid || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "12%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.leftover || 0}
-                    </p>
-                    <p style={{ "--data-line-size": "12%" }}>
-                      {item?.responsible}
-                    </p>
+                    {displayKeys?.map((key) => {
+                      return (
+                        <p
+                          style={{
+                            "--data-line-size": key?.size,
+                            justifyContent: key?.position || "flex-start",
+                          }}
+                        >
+                          {item[key?.name]}
+                        </p>
+                      );
+                    })}
                     <p
                       style={{
                         "--data-line-size": "10%",

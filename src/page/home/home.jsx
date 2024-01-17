@@ -91,7 +91,7 @@ export const Home = () => {
   });
 
   // to accept order's product by id
-  const orderAccept = (order) => {
+  const orderAccept = (order, time) => {
     try {
       setLoading(order);
       // const uData = {
@@ -105,7 +105,10 @@ export const Home = () => {
         variant: order?.status,
         user_id: order?.user_id,
       });
-      socket.emit("/update/order/status", order);
+      socket.emit("/update/order/status", {
+        data: order,
+        receivedAt: time,
+      });
       if (department === "kassir" || department === "owner") {
         socket.emit("/divide/orders/depart", order);
       }
@@ -193,10 +196,10 @@ export const Home = () => {
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
-                        {/* {(department === "kassir" ||
+                        {(department === "kassir" ||
                           department === "owner") && (
                           <span>{order?.address?.split("&")?.pop()}</span>
-                        )} */}
+                        )}
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
                       <span>{time}</span>
@@ -205,7 +208,14 @@ export const Home = () => {
                           <button
                             className="relative"
                             onClick={() =>
-                              orderAccept({ ...order, status: 4 }, 3)
+                              orderAccept(
+                                {
+                                  ...order,
+                                  id: order?.id?.split("_")[0],
+                                  status: 4,
+                                },
+                                order?.id?.split("_")[1] || order?.receivedAt
+                              )
                             }
                           >
                             {loading.id === order.id && loading.status === 4 ? (
@@ -218,22 +228,25 @@ export const Home = () => {
                             className="relative"
                             onClick={() => {
                               let newStatus;
-                              let pS;
                               if (order?.order_type === "online") {
                                 newStatus = 1;
-                                pS = 2;
                               } else if (
                                 order?.order_type === "offline" &&
                                 order?.status === 0
                               ) {
                                 newStatus = 2;
-                                pS = 4;
                               } else {
                                 newStatus = 3;
-                                pS = 5;
                               }
 
-                              orderAccept({ ...order, status: newStatus }, pS);
+                              orderAccept(
+                                {
+                                  ...order,
+                                  id: order?.id?.split("_")[0],
+                                  status: newStatus,
+                                },
+                                order?.id?.split("_")[1] || order?.receivedAt
+                              );
                             }}
                           >
                             {loading.id === order.id && loading.status === 1 ? (

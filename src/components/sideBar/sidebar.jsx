@@ -21,19 +21,23 @@ export const Sidebar = () => {
   const location = useLocation().pathname;
   const [dFromTop, setDFromTop] = useState(0);
 
-  const handleCategoryClick = (c) => {
+  const handleCategoryClick = (e, c) => {
     setActiveCategoryId((prevCategoryId) =>
       prevCategoryId === c.id ? null : c.id
     );
+    findDFromTop(e.target);
   };
 
-  const findDFromTop = (element) => {
+  function findDFromTop(element) {
     if (element) {
       const rect = element.getBoundingClientRect();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      const left = rect.left + scrollLeft;
-      const top = rect.top + scrollTop;
+      const elementWidth = rect.width;
+      const elementHeight = rect.height;
+      const left = rect.left + scrollLeft + elementWidth / 2;
+      const top = rect.top + scrollTop + elementHeight / 2;
+
       if (dWidth) {
         setDFromTop(left);
       } else {
@@ -42,7 +46,7 @@ export const Sidebar = () => {
     }
 
     return null;
-  };
+  }
 
   if (!status) {
     setTimeout(() => {
@@ -145,12 +149,9 @@ export const Sidebar = () => {
                         : "menu_box_item"
                     }
                     to={item?.path}
-                    onClick={(e) => handleCategoryClick({ id: item?.id })}
+                    onClick={(e) => handleCategoryClick(e, { id: item?.id })}
                   >
-                    <span onClick={(e) => findDFromTop(e.target)}>
-                      {item?.icon}
-                    </span>{" "}
-                    <p>{item?.name}</p>
+                    <span>{item?.icon}</span> <p>{item?.name}</p>
                     {item.id === activeCategoryId && (
                       <ul
                         className="inner_menu"

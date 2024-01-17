@@ -197,7 +197,7 @@
 
 .inner_menu {
   position: fixed;
-  top: calc(var(--top) - 105px);
+  top: calc(var(--top) - 120px);
   left: 0%;
   padding: 0;
   z-index: 99;
@@ -360,11 +360,11 @@
 
   .inner_menu {
     top: auto;
-    left: calc(var(--top) - 8px);
+    left: calc(var(--top) - 25px);
     bottom: 0;
   }
   .active_menu .inner_menu {
-    left: calc(var(--top) - 8px);
+    left: calc(var(--top) - 25px);
     bottom: 18px;
   }
   .menu_box {
