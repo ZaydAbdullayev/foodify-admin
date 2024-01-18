@@ -35,8 +35,8 @@ export const MakedFoods = () => {
       <div className="orders_body">
         {newOrders.length ? (
           newOrders?.map((order) => {
-            const products =
-              order?.product_data && JSON?.parse(order?.product_data);
+            const pds = JSON?.parse(order?.product_data);
+            const products = Object.values(pds)[0]?.pd;
             const time = new Date(order?.receivedAt)?.toLocaleString("uz-UZ", {
               year: "numeric",
               day: "numeric",

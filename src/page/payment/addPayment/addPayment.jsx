@@ -44,7 +44,8 @@ export const AddPayment = memo(({ open, setOpen }) => {
   };
 
   const orderData = order?.innerData;
-  const payment_data = orderData && JSON?.parse(orderData?.product_data);
+  const product_data = JSON?.parse(orderData?.product_data);
+  const payment_data = orderData && Object.values(product_data)[0]?.pd;
 
   return (
     <div

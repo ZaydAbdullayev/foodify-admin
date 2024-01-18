@@ -34,8 +34,8 @@ export const PaymentCheck = memo(() => {
   const { data: order = [], isLoading } = useGetpOrderQuery(id);
 
   const orderData = order?.innerData || [];
-  const products =
-    orderData?.product_data && JSON?.parse(orderData?.product_data);
+  const pds = JSON?.parse(orderData?.product_data);
+  const products = Object.values(pds)[0]?.pd;
   const time = new Date(orderData?.receivedAt)?.toLocaleString("uz-UZ", {
     year: "numeric",
     day: "numeric",

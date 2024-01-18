@@ -120,7 +120,7 @@ export const Router = () => {
             <Route path="statistics" element={<Statistics />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
-              path="update-order/:type/:number/:id/:ProductId"
+              path="update-order/:type/:number/:id/:ProductId/:queue"
               element={<Orders />}
             />
             <Route path="navigation" element={<NavigationPanel />} />

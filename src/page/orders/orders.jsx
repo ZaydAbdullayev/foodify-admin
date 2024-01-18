@@ -38,8 +38,7 @@ export const Orders = () => {
     ?.join("")
     ?.split("'")
     ?.join("");
-  const category =
-    location.search.split("=")[1] || categoryData?.data?.[0]?.name;
+  const category = location.search.split("=")[1] || ct;
   const cart = useMemo(() => {
     return JSON?.parse(localStorage?.getItem("cart")) || [];
   }, []);
@@ -50,7 +49,7 @@ export const Orders = () => {
     address: `&${position[3]}-stoll`,
     restaurant_id: user?.user?.id,
     user_id: position[4],
-    product_data: JSON.stringify(cart),
+    product_data: JSON.stringify({ 1: { pd: cart } }),
     food_total: total?.totalPrice,
     service: total?.service,
     prime_cost: prime_cost,
@@ -64,9 +63,10 @@ export const Orders = () => {
     t_location: position[2],
   };
 
+  const queue = position[6] + 1;
   const updatePaymentData = {
     order_id: position[5],
-    product_data: JSON.stringify(cart),
+    product_data: JSON.stringify({ [queue]: cart }),
   };
 
   const handleTarget = (item) => {

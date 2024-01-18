@@ -20,6 +20,8 @@ export const OrderById = () => {
   const navigate = useNavigate();
   const newLocation = location.split("/orders/tables").join("");
   const { data = [], isLoading } = useGetOrderQuery(id);
+  let queue;
+  let firstID;
 
   const finish = () => {
     const uData = {
@@ -40,7 +42,10 @@ export const OrderById = () => {
         </span>
       ) : (
         data?.innerData?.map((item) => {
-          const product_data = JSON.parse(item?.product_data || "[]");
+          const p_data = JSON.parse(item?.product_data || "[]");
+          const product_data = Object.values(p_data)[0]?.pd;
+          queue = Object.keys(p_data)[0];
+
           return product_data?.map((item) => {
             return (
               <div className="order_box__item" key={item.id}>
@@ -77,7 +82,9 @@ export const OrderById = () => {
         </button>
         <button
           onClick={() =>
-            navigate(`/update-order${newLocation}/${data?.innerData[0]?.id}`)
+            navigate(
+              `/update-order${newLocation}/${data?.innerData[0]?.id}/${queue}`
+            )
           }
         >
           Buyutma qo'shish

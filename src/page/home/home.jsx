@@ -92,6 +92,7 @@ export const Home = () => {
 
   // to accept order's product by id
   const orderAccept = (order, time) => {
+    console.log("upO", order);
     try {
       setLoading(order);
       // const uData = {
@@ -122,6 +123,7 @@ export const Home = () => {
 
   // to find order situation
   const orderSituation = (order) => {
+    console.log("upP", order);
     try {
       setLoading(order);
       socket.emit("/accept/order", {
@@ -169,8 +171,8 @@ export const Home = () => {
         {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
-              const products =
-                order?.product_data && JSON?.parse(order?.product_data);
+              const pds = JSON?.parse(order?.product_data);
+              const { pd, received_at } = Object.values(pds)[0];
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -189,7 +191,7 @@ export const Home = () => {
                   }
                   style={{
                     "--grid-col": full ? 1 : 1.5,
-                    "--grid-row": products?.length + 1,
+                    "--grid-row": pd?.length + 1,
                     display: order?.status === 4 ? "none" : "flex",
                   }}
                 >
@@ -208,10 +210,7 @@ export const Home = () => {
                           <button
                             className="relative"
                             onClick={() =>
-                              orderAccept(
-                                { ...order, status: 4 },
-                                products[0]?.received_at
-                              )
+                              orderAccept({ ...order, status: 4 }, received_at)
                             }
                           >
                             {loading.id === order.id && loading.status === 4 ? (
@@ -237,7 +236,7 @@ export const Home = () => {
 
                               orderAccept(
                                 { ...order, status: newStatus },
-                                products[0]?.received_at
+                                received_at
                               );
                             }}
                           >
@@ -251,7 +250,7 @@ export const Home = () => {
                       )}
                     </div>
                     <div className="order_item-body">
-                      {products?.map((product, ind) => {
+                      {pd?.map((product, ind) => {
                         return (
                           <figcaption key={product?.id + ind}>
                             <i
@@ -377,3 +376,4 @@ export const Home = () => {
     </div>
   );
 };
+  

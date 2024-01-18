@@ -65,7 +65,8 @@ export const Payment = () => {
       {ordersData?.innerData ? (
         ordersData?.innerData?.map((item, index) => {
           const reverseIndex = ordersData?.innerData?.length - index;
-          const payment_data = JSON?.parse(item?.product_data);
+          const p_data = JSON?.parse(item?.product_data);
+          const payment_data = Object.values(p_data)[0]?.pd;
           return (
             <div className="payment_item" key={item.id}>
               <span>{item.order_type}</span>
