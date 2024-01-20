@@ -40,12 +40,12 @@ const SoundButton = () => {
 
 export default SoundButton;
 
-export const gs = {
+export const sp = {
   address: "&4-stoll",
   cashier: "",
   description: "",
-  food_total: 34000,
-  id: "b9645110",
+  food_total: 52000,
+  id: "df3b6142",
   latitude: "",
   longitude: "",
   online_paymentToken: "token",
@@ -54,18 +54,18 @@ export const gs = {
   paid: 0,
   payment_status: 0,
   payment_type: "",
-  prime_cost: 5700,
+  prime_cost: 40950,
   product_data:
-    '{"1":{"pd":[{"id":"a698de","name":"somsa","category":"fast food","storage":"oshxona sklad","price":"12000","res_id":"2899b5","prime_cost":"4000","profit":"8000","markup":"3","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"1\\"},{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"2\\"}]","date":"2024-01-08T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":4,"quantity":1},{"id":"161efe","name":"sandvich","category":"fast food","storage":"oshxona sklad","price":"22000","res_id":"2899b5","prime_cost":"1700","profit":"20300","markup":"12.94","ingredients":"[{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":0,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"1\\"},{\\"id\\":\\"338b7d\\",\\"name\\":\\"oshko\'k\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.5\\"},{\\"id\\":\\"49c458\\",\\"name\\":\\"salat bargi\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.5\\"},{\\"id\\":\\"d2a4d1\\",\\"name\\":\\"sabzi\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.1\\"}]","date":"2024-01-07T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":4,"quantity":1}],"received_at":"2024-01-18T13:07:48.886Z"}}',
+    '{"1":{"pd":[{"id":"22ad50","name":"sho\'rva","category":"lagman","storage":"oshxona sklad","price":"40000","res_id":"2899b5","prime_cost":"36950","profit":"3050","markup":"1.08","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.1\\"},{\\"id\\":\\"338b7d\\",\\"name\\":\\"oshko\'k\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.1\\"},{\\"id\\":\\"6c1afe\\",\\"name\\":\\"semichka yog\'i\\",\\"unit\\":\\"l\\",\\"group\\":\\"yog\'\\",\\"res_id\\":\\"2899b5\\",\\"price\\":180000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.2\\"},{\\"id\\":\\"894c2d\\",\\"name\\":\\"kartoshka\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":3000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.2\\"},{\\"id\\":\\"d2a4d1\\",\\"name\\":\\"sabzi\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.1\\"}]","date":"2024-01-07T19:00:00.000Z","type":"taom","department":"suyuq taomlar","img":"","status":1,"quantity":1},{"id":"a698de","name":"somsa","category":"fast food","storage":"oshxona sklad","price":"12000","res_id":"2899b5","prime_cost":"4000","profit":"8000","markup":"3","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"1\\"},{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"2\\"}]","date":"2024-01-08T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":1,"quantity":1}],"received_at":"2024-01-19T12:25:16.536Z"},"2":[{"id":"22ad50","name":"sho\'rva","category":"lagman","storage":"oshxona sklad","price":"40000","res_id":"2899b5","prime_cost":"36950","profit":"3050","markup":"1.08","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.1\\"},{\\"id\\":\\"338b7d\\",\\"name\\":\\"oshko\'k\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.1\\"},{\\"id\\":\\"6c1afe\\",\\"name\\":\\"semichka yog\'i\\",\\"unit\\":\\"l\\",\\"group\\":\\"yog\'\\",\\"res_id\\":\\"2899b5\\",\\"price\\":180000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.2\\"},{\\"id\\":\\"894c2d\\",\\"name\\":\\"kartoshka\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":3000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.2\\"},{\\"id\\":\\"d2a4d1\\",\\"name\\":\\"sabzi\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.1\\"}]","date":"2024-01-07T19:00:00.000Z","type":"taom","department":"suyuq taomlar","img":"","status":1,"quantity":1},{"id":"a698de","name":"somsa","category":"fast food","storage":"oshxona sklad","price":"12000","res_id":"2899b5","prime_cost":"4000","profit":"8000","markup":"3","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"1\\"},{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"2\\"}]","date":"2024-01-08T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":1,"quantity":1}]}',
   qavat: "",
-  receivedAt: "2024-01-18T13:07:48.000Z",
+  receivedAt: "2024-01-19T12:25:16.000Z",
   restaurant_id: "2899b5",
-  service: 3400,
-  status: 2,
-  t_location: "tashqari",
+  service: 5200,
+  status: 0,
+  t_location: "ichkari",
   table_name: "4",
-  total: 340003400,
-  user_id: "fdfc62",
+  total: 520005200,
+  user_id: "aff0f6",
   worker_id: "2899b5",
   worker_name: "owner",
 };
@@ -80,55 +80,34 @@ export const dep = {
   two: [],
 };
 
-export const Test = () => {
-  const [showContent, setShowContent] = useState(false);
-  const pressTimer = useRef(null);
+export const TypingAnimation = () => {
+  const originalText =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque sed optio assumenda itaque quia doloremque amet, ipsa dignissimos placeat. Corporis expedita harum est explicabo odio natus sequi nemo ratione modi quia voluptatum quo maiores ut accusantium consequatur architecto itaque, ipsa, aperiam quaerat, dolore alias fugiat magni? Earum exercitationem, ut dolores odio voluptates in fugiat voluptate. Dolores aspernatur dolorem aperiam veritatis deleniti consequuntur velit esse eum cum quia. Minus error expedita sapiente esse nam odit id magni molestiae suscipit. Reprehenderit nostrum qui labore quia vitae nobis voluptatem libero laudantium, eos eaque dolore blanditiis aspernatur consequuntur ad adipisci laborum vero, quaerat pariatur!...";
 
-  const handleMouseDown = () => {
-    pressTimer.current = setTimeout(() => {
-      setShowContent(true);
-    }, 5000);
-  };
-
-  const handleMouseUp = () => {
-    clearTimeout(pressTimer.current);
-    setShowContent(false);
-  };
+  const [displayText, setDisplayText] = useState("");
+  const typingRef = useRef(null); // Yeni eklenen ref
 
   useEffect(() => {
-    return () => {
-      clearTimeout(pressTimer.current);
+    let currentIndex = 0;
+
+    const animateText = () => {
+      setDisplayText(originalText.slice(0, currentIndex));
+      typingRef.current.style.width = `${typingRef.current.scrollWidth}px`; // Genişlik güncellemesi
+      currentIndex++;
+
+      if (currentIndex <= originalText.length) {
+        requestAnimationFrame(animateText);
+      }
     };
+
+    if (currentIndex === 0) {
+      animateText();
+    }
   }, []);
 
   return (
-    <div>
-      <div
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        style={{
-          width: "200px",
-          height: "200px",
-          backgroundColor: "lightgray",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
-        {showContent && (
-          <div
-            style={{
-              position: "absolute",
-              backgroundColor: "white",
-              border: "1px solid black",
-              padding: "10px",
-            }}
-          >
-            İçerik burada görünmelidir.
-          </div>
-        )}
-      </div>
-    </div>
+    <p className="typing-text" ref={typingRef}>
+      {displayText}
+    </p>
   );
 };

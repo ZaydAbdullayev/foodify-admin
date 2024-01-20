@@ -63,7 +63,7 @@ export const Orders = () => {
     t_location: position[2],
   };
 
-  const queue = position[6] + 1;
+  const queue = parseInt(position[6]) + 1;
   const updatePaymentData = {
     order_id: position[5],
     product_data: JSON.stringify({ [queue]: cart }),

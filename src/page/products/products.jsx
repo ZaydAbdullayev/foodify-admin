@@ -142,109 +142,129 @@ export const Products = () => {
                 />
                 <img src={product?.img} alt="foto" />
               </label>
-              {update === product?.id ? (
-                <>
-                  <input
-                    type="text"
-                    defaultValue={product.name}
-                    style={{ textTransform: "capitalize" }}
-                    autoFocus
-                    onChange={(e) => handleInfoChange("name", e.target.value)}
-                    autoComplete="off"
-                  />
-                  <input
-                    type="text"
-                    defaultValue={product.description}
-                    style={{ flex: "1" }}
-                    onChange={(e) =>
-                      handleInfoChange("description", e.target.value)
-                    }
-                    autoComplete="off"
-                  />
-                </>
-              ) : (
-                <>
-                  <p className="name">{product.name}</p>
-                  <p style={{ flex: "1" }}>{product.description}</p>
-                </>
-              )}
+              <div className="_item_info-box">
+                {update === product?.id ? (
+                  <>
+                    <input
+                      type="text"
+                      defaultValue={product.name}
+                      style={{ textTransform: "capitalize" }}
+                      autoFocus
+                      onChange={(e) => handleInfoChange("name", e.target.value)}
+                      autoComplete="off"
+                    />
+                    <input
+                      type="text"
+                      defaultValue={product.description}
+                      onChange={(e) =>
+                        handleInfoChange("description", e.target.value)
+                      }
+                      autoComplete="off"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <p className="name">{product.name}</p>
+                    <p>{product.description}</p>
+                  </>
+                )}
+                <NumericFormat
+                  displayType={update === product?.id ? "input" : "text"}
+                  defaultValue={product.price}
+                  thousandSeparator=" "
+                  suffix=" so'm"
+                  onChange={(e) =>
+                    handleInfoChange(
+                      "price",
+                      e.target.value.split(" ").join("")
+                    )
+                  }
+                />
+              </div>
               <NumericFormat
                 className={update === product?.id ? "" : "_count"}
                 displayType={update === product?.id ? "input" : "text"}
                 style={{
                   background:
-                    product?.food_count >= 15 && product?.food_count < !10
+                    product?.food_count <= 15 && product?.food_count >= 10
                       ? "#f07167"
-                      : product?.food_count <= 10
+                      : product?.food_count < 10
                       ? "#ef233c"
                       : "",
                 }}
                 defaultValue={product?.food_count || 12}
                 onChange={(e) => handleInfoChange("cost_count")}
               />
-              <NumericFormat
-                displayType={update === product?.id ? "input" : "text"}
-                defaultValue={product.price}
-                thousandSeparator=" "
-                suffix=" so'm"
-                onChange={(e) =>
-                  handleInfoChange("price", e.target.value.split(" ").join(""))
-                }
-              />
-              <div className="status">
-                <span
-                  style={
-                    product.status === 1
-                      ? { background: "#33ff09" }
-                      : { color: "#aaaa" }
-                  }
-                  onClick={() => handleUpdate({ id: product.id, status: 1 })}
-                >
-                  active
-                </span>
-                <span
-                  style={
-                    product.status === 0
-                      ? { background: "#d82" }
-                      : { color: "#aaaa" }
-                  }
-                  onClick={() => handleUpdate({ id: product.id, status: 0 })}
-                >
-                  passive
-                </span>
-              </div>
-              <button className="update_btn">
-                {update === product?.id ? (
-                  <>
-                    <span
-                      onClick={() => handleUpdate({ ...info, id: product.id })}
-                    >
-                      <FaCheck />
-                    </span>{" "}
-                    <span onClick={() => setUpdate(false)}>
-                      <ImCancelCircle />
-                    </span>
-                  </>
-                ) : (
-                  <span onClick={() => setUpdate(product.id)}>
-                    <FaPen />
+              <div className="_item_action-box">
+                <div className="status">
+                  <span
+                    style={
+                      product.status === 1
+                        ? { background: "#33ff09" }
+                        : { color: "#aaaa" }
+                    }
+                    onClick={() => handleUpdate({ id: product.id, status: 1 })}
+                  >
+                    active
                   </span>
-                )}
-              </button>
+                  <span
+                    style={
+                      product.status === 0
+                        ? { background: "#d82" }
+                        : { color: "#aaaa" }
+                    }
+                    onClick={() => handleUpdate({ id: product.id, status: 0 })}
+                  >
+                    passive
+                  </span>
+                </div>
+                <span
+                  style={{
+                    color:
+                      product?.food_count <= 15 && product?.food_count >= 10
+                        ? "#f07167"
+                        : product?.food_count < 10
+                        ? "#ef233c"
+                        : "",
+                  }}
+                >
+                  {product.food_count}x
+                </span>
+                <div className="update_btn">
+                  {update === product?.id ? (
+                    <>
+                      <span
+                        onClick={() =>
+                          handleUpdate({ ...info, id: product.id })
+                        }
+                      >
+                        <FaCheck />
+                      </span>{" "}
+                      <span onClick={() => setUpdate(false)}>
+                        <ImCancelCircle />
+                      </span>
+                    </>
+                  ) : (
+                    <span onClick={() => setUpdate(product.id)}>
+                      <FaPen />
+                    </span>
+                  )}
+                </div>
 
-              <button
-                style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
-                onClick={() => handleDelete(product.id)}
-              >
-                <AiFillDelete />
-              </button>
+                <button
+                  style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
+                  onClick={() => handleDelete(product.id)}
+                >
+                  <AiFillDelete />
+                </button>
 
-              <button
-                style={{ fontSize: "var(--fs4)", color: "#787aff" }}
-                onClick={() => navigate(`/more/info/${product.id}`)}
-              >
-                <TbInfoSquareRounded />
-              </button>
+                <button
+                  style={{ fontSize: "var(--fs4)", color: "#219ebc" }}
+                  onClick={() => navigate(`/more/info/${product.id}`)}
+                >
+                  <TbInfoSquareRounded />
+                </button>
+              </div>
             </div>
           ))
         )}
@@ -252,3 +272,58 @@ export const Products = () => {
     </div>
   );
 };
+
+const product_data = [
+  {
+    id: "04a421e6",
+    name: "test bar 1",
+    price: 15000,
+    img: "https://localhost:8081/add/product/img_3be92846.jpg",
+    description: "test suv 1",
+    restaurant: "2899b5",
+    category: "ichimlik",
+    status: 1,
+    department: "bar",
+    quantity: 1,
+    food_count: 10,
+  },
+  {
+    id: "0a591be9",
+    name: "test Milliy taom 1",
+    price: 24000,
+    img: "https://localhost:8081/add/product/img_39361730.jpg",
+    description: "test 1",
+    restaurant: "2899b5",
+    category: "Milliy Taomlar",
+    status: 1,
+    department: "milliy taomlar",
+    quantity: 1,
+    food_count: 2,
+  },
+  {
+    id: "32a55b6d",
+    name: "Test Bar",
+    price: 12000,
+    img: "https://localhost:8081/add/product/img_f01245ee.jpg",
+    description: "test suv",
+    restaurant: "2899b5",
+    category: "ichimlik",
+    status: 1,
+    department: "bar",
+    quantity: 1,
+    food_count: 14,
+  },
+  {
+    id: "86c3e007",
+    name: "test Milliy taom 2",
+    price: 28000,
+    img: "https://localhost:8081/add/product/img_35b929f8.jpg",
+    description: "test 2",
+    restaurant: "2899b5",
+    category: "Milliy Taomlar",
+    status: 1,
+    department: "milliy taomlar",
+    quantity: 1,
+    food_count: 23,
+  },
+];

@@ -84,6 +84,8 @@ export const Home = () => {
         if (deleted !== -1) {
           updatedOrders.splice(deleted, 1);
         }
+      } else {
+        updatedOrders.push(newData);
       }
       return updatedOrders;
     });
@@ -95,12 +97,6 @@ export const Home = () => {
     console.log("upO", order);
     try {
       setLoading(order);
-      // const uData = {
-      //   id: order?.id,
-      //   status: order?.status,
-      //   user_id: order?.user_id,
-      //   order_type: order?.order_type,
-      // };
       socket.emit("/accept/order", {
         status: true,
         variant: order?.status,
@@ -376,4 +372,3 @@ export const Home = () => {
     </div>
   );
 };
-  

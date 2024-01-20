@@ -21,7 +21,6 @@ export const OrderById = () => {
   const newLocation = location.split("/orders/tables").join("");
   const { data = [], isLoading } = useGetOrderQuery(id);
   let queue;
-  let firstID;
 
   const finish = () => {
     const uData = {
