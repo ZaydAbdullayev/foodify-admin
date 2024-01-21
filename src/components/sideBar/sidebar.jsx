@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 // import { acShrink } from "../../redux/shrink";
 import { useLocation } from "react-router-dom";
 import { Menu, Menu_customer, Category } from "./menu";
 
 // import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
-import { RiMenu2Line, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import logo from "../../assets/images/logo.png";
 
 export const Sidebar = () => {
   const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
   const dWidth = useSelector((state) => state.dWidth);
-  const status = useSelector((state) => state.media);
-  // const dispatch = useDispatch();
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const [media, setMedia] = useState(false);
   const location = useLocation().pathname;
   const [dFromTop, setDFromTop] = useState(0);
 
@@ -48,16 +45,16 @@ export const Sidebar = () => {
     return null;
   }
 
-  if (!status) {
-    setTimeout(() => {
-      setMedia(true);
-    }, 1000);
-  }
-  if (status) {
-    setTimeout(() => {
-      setMedia(false);
-    }, 1);
-  }
+  // if (!status) {
+  //   setTimeout(() => {
+  //     setMedia(true);
+  //   }, 1000);
+  // }
+  // if (status) {
+  //   setTimeout(() => {
+  //     setMedia(false);
+  //   }, 1);
+  // }
 
   // const handleSidebarView = () => {
   //   dispatch(acShrink(!acShrink));

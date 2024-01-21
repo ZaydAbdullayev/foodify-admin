@@ -8,9 +8,9 @@ import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalModal } from "../../components/modal/modal";
 import { PatternFormat } from "react-number-format";
 
-// const socket = io("https://backup.foodify.uz");
+const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
 
 export const TableBox = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -28,19 +28,16 @@ export const TableBox = () => {
   const filterData = useCallback(
     (type) => {
       setActive(type);
-      const data = {
+      const tdata = {
         res_id: user?.id,
         location: type,
       };
-      socket.emit("/get/tables", data);
-
-      socket.on(`/get/table/${data.res_id}/${data.location}`, (data) => {
+      socket.emit("/get/tables", tdata);
+      socket.on(`/get/table/${tdata.res_id}/${tdata.location}`, (data) => {
+        console.log(data);
         setTablesData(data);
       });
-
-      return () => {
-        socket.off(`/get/table/${data.res_id}/${data.location}`);
-      };
+      // socket.off(`/get/table/${tdata.res_id}/${tdata.location}`);
     },
     [user?.id]
   );

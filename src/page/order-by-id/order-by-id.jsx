@@ -10,9 +10,9 @@ import { BiSolidTimer } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
 import { LoadingBtn } from "../../components/loading/loading";
 
-// const socket = io("https://backup.foodify.uz");
+const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
 
 export const OrderById = () => {
   const location = useLocation().pathname;

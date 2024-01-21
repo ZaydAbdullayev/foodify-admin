@@ -20,9 +20,9 @@ import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
 
-// const socket = io("https://backup.foodify.uz");
+const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -72,7 +72,7 @@ export const Home = () => {
       const updatedOrders = [...prevOrders];
       if (newData[0] === "update") {
         const existingIndex = updatedOrders.findIndex(
-          (order) => order.id === newData[1].id
+          (order) => order?.id === newData[1]?.id
         );
         if (existingIndex !== -1) {
           updatedOrders[existingIndex] = newData[1];
@@ -157,7 +157,7 @@ export const Home = () => {
         full ? "container_box home_page active" : "container_box home_page"
       }
     >
-      <div className="oreders">
+      <div className="_orders">
         <h1>
           Yangi Buyurtmalar{" "}
           <span onClick={() => setFull(!full)}>
@@ -169,14 +169,11 @@ export const Home = () => {
             {filteredData?.map((order) => {
               const pds = JSON?.parse(order?.product_data);
               const { pd, received_at } = Object.values(pds)[0];
-              const time = new Date(order?.receivedAt)?.toLocaleString(
-                "uz-UZ",
-                {
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: false,
-                }
-              );
+              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: false,
+              });
               return (
                 <div
                   key={order?.id}

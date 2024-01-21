@@ -16,9 +16,9 @@ import { BiCircle, BiCheck } from "react-icons/bi";
 import { FiCheckCircle } from "react-icons/fi";
 import { TbMessage2Plus } from "react-icons/tb";
 
-// const socket = io("https://backup.foodify.uz");
+const socket = io("https://backup.foodify.uz");
 // const socket = io("http://localhost:80");
-const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
 
 export const Orders = () => {
   const user = JSON.parse(localStorage.getItem("user")) || null;
@@ -32,12 +32,7 @@ export const Orders = () => {
   const { data = [], isLoading } = useGetStProductQuery();
   const { data: categoryData = [] } = useGetStCategoryQuery();
   const position = location.pathname.split("/");
-  const ct = categoryData?.data?.[0]?.name
-    ?.toLowerCase()
-    ?.split(" ")
-    ?.join("")
-    ?.split("'")
-    ?.join("");
+  const ct = categoryData?.data?.[0]?.name?.toLowerCase().replace(/\s|'/g, "");
   const category = location.search.split("=")[1] || ct;
   const cart = useMemo(() => {
     return JSON?.parse(localStorage?.getItem("cart")) || [];
@@ -70,12 +65,7 @@ export const Orders = () => {
   };
 
   const handleTarget = (item) => {
-    const url = item?.name
-      ?.toLowerCase()
-      ?.split(" ")
-      ?.join("")
-      ?.split("'")
-      ?.join("");
+    const url = item?.name?.toLowerCase().replace(/\s|'/g, "");
     navigate(`?category=${url}`);
   };
 
@@ -139,8 +129,7 @@ export const Orders = () => {
   };
 
   const filteredData = data?.data?.filter(
-    (item) =>
-      item?.category?.split(" ")?.join("")?.split("'")?.join("") === category
+    (item) => item?.category?.toLowerCase().replace(/\s|'/g, "") === category
   );
 
   return (
@@ -153,13 +142,7 @@ export const Orders = () => {
                 key={item?.id}
                 onClick={() => handleTarget({ id: item?.id, name: item?.name })}
                 className={
-                  category ===
-                  item?.name
-                    ?.toLowerCase()
-                    ?.split(" ")
-                    ?.join("")
-                    ?.split("'")
-                    ?.join("")
+                  category === item?.name?.toLowerCase().replace(/\s|'/g, "")
                     ? "active"
                     : ""
                 }
@@ -178,7 +161,7 @@ export const Orders = () => {
             </span>
           ) : (
             filteredData?.map((item) => {
-              const count = cart.filter((x) => x.id === item.id);
+              const count = cart?.filter((x) => x?.id === item?.id);
               return (
                 <div
                   className="res_menu_item"

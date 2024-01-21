@@ -23,7 +23,7 @@
   width: 0;
 }
 
-.oreders,
+._orders,
 .orders_body {
   width: 100%;
   display: flex;
@@ -50,7 +50,7 @@
   grid-row: span var(--grid-row);
 }
 
-.oreders > h1 {
+._orders > h1 {
   inline-size: 100%;
   display: flex;
   align-items: center;
@@ -60,12 +60,12 @@
   padding-left: 3%;
 }
 
-.oreders > h1 > span {
+._orders > h1 > span {
   cursor: pointer;
   transition: all 0.1s ease-in-out;
 }
 
-.oreders > h1 > span:hover {
+._orders > h1 > span:hover {
   color: #65ff57;
 }
 
