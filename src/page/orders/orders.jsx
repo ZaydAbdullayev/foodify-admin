@@ -9,7 +9,7 @@ import { useGetStCategoryQuery } from "../../service/category.service";
 import io from "socket.io-client";
 import { NumericFormat } from "react-number-format";
 import { LoadingBtn } from "../../components/loading/loading";
-// import { enqueueSnackbar as es } from "notistack";
+import { enqueueSnackbar as es } from "notistack";
 
 import { LuShoppingBasket } from "react-icons/lu";
 import { BiCircle, BiCheck } from "react-icons/bi";
@@ -112,9 +112,9 @@ export const Orders = () => {
       socket.emit("/divide/orders/depart", paymentData);
       socket.emit("/update/table", uData);
     }
-    // localStorage.removeItem("cart");
-    // navigate("/orders/tables");
-    // es("Buyurtma yuborildi!", { variant: "success" });
+    localStorage.removeItem("cart");
+    navigate("/orders/tables");
+    es("Buyurtma yuborildi!", { variant: "success" });
   };
 
   const addExtr = (value) => {

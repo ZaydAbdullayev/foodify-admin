@@ -45,21 +45,6 @@ export const Sidebar = () => {
     return null;
   }
 
-  // if (!status) {
-  //   setTimeout(() => {
-  //     setMedia(true);
-  //   }, 1000);
-  // }
-  // if (status) {
-  //   setTimeout(() => {
-  //     setMedia(false);
-  //   }, 1);
-  // }
-
-  // const handleSidebarView = () => {
-  //   dispatch(acShrink(!acShrink));
-  // };
-
   return (
     <div className={isShrinkView ? "shrink" : "sidebar_container"}>
       <div style={{ borderBottom: "1px solid #eee4" }}>
