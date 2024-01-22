@@ -13,7 +13,7 @@ export const Table = ({ data }) => {
       navigate(`/category/${location}/${item?.name}/${item?.id}`);
       return;
     }
-    navigate(`${location}/${item?.name}/${item?.id}`);
+    navigate(`${location}/${item?.name}/${item?.order_id}`);
   };
 
   return data?.map((item) => {

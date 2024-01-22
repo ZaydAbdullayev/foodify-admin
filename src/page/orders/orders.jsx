@@ -56,6 +56,7 @@ export const Orders = () => {
     worker_id: user?.user?.user_id || user?.user?.id,
     order_type: "offline",
     t_location: position[2],
+    table_id: position[4],
   };
 
   const queue = parseInt(position[6]) + 1;

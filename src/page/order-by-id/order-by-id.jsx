@@ -1,7 +1,7 @@
 import React from "react";
 import "./order-by-id.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetOrderQuery } from "../../service/order.service";
+import { useGetpOrderQuery } from "../../service/user.service";
 import io from "socket.io-client";
 import { NumericFormat } from "react-number-format";
 
@@ -19,7 +19,7 @@ export const OrderById = () => {
   const id = location.split("/").pop();
   const navigate = useNavigate();
   const newLocation = location.split("/orders/tables").join("");
-  const { data = [], isLoading } = useGetOrderQuery(id);
+  const { data = [], isLoading } = useGetpOrderQuery(id);
   let queue;
 
   const finish = () => {
