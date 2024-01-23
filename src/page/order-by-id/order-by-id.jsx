@@ -16,22 +16,23 @@ const socket = io("https://backup.foodify.uz");
 
 export const OrderById = () => {
   const location = useLocation().pathname;
-  const id = location.split("/").pop();
+  const lc = location.split("/");
+  const t_id = lc[4].split("-").pop();
   const navigate = useNavigate();
   const newLocation = location.split("/orders/tables").join("");
-  const { data = [], isLoading } = useGetpOrderQuery(id);
+  const { data = [], isLoading } = useGetpOrderQuery(lc[5]);
   let queue;
 
   const finish = () => {
     const uData = {
-      id: id,
+      id: t_id,
       status: 0,
+      location: lc[3],
+      res_id: data?.innerData[0]?.restaurant_id,
     };
     socket.emit("/update/table", uData);
     navigate("/orders/tables");
   };
-
-  console.log(data);
 
   return (
     <div className="order_box">
@@ -76,7 +77,7 @@ export const OrderById = () => {
         })
       )}
       <div className="order-footer">
-        <button onClick={() => navigate(`/payment/check/${id}`)}>
+        <button onClick={() => navigate(`/payment/check/${t_id}`)}>
           Check chiqarish
         </button>
         <button

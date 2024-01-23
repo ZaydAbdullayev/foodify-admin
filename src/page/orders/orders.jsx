@@ -99,13 +99,13 @@ export const Orders = () => {
     const uData = {
       id: position[4],
       status: 2,
+      res_id: user?.user?.id,
+      location: position[2],
     };
     if (!cart.length) {
       alert("Savatcha bo'sh");
       return;
     }
-    console.log(paymentData);
-    console.log(updatePaymentData);
     if (position[1] === "update-order") {
       socket.emit("/addProduct/toOrder", updatePaymentData);
     } else {

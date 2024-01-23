@@ -32,7 +32,7 @@ export const TypingAnimation = () => {
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque sed optio assumenda itaque quia doloremque amet, ipsa dignissimos placeat. Corporis expedita harum est explicabo odio natus sequi nemo ratione modi quia voluptatum quo maiores ut accusantium consequatur architecto itaque, ipsa, aperiam quaerat, dolore alias fugiat magni? Earum exercitationem, ut dolores odio voluptates in fugiat voluptate. Dolores aspernatur dolorem aperiam veritatis deleniti consequuntur velit esse eum cum quia. Minus error expedita sapiente esse nam odit id magni molestiae suscipit. Reprehenderit nostrum qui labore quia vitae nobis voluptatem libero laudantium, eos eaque dolore blanditiis aspernatur consequuntur ad adipisci laborum vero, quaerat pariatur!...";
 
   const [displayText, setDisplayText] = useState("");
-  const typingRef = useRef(null); // Yeni eklenen ref
+  const typingRef = useRef(null);
 
   useEffect(() => {
     let currentIndex = 0;

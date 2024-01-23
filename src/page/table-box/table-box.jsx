@@ -34,10 +34,8 @@ export const TableBox = () => {
       };
       socket.emit("/get/tables", tdata);
       socket.on(`/get/table/${tdata.res_id}/${tdata.location}`, (data) => {
-        console.log(data);
         setTablesData(data);
       });
-      // socket.off(`/get/table/${tdata.res_id}/${tdata.location}`);
     },
     [user?.id]
   );

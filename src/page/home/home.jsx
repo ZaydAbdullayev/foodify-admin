@@ -94,7 +94,10 @@ export const Home = () => {
 
   // to accept order's product by id
   const orderAccept = (order, time) => {
-    console.log("upO", order);
+    console.log("upO", {
+      data: order,
+      receivedAt: time,
+    });
     try {
       setLoading(order);
       socket.emit("/accept/order", {

@@ -69,7 +69,7 @@ export const Sidebar = () => {
       )} */}
       <ul className="menu_box">
         {login?.user?.role === "owner"
-          ? Menu.map((item) => {
+          ? Menu?.map((item) => {
               return (
                 <div key={item?.id}>
                   <Link

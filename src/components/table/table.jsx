@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { HiUser } from "react-icons/hi";
 
-export const Table = ({ data }) => {
+export const Table = ({ data = [] }) => {
   const navigate = useNavigate();
 
   const handleTarget = (item) => {
@@ -13,7 +13,7 @@ export const Table = ({ data }) => {
       navigate(`/category/${location}/${item?.name}/${item?.id}`);
       return;
     }
-    navigate(`${location}/${item?.name}/${item?.order_id}`);
+    navigate(`${location}/${item?.name}-${item?.id}/${item?.order_id}`);
   };
 
   return data?.map((item) => {
