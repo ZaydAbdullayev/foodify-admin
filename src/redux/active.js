@@ -29,5 +29,15 @@ export const reActiveThing = (state = {}, action) => {
   }
 };
 
+export const reStorageId = (state = "", action) => {
+  switch (action.type) {
+    case "STORAGE_ID":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 export const acActive = (payload) => ({ type: "ACTIVE_ITEM", payload });
 export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
+export const acStorageId = (payload) => ({ type: "STORAGE_ID", payload });

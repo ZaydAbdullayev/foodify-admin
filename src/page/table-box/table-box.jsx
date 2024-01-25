@@ -2,15 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./table-box.css";
 import { Table } from "../../components/table/table";
 import { useGetLocationQuery } from "../../service/table.service";
-import io from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalModal } from "../../components/modal/modal";
 import { PatternFormat } from "react-number-format";
-
-const socket = io("https://backup.foodify.uz");
-// const socket = io("http://localhost:80");
-// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+import socket from "../../socket.config";
 
 export const TableBox = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;

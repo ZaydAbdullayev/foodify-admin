@@ -27,6 +27,7 @@ export const StorageProducts = () => {
   const [showMore, setShowMore] = useState(null);
   const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.activeThing);
+  const id = useSelector((state) => state.storageId);
   const img = useSelector((state) => state.image);
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
@@ -46,10 +47,12 @@ export const StorageProducts = () => {
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item.id ? item : i))
+        prevData.map((i) =>
+          i.id === item.id ? { ...item, storage_id: id } : i
+        )
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [...prevData, { ...item, storage_id: id }]);
     }
   };
 

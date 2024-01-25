@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./home.css";
 import { ApiGetService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
-// import { acUpload } from "../../redux/upload";
-import { io } from "socket.io-client";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { acNavStatus } from "../../redux/navbar.status";
 import { NumericFormat } from "react-number-format";
-// import SoundButton from "../../components/touch/touch";
+import { ResolveModal } from "./resolve.modal";
+import socket from "../../socket.config";
 
 import { BsCheck2All } from "react-icons/bs";
-// import { RxCross1 } from "react-icons/rx";
 import { AiOutlineFullscreen } from "react-icons/ai";
 import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi2";
@@ -19,10 +17,7 @@ import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
-
-const socket = io("https://backup.foodify.uz");
-// const socket = io("http://localhost:80");
-// const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms");
+import { acResolve } from "../../redux/resolve";
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -293,12 +288,14 @@ export const Home = () => {
                                 <button
                                   className="relative"
                                   onClick={() =>
-                                    orderSituation({
-                                      order_id: order?.id,
-                                      product_id: product?.id,
-                                      status: 3,
-                                      department: department,
-                                    })
+                                    dispatch(
+                                      acResolve({
+                                        product: product,
+                                        order_id: order?.id,
+                                        status: 3,
+                                        department: department,
+                                      })
+                                    )
                                   }
                                 >
                                   {loading.id === product.id &&
@@ -369,6 +366,7 @@ export const Home = () => {
           </figure>
         )}
       </div>
+      <ResolveModal />
     </div>
   );
 };

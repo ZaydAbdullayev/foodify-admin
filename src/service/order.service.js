@@ -14,12 +14,22 @@ export const storeApi = apiSlice.injectEndpoints({
 
     getOrder: builder.query({
       query: (id) => ({
-        url: `get/myOrders/${id}`,
+        url: `/get/myOrders/${id}`,
         method: "GET",
       }),
       providesTags: ["add-order"],
     }),
+
+    // path for resolve order item
+    resolveItem: builder.mutation({
+      query: (value) => ({
+        url: `/cancel/item`,
+        method: "POST",
+        body: value,
+      }),
+    }),
   }),
 });
 
-export const { useGetOrderQuery, useGetProductQuery } = storeApi;
+export const { useGetOrderQuery, useGetProductQuery, useResolveItemMutation } =
+  storeApi;

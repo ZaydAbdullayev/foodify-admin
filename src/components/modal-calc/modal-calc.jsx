@@ -28,6 +28,7 @@ import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
 import { acActiveThing } from "../../redux/active";
 import { useUpdateItemsMutation } from "../../service/store.service";
 import { acGetUrl } from "../../redux/u-modal";
+import { acStorageId } from "../../redux/active";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -250,6 +251,12 @@ export const UniversalProductControl = ({
 }) => {
   const { data: store = [] } = useGetStoreQuery();
   const { data: groups = [] } = useGetStGroupsQuery();
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    if (store?.data?.length > 0) {
+      dispatch(acStorageId(store?.data[0]?.id));
+    }
+  }, [dispatch, store?.data]);
 
   return (
     <div className="u-control_add_box">
@@ -288,11 +295,10 @@ export const UniversalProductControl = ({
                   );
                 })}
               </select>
-              <select>
-                <option value="default">Ombor tanlang</option>
+              <select onChange={(e) => dispatch(acStorageId(e.target.value))}>
                 {store?.data?.map((item) => {
                   return (
-                    <option key={item.id} value={item.name}>
+                    <option key={item.id} value={item.id}>
                       {item.name}
                     </option>
                   );

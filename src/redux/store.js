@@ -10,7 +10,7 @@ import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
 import { rePermission } from "./permission";
 import { reGetUrl, reUModal, reUModalU } from "./u-modal";
-import { reActive } from "./active";
+import { reActive, reStorageId } from "./active";
 import { reCalc } from "./calc";
 import { reModalType } from "./u-modal";
 import { apiSlice } from "../service/frame.service";
@@ -18,6 +18,7 @@ import { reActiveThing } from "./active";
 import { reNavStatus } from "./navbar.status";
 import { reDeviceWidth, reMedia } from "./media";
 import { reNothification } from "./nothification";
+import { resolve } from "./resolve";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -39,6 +40,8 @@ export const store = configureStore({
     image: reGetUrl,
     dWidth: reDeviceWidth,
     nothificate: reNothification,
+    resolve: resolve,
+    storageId: reStorageId,
     [apiSlice.reducerPath]: apiSlice.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
