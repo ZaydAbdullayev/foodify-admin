@@ -5,6 +5,7 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./invoices.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStInvoiceQuery } from "../../../service/invoices.service";
+import { CalculateTotalP } from "../../../service/calc.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -57,6 +58,21 @@ export const StorageInvoices = () => {
     { name: "paid", size: "10%", position: "flex-end" },
     { name: "leftover", size: "12%", position: "flex-end" },
     { name: "responsible", size: "12%" },
+  ];
+
+  const innerHeaderKeys = [
+    { name: "Nomi", size: "24%", border: "1px solid #ccc5" },
+    { name: "O'lchov b/i", size: "15%", border: "1px solid #ccc5" },
+    { name: "Narxi", size: "19%", border: "1px solid #ccc5" },
+    { name: "Miqdor", size: "19%", border: "1px solid #ccc5" },
+    { name: "Jami", size: "19%" },
+  ];
+
+  const innerDisplayKeys = [
+    { name: "name", size: "24%" },
+    { name: "unit", size: "15%", position: "center" },
+    { name: "price", size: "19%", position: "flex-end" },
+    { name: "amount", size: "19%", position: "flex-end" },
   ];
 
   const sortData =
@@ -124,6 +140,7 @@ export const StorageInvoices = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const ingredient = JSON.parse(item?.ingredients);
               return (
                 <div
                   className={
@@ -214,33 +231,20 @@ export const StorageInvoices = () => {
                       >
                         №
                       </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      {innerHeaderKeys?.map((item) => {
+                        return (
+                          <p
+                            style={{
+                              "--data-line-size": item?.size,
+                              borderRight: item.border,
+                            }}
+                          >
+                            {item?.name}
+                          </p>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {ingredient?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
@@ -250,21 +254,44 @@ export const StorageInvoices = () => {
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
+                          {innerDisplayKeys?.map((key) => {
+                            return (
+                              <p
+                                style={{
+                                  "--data-line-size": key?.size,
+                                  justifyContent: key?.position || "flex-start",
+                                }}
+                              >
+                                {product[key?.name]}
+                              </p>
+                            );
+                          })}
+                          <p
+                            style={{
+                              "--data-line-size": "19%",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            {product?.price * product?.amount}
                           </p>
                         </div>
                       );
                     })}
+                    <div
+                      className="storage_body_item inner_item"
+                      style={{ background: "#3339" }}
+                    >
+                      <p></p>
+                      <p style={{ "--data-line-size": "66%" }}>Jami mablag'</p>
+                      <p
+                        style={{
+                          "--data-line-size": "30%",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {CalculateTotalP(ingredient, "price", "amount")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );

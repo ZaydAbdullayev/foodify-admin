@@ -62,6 +62,14 @@ export const Workers = () => {
     setOpen(true);
     setType(value);
   };
+  const headerKeys = [
+    { key: "a/p", size: "5%" },
+    { key: "Ismi", size: "20%" },
+    { key: "Parol", size: "20%" },
+    { key: "Bo'limi", size: "20%" },
+    { key: "Kod", size: "20%" },
+    { key: "", size: "15%" },
+  ];
 
   const filteredWorkers = workersData?.innerData?.filter((worker) =>
     worker?.name?.toLowerCase().includes(search.toLowerCase())
@@ -80,12 +88,11 @@ export const Workers = () => {
         className="worker"
         style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}
       >
-        <p>a/p</p>
-        <p>Ismi</p>
-        <p>Parol</p>
-        <p>Bo'limi</p>
-        <p>Kod</p>
-        <p></p>
+        {headerKeys.map((key) => (
+          <p key={key.key} style={{ "--worker-t-w": key.size }}>
+            {key.key}
+          </p>
+        ))}
       </div>
       <div className="workers_body">
         {permission ? (
@@ -94,11 +101,10 @@ export const Workers = () => {
               <div className="worker" key={worker.id}>
                 <p>
                   <span
-                    style={
-                      worker?.status === 1
-                        ? { color: "lime" }
-                        : { color: "red" }
-                    }
+                    style={{
+                      color: worker?.status === 1 ? "lime" : "red",
+                      "--worker-t-w": "5%",
+                    }}
                     onClick={() =>
                       handleEdit({ id: worker.id, status: !worker.status })
                     }
@@ -106,7 +112,7 @@ export const Workers = () => {
                     <GoDotFill />
                   </span>
                 </p>
-                <p>
+                <p style={{ "--worker-t-w": "20%" }}>
                   {update === worker.id ? (
                     <input
                       type="text"
@@ -121,8 +127,10 @@ export const Workers = () => {
                     </span>
                   )}
                 </p>
-                <p>{worker.workerpass && "••••••"}</p>
-                <p>
+                <p style={{ "--worker-t-w": "20%" }}>
+                  {worker.workerpass && "••••••"}
+                </p>
+                <p style={{ "--worker-t-w": "20%" }}>
                   {update === worker.id ? (
                     <>
                       <input
@@ -149,7 +157,7 @@ export const Workers = () => {
                     </span>
                   )}
                 </p>
-                <p className="w_pin">
+                <p className="w_pin" style={{ "--worker-t-w": "20%" }}>
                   {update === worker.id ? (
                     <input
                       type="text"
@@ -169,7 +177,7 @@ export const Workers = () => {
                     </>
                   )}
                 </p>
-                <div className="w_btns">
+                <div className="w_btns" style={{ "--worker-t-w": "15%" }}>
                   {update === worker.id && (
                     <button
                       style={{ background: "red" }}
@@ -211,4 +219,3 @@ export const Workers = () => {
     </div>
   );
 };
-

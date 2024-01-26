@@ -55,6 +55,7 @@ import audio from "./assets/images/nothification.mp3";
 import { acDeviceWidth } from "./redux/media";
 import { acNothification } from "./redux/nothification";
 import { NothificationPage } from "./page/nothification/nothification.jsx";
+import { Inventory } from "./page/inventory/inventory.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -118,6 +119,7 @@ export const Router = () => {
             <Route path="orders" element={<Home />} />
             <Route path="" element={<Document />} />
             <Route path="statistics" element={<Statistics />} />
+            <Route path="inventory" element={<Inventory />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"

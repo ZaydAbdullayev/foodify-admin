@@ -46,38 +46,21 @@
 }
 
 .worker > :first-child {
-  width: 4%;
   padding-top: 0.5%;
   cursor: pointer;
+}
+
+.worker > :where(p, div){
+  width: var(--worker-t-w);
 }
 
 .worker > :first-child span {
   font-size: var(--fs4);
 }
 
-.worker > :nth-child(2) {
-  width: 27%;
-}
-
-.worker > :nth-child(3) {
-  width: 17%;
-}
-
 .worker > :nth-child(4) > span {
   padding: 0.5% 5% 1%;
   border-radius: 20px;
-}
-
-.worker > :nth-child(4) {
-  width: 22%;
-}
-
-.worker > :nth-child(5) {
-  width: 15%;
-}
-
-.worker > :nth-child(6) {
-  width: 15%;
 }
 
 .worker input {

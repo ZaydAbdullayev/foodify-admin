@@ -35,6 +35,7 @@ export const ResolveModal = () => {
           status: resolve?.status,
         }),
         worker_id: user?.user?.worker_id || user?.user?.id,
+        res_id: user?.user?.id,
         storage,
         dailyLimit,
       });

@@ -1,0 +1,45 @@
+.changed_tool {
+  width: 100%;
+  height: 100%;
+  padding: 1% 2%;
+  display: flex;
+  background: #3339;
+}
+
+.changed_tool > input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #eee;
+  font-size: var(--fs6);
+}
+
+.inventory_header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap3);
+  font-size: var(--fs3);
+}
+
+.inventory_header > select {
+  height: var(--bwh);
+  padding: 0.5% 5%;
+  border: none;
+  background: #eee;
+  color: #222;
+  font-size: var(--fs6);
+  border-radius: 10px;
+}
+
+.inventory_header > select > option {
+  background: #eee;
+  color: #222;
+  font-size: var(--fs6);
+  border-radius: 10px;
+}
+
+.inventory_body .worker > :first-child {
+  padding-top: 0;
+}

@@ -147,10 +147,23 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd8;
+  overflow-y: auto;
 }
 
-.product_box_body,
-.second_column_body {
+.u-control_product_box::-webkit-scrollbar {
+  display: none;
+}
+
+.u-control_product_box > :first-child {
+  position: sticky;
+  top: 0;
+}
+
+.u-control_product_box > :last-child {
+  margin-bottom: 45px;
+}
+
+.product_box_body {
   width: 100%;
   height: 100%;
   display: flex;
@@ -229,10 +242,6 @@
   font-size: var(--fs8);
 }
 
-.second_column_body {
-  border: 1px solid #ddd8;
-}
-
 .product_box_item > p > :where(input, select) {
   width: 80%;
   padding: 0% 5%;
@@ -266,6 +275,16 @@
   gap: var(--gap6);
   border: 1px solid #ddd8;
 }
+/* 
+.u-control_calc_body .product_box_body {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.u-control_calc_body .product_box_body::-webkit-scrollbar {
+  display: none;
+} */
 
 .u-control_calc_body .product_box_item {
   overflow-x: auto;
