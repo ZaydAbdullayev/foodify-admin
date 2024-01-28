@@ -26,6 +26,7 @@
 }
 
 .workers_header > button {
+  min-width: 100px;
   padding: 0.5% 2%;
   border: none;
   display: flex;
@@ -50,7 +51,7 @@
   cursor: pointer;
 }
 
-.worker > :where(p, div){
+.worker > :where(p, div) {
   width: var(--worker-t-w);
 }
 
@@ -139,5 +140,18 @@
 @media (max-width: 1150px) {
   .worker {
     width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .workers_header {
+    align-items: flex-end;
+    padding-bottom: 2%;
+  }
+
+  .workers_header > button {
+    height: 30px;
+    padding: 0.5% 2%;
+    border-radius: 5px;
   }
 }

@@ -112,9 +112,16 @@ export const Category = [
     icon: <HiMiniUserGroup />,
   },
   {
-    id: "1",
+    id: "12",
     name: "Envantarizatsiya",
     path: "/envantarisation",
+    positions: width ? [-90, 90, 75] : [-65, 65, 70],
+    icon: <LiaListAlt />,
+  },
+  {
+    id: "1",
+    name: "Envantarizatsiya",
+    path: "/inventory",
     positions: width ? [-90, 90, 75] : [-65, 65, 70],
     icon: <LiaListAlt />,
   },

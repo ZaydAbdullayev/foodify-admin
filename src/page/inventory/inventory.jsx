@@ -2,26 +2,30 @@ import React, { useState, useEffect } from "react";
 import "./inventory.css";
 import { useGetStorageItemsQuery } from "../../service/invoices.service";
 import { useGetStoreQuery } from "../../service/store.service";
+import { useAddSyncMutation } from "../../service/invenory.service";
+import { LoadingBtn } from "../../components/loading/loading";
 
 export const Inventory = () => {
   const { data: stores = [] } = useGetStoreQuery();
   const [storageId, setStorageId] = useState(stores.data?.[0]?.id);
   const [snc, setSnc] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
   const [newData, setNewData] = useState([]);
+  const [addSync] = useAddSyncMutation();
 
   const storageItemsQuery = useGetStorageItemsQuery(storageId);
   const storageItems = storageItemsQuery.data || [];
 
   useEffect(() => {
-    if (stores.data && stores.data[0]) {
-      setStorageId(stores.data[0].id);
+    if (stores?.data && stores?.data[0]) {
+      setStorageId(stores?.data[0].id);
     }
-  }, [stores]);
+  }, [stores?.data]);
 
   useEffect(() => {
-    setNewData(storageItems.data || []);
-  }, [storageItems]);
+    setNewData(storageItems?.data || []);
+  }, [storageItems?.data]);
 
   const headerKeys = [
     { key: "№", size: "5%" },
@@ -48,6 +52,28 @@ export const Inventory = () => {
     setSelected(null);
   };
 
+  const syncData = async (status) => {
+    try {
+      setLoading(true);
+      if (!status) {
+        const uData = {
+          old_data: JSON.stringify(storageItems.data),
+          new_data: JSON.stringify(newData),
+        };
+        const { data = null } = await addSync(uData);
+        if (data.message === "syncStorage has been added") {
+          setSnc(status);
+        }
+      } else {
+        setSnc(status);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container_box worker_container">
       <div className="workers_header">
@@ -61,8 +87,8 @@ export const Inventory = () => {
             ))}
           </select>
         </div>
-        <button onClick={() => setSnc(!snc)}>
-          {snc ? "Yakunlash" : "Sinxronlashtirish"}
+        <button onClick={() => syncData(!snc)} className="relative">
+          {loading ? <LoadingBtn /> : snc ? "Yakunlash" : "Sinxronlashtirish"}
         </button>
       </div>
       <div
@@ -77,44 +103,44 @@ export const Inventory = () => {
       </div>
       <div className="workers_body inventory_body">
         {newData?.map((ingredient, ind) => (
-          <div className="worker" key={ingredient.id}>
+          <div className="worker" key={ingredient?.id}>
             <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
             <p style={{ "--worker-t-w": "20%" }}>
-              <span>{ingredient.name}</span>
+              <span>{ingredient?.name}</span>
             </p>
             <p style={{ "--worker-t-w": "20%" }}>
-              <span>{ingredient.group}</span>
+              <span>{ingredient?.group}</span>
             </p>
             <p style={{ "--worker-t-w": "20%" }}>
-              <span>{ingredient.type}</span>
+              <span>{ingredient?.type}</span>
             </p>
             <p style={{ "--worker-t-w": "20%" }}>
-              <span>{ingredient.price}</span>
+              <span>{ingredient?.price}</span>
             </p>
             <p
               style={{ "--worker-t-w": "15%", cursor: "pointer" }}
               onDoubleClick={() => {
                 if (snc) {
-                  setSelected(ingredient.id);
+                  setSelected(ingredient?.id);
                 }
               }}
             >
               {selected === ingredient?.id ? (
                 <form
-                  onSubmit={(e) => changeQuantity(e, ingredient.id)}
+                  onSubmit={(e) => changeQuantity(e, ingredient?.id)}
                   className="changed_tool"
                 >
                   <input
                     type="number"
                     name="quantity"
                     autoFocus
-                    defaultValue={ingredient.total_quantity}
+                    defaultValue={ingredient?.total_quantity}
                   />
                   <button type="submit" style={{ display: "none" }}></button>
                 </form>
               ) : (
                 <span>
-                  {ingredient.total_quantity} {ingredient.unit}
+                  {ingredient?.total_quantity} {ingredient?.unit}
                 </span>
               )}
             </p>

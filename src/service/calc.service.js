@@ -4,11 +4,12 @@ export const CalculateTotalPrice = (cart = [], percentage = 10) => {
     0
   );
   const service = isNaN(totalPrice) ? 0 : (totalPrice / 100) * percentage;
+  const parsedS = parseFloat(service.toFixed(2));
 
   return {
     totalPrice,
-    service: service.toFixed(2),
-    total: totalPrice + service.toFixed(2),
+    service: parsedS,
+    total: parseInt(totalPrice) + parsedS,
   };
 };
 
@@ -50,7 +51,6 @@ export const CalculateTotal = (data, key) => {
   });
   return total;
 };
-
 
 // function calculatePositionValue(positions, vw) {
 //   const [start, end, base] = positions;

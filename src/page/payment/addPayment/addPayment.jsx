@@ -14,7 +14,7 @@ import { BsJournalCheck } from "react-icons/bs";
 import { GiCardExchange } from "react-icons/gi";
 import { FaMoneyBillAlt } from "react-icons/fa";
 
-export const AddPayment = memo(({ open, setOpen }) => {
+export const AddPayment = memo(({ active, actives }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || "";
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState({ id: 1, comment: "Naqd to'lov" }); // ["ofline", "online"]
@@ -35,7 +35,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
       //   replace: true,
       // });
 
-      setOpen(false);
+      active(false);
     } catch (error) {
       es(error.response.message, { variant: "warning" });
     } finally {
@@ -43,16 +43,46 @@ export const AddPayment = memo(({ open, setOpen }) => {
     }
   };
 
-  // const orderData = order?.innerData ? order?.innerData?.product_data : [];
-  // const product_data = JSON?.parse(orderData);
-  // const payment_data = product_data && Object.values(product_data)[0]?.pd;
-  const orderData = [];
-  const payment_data = [];
+  // address: "&2-stoll";
+  // cashier: "";
+  // description: "";
+  // food_total: 162000;
+  // id: "afaf57e7";
+  // latitude: "";
+  // longitude: "";
+  // online_paymentToken: "token";
+  // order_type: "offline";
+  // padyezd: "";
+  // paid: 0;
+  // payment_status: 0;
+  // payment_type: "";
+  // prime_cost: 24700;
+  // product_data: '{"1":{"pd":[{"id":"161efe","name":"sandvich","category":"fast food","storage":"oshxona sklad","price":"22000","res_id":"2899b5","prime_cost":"1700","profit":"20300","markup":"12.94","ingredients":"[{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":0,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"1\\"},{\\"id\\":\\"338b7d\\",\\"name\\":\\"oshko\'k\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"0.5\\"},{\\"id\\":\\"49c458\\",\\"name\\":\\"salat bargi\\",\\"unit\\":\\"ta\\",\\"group\\":\\"ko\'katlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.5\\"},{\\"id\\":\\"d2a4d1\\",\\"name\\":\\"sabzi\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":2000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"0.1\\"}]","date":"2024-01-07T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":5,"quantity":1},{"id":"5237d6","name":"second test","category":"fast food","storage":"oshxona sklad","price":"20000","res_id":"2899b5","prime_cost":"18000","profit":"2000","markup":"1.11","ingredients":"[{\\"id\\":\\"225081\\",\\"name\\":\\"hamir\\",\\"unit\\":\\"kg\\",\\"group\\":\\"hamir\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1500,\\"type\\":\\"Ingredient\\",\\"storage_id\\":null,\\"amount\\":\\"12\\"}]","date":"2024-01-23T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":5,"quantity":1},{"id":"672a14","name":"liboyi","category":"fast food","storage":"oshxona sklad","price":"120000","res_id":"2899b5","prime_cost":"5000","profit":"115000","markup":"24.00","ingredients":"[{\\"id\\":\\"1c4a67\\",\\"name\\":\\"piyoz\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":1000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"2\\"},{\\"id\\":\\"894c2d\\",\\"name\\":\\"kartoshka\\",\\"unit\\":\\"kg\\",\\"group\\":\\"sabzavotlar\\",\\"res_id\\":\\"2899b5\\",\\"price\\":3000,\\"type\\":\\"Ingredient\\",\\"storage_id\\":\\"1f1a3e\\",\\"amount\\":\\"1\\"}]","date":"2024-01-22T19:00:00.000Z","type":"taom","department":"somsalar","img":"","status":5,"quantity":1}]}}';
+  // qavat: "";
+  // receivedAt: "2024-01-25T13:03:48.000Z";
+  // restaurant_id: "2899b5";
+  // service: 16200;
+  // status: 0;
+  // t_location: "ichkari";
+  // table_id: "bc6192";
+  // table_name: "2";
+  // total: 2147483647;
+  // user_id: "bc6192";
+  // worker_id: "2899b5";
+  // worker_name: "owner";
+
+  const orderData = order?.innerData ? order?.innerData[0] : [];
+  const productdata = orderData.length
+    ? JSON.parse(orderData.product_data)
+    : [];
+  const payment_data = Object.values(productdata)[0]?.pd;
 
   return (
     <div
       className={
-        open ? "add_payment__container open_details" : "add_payment__container"
+        actives
+          ? "add_payment__container open_details"
+          : "add_payment__container"
       }
     >
       <div className="add_payment__box">
@@ -104,7 +134,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
           <p>
             <span className="p_name">Service (10%)</span>
             <NumericFormat
-              value={orderData?.price * 0.1}
+              value={orderData?.service}
               displayType={"text"}
               thousandSeparator=","
               suffix={" so'm"}
@@ -113,7 +143,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
           <p>
             <span className="p_name">Jami</span>
             <NumericFormat
-              value={orderData?.price}
+              value={orderData?.total}
               displayType={"text"}
               thousandSeparator=","
               suffix={" so'm"}
@@ -152,7 +182,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
                 <p>Olindi:</p>
                 <input
                   type="number"
-                  defaultValue={orderData?.price}
+                  defaultValue={orderData?.total}
                   onChange={(e) => setPrice(e.target.value)}
                   name="price"
                 />
@@ -184,7 +214,7 @@ export const AddPayment = memo(({ open, setOpen }) => {
           )}
         </div>
       </div>
-      <i onClick={() => setOpen(false)}></i>
+      <i onClick={() => navigate("/financial")}></i>
     </div>
   );
 });

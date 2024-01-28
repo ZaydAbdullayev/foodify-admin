@@ -15,6 +15,7 @@ import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
+import { AddPayment } from "./page/payment/addPayment/addPayment.jsx";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
@@ -119,7 +120,6 @@ export const Router = () => {
             <Route path="orders" element={<Home />} />
             <Route path="" element={<Document />} />
             <Route path="statistics" element={<Statistics />} />
-            <Route path="inventory" element={<Inventory />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"
@@ -134,6 +134,7 @@ export const Router = () => {
               <Route path="workers" element={<Workers />} />
               <Route path="workers/add" element={<AddWorker />} />
               <Route path="envantarisation" element={<InvoiceInvantar />} />
+              <Route path="inventory" element={<Inventory />} />
             </Route>
             <Route path="orders" element={<Blog />}>
               <Route path="" element={<Home />} />
@@ -147,6 +148,7 @@ export const Router = () => {
               <Route path="" element={<Payment />} />
               <Route path="cashbox" element={<Cashboxes />} />
               <Route path="orders" element={<ReportOrders />} />
+              <Route path="payment" element={<AddPayment />} />
               <Route
                 path="cashbox/transactions"
                 element={<CashboxTransaction />}

@@ -101,17 +101,19 @@ export const Payment = () => {
                 </p>
                 {payment_data?.map((product) => {
                   return (
-                    <li key={product.id}>
-                      <span>{product.quantity}</span>
-                      <span className="p_name">{product.name}</span>
-                      <span>{product.price} so'm</span>
+                    <li key={product?.id}>
+                      <span>{product?.quantity}</span>
+                      <span className="p_name">{product?.name}</span>
+                      <span>
+                        {product?.price.replace(/\d(?=(\d{3})+$)/g, "$&,")} so'm
+                      </span>
                     </li>
                   );
                 })}
               </ul>
               <p style={{ lineHeight: "2" }}>
                 <span className="p_name">To'lov narxi</span>
-                <span>{item?.price} so'm</span>
+                <span>{item?.total} so'm</span>
               </p>
               <div className="p_btn__box">
                 <button onClick={() => getDetails(item.id)}>Edit</button>
@@ -125,163 +127,7 @@ export const Payment = () => {
           <img src={noResult} alt="foto" />
         </figure>
       )}
-      <AddPayment setOpen={setOpen} open={open} />
+      <AddPayment active={setOpen} actives={open} />
     </div>
   );
 };
-
-// const orderData = [
-//   {
-//     id: 654321,
-//     type: "online",
-//     status: false,
-//     payment_data: [
-//       {
-//         id: 123456,
-//         name: "Do'ner",
-//         quantity: 2,
-//         price: 200000,
-//       },
-//       {
-//         id: 765432,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 340000,
-//       },
-//       {
-//         id: 645352,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 140000,
-//       },
-//     ],
-//   },
-//   {
-//     id: 654351,
-//     type: "ofline",
-//     table: "03",
-//     status: true,
-//     payment_data: [
-//       {
-//         id: 123456,
-//         name: "Pizza pishloqli",
-//         quantity: 2,
-//         price: 100000,
-//       },
-//       {
-//         id: 153446,
-//         name: "Do'ner",
-//         quantity: 2,
-//         price: 204000,
-//       },
-//       {
-//         id: 765432,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 34000,
-//       },
-//       {
-//         id: 645352,
-//         name: "Kokteyl malinali",
-//         quantity: 1,
-//         price: 14000,
-//       },
-//     ],
-//   },
-//   {
-//     id: 908851,
-//     type: "ofline",
-//     table: "01",
-//     status: true,
-//     payment_data: [
-//       {
-//         id: 123456,
-//         name: "Pizza pishloqli",
-//         quantity: 2,
-//         price: 100000,
-//       },
-//       {
-//         id: 153446,
-//         name: "Do'ner",
-//         quantity: 2,
-//         price: 24000,
-//       },
-//       {
-//         id: 765432,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 34000,
-//       },
-//       {
-//         id: 645352,
-//         name: "Kokteyl malinali",
-//         quantity: 1,
-//         price: 14000,
-//       },
-//     ],
-//   },
-//   {
-//     id: 554351,
-//     type: "ofline",
-//     status: true,
-//     table: "02",
-//     payment_data: [
-//       {
-//         id: 123456,
-//         name: "Pizza pishloqli",
-//         quantity: 2,
-//         price: 100000,
-//       },
-//       {
-//         id: 153446,
-//         name: "Do'ner",
-//         quantity: 2,
-//         price: 24000,
-//       },
-//       {
-//         id: 765432,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 34000,
-//       },
-//       {
-//         id: 645352,
-//         name: "Kokteyl malinali",
-//         quantity: 1,
-//         price: 14000,
-//       },
-//     ],
-//   },
-//   {
-//     id: 123451,
-//     type: "ofline",
-//     table: "04",
-//     status: true,
-//     payment_data: [
-//       {
-//         id: 123456,
-//         name: "Pizza pishloqli",
-//         quantity: 2,
-//         price: 100000,
-//       },
-//       {
-//         id: 153446,
-//         name: "Do'ner",
-//         quantity: 2,
-//         price: 24000,
-//       },
-//       {
-//         id: 765432,
-//         name: "Lavash",
-//         quantity: 1,
-//         price: 34000,
-//       },
-//       {
-//         id: 645352,
-//         name: "Kokteyl malinali",
-//         quantity: 1,
-//         price: 14000,
-//       },
-//     ],
-//   },
-// ];
