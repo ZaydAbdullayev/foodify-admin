@@ -9,6 +9,7 @@ import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
 import { useSelector, useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
+import { LiaCalendarDaySolid } from "react-icons/lia";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -43,7 +44,7 @@ export const Document = () => {
         <h1>Barcha hisobotlar</h1>
 
         <form className="filter_date">
-          <label>
+          <label data-icon={<LiaCalendarDaySolid />}>
             <input
               type="date"
               name="fdate"
@@ -52,7 +53,7 @@ export const Document = () => {
             <span>{date.fdate}</span>
           </label>
           <LuArrowLeftRight />
-          <label>
+          <label data-icon={<LiaCalendarDaySolid />}>
             <span>{date.tdate}</span>
             <input
               type="date"

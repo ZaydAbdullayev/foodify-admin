@@ -6,6 +6,7 @@ import { LuArrowLeftRight } from "react-icons/lu";
 import { useGetPaymentOrderQuery } from "../../service/user.service";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
+import { LiaCalendarDaySolid } from "react-icons/lia";
 
 import noResult from "../../assets/images/20231109_144621.png";
 
@@ -45,6 +46,7 @@ export const Payment = () => {
         <form className="filter_date">
           <label>
             <input
+              data-icon={<LiaCalendarDaySolid />}
               type="date"
               name="start"
               onChange={(e) => setDate({ ...date, start: e.target.value })}
@@ -52,7 +54,7 @@ export const Payment = () => {
             <span>{date.start}</span>
           </label>
           <LuArrowLeftRight />
-          <label>
+          <label style={{ "--date-icon": <LiaCalendarDaySolid /> }}>
             <span>{date.end}</span>
             <input
               type="date"

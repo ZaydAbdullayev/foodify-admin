@@ -35,6 +35,7 @@ export const storeApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
+      invalidatesTags: ["inventory"],
     }),
 
     updateItems: builder.mutation({
@@ -43,7 +44,7 @@ export const storeApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { ingredients: value?.ing },
       }),
-      invalidatesTags: ["store"],
+      invalidatesTags: ["inventory"],
     }),
 
     deleteStore: builder.mutation({
@@ -64,5 +65,3 @@ export const {
   useDeleteStoreMutation,
   useUpdateItemsMutation,
 } = storeApi;
-
-// ingredients: '[{"id":"5d49b2","name":"hamir","unit":"kg","group":"chuchvaralar","res_id":"2899b5","price":1200,"type":"Ingredient","storage_id":"296142","amount":"1","old_quantity":0,"total_quantity":1},{"id":"777d2b","name":"sharbat","unit":"l","group":"ichimliklar","res_id":"2899b5","price":"1000","type":"Ingredient","storage_id":null,"amount":"1"},{"id":"8a7def","name":"Salat bargi","unit":"ta","group":"sabzavotlar","res_id":"2899b5","price":100,"type":"Ingredient","storage_id":null,"amount":"1"}]';

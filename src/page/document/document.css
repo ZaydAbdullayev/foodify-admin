@@ -59,19 +59,38 @@
   border: none;
   border-radius: 7px;
   overflow: visible;
+  color: transparent;
 }
 
-.filter_date ::-webkit-calendar-picker-indicator {
+.filter_date > label input::after {
+      content: "📆";
   position: absolute;
   top: -5px;
   left: 0;
   width: var(--us);
   height: var(--us);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 5px;
   background-color: #eee;
+  font-size: var(--fs5);
   cursor: pointer;
   border-radius: 50%;
   z-index: 999;
+  color: #333;
+}
+
+.filter_date ::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--us);
+  height: var(--us);
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  z-index: 9999;
 }
 
 .document_body {

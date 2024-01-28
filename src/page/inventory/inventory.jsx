@@ -4,6 +4,7 @@ import { useGetStorageItemsQuery } from "../../service/invoices.service";
 import { useGetStoreQuery } from "../../service/store.service";
 import { useAddSyncMutation } from "../../service/invenory.service";
 import { LoadingBtn } from "../../components/loading/loading";
+import { enqueueSnackbar as es } from "notistack";
 
 export const Inventory = () => {
   const { data: stores = [] } = useGetStoreQuery();
@@ -59,16 +60,19 @@ export const Inventory = () => {
         const uData = {
           old_data: JSON.stringify(storageItems.data),
           new_data: JSON.stringify(newData),
+          storage_id: storageId,
         };
         const { data = null } = await addSync(uData);
         if (data.message === "syncStorage has been added") {
           setSnc(status);
+          es("Sinxronlashtirish yakunlandi", { variant: "success" });
         }
       } else {
         setSnc(status);
       }
     } catch (error) {
       console.log(error);
+      es("Sinxronlashtirish muvoffaqiyatsiz", { variant: "error" });
     } finally {
       setLoading(false);
     }

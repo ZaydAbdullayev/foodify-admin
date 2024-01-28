@@ -27,15 +27,21 @@
 
 .workers_header > button {
   min-width: 100px;
+  height: 35px;
   padding: 0.5% 2%;
   border: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--gap5);
   background: #787aff;
   color: #fff;
   font-size: var(--fs6);
   border-radius: 10px;
+}
+
+.workers_header > button svg {
+  font-size: var(--fs3);
 }
 
 .worker {

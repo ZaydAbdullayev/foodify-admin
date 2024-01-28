@@ -9,7 +9,7 @@ export const CalculateTotalPrice = (cart = [], percentage = 10) => {
   return {
     totalPrice,
     service: parsedS,
-    total: parseInt(totalPrice) + parsedS,
+    total: parseInt(totalPrice) + parseInt(parsedS),
   };
 };
 
