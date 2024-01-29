@@ -133,7 +133,7 @@ export const Sidebar = () => {
                     to={item?.path}
                     onClick={(e) => handleCategoryClick(e, { id: item?.id })}
                   >
-                    <span>{item?.icon}</span> <p>{item?.name}</p>
+                    <span>{item?.icon}</span>
                     {item.id === activeCategoryId && (
                       <ul
                         className="inner_menu"

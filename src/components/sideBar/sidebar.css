@@ -128,10 +128,8 @@
   display: flex;
   align-items: center;
   font-size: var(--fs5);
-  gap: var(--gap3);
   color: #fff;
   z-index: 99;
-  /* border: 1px solid transparent; */
   text-align: center;
 }
 
@@ -165,9 +163,9 @@
 
 .menu_box_item::after {
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -53%);
   width: 65%;
   height: 85%;
   background: transparent;
