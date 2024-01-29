@@ -52,7 +52,7 @@ export const Login = () => {
       handleLoginError();
       return;
     }
-    // const user = data.innerData.user;
+
     localStorage.setItem("user", JSON.stringify(data.innerData.user));
     if (loginData.role !== "owner") {
       localStorage.setItem("department", JSON.stringify("owner"));
@@ -61,7 +61,7 @@ export const Login = () => {
     if (data?.innerData?.user?.user?.workers) {
       localStorage.setItem("permission", JSON.stringify(true));
     }
-    window.location.reload();
+
     navigate("/");
     setErr(false);
   };

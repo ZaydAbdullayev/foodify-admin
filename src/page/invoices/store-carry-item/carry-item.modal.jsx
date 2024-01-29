@@ -173,7 +173,6 @@ export const InvoicesModal = ({
           placeholder="Tavsif"
           style={{ "--input-width": "12%" }}
         />
-        <input type="hidden" name="storage_id" value={id} />
       </UniversalForm>
       <UniversalProductControl
         setActivePart={setActivePart}
@@ -210,8 +209,8 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked}
-                    onClick={() =>
+                    checked={checked || false}
+                    onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }
                   />

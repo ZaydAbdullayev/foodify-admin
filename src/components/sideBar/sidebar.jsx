@@ -155,14 +155,7 @@ export const Sidebar = () => {
                               }}
                             >
                               <Link to={`${item?.path}${catItem?.path}`}>
-                                {isShrinkView ? (
-                                  catItem?.icon
-                                ) : (
-                                  <>
-                                    {catItem?.icon}
-                                    {catItem?.name}
-                                  </>
-                                )}
+                                {catItem?.icon}
                               </Link>
                             </li>
                           ))}

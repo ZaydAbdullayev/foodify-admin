@@ -42,6 +42,39 @@ export const StorageDamaged = () => {
     }
   };
 
+  const headerKeys = [
+    { name: "Kun", size: "16.5%", sort: true },
+    { name: "Ombor", size: "16.5%", sort: true },
+    { name: "Miqdor", size: "16.5%", sort: true },
+    { name: "Guruh", size: "16.5%", sort: true },
+    { name: "Tavsif", size: "16.5%", sort: true },
+    { name: "Tafsilot", size: "11%", sort: false },
+  ];
+
+  const displayKeys = [
+    { name: "storage", size: "16.5%" },
+    { name: "cost", size: "16.5%" },
+    { name: "ingredient_group", size: "16.5%" },
+    { name: "description", size: "16.5%" },
+  ];
+
+  const innerHeaderKeys = [
+    { name: "№", border: "1px solid #ccc5" },
+    { name: "Nomi", size: "28%", border: "1px solid #ccc5" },
+    { name: "Narxi", size: "19.3%", border: "1px solid #ccc5" },
+    { name: "Oldin", size: "19.3%", border: "1px solid #ccc5" },
+    { name: "Keyin", size: "19.3%", border: "1px solid #ccc5" },
+    { name: "Farq", size: "10%" },
+  ];
+
+  const innerDisplayKeys = [
+    { name: "name", size: "28%" },
+    { name: "price", size: "19.3%" },
+    { name: "old_quantity", size: "19.3%", tick: true },
+    { name: "total_quantity", size: "19.3%", tick: true },
+    { name: "amount", size: "10%", tick: true },
+  ];
+
   const sortData =
     demagedData?.data &&
     [...demagedData?.data]?.sort((a, b) => {
@@ -68,64 +101,32 @@ export const StorageDamaged = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Kun</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Miqdor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Guruh</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "16.4%" }}
-          >
-            <p>Tavsif</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tafsilot
-          </p>
+          {headerKeys.map((item, index) => {
+            return (
+              <label
+                style={{
+                  "--data-line-size": item?.size,
+                  cursor: item?.sort ? "pointer" : "default",
+                }}
+                onClick={() => {
+                  if (item?.sort) {
+                    setSort({ id: index, state: !sort.state });
+                  }
+                }}
+              >
+                <p>{item?.name}</p>
+                {item?.sort ? (
+                  sort.id === index && sort.state ? (
+                    <RiArrowUpSLine className="sort_arrow" />
+                  ) : (
+                    <RiArrowDownSLine className="sort_arrow" />
+                  )
+                ) : (
+                  ""
+                )}
+              </label>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -139,6 +140,7 @@ export const StorageDamaged = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const innerData = JSON.parse(item?.ingredients);
               return (
                 <div
                   className={
@@ -170,38 +172,15 @@ export const StorageDamaged = () => {
                       )}
                     </label>
                     <p>{item?.order}</p>
-                    <p style={{ "--data-line-size": "16.4%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "16.5%" }}>{date}</p>
+                    {displayKeys.map((key, ind) => (
+                      <p style={{ "--data-line-size": key?.size }} key={ind}>
+                        {item[key?.name]}
+                      </p>
+                    ))}
                     <p
                       style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.storage}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.ingredient}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.ingredient_group}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "16.4%",
-                      }}
-                    >
-                      {item?.description}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "10%",
+                        "--data-line-size": "11%",
                         justifyContent: "center",
                       }}
                       onClick={() =>
@@ -218,41 +197,23 @@ export const StorageDamaged = () => {
                     </p>
                   </div>
                   <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                    <div
+                      className="storage_body_item"
+                      style={{ background: "#3339" }}
+                    >
+                      {innerHeaderKeys.map((key, ind) => (
+                        <p
+                          style={{
+                            "--data-line-size": key?.size,
+                            borderRight: key?.border,
+                          }}
+                          key={ind}
+                        >
+                          {key?.name}
+                        </p>
+                      ))}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {innerData?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
@@ -262,21 +223,47 @@ export const StorageDamaged = () => {
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
-                          </p>
+                          {innerDisplayKeys.map((key, index) => (
+                            <p
+                              style={{
+                                "--data-line-size": key?.size,
+                                borderRight: key?.border,
+                              }}
+                              key={index}
+                            >
+                              {product[key?.name] === 0
+                                ? parseInt(product?.amount) +
+                                  product?.total_quantity
+                                : product[key?.name]}{" "}
+                              {key?.tick ? product?.unit : ""}
+                            </p>
+                          ))}
                         </div>
                       );
                     })}
+                    <div
+                      className="storage_body_item"
+                      style={{ background: "#3339" }}
+                    >
+                      <p></p>
+                      <p
+                        style={{
+                          "--data-line-size": "66%",
+                          borderRight: "1px solid #ccc5",
+                          justifyContent: "flex-start",
+                        }}
+                      >
+                        Jami zarar:
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "30%",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {item?.cost} so'm
+                      </p>
+                    </div>
                   </div>
                 </div>
               );

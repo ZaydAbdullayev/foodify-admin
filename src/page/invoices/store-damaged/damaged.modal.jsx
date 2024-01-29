@@ -32,7 +32,7 @@ export const InvoicesModal = ({
         ...newItem,
         old_quantity: oldData?.total_quantity || 0,
         total_quantity:
-          parseInt(newItem?.amount) + oldData?.total_quantity || 0,
+          oldData?.total_quantity - parseInt(newItem?.amount) || 0,
         total_price: parseInt(newItem?.amount) * newItem?.price,
       };
     }
@@ -158,8 +158,8 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked}
-                    onClick={() =>
+                    checked={checked || false}
+                    onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }
                   />

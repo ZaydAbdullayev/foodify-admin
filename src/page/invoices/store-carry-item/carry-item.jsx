@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive, acActiveThing } from "../../../redux/active";
+import { acActiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./carry-item.modal";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
@@ -52,6 +52,41 @@ export const StorageCarryUp = () => {
       }
     });
 
+  const headerKeys = [
+    { name: "№" },
+    { name: "Kun", size: "14%", sort: true },
+    { name: "Ombordan", size: "14%", sort: true },
+    { name: "Omborga", size: "14%", sort: true },
+    { name: "Miqdor", size: "14%", sort: true },
+    { name: "Guruh", size: "14%", sort: true },
+    { name: "Tavsif", size: "14%", sort: true },
+    { name: "Tafsilot", size: "10%", position: "center" },
+  ];
+
+  const displayKeys = [
+    { name: "sender_storage", size: "14%" },
+    { name: "receiver_storage", size: "14%" },
+    { name: "amount", size: "14%", position: "flex-end" },
+    { name: "waste", size: "14%", position: "flex-end" },
+    { name: "ingredient_group", size: "14%" },
+    { name: "description", size: "14%" },
+  ];
+
+  const innerHeaderKeys = [
+    { name: "№", border: "1px solid #ccc5" },
+    { name: "Nomi", size: "35%", border: "1px solid #ccc5" },
+    { name: "Narxi", size: "20%", border: "1px solid #ccc5" },
+    { name: "Tan Narxi", size: "25%", border: "1px solid #ccc5" },
+    { name: "Foyda", size: "15%" },
+  ];
+
+  const innerDisplayKeys = [
+    { name: "name", size: "35%" },
+    { name: "password", size: "20%" },
+    { name: "remain", size: "25%" },
+    { name: "total", size: "15%" },
+  ];
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -68,75 +103,31 @@ export const StorageCarryUp = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Kun</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Ombordan</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Omborga</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Miqdor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Guruh</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "14%" }}
-          >
-            <p>Tavsif</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <p style={{ "--data-line-size": "10%", justifyContent: "center" }}>
-            Tafsilot
-          </p>
+          {headerKeys?.map((item, index) => {
+            return (
+              <label
+                style={{
+                  "--data-line-size": item?.size,
+                  justifyContent: item?.position,
+                }}
+                key={index}
+                onClick={() => {
+                  if (item?.sort) {
+                    setSort({ id: index, state: !sort.state });
+                  }
+                }}
+              >
+                <p>{item?.name}</p>
+                {sort.id === index ? (
+                  sort.state ? (
+                    <RiArrowDownSLine />
+                  ) : (
+                    <RiArrowUpSLine />
+                  )
+                ) : null}
+              </label>
+            );
+          })}
         </div>
         <div className="storage_body_box">
           {isLoading ? (
@@ -150,6 +141,7 @@ export const StorageCarryUp = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const innerData = JSON.parse(item?.ingredients);
               return (
                 <div
                   className={
@@ -184,43 +176,19 @@ export const StorageCarryUp = () => {
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "14%" }}>{date}</p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                      }}
-                    >
-                      {item?.storage}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                      }}
-                    >
-                      {item?.ingredient}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.amount || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item?.waste || 0}
-                    </p>
-                    <p
-                      style={{
-                        "--data-line-size": "14%",
-                      }}
-                    >
-                      {item?.ingredient_group}
-                    </p>
+                    {displayKeys?.map((key, index) => {
+                      return (
+                        <p
+                          style={{
+                            "--data-line-size": key?.size,
+                            justifyContent: key?.position,
+                          }}
+                          key={index}
+                        >
+                          {item[key?.name] || 0}
+                        </p>
+                      );
+                    })}
                     <p
                       style={{
                         "--data-line-size": "10%",
@@ -240,41 +208,25 @@ export const StorageCarryUp = () => {
                     </p>
                   </div>
                   <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                    <div
+                      className="storage_body_item"
+                      style={{ background: "#3339" }}
+                    >
+                      {innerHeaderKeys?.map((item, index) => {
+                        return (
+                          <p
+                            style={{
+                              "--data-line-size": item?.size,
+                              borderRight: item?.border,
+                            }}
+                            key={index}
+                          >
+                            {item?.name}
+                          </p>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {innerData?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
@@ -284,18 +236,19 @@ export const StorageCarryUp = () => {
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
-                          </p>
+                          {innerDisplayKeys?.map((key, index) => {
+                            return (
+                              <p
+                                style={{
+                                  "--data-line-size": key?.size,
+                                  borderRight: key?.border,
+                                }}
+                                key={index}
+                              >
+                                {product[key?.name] || 0}
+                              </p>
+                            );
+                          })}
                         </div>
                       );
                     })}

@@ -182,6 +182,9 @@ export const UniversalControlModal = ({
     if (type === "cutting") {
       setFetchdata({ ...acP, ...data });
     }
+    if (type === "carryUp") {
+      setFetchdata({ ...acP, ...data });
+    }
     if (type === "damaged") {
       setFetchdata({ ...acP, ...data, cost: result?.prime_cost });
     }

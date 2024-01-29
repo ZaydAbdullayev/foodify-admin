@@ -71,7 +71,7 @@ export const InvoicesModal = ({
     }
   }, [acItem?.storage, storeData?.data]);
 
-  const ingredientData = storageItems?.data ? storageItems?.data : data;
+  // const ingredientData = storageItems?.data ? storageItems?.data : data;
 
   return (
     <UniversalControlModal
@@ -176,8 +176,8 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked}
-                    onClick={() =>
+                    checked={checked || false}
+                    onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }
                   />

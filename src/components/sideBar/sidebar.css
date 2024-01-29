@@ -322,7 +322,7 @@
 }
 
 .shrink .inner_menu-item > a {
-  padding: calc(6px + (10 - 6) * (100vw - 320px) / (1440 - 320));
+  padding: calc(6px + (8 - 6) * (100vw - 320px) / (1440 - 320));
 }
 
 .inner_menu-item > a:hover {

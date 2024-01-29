@@ -12,13 +12,14 @@ export const CalculateTotalPrice = (cart = [], percentage = 10) => {
     total: parseInt(totalPrice) + parseInt(parsedS),
   };
 };
-
-export const CalculateTotalQuantity = (cart, key) => {
+// (qty ? item[key] * qty : item[key]),
+export const CalculateTotalQuantity = (cart, key, qty = null) => {
   const totalPrice =
-    cart?.reduce(
-      (accumulator, item) => accumulator + parseInt(item[key], 10),
-      0
-    ) || 0;
+    cart?.reduce((accumulator, item) => {
+      const quantityMultiplier = qty ? parseInt(item[qty], 10) : 1;
+      return accumulator + parseInt(item[key], 10) * quantityMultiplier;
+    }, 0) || 0;
+
   return totalPrice;
 };
 
@@ -51,24 +52,3 @@ export const CalculateTotal = (data, key) => {
   });
   return total;
 };
-
-// function calculatePositionValue(positions, vw) {
-//   const [start, end, base] = positions;
-//   const minWidth = 320;
-//   const maxWidth = 1440;
-//   const minFontSize = 28;
-//   const maxFontSize = 40;
-
-//   const fontSize = minFontSize + ((maxFontSize - minFontSize) * (vw - minWidth)) / (maxWidth - minWidth);
-
-//   const result = fontSize + start + (end - start) * (vw - minWidth) / (maxWidth - minWidth) + base;
-
-//   return result;
-// }
-
-// // Kullanımı
-// const positions = [65, -65, 70];
-// const vw = window.innerWidth; // pencere genişliğini istediğiniz şekilde alabilirsiniz
-
-// const cssValue = `calc(${calculatePositionValue(positions, vw)}px)`;
-// console.log(cssValue); // Örnek bir çıktı: calc(35.5px)

@@ -5,6 +5,7 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./pre-order.modal";
 import { useGetStProductQuery } from "../../../service/s-products.service";
 import { useGetPreOrderQuery } from "../../../service/pre-order.service";
+import { CalculateTotalQuantity } from "../../../service/calc.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -62,6 +63,38 @@ export const InvoicePreOrders = () => {
     { name: "description", size: "28%" },
   ];
 
+  const innerHeaderData = [
+    { name: "№", border: "1px solid #ccc5" },
+    { name: "Nomi", size: "30%", border: "1px solid #ccc5" },
+    { name: "Narxi", size: "25%", border: "1px solid #ccc5" },
+    { name: "Tan narx", size: "20%", border: "1px solid #ccc5" },
+    { name: "Foyda", size: "21%" },
+  ];
+
+  const innerDisplayKeys = [
+    { name: "name", size: "30%", border: "1px solid #ccc5" },
+    {
+      name: "price",
+      size: "25%",
+      position: "flex-end",
+      border: "1px solid #ccc5",
+      amount: true,
+    },
+    {
+      name: "prime_cost",
+      size: "20%",
+      position: "flex-end",
+      border: "1px solid #ccc5",
+      amount: true,
+    },
+    {
+      name: "profit",
+      size: "21%",
+      position: "flex-end",
+      amount: true,
+    },
+  ];
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -109,6 +142,7 @@ export const InvoicePreOrders = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const innerData = JSON.parse(item?.ingredients);
               return (
                 <div
                   key={item?.id}
@@ -189,41 +223,25 @@ export const InvoicePreOrders = () => {
                     </p>
                   </div>
                   <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                    <div
+                      className="storage_body_item"
+                      style={{ background: "#3339" }}
+                    >
+                      {innerHeaderData?.map((item, index) => {
+                        return (
+                          <p
+                            key={index}
+                            style={{
+                              "--data-line-size": item?.size,
+                              borderRight: item?.border,
+                            }}
+                          >
+                            {item?.name}
+                          </p>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {innerData?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
@@ -233,21 +251,68 @@ export const InvoicePreOrders = () => {
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
-                          </p>
+                          {innerDisplayKeys?.map((key, index) => {
+                            return (
+                              <p
+                                key={index}
+                                style={{
+                                  "--data-line-size": key?.size,
+                                  justifyContent: key?.position || "flex-start",
+                                  borderRight: key?.border,
+                                }}
+                              >
+                                {key.amount && `${product.amount} x`}{" "}
+                                {product[key?.name]}
+                              </p>
+                            );
+                          })}
                         </div>
                       );
                     })}
+                    <div
+                      className="storage_body_item inner_item"
+                      style={{ background: "#3339" }}
+                    >
+                      <p></p>
+                      <p
+                        style={{
+                          "--data-line-size": "30%",
+                          borderRight: "1px solid #ccc5",
+                        }}
+                      >
+                        Jami:
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "25%",
+                          justifyContent: "flex-end",
+                          borderRight: "1px solid #ccc5",
+                        }}
+                      >
+                        {CalculateTotalQuantity(innerData, "price", "amount")}
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "20%",
+                          justifyContent: "flex-end",
+                          borderRight: "1px solid #ccc5",
+                        }}
+                      >
+                        {CalculateTotalQuantity(
+                          innerData,
+                          "prime_cost",
+                          "amount"
+                        )}
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "21%",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {CalculateTotalQuantity(innerData, "profit", "amount")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
