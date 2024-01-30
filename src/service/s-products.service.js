@@ -8,7 +8,7 @@ export const s_productApi = apiSlice.injectEndpoints({
         url: `get/foods/${user?.user?.id}`,
         method: "GET",
       }),
-      providesTags: ["s-products"],
+      providesTags: ["s-products", "product"],
     }),
 
     addStProduct: builder.mutation({
@@ -36,6 +36,19 @@ export const s_productApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["s-products"],
     }),
+
+    updateStProductImage: builder.mutation({
+      query: (value) => ({
+        url: `update/productImg/${value.id}`,
+        method: "PATCH",
+        body: {
+          img: value?.image,
+          deleteImg: value.deleteImg,
+        },
+        formData: true,
+      }),
+      invalidatesTags: ["s-products"],
+    }),
   }),
 });
 
@@ -44,4 +57,5 @@ export const {
   useUpdateStProductMutation,
   useGetStProductQuery,
   useDeleteStProductMutation,
+  useUpdateStProductImageMutation,
 } = s_productApi;

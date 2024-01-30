@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import "./products.css";
 import { Link, useLocation } from "react-router-dom";
-import { ApiUpdateService } from "../../service/api.service";
 import { NumericFormat } from "react-number-format";
 import { enqueueSnackbar as es } from "notistack";
-import { useUpdatePbyIdMutation } from "../../service/product.service";
-import { useDeleteProductMutation } from "../../service/product.service";
-import { useGetAllProductQuery } from "../../service/product.service";
 import { useDispatch } from "react-redux";
 import { LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
+import { useGetStProductQuery } from "../../service/s-products.service";
+import { useDeleteStProductMutation } from "../../service/s-products.service";
+import { useUpdateStProductMutation } from "../../service/s-products.service";
+import { useUpdateStProductImageMutation } from "../../service/s-products.service";
+import { useGetStCategoryQuery } from "../../service/category.service";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
@@ -19,30 +20,22 @@ import { FaPen, FaCheck } from "react-icons/fa";
 import { TbInfoSquareRounded } from "react-icons/tb";
 
 export const Products = () => {
-  const user_id = JSON.parse(localStorage.getItem("user"))?.user?.id;
   const { search, pathname } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [update, setUpdate] = useState(false);
   const [info, setInfo] = useState({});
   // const [detail, setDetail] = useState(false);
-  const { data: products = [], isLoading } = useGetAllProductQuery(user_id);
-  const [updatePbyId] = useUpdatePbyIdMutation();
-  const [deleteProduct] = useDeleteProductMutation();
+  const { data: products = [], isLoading } = useGetStProductQuery();
+  const { data: categorys = [] } = useGetStCategoryQuery();
+  const [deleteStProduct] = useDeleteStProductMutation();
+  const [updateStProduct] = useUpdateStProductMutation();
+  const [updateStProductImage] = useUpdateStProductImageMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
 
-  const getUniqueCategories = () => {
-    const uniqueCategories = new Set();
-    products?.innerData?.forEach((item) => {
-      uniqueCategories.add(item.category);
-    });
-    return Array.from(uniqueCategories);
-  };
-
-  const uniqueCategories = getUniqueCategories();
   const category = (search && decodeURIComponent(search.split("=")[1])) || "";
 
   const handleSearch = (e) => {
@@ -50,7 +43,7 @@ export const Products = () => {
   };
 
   const handleUpdate = async (product) => {
-    const { data } = await updatePbyId(product);
+    const { data } = await updateStProduct(product);
     if (data) {
       es("Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!", {
         variant: "success",
@@ -61,29 +54,22 @@ export const Products = () => {
   };
 
   const handleDelete = async (id) => {
-    const { data } = await deleteProduct(id);
+    const { data } = await deleteStProduct(id);
     if (data) {
       const msg = "Mahsulotni O'zgartirishda qandaydir xatolik yuz berdi";
       es(msg, { variant: "error" });
     }
   };
 
-  const updateImg = (product) => {
-    console.log(product);
-    ApiUpdateService.fetching(`update/productImg/${product.id}`, {
-      img: product?.image,
-      deleteImg: product.deleteImg,
-    })
-      .then((res) => {
-        const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
-        es(msg, { variant: "success" });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const updateImg = async (product) => {
+    const { data } = await updateStProductImage(product);
+    if (data) {
+      const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
+      es(msg, { variant: "success" });
+    }
   };
 
-  const filteredProducts = products?.innerData?.filter((product) => {
+  const filteredProducts = products?.data?.filter((product) => {
     const categoryMatches =
       category === "" ||
       product?.category?.toLowerCase().includes(category.toLowerCase());
@@ -116,9 +102,12 @@ export const Products = () => {
       </div>
       <div className="search_src">
         <Link to={pathname}>All</Link>
-        {uniqueCategories?.map((category) => (
-          <Link to={`?q/gr=${encodeURIComponent(category)}`} key={category}>
-            {category}
+        {categorys?.data?.map((category) => (
+          <Link
+            to={`?q/gr=${encodeURIComponent(category?.name)}`}
+            key={category?.id}
+          >
+            {category?.name}
           </Link>
         ))}
       </div>
@@ -272,58 +261,3 @@ export const Products = () => {
     </div>
   );
 };
-
-const product_data = [
-  {
-    id: "04a421e6",
-    name: "test bar 1",
-    price: 15000,
-    img: "https://localhost:8081/add/product/img_3be92846.jpg",
-    description: "test suv 1",
-    restaurant: "2899b5",
-    category: "ichimlik",
-    status: 1,
-    department: "bar",
-    quantity: 1,
-    food_count: 10,
-  },
-  {
-    id: "0a591be9",
-    name: "test Milliy taom 1",
-    price: 24000,
-    img: "https://localhost:8081/add/product/img_39361730.jpg",
-    description: "test 1",
-    restaurant: "2899b5",
-    category: "Milliy Taomlar",
-    status: 1,
-    department: "milliy taomlar",
-    quantity: 1,
-    food_count: 2,
-  },
-  {
-    id: "32a55b6d",
-    name: "Test Bar",
-    price: 12000,
-    img: "https://localhost:8081/add/product/img_f01245ee.jpg",
-    description: "test suv",
-    restaurant: "2899b5",
-    category: "ichimlik",
-    status: 1,
-    department: "bar",
-    quantity: 1,
-    food_count: 14,
-  },
-  {
-    id: "86c3e007",
-    name: "test Milliy taom 2",
-    price: 28000,
-    img: "https://localhost:8081/add/product/img_35b929f8.jpg",
-    description: "test 2",
-    restaurant: "2899b5",
-    category: "Milliy Taomlar",
-    status: 1,
-    department: "milliy taomlar",
-    quantity: 1,
-    food_count: 23,
-  },
-];

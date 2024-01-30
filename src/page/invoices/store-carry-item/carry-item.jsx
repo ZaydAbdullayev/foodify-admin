@@ -53,7 +53,6 @@ export const StorageCarryUp = () => {
     });
 
   const headerKeys = [
-    { name: "№" },
     { name: "Kun", size: "14%", sort: true },
     { name: "Ombordan", size: "14%", sort: true },
     { name: "Omborga", size: "14%", sort: true },
@@ -66,7 +65,6 @@ export const StorageCarryUp = () => {
   const displayKeys = [
     { name: "sender_storage", size: "14%" },
     { name: "receiver_storage", size: "14%" },
-    { name: "amount", size: "14%", position: "flex-end" },
     { name: "waste", size: "14%", position: "flex-end" },
     { name: "ingredient_group", size: "14%" },
     { name: "description", size: "14%" },

@@ -46,8 +46,8 @@ export const CashboxTransaction = () => {
   //   };
 
   const sortData =
-    invoiceData?.data &&
-    [...invoiceData?.data].sort((a, b) => {
+    cashTrData?.data &&
+    [...cashTrData?.data].sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -69,14 +69,14 @@ export const CashboxTransaction = () => {
   ];
 
   const displayKeys = [
-    { name: "storage", size: "10%" },
-    { name: "storage", size: "10%" },
-    { name: "storage", size: "10%" },
-    { name: "storage", size: "10%" },
-    { name: "storage", size: "10%" },
-    { name: "storage", size: "10%" },
-    { name: "description", size: "9%" },
-    { name: "cost", size: "9%", position: "center" },
+    { name: "cashier_receiver", size: "10%" },
+    { name: "payment_type", size: "10%" },
+    { name: "cashier_sender", size: "10%" },
+    { name: "cashier_receiver", size: "10%" },
+    { name: "transaction_group", size: "10%" },
+    { name: "activity_kind", size: "10%" },
+    { name: "transaction_type", size: "9%" },
+    { name: "amount", size: "9%", position: "center" },
     { name: "description", size: "8%" },
   ];
 
@@ -126,7 +126,7 @@ export const CashboxTransaction = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item) => {
+            sortData?.map((item, ind) => {
               const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
                 day: "numeric",
                 month: "numeric",
@@ -163,7 +163,7 @@ export const CashboxTransaction = () => {
                         <input type="checkbox" name="id" />
                       )}
                     </label>
-                    <p>{item?.order}</p>
+                    <p>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>
                     {displayKeys?.map((key, index) => {
                       return (

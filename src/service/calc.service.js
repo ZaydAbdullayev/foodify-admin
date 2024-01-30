@@ -35,7 +35,7 @@ export const CalculateTotalByLine = (cart, keyToExclude) => {
   const totalPrice =
     cart?.reduce((accumulator, item) => {
       if (!item.hasOwnProperty(keyToExclude)) {
-        accumulator += parseInt(item[keyToExclude], 10) || 0;
+        accumulator += parseInt(item[keyToExclude], 10);
       }
       return accumulator;
     }, 0) || 0;

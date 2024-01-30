@@ -25,7 +25,7 @@ export const Payment = () => {
   }, [dispatch]);
 
   const getDetails = (id) => {
-    navigate(`/financial/payment?dt=${id}`);
+    navigate(`/financial?dt=${id}`);
     setOpen(true);
   };
 

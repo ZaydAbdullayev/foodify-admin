@@ -30,6 +30,7 @@ export const TransactionRapor = () => {
   }, [dispatch]);
   let total = 0;
 
+  console.log(trData?.data);
   const headerData = [
     { name: "Turi", size: "11.3%" },
     { name: "Naqd pul", size: "10.7%" },
@@ -89,7 +90,7 @@ export const TransactionRapor = () => {
           {headerData?.map((item, index) => {
             return (
               <p
-                key={index + 1}
+                key={index}
                 style={{
                   "--data-line-size": item?.size,
                   justifyContent: "center",
@@ -117,6 +118,7 @@ export const TransactionRapor = () => {
             </span>
           ) : (
             trData?.data?.map((item, index) => {
+              console.log(CalculateTotalByLine(trData.data, "type"));
               return (
                 <div className={"storage_body__box"} key={index}>
                   <div
@@ -209,7 +211,7 @@ export const TransactionRapor = () => {
                 <div className="_body__item" key={index}>
                   <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transactions?.map((tr) => {
+                    {inner?.transactions?.map((tr, ind) => {
                       return (
                         <div className="_details__item" key={tr?.id}>
                           <p>{tr?.payment_type}</p>
@@ -249,10 +251,10 @@ export const TransactionRapor = () => {
             </pre>
             {trExpData?.data?.map((inner, index) => {
               return (
-                <div className="_body__item" key={index}>
+                <div className="_body__item" key={index + 543}>
                   <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transactions?.map((tr) => {
+                    {inner?.transactions?.map((tr, ind) => {
                       return (
                         <div className="_details__item" key={tr?.id}>
                           <p>{tr?.payment_type}</p>
