@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./invoices.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
@@ -157,12 +157,16 @@ export const StorageInvoices = () => {
                     }
                     key={item?.id}
                     onDoubleClick={() =>
-                      dispatch(acActiveThing(!acItem?.id ? item : {}))
+                      dispatch(
+                        acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      )
                     }
                   >
                     <label
                       onClick={() =>
-                        dispatch(acActiveThing(!acItem?.id ? item : {}))
+                        dispatch(
+                        acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      )
                       }
                     >
                       {checked ? (

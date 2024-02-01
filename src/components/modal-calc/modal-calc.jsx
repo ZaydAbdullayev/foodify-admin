@@ -25,7 +25,7 @@ import { useUpdateStExpenditureMutation } from "../../service/expenditures.servi
 import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
 import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
 import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
-import { acActiveThing } from "../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../redux/active";
 import { useUpdateItemsMutation } from "../../service/store.service";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
@@ -145,7 +145,7 @@ export const UniversalControlModal = ({
         es({ message: "Qo'shildi", variant: "success" });
         ClearForm("u-control-form");
         dispatch(acCloseUModal());
-        dispatch(acActiveThing({}));
+        dispatch(acPassiveThing());
         dispatch(acGetUrl({ st: false, img: "" }));
         setCheckedData([]);
       }
@@ -199,7 +199,7 @@ export const UniversalControlModal = ({
 
   const closeModal = () => {
     dispatch(acCloseUModal());
-    dispatch(acActiveThing({}));
+    dispatch(acPassiveThing());
     setCheckedData([]);
   };
 

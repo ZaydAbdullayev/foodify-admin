@@ -92,11 +92,13 @@ export const Orders = () => {
   };
 
   const resieveOrderS = async () => {
+    console.log(paymentData);
     const uData = {
       id: position[4],
       status: 2,
       res_id: user?.user?.id,
       location: position[2],
+      worker_id: user?.user?.worker_id,
     };
     if (!cart.length) {
       alert("Savatcha bo'sh");

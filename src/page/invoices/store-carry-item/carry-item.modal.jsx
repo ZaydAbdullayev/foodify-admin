@@ -94,7 +94,7 @@ export const InvoicesModal = ({
   };
 
   const activeData = activePart === 1 ? data : productData?.data;
-
+  const num = acItem?.order ? acItem?.order : NUM?.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -107,7 +107,7 @@ export const InvoicesModal = ({
           type="number"
           name="order"
           placeholder="Tartib raqam*"
-          defaultValue={acItem?.order ? acItem?.order : NUM?.num}
+          defaultValue={num}
           required
           autoComplete="off"
           style={{ "--input-width": "8%" }}
@@ -116,7 +116,7 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "15%" }}
-          defaultValue={acItem?.date ? acItem?.date : today}
+          defaultValue={acItem?.date.split["T"][0]}
         />
         <select
           name="storage_sender"
@@ -169,7 +169,7 @@ export const InvoicesModal = ({
         <input
           type="text"
           name="description"
-          defaultValue={acItem?.description ? acItem?.description : ""}
+          defaultValue={acItem?.description}
           placeholder="Tavsif"
           style={{ "--input-width": "12%" }}
         />
@@ -268,7 +268,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      defaultValue={acItem?.amount ? acItem?.amount : ""}
+                      defaultValue={acItem?.amount}
                       onChange={(e) =>
                         activePart === 2
                           ? setCalcData({

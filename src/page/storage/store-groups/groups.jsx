@@ -224,7 +224,7 @@ export const StorageGroups = () => {
           type="text"
           name="name"
           placeholder="Guruh nomi*"
-          defaultValue={acItem.name}
+          defaultValue={acItem?.name}
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />

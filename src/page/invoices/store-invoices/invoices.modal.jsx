@@ -73,6 +73,7 @@ export const InvoicesModal = ({
 
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
 
+  const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -89,7 +90,7 @@ export const InvoicesModal = ({
           placeholder="Tartib raqam*"
           required
           autoComplete="off"
-          defaultValue={acItem?.order ? acItem?.order : NUM.num}
+          defaultValue={num}
           style={{ "--input-width": "15%" }}
         />
         <input
@@ -98,7 +99,7 @@ export const InvoicesModal = ({
           style={{
             "--input-width": "12%",
           }}
-          defaultValue={acItem?.date ? acItem?.date : today}
+          defaultValue={acItem?.date.split["T"][0]}
         />
         <select name="supplier" style={{ "--input-width": "12%" }}>
           {acItem?.supplier ? (
@@ -137,14 +138,14 @@ export const InvoicesModal = ({
           name="responsible"
           placeholder="Javobgar*"
           required
-          defaultValue={acItem?.responsible ? acItem?.responsible : ""}
+          defaultValue={acItem?.responsible}
           style={{ "--input-width": "12%" }}
         />
         <input
           type="text"
           name="description"
           placeholder="Tavsif*"
-          defaultValue={acItem?.description ? acItem?.description : ""}
+          defaultValue={acItem?.description}
           style={{ "--input-width": "12%" }}
         />
       </UniversalForm>

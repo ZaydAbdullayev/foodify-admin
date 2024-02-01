@@ -80,6 +80,8 @@ export const InvoicesModal = ({
     }
   }, [acItem?.storage, setId, storeData?.data]);
 
+  const ingID = acItem?.ingredient_id ? acItem?.ingredient_id : pId;
+  const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -92,7 +94,7 @@ export const InvoicesModal = ({
           type="number"
           name="order"
           placeholder="Tartib raqam*"
-          defaultValue={acItem?.order ? acItem?.order : NUM.num}
+          defaultValue={num}
           required
           autoComplete="off"
           style={{ "--input-width": "12%" }}
@@ -121,7 +123,7 @@ export const InvoicesModal = ({
           type="text"
           name="amount"
           placeholder="Miqdori"
-          defaultValue={acItem?.amount ? acItem?.amount : ""}
+          defaultValue={acItem?.amount}
           required
           autoComplete="off"
           style={{ "--input-width": "12%" }}
@@ -131,7 +133,7 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "15%" }}
-          defaultValue={acItem?.date ? acItem.date : today}
+          defaultValue={acItem?.date}
         />
         <select
           name="storage"
@@ -171,15 +173,11 @@ export const InvoicesModal = ({
           type="text"
           name="description"
           placeholder="Tavsif*"
-          defaultValue={acItem?.description ? acItem?.description : ""}
+          defaultValue={acItem?.description}
           style={{ "--input-width": "12%" }}
         />
         <input type="hidden" name="storage_id" value={id} />
-        <input
-          type="hidden"
-          name="ingredient_id"
-          value={acItem?.ingredient_id ? acItem?.ingredient_id : pId}
-        />
+        <input type="hidden" name="ingredient_id" value={ingID} />
         <input type="hidden" name="waste" value={3844} />
       </UniversalForm>
       <UniversalProductControl
@@ -281,7 +279,7 @@ export const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      defaultValue={acItem?.amount ? acItem.amount : ""}
+                      defaultValue={acItem?.amount}
                       onChange={(e) =>
                         getProduct({ ...item, amount: e.target.value }, 1)
                       }

@@ -25,6 +25,7 @@ export const OrderById = () => {
       status: 0,
       location: lc[3],
       res_id: data?.innerData[0]?.restaurant_id,
+      worker_id: "",
     };
     socket.emit("/update/table", uData);
     navigate("/orders/tables");

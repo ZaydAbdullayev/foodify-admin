@@ -63,7 +63,7 @@ export const InvoicesModal = ({
       setId(selectedId);
     }
   }, [acItem?.storage, setId, storeData?.data]);
-
+  const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -77,7 +77,7 @@ export const InvoicesModal = ({
           name="order"
           placeholder="Tartib raqam*"
           required
-          defaultValue={acItem?.order ? acItem?.order : NUM.num}
+          defaultValue={num}
           autoComplete="off"
           style={{ "--input-width": "15%" }}
         />
@@ -85,7 +85,7 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "12%" }}
-          defaultValue={acItem?.date ? acItem?.date : today}
+          defaultValue={acItem?.date}
         />
         <select
           name="storage"

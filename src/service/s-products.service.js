@@ -31,8 +31,17 @@ export const s_productApi = apiSlice.injectEndpoints({
 
     deleteStProduct: builder.mutation({
       query: (id) => ({
-        url: `delete/foods/${id}`,
+        url: `delete/food/${id}`,
         method: "DELETE",
+      }),
+      invalidatesTags: ["s-products"],
+    }),
+
+    deleteStProducts: builder.mutation({
+      query: (ids) => ({
+        url: `delete/foods`,
+        method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["s-products"],
     }),
@@ -49,6 +58,14 @@ export const s_productApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["s-products"],
     }),
+
+    getStProductById: builder.query({
+      query: (id) => ({
+        url: `get/oneFood/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["s-products", "product"],
+    }),
   }),
 });
 
@@ -58,4 +75,6 @@ export const {
   useGetStProductQuery,
   useDeleteStProductMutation,
   useUpdateStProductImageMutation,
+  useGetStProductByIdQuery,
+  useDeleteStProductsMutation,
 } = s_productApi;

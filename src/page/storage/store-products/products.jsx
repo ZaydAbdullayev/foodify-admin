@@ -12,8 +12,9 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { data } from "../../../components/modal-calc/components";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
-import { acActiveThing } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
+import { deleteSelectedFoods } from "../../../service/delete-foods.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -39,7 +40,10 @@ export const StorageProducts = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
   }, [dispatch]);
+
   const getProduct = (item, status) => {
+    const ids = deleteSelectedFoods(item.id);
+    console.log(ids);
     const isChecked = checkedData.some((i) => i.id === item.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item.id));
@@ -166,12 +170,16 @@ export const StorageProducts = () => {
                     }
                     key={item.id}
                     onDoubleClick={() =>
-                      dispatch(acActiveThing(!acItem.id ? item : null))
+                      dispatch(
+                        acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      )
                     }
                   >
                     <label
                       onClick={() =>
-                        dispatch(acActiveThing(!acItem?.id ? item : null))
+                        dispatch(
+                          acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        )
                       }
                     >
                       {checked ? (
@@ -298,9 +306,9 @@ export const StorageProducts = () => {
           <input
             type="text"
             name="name"
+            defaultValue={acItem?.name}
             placeholder="Nomi*"
             required
-            defaultValue={acItem?.id ? acItem?.name : ""}
             autoComplete="off"
             style={{ "--input-width": "15%" }}
           />
@@ -323,13 +331,13 @@ export const StorageProducts = () => {
             name="price"
             placeholder="Narxi*"
             style={{ "--input-width": "12%" }}
-            defaultValue={acItem?.id ? acItem?.price : ""}
+            defaultValue={acItem?.price}
           />
           <input
             type="date"
             name="date"
             style={{ "--input-width": "12%" }}
-            defaultValue={acItem?.id ? acItem?.date : today}
+            defaultValue={acItem?.date}
           />
           <input type="hidden" name="img" value={img?.img} />
         </UniversalForm>
