@@ -19,6 +19,7 @@ import { reNavStatus } from "./navbar.status";
 import { reDeviceWidth, reMedia } from "./media";
 import { reNothification } from "./nothification";
 import { resolve } from "./resolve";
+import { rootDocumetns } from "./deleteFoods";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -42,9 +43,9 @@ export const store = configureStore({
     nothificate: reNothification,
     resolve: resolve,
     storageId: reStorageId,
+    delRouter: rootDocumetns,
     [apiSlice.reducerPath]: apiSlice.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: process.env.NODE_ENV !== "production",
 });

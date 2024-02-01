@@ -14,7 +14,8 @@ import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
-import deleteSelectedFoods from "../../../service/delete-foods.service";
+import { setDocuments } from "../../../redux/deleteFoods";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -24,7 +25,6 @@ export const StorageProducts = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const [delData, setDelData] = useState([]);
   const [showMore, setShowMore] = useState(null);
   const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.activeThing);
@@ -34,6 +34,7 @@ export const StorageProducts = () => {
     ? JSON?.parse(acItem?.ingredients)
     : [];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: products = [], isLoading } = useGetStProductQuery();
   const { data: ingredients = [] } = useGetStIngredientsQuery();
   const { data: category = [] } = useGetStCategoryQuery();
@@ -167,18 +168,22 @@ export const StorageProducts = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
                         acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                      );
+                      dispatch(setDocuments("products", item?.id));
+                      navigate(`?page-code=products`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
                           acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        )
-                      }
+                        );
+                        dispatch(setDocuments("products", item?.id));
+                        navigate(`?page-code=products`);
+                      }}
                     >
                       {checked ? (
                         <input type="checkbox" name="id" checked />

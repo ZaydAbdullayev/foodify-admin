@@ -11,6 +11,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { LoadingBtn } from "../../components/loading/loading";
 
 export const OrderById = () => {
+  const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const location = useLocation().pathname;
   const lc = location.split("/");
   const t_id = lc[4].split("-").pop();
@@ -24,7 +25,7 @@ export const OrderById = () => {
       id: t_id,
       status: 0,
       location: lc[3],
-      res_id: data?.innerData[0]?.restaurant_id,
+      res_id: user?.id,
       worker_id: "",
     };
     socket.emit("/update/table", uData);

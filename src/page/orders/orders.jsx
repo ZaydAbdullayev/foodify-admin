@@ -53,6 +53,7 @@ export const Orders = () => {
     order_type: "offline",
     t_location: position[2],
     table_id: position[4],
+    discount: 0,
   };
 
   const queue = parseInt(position[6]) + 1;

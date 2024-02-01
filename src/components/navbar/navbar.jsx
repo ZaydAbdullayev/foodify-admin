@@ -3,11 +3,14 @@ import "./navbar.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acMedia } from "../../redux/media";
 import { UniversalFilterBox } from "../filter/filter";
 import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
+import DeleteSelectedFoods from "../../service/delete-foods.service";
+import { enqueueSnackbar as es } from "notistack";
+import { setRelease } from "../../redux/deleteFoods";
 
 import { BiEdit, BiPlus } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -29,6 +32,19 @@ export const Navbar = () => {
   const media = useSelector((state) => state.media);
   const acItem = useSelector((state) => state.active);
   const acP = useSelector((state) => state.activeThing);
+  const delDocuments = useSelector((state) => state.delRouter);
+  const page_code = useLocation().search.split("=")[1];
+  const delData = delDocuments?.[page_code];
+
+  const deleteDocuments = async () => {
+    const result = await DeleteSelectedFoods(page_code, delData);
+    if (result.status === "success") {
+      es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
+      dispatch(setRelease(page_code));
+    } else {
+      es({ message: "Xatolik yuz berdi", variant: "error" });
+    }
+  };
 
   const openModal = () => {
     dispatch(acOpenMadal());
@@ -95,10 +111,11 @@ export const Navbar = () => {
           {status?.includes(3) && (
             <button
               style={
-                acItem.id || acP?.id
+                delDocuments?.[page_code]?.length > 0
                   ? {}
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
+              onClick={() => deleteDocuments()}
             >
               <MdDelete />
             </button>
