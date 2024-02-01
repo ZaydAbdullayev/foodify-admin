@@ -99,7 +99,7 @@ export const InvoicesModal = ({
           style={{
             "--input-width": "12%",
           }}
-          defaultValue={acItem?.date.split["T"][0]}
+          defaultValue={acItem?.date}
         />
         <select name="supplier" style={{ "--input-width": "12%" }}>
           {acItem?.supplier ? (

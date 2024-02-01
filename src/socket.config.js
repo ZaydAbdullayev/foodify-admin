@@ -2,7 +2,7 @@
 
 import io from "socket.io-client";
 
-const socket = io("https://backup.foodify.uz", {
+const socket = io("https://bvtrj1n0-80.euw.devtunnels.ms", {
   transportOptions: {
     polling: {
       extraHeaders: {

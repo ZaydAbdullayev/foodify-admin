@@ -14,7 +14,7 @@ import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
-import { deleteSelectedFoods } from "../../../service/delete-foods.service";
+import deleteSelectedFoods from "../../../service/delete-foods.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -24,7 +24,7 @@ export const StorageProducts = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const today = new Date().toISOString().split("T")[0];
+  const [delData, setDelData] = useState([]);
   const [showMore, setShowMore] = useState(null);
   const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.activeThing);
@@ -42,8 +42,6 @@ export const StorageProducts = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const ids = deleteSelectedFoods(item.id);
-    console.log(ids);
     const isChecked = checkedData.some((i) => i.id === item.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData.filter((i) => i.id !== item.id));

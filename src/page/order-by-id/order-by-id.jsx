@@ -74,9 +74,7 @@ export const OrderById = () => {
         })
       )}
       <div className="order-footer">
-        <button onClick={() => navigate(`/payment/check/${t_id}`)}>
-          Check chiqarish
-        </button>
+        <button onClick={() => finish()}>Hisobni yakunlash</button>
         <button
           onClick={() =>
             navigate(
@@ -86,7 +84,7 @@ export const OrderById = () => {
         >
           Buyutma qo'shish
         </button>
-        <button onClick={() => finish()}>Hisobni yakunlash</button>
+        <button>Buyurtmani o'tkazish</button>
       </div>
     </div>
   );

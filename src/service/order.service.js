@@ -28,8 +28,19 @@ export const storeApi = apiSlice.injectEndpoints({
         body: value,
       }),
     }),
+
+    getOrderByWaiterId: builder.query({
+      query: (value) => ({
+        url: `/get/waiter/orders/${user?.user?.id}/${value.start}/${value.end}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetOrderQuery, useGetProductQuery, useResolveItemMutation } =
-  storeApi;
+export const {
+  useGetOrderQuery,
+  useGetProductQuery,
+  useResolveItemMutation,
+  useGetOrderByWaiterIdQuery,
+} = storeApi;

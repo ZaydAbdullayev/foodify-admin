@@ -101,9 +101,10 @@ export const StorageInvoices = () => {
             />
           </label>
           <p>№</p>
-          {headerKeys?.map((item) => {
+          {headerKeys?.map((item, ind) => {
             return (
               <p
+                key={ind}
                 style={{
                   "--data-line-size": item?.size,
                 }}
@@ -148,6 +149,7 @@ export const StorageInvoices = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
+                  key={item?.id}
                 >
                   <div
                     className={
@@ -165,8 +167,8 @@ export const StorageInvoices = () => {
                     <label
                       onClick={() =>
                         dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
+                          acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        )
                       }
                     >
                       {checked ? (
@@ -179,9 +181,10 @@ export const StorageInvoices = () => {
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "13%" }}>{date}</p>
-                    {displayKeys?.map((key) => {
+                    {displayKeys?.map((key, ind) => {
                       return (
                         <p
+                          key={ind}
                           style={{
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
@@ -235,9 +238,10 @@ export const StorageInvoices = () => {
                       >
                         №
                       </p>
-                      {innerHeaderKeys?.map((item) => {
+                      {innerHeaderKeys?.map((item, ind) => {
                         return (
                           <p
+                            key={ind}
                             style={{
                               "--data-line-size": item?.size,
                               borderRight: item.border,
@@ -258,9 +262,10 @@ export const StorageInvoices = () => {
                           >
                             {ind + 1}
                           </p>
-                          {innerDisplayKeys?.map((key) => {
+                          {innerDisplayKeys?.map((key, ind) => {
                             return (
                               <p
+                                key={ind}
                                 style={{
                                   "--data-line-size": key?.size,
                                   justifyContent: key?.position || "flex-start",
