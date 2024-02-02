@@ -166,7 +166,7 @@ export const Navbar = () => {
         <ul>
           <Link to="/">Ma'lumotlarim</Link>
           <Link to="/">Manzillarim</Link>
-          <Link to="/">Buyurtlarim</Link>
+          <Link to="/my-receive-orders">Buyurtlarim</Link>
           <Link to="/">Bildirishnomalar</Link>
           <li onClick={log_out}>Chiqish</li>
         </ul>

@@ -35,6 +35,13 @@ export const storeApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getOrderByStatus: builder.query({
+      query: (value) => ({
+        url: `/get/foodsBySt/${user?.user?.id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -43,4 +50,5 @@ export const {
   useGetProductQuery,
   useResolveItemMutation,
   useGetOrderByWaiterIdQuery,
+  useGetOrderByStatusQuery,
 } = storeApi;

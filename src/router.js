@@ -57,6 +57,7 @@ import { acDeviceWidth } from "./redux/media";
 import { acNothification } from "./redux/nothification";
 import { NothificationPage } from "./page/nothification/nothification.jsx";
 import { Inventory } from "./page/inventory/inventory.jsx";
+import { MyOrder } from "./page/my-orders/my-order.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -118,6 +119,7 @@ export const Router = () => {
           <Route path="check" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
             <Route path="orders" element={<Home />} />
+            <Route path="my-receive-orders" element={<MyOrder />} />
             <Route path="" element={<Document />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
