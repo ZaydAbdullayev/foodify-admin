@@ -5,10 +5,13 @@ import { NumericFormat } from "react-number-format";
 import { useSwipeable } from "react-swipeable";
 
 import { RiArrowUpSLine, RiArrowDownSLine } from "react-icons/ri";
+import { TiChevronLeft, TiChevronRight } from "react-icons/ti";
+import { calculateDifTime } from "../../service/calc-date.service";
 
 export const MyOrder = () => {
   const { data: order = [] } = useGetOrderByStatusQuery();
-  const [dr, setDr] = useState("center");
+  const [dr, setDr] = useState("left");
+  const media = window.matchMedia("(max-width: 768px)");
   console.log(order);
 
   const handlers = useSwipeable({
@@ -21,29 +24,60 @@ export const MyOrder = () => {
     <div className="my-order-main">
       <p>Mening buyurtmalarim</p>
       <div className="my-order-display-box" {...handlers}>
-        <MyOrderDisplay
-          header={"Tayyorlanayotgan Buyurtmalar"}
-          data={order?.innerData?.[1] || []}
-        />
-        <MyOrderDisplay
-          header={"Tayyor Buyurtmalar"}
-          data={order?.innerData?.[2] || []}
-        />
-        <MyOrderDisplay
-          header={"Yopilgan Buyurtmalar"}
-          data={order?.innerData?.[3] || []}
-        />
+        {media.matches ? (
+          <>
+            {dr === "left" ? (
+              <MyOrderDisplay
+                header={"Tayyorlanayotgan Buyurtmalar"}
+                data={order?.innerData?.[1] || []}
+                right={<TiChevronRight />}
+              />
+            ) : dr === "right" ? (
+              <MyOrderDisplay
+                header={"Yopilgan Buyurtmalar"}
+                data={order?.innerData?.[3] || []}
+                left={<TiChevronLeft />}
+              />
+            ) : (
+              <MyOrderDisplay
+                header={"Tayyor Buyurtmalar"}
+                data={order?.innerData?.[2] || []}
+                left={<TiChevronLeft />}
+                right={<TiChevronRight />}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <MyOrderDisplay
+              header={"Tayyorlanayotgan Buyurtmalar"}
+              data={order?.innerData?.[1] || []}
+            />
+            <MyOrderDisplay
+              header={"Tayyor Buyurtmalar"}
+              data={order?.innerData?.[2] || []}
+            />
+            <MyOrderDisplay
+              header={"Yopilgan Buyurtmalar"}
+              data={order?.innerData?.[3] || []}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 };
 
-export const MyOrderDisplay = ({ header, data }) => {
+export const MyOrderDisplay = ({ header, data, right, left }) => {
   const [sort, setSort] = useState({ id: null, state: false });
 
   return (
     <div className="my-order-display">
-      <p>{header}</p>
+      <p>
+        <span>{left || ""}</span>
+        <span>{header}</span>
+        <span>{right || ""}</span>
+      </p>
       {data?.map((item) => {
         const pds = JSON.parse(item?.product_data);
         const products = Object.values(pds)[0].pd;
@@ -62,8 +96,8 @@ export const MyOrderDisplay = ({ header, data }) => {
               <p style={{ "--my-order-w": "20%" }}>
                 {item?.address?.split("&")[1]}
               </p>
-              <p style={{ "--my-order-w": "30%" }}>
-                {item?.received_at || "2024-01-02"}
+              <p style={{ "--my-order-w": "30%", letterSpacing: "1px" }}>
+                {calculateDifTime(item?.receivedAt)} oldin
               </p>
               <NumericFormat
                 value={item?.total}

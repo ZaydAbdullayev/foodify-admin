@@ -64,7 +64,7 @@ textarea {
   left: 50%;
   transform: scale(0.5);
   display: none;
-  z-index: 999;
+  z-index: 9999999999999;
 }
 
 .stm-animate.active {

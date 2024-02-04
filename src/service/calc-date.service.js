@@ -37,3 +37,23 @@ export const calculateMonthRange = (offset) => {
   };
 };
 
+export const calculateDifTime = (time) => {
+  const currentTime = new Date();
+  const oldTime = new Date(time);
+  const difference = currentTime - oldTime;
+  const diffMinutes = Math.floor(difference / (1000 * 60));
+
+  if (diffMinutes >= 60) {
+    const diffHours = Math.floor(diffMinutes / 60);
+    const remainingMinutes = diffMinutes % 60;
+
+    const diffDays = Math.floor(diffHours / 24);
+    const remainingHours = diffHours % 24;
+
+    const diffTimeStr = `${diffDays}:${remainingHours}:${remainingMinutes}`;
+    return diffTimeStr;
+  } else {
+    const diffTimeStr = `00:00:${diffMinutes}`;
+    return diffTimeStr;
+  }
+};

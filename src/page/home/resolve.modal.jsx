@@ -57,7 +57,7 @@ export const ResolveModal = () => {
     >
       <div className="u_modal_box">
         <form className="resolve_item" onSubmit={orderSituation}>
-          <p>{resolve?.product?.name}ni bekor qilish sababi ?</p>
+          <p>{resolve?.product?.name} ni bekor qilish sababi ?</p>
 
           <div className="resolve_options">
             <label

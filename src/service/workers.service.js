@@ -40,6 +40,15 @@ export const workerService = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["worker"],
     }),
+
+    // path for get all res's waiters
+    getWaiters: builder.query({
+      query: () => ({
+        url: `/get/waiters/${user?.user?.id}`,
+        method: "GET",
+      }),
+      providesTags: ["worker"],
+    }),
   }),
 });
 
@@ -48,4 +57,5 @@ export const {
   useDeleteWorkerMutation,
   useGetWorkersQuery,
   useUpdateWorkerMutation,
+  useGetWaitersQuery,
 } = workerService;

@@ -9,10 +9,12 @@ import { GiHotMeal } from "react-icons/gi";
 import { BiSolidTimer } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
 import { LoadingBtn } from "../../components/loading/loading";
+import { useGetWaitersQuery } from "../../service/workers.service";
 
 export const OrderById = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const location = useLocation().pathname;
+  const [open, setOpen] = React.useState(false);
   const lc = location.split("/");
   const t_id = lc[4].split("-").pop();
   const navigate = useNavigate();
@@ -85,7 +87,67 @@ export const OrderById = () => {
         >
           Buyutma qo'shish
         </button>
-        <button>Buyurtmani o'tkazish</button>
+        <button onClick={() => setOpen(true)}>Buyurtmani o'tkazish</button>
+      </div>
+      <TransactionWaiter
+        data={[]}
+        open={open}
+        setOpen={setOpen}
+        t_id={t_id}
+        res_id={user?.id}
+        lc={lc[3]}
+      />
+    </div>
+  );
+};
+
+export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
+  const { data = [] } = useGetWaitersQuery();
+  const [option, setOption] = React.useState(data?.innerData?.[0]?.id);
+
+  const updateOrder = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const value = Object.fromEntries(formData.entries());
+    socket.emit("/update/table", {
+      id: t_id,
+      location: lc,
+      res_id: res_id,
+      worker_id: value?.worker,
+    });
+  };
+  return (
+    <div className={open ? "u_modal_container open" : "u_modal_container"}>
+      <div className="u_modal_box">
+        <form className="resolve_item" onSubmit={updateOrder}>
+          <p>Buyurtmani o'tkazish</p>
+          <div className="resolve_options">
+            {data?.innerData?.map((item) => {
+              return (
+                <label
+                  onClick={() => setOption(item?.id)}
+                  className={
+                    option === item?.id
+                      ? "resolve_option active"
+                      : "resolve_option"
+                  }
+                  key={item.id}
+                >
+                  <input type="radio" name="worker" value={item?.name} />
+                  <span style={{ textTransform: "capitalize" }}>
+                    {item?.name}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <div className="resolve_options resolve_btn_box">
+            <button type="button" onClick={() => setOpen(false)}>
+              Bekor qilish
+            </button>
+            <button>OK</button>
+          </div>
+        </form>
       </div>
     </div>
   );

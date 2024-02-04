@@ -23,6 +23,7 @@
 .resolve_options {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--gap3);
 }
