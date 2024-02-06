@@ -28,6 +28,15 @@ export const groupsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["groups"],
     }),
+
+    deleteStGroups: builder.mutation({
+      query: (value) => ({
+        url: "delete/ingredientGroup",
+        method: "DELETE",
+        body: value,
+      }),
+      invalidatesTags: ["groups"],
+    }),
   }),
 });
 
@@ -35,4 +44,5 @@ export const {
   useAddStGroupsMutation,
   useUpdateStGroupsMutation,
   useGetStGroupsQuery,
+  useDeleteStGroupsMutation,
 } = groupsApi;

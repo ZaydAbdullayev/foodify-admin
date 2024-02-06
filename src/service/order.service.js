@@ -1,7 +1,7 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const storeApi = apiSlice.injectEndpoints({
+export const order_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // path fro get all product list by restaurant id
     getProduct: builder.query({
@@ -51,4 +51,4 @@ export const {
   useResolveItemMutation,
   useGetOrderByWaiterIdQuery,
   useGetOrderByStatusQuery,
-} = storeApi;
+} = order_Api;

@@ -8,7 +8,7 @@ export const cashboxGr_Api = apiSlice.injectEndpoints({
         url: `get/${user?.user?.id}/transactionGroups`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["tr-group"],
     }),
 
     addCashboxGr: builder.mutation({
@@ -17,7 +17,7 @@ export const cashboxGr_Api = apiSlice.injectEndpoints({
         method: "POST",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["tr-group"],
     }),
 
     updateCashboxGr: builder.mutation({
@@ -26,15 +26,16 @@ export const cashboxGr_Api = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["tr-group"],
     }),
 
     deleteCashboxGr: builder.mutation({
-      query: (id) => ({
-        url: `delete/transactionGroups/${id}`,
+      query: (ids) => ({
+        url: `delete/transactionGroups`,
         method: "DELETE",
+        body: ids,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["tr-group"],
     }),
   }),
 });

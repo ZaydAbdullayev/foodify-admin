@@ -5,10 +5,16 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./carry-item.modal";
 import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,7 +23,9 @@ export const StorageCarryUp = () => {
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
@@ -97,7 +105,14 @@ export const StorageCarryUp = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("carry")
+                    : setAllDocuments("carry", cuttingData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -140,6 +155,7 @@ export const StorageCarryUp = () => {
                 year: "numeric",
               });
               const innerData = JSON.parse(item?.ingredients);
+              const check = ckddt?.carry?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -155,26 +171,24 @@ export const StorageCarryUp = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("carry", item));
+                      navigate(`?page-code=carry`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("carry", item));
+                        navigate(`?page-code=carry`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem?.id === item?.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "14%" }}>{date}</p>

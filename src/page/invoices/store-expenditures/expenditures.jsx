@@ -5,10 +5,16 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./expenditures.modal";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStExpenditureQuery } from "../../../service/expenditures.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageExpenditures = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,7 +23,9 @@ export const StorageExpenditures = () => {
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: invoiceData = [], isLoading } = useGetStExpenditureQuery();
   React.useEffect(() => {
@@ -76,7 +84,14 @@ export const StorageExpenditures = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("invoice")
+                    : setAllDocuments("invoice", invoiceData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -117,6 +132,7 @@ export const StorageExpenditures = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -132,26 +148,24 @@ export const StorageExpenditures = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("invoice", item));
+                      navigate(`?page-code=invoice`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("invoice", item));
+                        navigate(`?page-code=invoice`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem?.id === item?.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "15.6%" }}>{date}</p>

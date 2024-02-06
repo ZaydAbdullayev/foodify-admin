@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
 import "./storage.css";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalModal, UniversalUModal } from "../../components/modal/modal";
+import { UniversalModal } from "../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../redux/active";
 import { Outlet } from "react-router-dom";
 import { useGetStoreQuery } from "../../service/store.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalFilterBox } from "../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../redux/deleteFoods";
+import { useNavigate } from "react-router-dom";
 
 export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data = [], isLoading } = useGetStoreQuery();
   useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
@@ -42,7 +50,14 @@ export const Storage = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("main")
+                    : setAllDocuments("main", data?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -62,6 +77,7 @@ export const Storage = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.main?.some((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -70,32 +86,24 @@ export const Storage = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() =>
+                  onDoubleClick={() => {
                     dispatch(
-                      acActive({
-                        id: !acItem.id ? item.id : null,
-                        name: !acItem.name ? item.name : "",
-                      })
-                    )
-                  }
+                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                    );
+                    dispatch(setDocuments("main", item));
+                    navigate(`?page-code=main`);
+                  }}
                 >
                   <label
-                    onClick={() =>
+                    onClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("main", item));
+                      navigate(`?page-code=main`);
+                    }}
                   >
-                    {checked ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : acItem.id === item.id ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : (
-                      <input type="checkbox" name="id" />
-                    )}
+                    <input type="checkbox" name="id" checked={check} />
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>
@@ -105,13 +113,12 @@ export const Storage = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="main">
-        <p>Ombor qo'shish</p>
-        <input type="text" name="name" placeholder="Ombor nomi*" required />
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
-      <UniversalUModal type="main" setChecked={setChecked}>
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="main"
+        setChecked={setChecked}
+        title="Ombor qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -120,8 +127,8 @@ export const Storage = () => {
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+      </UniversalModal>
     </div>
   );
 };

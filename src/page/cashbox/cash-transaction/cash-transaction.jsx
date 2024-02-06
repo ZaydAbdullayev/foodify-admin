@@ -1,35 +1,38 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useGetCashboxQuery } from "../../../service/cashbox.service";
 import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { useGetCashTransactionQuery } from "../../../service/cash-transaction.service";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const CashboxTransaction = () => {
   const user = JSON?.parse(localStorage.getItem("user"))?.user || [];
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [modalType, setModalType] = useState("default");
-  //   const [checkedData, setCheckedData] = useState([]);
   const today = new Date().toISOString().split("T")[0];
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delTouter);
   const dispatch = useDispatch();
-  const { data: invoiceData = [] } = useGetStInvoiceQuery();
+  const navigate = useNavigate();
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
   const { data: cashboxGrData = [] } = useGetCashboxGrQuery();
   const { data: cashTrData = [] } = useGetCashTransactionQuery();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
-  console.log("trData", cashTrData);
-
   //   const getProduct = (item, status) => {
   //     const isChecked = checkedData?.some((i) => i.id === item?.id);
   //     if (status === 0) {
@@ -92,7 +95,14 @@ export const CashboxTransaction = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(checked ? false : true);
+                dispatch(
+                  checked
+                    ? setRelease("trsn")
+                    : setAllDocuments("trsn", cashTrData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -132,6 +142,7 @@ export const CashboxTransaction = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const isChecked = ckddt?.trsn?.some((i) => i.id === item?.id);
               return (
                 <div className={"storage_body__box"} key={item?.id}>
                   <div
@@ -140,28 +151,24 @@ export const CashboxTransaction = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem?.id ? item?.id : null,
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("trsn", item));
+                      navigate(`?page-code=trsn`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem?.id ? item?.id : null,
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("trsn", item));
+                        navigate(`?page-code=trsn`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={isChecked} />
                     </label>
                     <p>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>

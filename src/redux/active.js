@@ -21,7 +21,7 @@ export const reActive = (
 };
 
 const initialState = {
-  id: "",
+  id: null,
   name: "",
   group: "",
   ingredient_group: "",
@@ -53,9 +53,13 @@ const initialState = {
   ActualAddress: "",
   unit: "",
   price: "",
+  payment_type: "",
+  res_id: user?.id,
 };
 
 export const reActiveThing = (state = initialState, action) => {
+  console.log("state", state);
+  console.log("reActiveThing", action);
   switch (action.type) {
     case "ACTIVE_THING":
       return { ...state, ...action.payload };
@@ -77,5 +81,5 @@ export const reStorageId = (state = "", action) => {
 
 export const acActive = (payload) => ({ type: "ACTIVE_ITEM", payload });
 export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
-export const acPassiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
+export const acPassiveThing = (payload) => ({ type: "PASSIVE_THING", payload });
 export const acStorageId = (payload) => ({ type: "STORAGE_ID", payload });

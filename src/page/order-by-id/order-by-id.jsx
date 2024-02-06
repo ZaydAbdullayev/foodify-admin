@@ -109,12 +109,15 @@ export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const value = Object.fromEntries(formData.entries());
-    socket.emit("/update/table", {
+    const uData = {
       id: t_id,
       location: lc,
+      status: 2,
       res_id: res_id,
       worker_id: value?.worker,
-    });
+    };
+    socket.emit("/update/table", uData);
+    console.log(uData);
   };
   return (
     <div className={open ? "u_modal_container open" : "u_modal_container"}>
@@ -133,7 +136,7 @@ export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
                   }
                   key={item.id}
                 >
-                  <input type="radio" name="worker" value={item?.name} />
+                  <input type="radio" name="worker" value={item?.id} />
                   <span style={{ textTransform: "capitalize" }}>
                     {item?.name}
                   </span>

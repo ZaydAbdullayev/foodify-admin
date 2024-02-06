@@ -30,9 +30,10 @@ export const invoicegr_Api = apiSlice.injectEndpoints({
     }),
 
     deleteStInvoiceGroup: builder.mutation({
-      query: (id) => ({
-        url: `delete/invoiceGroup/${id}`,
+      query: (ids) => ({
+        url: `delete/invoiceGroup`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["invoice-group"],
     }),

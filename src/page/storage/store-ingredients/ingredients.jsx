@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -18,8 +23,10 @@ export const StorageIngredients = () => {
   const [newIngGr, setNewIngGr] = useState(null);
   const [showMore, setShowMore] = useState(null);
   const [newGrData, setNewGrData] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: groupData = [] } = useGetStGroupsQuery();
   const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
   React.useEffect(() => {
@@ -47,7 +54,14 @@ export const StorageIngredients = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("ingredient")
+                    : setAllDocuments("ingredient", ingredientData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -106,6 +120,7 @@ export const StorageIngredients = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.ingredient?.find((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -121,36 +136,24 @@ export const StorageIngredients = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                          group: !acItem.group ? item.group : "",
-                          unit: !acItem.unit ? item.unit : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("ingredient", item));
+                      navigate(`?page-code=ingredient`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                            group: !acItem.group ? item.group : "",
-                            unit: !acItem.unit ? item.unit : "",
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("ingredient", item));
+                        navigate(`?page-code=ingredient`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem.id === item.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
@@ -250,18 +253,35 @@ export const StorageIngredients = () => {
       <UniversalModal
         type={newIngGr === "new" ? "newIngGr" : "ing"}
         newGrData={{ name: newGrData, res_id: user?.id }}
+        setChecked={setChecked}
+        title="Ingredient qo'shish"
+        status={acItem.id ? false : true}
       >
-        <p>Ingredient qo'shish</p>
-        <input type="text" name="name" placeholder="Mahsulot nomi*" required />
+        <input
+          type="text"
+          name="name"
+          defaultValue={acItem.name}
+          placeholder="Ingredient nomi*"
+          required
+        />
         <input type="hidden" name="res_id" value={user?.id} />
+        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
         <select name="unit">
-          <option value="default">O'lchov birligi tanlang*</option>
+          {acItem?.unit ? (
+            <option value={acItem.unit}>{acItem.unit}</option>
+          ) : (
+            <option value="default">O'ljov birligi</option>
+          )}
           <option value="kg">kg</option>
           <option value="l">litr</option>
           <option value="ta">ta</option>
         </select>
         <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
-          <option value="default">Guruh tanlang*</option>
+          {acItem?.group ? (
+            <option value={acItem.group}>{acItem.group}</option>
+          ) : (
+            <option value="default">Guruh tanlang*</option>
+          )}
           {groupData?.data?.map((item, index) => {
             return (
               <option value={item.name} key={index}>
@@ -281,48 +301,6 @@ export const StorageIngredients = () => {
           />
         )}
       </UniversalModal>
-      <UniversalUModal
-        type={newIngGr === "new" ? "newIngGr" : "ing"}
-        newGrData={{ name: newGrData, res_id: user?.id }}
-        setChecked={setChecked}
-      >
-        <p>Ingradientni taxrirlash</p>
-        <input
-          type="text"
-          name="name"
-          defaultValue={acItem.name}
-          placeholder="Ingredient nomi*"
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem?.id} />
-        <select name="unit">
-          <option value={acItem.unit}>{acItem.unit}</option>
-          <option value="kg">kg</option>
-          <option value="l">litr</option>
-          <option value="ta">ta</option>
-        </select>
-        <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
-          <option value={acItem.group}>{acItem.group}</option>
-          {groupData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-          <option value="new">Yangi guruh</option>
-        </select>
-        {newIngGr === "new" && (
-          <input
-            type="text"
-            name="name"
-            placeholder="Yangi guruh nomi*"
-            required
-            onChange={(e) => setNewGrData(e.target.value)}
-          />
-        )}
-      </UniversalUModal>
     </div>
   );
 };

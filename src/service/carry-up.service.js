@@ -30,9 +30,10 @@ export const carryUp_Api = apiSlice.injectEndpoints({
     }),
 
     deleteStCarryUp: builder.mutation({
-      query: (id) => ({
-        url: `delete/carry-up/${id}`,
+      query: (ids) => ({
+        url: `delete/carry-up`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["carry-up"],
     }),

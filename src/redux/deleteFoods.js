@@ -1,11 +1,12 @@
 const initialState = {
   products: [],
   income: [],
-  expense: [],
+  invoice: [],
+  exp: [],
   edr: [],
   cutting: [],
   damaged: [],
-  curryUp: [],
+  curry: [],
   making: [],
   preOrder: [],
   main: [],
@@ -14,12 +15,15 @@ const initialState = {
   group: [],
   ing: [],
   newIngGr: [],
-  supp: [],
+  supplier: [],
   invGr: [],
   cashbox: [],
   cashboxGr: [],
   trsn: [],
   table: [],
+  ingradient: [],
+  envanter: [],
+  orderReport: [],
 };
 
 export const rootDocuments = (state = initialState, action) => {
@@ -28,9 +32,9 @@ export const rootDocuments = (state = initialState, action) => {
       const existingDocuments = state[action.payload.roomId];
       const newDocument = action.payload.document;
 
-      if (existingDocuments.includes(newDocument)) {
+      if (existingDocuments?.some((doc) => doc?.id === newDocument?.id)) {
         const filteredDocuments = existingDocuments.filter(
-          (doc) => doc !== newDocument
+          (doc) => doc?.id !== newDocument?.id
         );
 
         return {
@@ -47,6 +51,11 @@ export const rootDocuments = (state = initialState, action) => {
       return {
         ...state,
         [action.payload.roomId]: [],
+      };
+    case "SET_ALL_DOCUMENTS":
+      return {
+        ...state,
+        [action.payload.roomId]: action.payload.documents,
       };
 
     default:
@@ -68,3 +77,13 @@ export const setRelease = (roomId) => ({
     roomId,
   },
 });
+
+export const setAllDocuments = (roomId, documents) => ({
+  type: "SET_ALL_DOCUMENTS",
+  payload: {
+    roomId,
+    documents,
+  },
+});
+
+

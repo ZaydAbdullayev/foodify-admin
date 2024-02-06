@@ -30,9 +30,10 @@ export const invoices_Api = apiSlice.injectEndpoints({
     }),
 
     deleteStInvoice: builder.mutation({
-      query: (id) => ({
-        url: `delete/receivedGoods/${id}`,
+      query: (ids) => ({
+        url: `delete/receivedGoods`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["invoices"],
     }),

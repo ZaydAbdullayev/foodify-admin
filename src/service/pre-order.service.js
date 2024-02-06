@@ -1,7 +1,7 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const invoicegr_Api = apiSlice.injectEndpoints({
+export const preOrder_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPreOrder: builder.query({
       query: () => ({
@@ -34,9 +34,10 @@ export const invoicegr_Api = apiSlice.injectEndpoints({
     }),
 
     deletePreOrder: builder.mutation({
-      query: (id) => ({
-        url: `delete/preOrders/${id}`,
+      query: (ids) => ({
+        url: `delete/preOrders`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["pre-order"],
     }),
@@ -48,4 +49,4 @@ export const {
   useDeletePreOrderMutation,
   useGetPreOrderQuery,
   useUpdatePreOrderMutation,
-} = invoicegr_Api;
+} = preOrder_Api;

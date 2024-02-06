@@ -1,20 +1,27 @@
 import React, { useState } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useGetCashboxQuery } from "../../../service/cashbox.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
+import { useNavigate } from "react-router-dom";
 
 export const Cashboxes = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
@@ -42,7 +49,14 @@ export const Cashboxes = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("cashbox")
+                    : setAllDocuments("cashbox", cashboxData.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -62,6 +76,7 @@ export const Cashboxes = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.cashbox?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -70,30 +85,24 @@ export const Cashboxes = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() =>
+                  onDoubleClick={() => {
                     dispatch(
-                      acActive({
-                        id: !acItem.id ? item.id : null,
-                        name: !acItem.name ? item.name : "",
-                      })
-                    )
-                  }
+                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                    );
+                    dispatch(setDocuments("cashbox", item));
+                    navigate(`?page-code=cashbox`);
+                  }}
                 >
                   <label
-                    onClick={() =>
+                    onClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("cashbox", item));
+                      navigate(`?page-code=cashbox`);
+                    }}
                   >
-                    {checked ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : (
-                      <input type="checkbox" name="id" />
-                    )}
+                    <input type="checkbox" name="id" checked={check} />
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>
@@ -103,13 +112,11 @@ export const Cashboxes = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="cashbox">
-        <p>Kassa qo'shish</p>
-        <input type="text" name="name" placeholder="Kassa nomi*" required />
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
-      <UniversalUModal type="cashbox">
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="cashbox"
+        title="Kassa qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -118,8 +125,8 @@ export const Cashboxes = () => {
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+      </UniversalModal>
     </div>
   );
 };

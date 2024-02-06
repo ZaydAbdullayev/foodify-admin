@@ -14,7 +14,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));

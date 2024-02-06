@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useGetStInvoiceGroupQuery } from "../../../service/invoice-group.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -10,14 +9,19 @@ import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { RiExchangeLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const InvoicesGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStInvoiceGroupQuery();
@@ -52,7 +56,14 @@ export const InvoicesGroups = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("invGr")
+                    : setAllDocuments("invGr", groupData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -75,6 +86,7 @@ export const InvoicesGroups = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.invGr?.some((el) => el?.id === item?.id);
               return (
                 <div className={"storage_body__box"}>
                   <div
@@ -84,30 +96,24 @@ export const InvoicesGroups = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("invGr", item));
+                      navigate(`?page-code=invGr`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("invGr", item));
+                        navigate(`?page-code=invGr`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p style={{ "--data-line-size": "94%" }}>{item.name}</p>
@@ -118,13 +124,11 @@ export const InvoicesGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="invGr">
-        <p>Guruh qo'shish</p>
-        <input type="text" name="name" placeholder="Guruh nomi*" required />
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
-      <UniversalUModal type="invGr">
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="invGr"
+        title="Guruh qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -133,8 +137,8 @@ export const InvoicesGroups = () => {
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem?.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+      </UniversalModal>
     </div>
   );
 };

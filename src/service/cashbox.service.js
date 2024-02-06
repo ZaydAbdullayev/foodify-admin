@@ -8,7 +8,7 @@ export const cashbox_Api = apiSlice.injectEndpoints({
         url: `get/cashbox/${user?.user?.id}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["cashbox"],
     }),
 
     addCashbox: builder.mutation({
@@ -17,7 +17,7 @@ export const cashbox_Api = apiSlice.injectEndpoints({
         method: "POST",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox"],
     }),
 
     updateCashbox: builder.mutation({
@@ -26,15 +26,16 @@ export const cashbox_Api = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox"],
     }),
 
     deleteCashbox: builder.mutation({
-      query: (id) => ({
-        url: `delete/cashbox/${id}`,
+      query: (ids) => ({
+        url: `delete/cashbox`,
         method: "DELETE",
+        body: ids,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox"],
     }),
   }),
 });

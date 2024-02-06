@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./pre-order.modal";
 import { useGetStProductQuery } from "../../../service/s-products.service";
 import { useGetPreOrderQuery } from "../../../service/pre-order.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const InvoicePreOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStProductQuery();
   const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
   React.useEffect(() => {
@@ -107,7 +115,14 @@ export const InvoicePreOrders = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("preOrder")
+                    : setAllDocuments("preOrder", preOrder?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -142,6 +157,7 @@ export const InvoicePreOrders = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const check = ckddt?.preOrder?.some((el) => el?.id === item?.id);
               const innerData = JSON.parse(item?.ingredients);
               return (
                 <div
@@ -159,28 +175,24 @@ export const InvoicePreOrders = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem?.id ? item?.id : null,
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("preOrder", item));
+                      navigate(`?page-code=preOrder`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem?.id ? item?.id : null,
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("preOrder", item));
+                        navigate(`?page-code=preOrder`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p

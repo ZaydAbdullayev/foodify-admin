@@ -1,7 +1,7 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const storeApi = apiSlice.injectEndpoints({
+export const invenory_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSync: builder.query({
       query: () => ({
@@ -22,4 +22,4 @@ export const storeApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useAddSyncMutation, useGetSyncQuery } = storeApi;
+export const { useAddSyncMutation, useGetSyncQuery } = invenory_Api;

@@ -30,9 +30,10 @@ export const cutting_Api = apiSlice.injectEndpoints({
     }),
 
     deleteStCutting: builder.mutation({
-      query: (id) => ({
-        url: `delete/cutting/${id}`,
+      query: (ids) => ({
+        url: `delete/cutting`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["cutting"],
     }),

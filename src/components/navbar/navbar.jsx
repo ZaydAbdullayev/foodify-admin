@@ -7,8 +7,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acMedia } from "../../redux/media";
 import { UniversalFilterBox } from "../filter/filter";
-import { acOpenUModal, acOpenUModalU } from "../../redux/u-modal";
-import DeleteSelectedFoods from "../../service/delete-foods.service";
+import { acOpenUModal } from "../../redux/u-modal";
+import DeleteSelectedElementss from "../../service/delete-elements.service";
 import { enqueueSnackbar as es } from "notistack";
 import { setRelease } from "../../redux/deleteFoods";
 
@@ -30,14 +30,12 @@ export const Navbar = () => {
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
-  const acItem = useSelector((state) => state.active);
-  const acP = useSelector((state) => state.activeThing);
   const delDocuments = useSelector((state) => state.delRouter);
   const page_code = useLocation().search.split("=")[1];
   const delData = delDocuments?.[page_code];
 
   const deleteDocuments = async () => {
-    const result = await DeleteSelectedFoods(page_code, delData);
+    const result = await DeleteSelectedElementss(page_code, delData);
     if (result.status === "success") {
       es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
       dispatch(setRelease(page_code));
@@ -59,11 +57,7 @@ export const Navbar = () => {
   };
 
   const openUModalU = () => {
-    if (acP.id) {
-      dispatch(acOpenUModal());
-    } else {
-      dispatch(acOpenUModalU());
-    }
+    dispatch(acOpenUModal());
   };
 
   const handleSort = (value) => {
@@ -99,7 +93,7 @@ export const Navbar = () => {
           {status?.includes(2) && (
             <button
               style={
-                acItem.id || acP?.id
+                delDocuments?.[page_code]?.length === 1
                   ? {}
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }

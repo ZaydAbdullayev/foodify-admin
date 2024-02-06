@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./making-food.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 // import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 import { useGetMakedFoodQuery } from "../../../service/making-food.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const InvoicesMakingFood = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
   const { data: makedFood = [], isLoading } = useGetMakedFoodQuery();
   React.useEffect(() => {
@@ -82,7 +90,14 @@ export const InvoicesMakingFood = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("making")
+                    : setAllDocuments("making", makedFood?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -122,6 +137,7 @@ export const InvoicesMakingFood = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const check = ckddt?.making?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -137,28 +153,24 @@ export const InvoicesMakingFood = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem?.id ? item?.id : null,
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("making", item));
+                      navigate(`?page-code=making`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem?.id ? item?.id : null,
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("making", item));
+                        navigate(`?page-code=making`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "12%" }}>{date}</p>

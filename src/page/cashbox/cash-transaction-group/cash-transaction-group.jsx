@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActive, acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [status, setStatus] = useState(false);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data = [], isLoading } = useGetCashboxGrQuery();
@@ -61,7 +66,14 @@ export const TransactionGroups = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(checked ? false : true);
+                dispatch(
+                  checked
+                    ? setRelease("cashboxGr")
+                    : setAllDocuments("cashboxGr", data?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -89,6 +101,7 @@ export const TransactionGroups = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.cashboxGr?.some((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -97,30 +110,24 @@ export const TransactionGroups = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() =>
+                  onDoubleClick={() => {
                     dispatch(
-                      acActive({
-                        id: !acItem.id ? item.id : null,
-                        name: !acItem.name ? item.name : "",
-                      })
-                    )
-                  }
+                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                    );
+                    dispatch(setDocuments("cashboxGr", item));
+                    navigate(`?page-code=cashboxGr`);
+                  }}
                 >
                   <label
-                    onClick={() =>
+                    onClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("cashboxGr", item));
+                      navigate(`?page-code=cashboxGr`);
+                    }}
                   >
-                    {checked ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : (
-                      <input type="checkbox" name="id" />
-                    )}
+                    <input type="checkbox" name="id" checked={check} />
                   </label>
                   <p>{index + 1}</p>
                   {displayKeys?.map(({ name, size, position }) => (
@@ -144,40 +151,36 @@ export const TransactionGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="cashboxGr">
-        <p>Kassa qo'shish</p>
+      <UniversalModal
+        type="cashboxGr"
+        title={"Kassa qo'shish"}
+        status={acItem?.id ? false : true}
+      >
         <input type="text" name="name" placeholder="Kassa nomi*" required />
         <select name="category" onChange={(e) => setStatus(e.target.value)}>
-          <option value="default">To'lov turini tanlang*</option>
+          {acItem?.category ? (
+            <option value={acItem?.category}>{acItem?.category}</option>
+          ) : (
+            <option value="default">To'lov turini tanlang*</option>
+          )}
           <option value="operating">Operativ</option>
           <option value="finacialy">Moliyaviy</option>
           <option value="invest">Sarmoya</option>
         </select>
         {status === "operating" && (
           <select name="activity_kind">
-            <option value="default">Kategoriya tanlang*</option>
+            {acItem?.activity_kind ? (
+              <option value={acItem?.activity_kind}>
+                {acItem?.activity_kind}
+              </option>
+            ) : (
+              <option value="default">Faoliyat turi tanlang*</option>
+            )}
             <option value="permanent">Doimiy</option>
           </select>
         )}
         <input type="hidden" name="res_id" value={user?.id} />
       </UniversalModal>
-      <UniversalUModal type="cashboxGr">
-        <p>Taxrirlash</p>
-        <input
-          type="text"
-          name="name"
-          defaultValue={acItem.name}
-          placeholder="Kassa nomi*"
-          required
-        />
-        <select name="payment_type">
-          <option value="default">To'lov turini tanlang*</option>
-          <option value="1">Naqd</option>
-          <option value="2">Plastik</option>
-        </select>
-        <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem.id} />
-      </UniversalUModal>
     </div>
   );
 };

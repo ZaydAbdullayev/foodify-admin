@@ -1,23 +1,27 @@
 import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useGetStSuplierQuery } from "../../../service/suplier.service";
 import { PatternFormat } from "react-number-format";
+import { useNavigate } from "react-router-dom";
+import { setAllDocuments, setRelease } from "../../../redux/deleteFoods";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { setDocuments } from "../../../redux/deleteFoods";
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const [sort, setSort] = useState({ id: null, state: false });
   const [type, setType] = useState();
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: suplierData = [], isLoading } = useGetStSuplierQuery();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
@@ -44,7 +48,14 @@ export const StorageSupplier = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(checked ? false : true);
+                dispatch(
+                  checked
+                    ? setRelease("supplier")
+                    : setAllDocuments("supplier", suplierData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -100,6 +111,7 @@ export const StorageSupplier = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.supplier?.some((el) => el.id === item.id);
               return (
                 <div key={item.id} className={"storage_body__box"}>
                   <div
@@ -109,20 +121,24 @@ export const StorageSupplier = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
-                      dispatch(acActive(!acItem.id ? item : {}))
-                    }
+                    onDoubleClick={() => {
+                      dispatch(
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("supplier", item));
+                      navigate(`?page-code=supplier`);
+                    }}
                   >
                     <label
-                      onClick={() => dispatch(acActive(!acItem.id ? item : {}))}
+                      onClick={() => {
+                        dispatch(
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("supplier", item));
+                        navigate(`?page-code=supplier`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem.id === item.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" checked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p
@@ -151,143 +167,12 @@ export const StorageSupplier = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="supp" setChecked={setChecked}>
-        <p>Yetkazuvchi qo'shish</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Yetkazuvchi nomi*"
-          required
-        />
-        <select name="type" onChange={(e) => setType(e.target.value)}>
-          <option value="default">Yetkazuvchi turi</option>
-          <option value="person">Oddiy shaxs</option>
-          <option value="juridical">Yuridik shaxs</option>
-        </select>
-        {type === "person" ? (
-          <>
-            <input
-              type="text"
-              name="fullname"
-              placeholder="To'liq ism/familiyasi"
-              required
-            />
-            <label>
-              <input
-                type="text"
-                name="passport"
-                placeholder="Passport ma'limotlari"
-                required
-              />
-              <input type="text" name="SNILS" placeholder="SNLS" required />
-            </label>
-            <label>
-              <input
-                type="text"
-                name="code"
-                placeholder="Bo'lim kodi"
-                required
-              />
-              <input
-                type="date"
-                name="date"
-                placeholder="Berilgan vaqti"
-                required
-              />
-            </label>
-            <label>
-              <input type="text" name="INN" placeholder="INN" required />
-              <input
-                type="text"
-                name="issued_by"
-                placeholder="Kim tomonidan berilgan"
-                required
-              />
-            </label>
-            <label>
-              <input
-                type="text"
-                name="registered_address"
-                placeholder="Bazoviy manzili"
-                required
-              />
-              <input
-                type="text"
-                name="residence_address"
-                placeholder="Yashash manzili"
-                required
-              />
-            </label>
-            <PatternFormat
-              format="+998 ## ### ## ##"
-              name="number"
-              mask="_"
-              placeholder="+998"
-              required
-            />
-          </>
-        ) : (
-          type === "juridical" && (
-            <>
-              <input
-                type="text"
-                name="fullOrganizationName"
-                placeholder="Kompaniya to'liq nomi"
-                required
-              />
-              <label>
-                <input
-                  type="text"
-                  name="shortOrganizationName"
-                  placeholder="Kompaniya qisqa nomi"
-                  required
-                />
-                <input type="text" name="INN" placeholder="INN" required />
-              </label>
-              <label>
-                <input type="text" name="code" placeholder="email" required />
-                <PatternFormat
-                  format="+998 ## ### ####"
-                  name="number"
-                  mask="_"
-                  placeholder="+998"
-                  required
-                />
-              </label>
-              <label>
-                <input type="text" name="KPP" placeholder="KPP" required />
-                <input type="text" name="OKPO" placeholder="OKPO" required />
-              </label>
-              <label>
-                <input type="text" name="ORGN" placeholder="ORGN" required />
-                <input
-                  type="text"
-                  name="headDirector"
-                  placeholder="Direktor ismi"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="Yuridik_address"
-                  placeholder="Bazoviy manzili"
-                  required
-                />
-                <input
-                  type="text"
-                  name="ActualAddress"
-                  placeholder="Yashash manzili"
-                  required
-                />
-              </label>
-            </>
-          )
-        )}
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
-      <UniversalUModal type="supp" setChecked={setChecked}>
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="supp"
+        setChecked={setChecked}
+        title="Yetkazuvchi qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -479,8 +364,8 @@ export const StorageSupplier = () => {
           )
         )}
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem?.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+      </UniversalModal>
     </div>
   );
 };

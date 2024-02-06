@@ -7,8 +7,14 @@ import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageCutting = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,9 +23,11 @@ export const StorageCutting = () => {
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  const { data: dmData = [], isLoading } = useGetStCuttingQuery();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
@@ -41,8 +49,8 @@ export const StorageCutting = () => {
   };
 
   const sortData =
-    cuttingData?.data &&
-    [...cuttingData?.data]?.sort((a, b) => {
+    dmData?.data &&
+    [...dmData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -82,7 +90,14 @@ export const StorageCutting = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("cutting")
+                    : setAllDocuments("cutting", dmData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -117,6 +132,7 @@ export const StorageCutting = () => {
                 month: "numeric",
                 year: "numeric",
               });
+              const check = ckddt?.cutting?.some((el) => el?.id === item?.id);
               return (
                 <div
                   key={item?.id}
@@ -133,26 +149,24 @@ export const StorageCutting = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("cutting", item));
+                      navigate(`?page-code=cutting`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("cutting", item));
+                        navigate(`?page-code=cutting`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem?.id === item?.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "12%" }}>{date}</p>
@@ -261,9 +275,7 @@ export const StorageCutting = () => {
         getProduct={getProduct}
         NUM={
           !isLoading && {
-            num:
-              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
-              1,
+            num: JSON.parse(dmData?.data ? dmData?.data[0]?.order : 0) + 1,
           }
         }
         setId={setId}

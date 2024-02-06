@@ -17,7 +17,7 @@ export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const { data: storeData = [] } = useGetStCategoryQuery();
   const today = new Date().toISOString().slice(0, 10);
   console.log(storeData);

@@ -6,18 +6,27 @@ import { InvoicesModal } from "./invoices.modal";
 import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useGetStInvoiceQuery } from "../../../service/invoices.service";
 import { CalculateTotalP } from "../../../service/calc.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageInvoices = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
+  const [payment, setPayment] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStIngredientsQuery();
   const { data: invoiceData = [], isLoading } = useGetStInvoiceQuery();
   React.useEffect(() => {
@@ -97,7 +106,14 @@ export const StorageInvoices = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(checked ? false : true);
+                dispatch(
+                  checked
+                    ? setRelease("invoice")
+                    : setAllDocuments("invoice", invoiceData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -142,6 +158,7 @@ export const StorageInvoices = () => {
                 year: "numeric",
               });
               const ingredient = JSON.parse(item?.ingredients);
+              const check = ckddt?.invoice?.some((i) => i.id === item?.id);
               return (
                 <div
                   className={
@@ -158,26 +175,24 @@ export const StorageInvoices = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("invoice", item));
+                      navigate(`?page-code=invoice`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("invoice", item));
+                        navigate(`?page-code=invoice`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem?.id === item.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "13%" }}>{date}</p>
@@ -199,17 +214,21 @@ export const StorageInvoices = () => {
                         "--data-line-size": "10%",
                         justifyContent: "center",
                       }}
-                      onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
                     >
-                      <u
-                        style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
-                        hisoblash
-                      </u>
+                      <pre>
+                        <u
+                          style={
+                            showMore === item?.id ? { color: "#787aff" } : {}
+                          }
+                          onClick={() =>
+                            setShowMore(showMore === item?.id ? null : item?.id)
+                          }
+                        >
+                          hisoblash
+                        </u>
+                        <br />
+                        <u>to'lov</u>
+                      </pre>
                     </p>
                     <p
                       style={{

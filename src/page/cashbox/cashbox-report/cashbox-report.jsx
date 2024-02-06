@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../cash-universal.css";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { NumericFormat } from "react-number-format";
 import AnimatedNumber from "animated-number-react";
@@ -18,7 +17,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const search = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
   const { data: trData = [], isLoading } = useGetTransactionQuery(search?.date);
@@ -128,9 +127,6 @@ export const TransactionRapor = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
-                      dispatch(acActive(!acItem?.id ? item : null))
-                    }
                   >
                     <p>{index + 1}</p>
                     {displayKeys?.map((key, index) => {

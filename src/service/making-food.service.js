@@ -30,9 +30,10 @@ export const makingFood_api = apiSlice.injectEndpoints({
     }),
 
     deleteMakedFood: builder.mutation({
-      query: (id) => ({
-        url: `delete/preparedFoods/${id}`,
+      query: (ids) => ({
+        url: `delete/preparedFoods`,
         method: "DELETE",
+        body: ids,
       }),
     }),
   }),

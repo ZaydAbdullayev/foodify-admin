@@ -48,9 +48,10 @@ export const storeApi = apiSlice.injectEndpoints({
     }),
 
     deleteStore: builder.mutation({
-      query: (value) => ({
-        url: `delete/storage/${value}`,
+      query: (ids) => ({
+        url: `delete/storage`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["store"],
     }),

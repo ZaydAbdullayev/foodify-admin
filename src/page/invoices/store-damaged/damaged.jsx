@@ -6,9 +6,15 @@ import { InvoicesModal } from "./damaged.modal";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
 import { useGetStDamagedQuery } from "../../../service/damaged.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageDamaged = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -17,7 +23,9 @@ export const StorageDamaged = () => {
   const [showMore, setShowMore] = useState(null);
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
   const { data: demagedData = [], isLoading } = useGetStDamagedQuery();
   React.useEffect(() => {
@@ -97,7 +105,14 @@ export const StorageDamaged = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("damaged")
+                    : setAllDocuments("damaged", demagedData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -141,6 +156,7 @@ export const StorageDamaged = () => {
                 year: "numeric",
               });
               const innerData = JSON.parse(item?.ingredients);
+              const check = ckddt?.damaged?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -156,24 +172,24 @@ export const StorageDamaged = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("damaged", item));
+                      navigate(`?page-code=damaged`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                        acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("damaged", item));
+                        navigate(`?page-code=damaged`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "16.5%" }}>{date}</p>

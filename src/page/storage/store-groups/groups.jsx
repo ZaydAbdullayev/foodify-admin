@@ -4,20 +4,25 @@ import { useGetStGroupsQuery } from "../../../service/groups.service";
 import { useNavigate } from "react-router-dom";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useSwipeable } from "react-swipeable";
-
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
+
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useGetStGroupsQuery();
@@ -53,7 +58,14 @@ export const StorageGroups = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("ingGroup")
+                    : setAllDocuments("ingGroup", groupData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -87,6 +99,7 @@ export const StorageGroups = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.ingGroup?.find((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -102,32 +115,24 @@ export const StorageGroups = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("ingGroup", item));
+                      navigate(`?page-code=ingGroup`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("ingGroup", item));
+                        navigate(`?page-code=ingGroup`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem.id === item.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p
@@ -213,13 +218,12 @@ export const StorageGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="group">
-        <p>Guruh qo'shish</p>
-        <input type="text" name="name" placeholder="Guruh nomi*" required />
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
-      <UniversalUModal type="group" setChecked={setChecked}>
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="group"
+        setChecked={setChecked}
+        title="Guruh qo'shish"
+        status={acItem.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -228,8 +232,8 @@ export const StorageGroups = () => {
           required
         />
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem?.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+      </UniversalModal>
     </div>
   );
 };

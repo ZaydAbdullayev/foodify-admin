@@ -9,7 +9,7 @@ import { reShrink } from "./shrink";
 import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
 import { rePermission } from "./permission";
-import { reGetUrl, reUModal, reUModalU } from "./u-modal";
+import { reGetUrl, reUModal } from "./u-modal";
 import { reActive, reStorageId } from "./active";
 import { reCalc } from "./calc";
 import { reModalType } from "./u-modal";
@@ -30,7 +30,6 @@ export const store = configureStore({
     search: reSearch,
     permission: rePermission,
     uModal: reUModal,
-    uModalU: reUModalU,
     active: reActive,
     calc: reCalc,
     modalType: reModalType,

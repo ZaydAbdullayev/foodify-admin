@@ -8,35 +8,35 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
         url: `get/transactions/${user?.user?.id}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["transaction-report"],
     }),
     getTransactionIncome: builder.query({
       query: (date) => ({
         url: `get/incomeTransactions/${user?.user?.id}/${date?.start}/${date?.end}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["transaction-report"],
     }),
     getTransactionExpense: builder.query({
       query: (date) => ({
         url: `get/expenseTransactions/${user?.user?.id}/${date?.start}/${date?.end}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["transaction-report"],
     }),
     getTransaction: builder.query({
       query: (date) => ({
         url: `get/transactionsTable/${user?.user?.id}/${date.start}/${date.end}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["transaction-report"],
     }),
     getBalance: builder.query({
       query: (date) => ({
         url: `get/balance/${user?.user?.id}/${date?.start}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["transaction-report"],
     }),
     addTransactionRapor: builder.mutation({
       query: (value) => ({
@@ -44,7 +44,7 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
         method: "POST",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["transaction-report"],
     }),
 
     updateTransactionRapor: builder.mutation({
@@ -53,15 +53,16 @@ export const transactionRapor_Api = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["transaction-report"],
     }),
 
     deleteTransactionRapor: builder.mutation({
-      query: (id) => ({
-        url: `delete/transaction/${id}`,
+      query: (ids) => ({
+        url: `delete/transaction`,
         method: "DELETE",
+        body: ids,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["transaction-report"],
     }),
   }),
 });

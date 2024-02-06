@@ -1,7 +1,7 @@
 import { apiSlice } from "./frame.service";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
 
-export const suplierApi = apiSlice.injectEndpoints({
+export const tableApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getLocation: builder.query({
       query: () => ({
@@ -60,4 +60,4 @@ export const {
   useUpdateStSuplierMutation,
   useGetLocationQuery,
   useDeleteStSuplierMutation,
-} = suplierApi;
+} = tableApi;

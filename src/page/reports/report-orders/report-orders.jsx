@@ -2,21 +2,29 @@ import React, { useState } from "react";
 import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { storageD } from "../../storage/store-data";
 import { useGetStCategoryQuery } from "../../../service/category.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const ReportOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
@@ -84,7 +92,14 @@ export const ReportOrders = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("orderReport")
+                    : setAllDocuments("orderReport", storageD)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -112,6 +127,7 @@ export const ReportOrders = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const chek = ckddt?.orderReport?.some((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -127,32 +143,24 @@ export const ReportOrders = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                          category: !acItem.category ? item.category : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("orderReport", item));
+                      navigate(`?page-code=orderReport`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                            category: !acItem.category ? item.category : "",
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("orderReport", item));
+                        navigate(`?page-code=orderReport`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={chek} />
                     </label>
                     <p>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }) => (

@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useGetStoreDepQuery } from "../../../service/dep.service";
 import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import {
+  setAllDocuments,
+  setDocuments,
+  setRelease,
+} from "../../../redux/deleteFoods";
 
 export const StorageCatgegories = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: depData = [] } = useGetStoreDepQuery();
   const { data: storeData = [], isLoading } = useGetStCategoryQuery();
   React.useEffect(() => {
@@ -45,7 +52,14 @@ export const StorageCatgegories = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("category")
+                    : setAllDocuments("category", storeData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -91,6 +105,7 @@ export const StorageCatgegories = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.category?.some((el) => el.id === item.id);
               return (
                 <div
                   className={
@@ -107,34 +122,24 @@ export const StorageCatgegories = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                          category: !acItem.category ? item.category : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("category", item));
+                      navigate(`?page-code=category`);
+                    }}
                   >
                     <label
-                      onClick={() =>
+                      onClick={() => {
                         dispatch(
-                          acActive({
-                            id: !acItem.id ? item.id : null,
-                            name: !acItem.name ? item.name : "",
-                            category: !acItem.category ? item.category : "",
-                          })
-                        )
-                      }
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("category", item));
+                        navigate(`?page-code=category`);
+                      }}
                     >
-                      {checked ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : acItem.id === item.id ? (
-                        <input type="checkbox" name="id" checked />
-                      ) : (
-                        <input type="checkbox" name="id" />
-                      )}
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
@@ -222,28 +227,12 @@ export const StorageCatgegories = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="category">
-        <p>Categoriya qo'shish</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Categoriya nomi*"
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        <select name="department">
-          <option value="default">Bo'lim tanlang*</option>
-          {depData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-      </UniversalModal>
-      <UniversalUModal type="category" setChecked={setChecked}>
-        <p>Taxrirlash</p>
+      <UniversalModal
+        type="category"
+        setChecked={setChecked}
+        title="Categoriya qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <input
           type="text"
           name="name"
@@ -252,7 +241,11 @@ export const StorageCatgegories = () => {
           required
         />
         <select name="department">
-          <option value={acItem.category}>{acItem.category}</option>
+          {acItem?.department ? (
+            <option value="default">Bo'lim tanlang*</option>
+          ) : (
+            <option value={acItem.category}>{acItem.category}</option>
+          )}
           {depData?.data?.map((item, index) => {
             return (
               <option value={item.name} key={index}>
@@ -262,8 +255,8 @@ export const StorageCatgegories = () => {
           })}
         </select>
         <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem.id} />
-      </UniversalUModal>
+        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+      </UniversalModal>
     </div>
   );
 };

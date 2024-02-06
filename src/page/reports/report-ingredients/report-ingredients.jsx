@@ -14,7 +14,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 export const ReportIngredients = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
   const { data: storeData = [] } = useGetStCategoryQuery();
   const dispatch = useDispatch();
   React.useEffect(() => {

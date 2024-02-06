@@ -30,9 +30,10 @@ export const damaged_Api = apiSlice.injectEndpoints({
     }),
 
     deleteStDamaged: builder.mutation({
-      query: (id) => ({
-        url: `delete/damagedGoods/${id}`,
+      query: (ids) => ({
+        url: `delete/damagedGoods`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["damaged"],
     }),

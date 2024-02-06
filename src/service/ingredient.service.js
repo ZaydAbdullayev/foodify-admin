@@ -35,9 +35,10 @@ export const ingredientApi = apiSlice.injectEndpoints({
     }),
 
     deleteStIngredients: builder.mutation({
-      query: (id) => ({
-        url: `delete/ingredient/${id}`,
+      query: (ids) => ({
+        url: `delete/ingredient`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["ingredient"],
     }),

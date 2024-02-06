@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
-import { UniversalUModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useGetStoreDepQuery } from "../../../service/dep.service";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 
 export const StorageDep = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.active);
+  const acItem = useSelector((state) => state.activeThing);
+  const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: depData = [], isLoading } = useGetStoreDepQuery();
   const { data: storeData = [] } = useGetStoreQuery();
   React.useEffect(() => {
@@ -45,7 +49,14 @@ export const StorageDep = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setChecked(!checked)}
+              onClick={() => {
+                setChecked(!checked);
+                dispatch(
+                  checked
+                    ? setRelease("main")
+                    : setAllDocuments("main", depData?.data)
+                );
+              }}
             />
           </label>
           <p>№</p>
@@ -79,6 +90,7 @@ export const StorageDep = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
+              const check = ckddt?.main?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={
@@ -87,34 +99,24 @@ export const StorageDep = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() =>
+                  onDoubleClick={() => {
                     dispatch(
-                      acActive({
-                        id: !acItem.id ? item.id : null,
-                        name: !acItem.name ? item.name : "",
-                        storage: !acItem.storage ? item.storage : "",
-                      })
-                    )
-                  }
+                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                    );
+                    dispatch(setDocuments("main", item));
+                    navigate(`?page-code=main`);
+                  }}
                 >
                   <label
-                    onClick={() =>
+                    onClick={() => {
                       dispatch(
-                        acActive({
-                          id: !acItem.id ? item.id : null,
-                          name: !acItem.name ? item.name : "",
-                          storage: !acItem.storage ? item.storage : "",
-                        })
-                      )
-                    }
+                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                      );
+                      dispatch(setDocuments("main", item));
+                      navigate(`?page-code=main`);
+                    }}
                   >
-                    {checked ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : acItem.id === item.id ? (
-                      <input type="checkbox" name="id" checked />
-                    ) : (
-                      <input type="checkbox" name="id" />
-                    )}
+                    <input type="checkbox" name="id" checked={check} />
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
@@ -125,12 +127,27 @@ export const StorageDep = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="dep">
-        <p>Bo'lim qo'shish</p>
-        <input type="text" name="name" placeholder="Bo'lim nomi*" required />
+      <UniversalModal
+        type="dep"
+        setChecked={setChecked}
+        title="Bo'lim qo'shish"
+        status={acItem.id ? false : true}
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Bo'lim nomi*"
+          defaultValue={acItem.name}
+          required
+        />
         <input type="hidden" name="res_id" value={user?.id} />
+        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
         <select name="storage">
-          <option value="default">Ombor tanlang*</option>
+          {acItem.id ? (
+            <option value={acItem.storage}>{acItem.storage}</option>
+          ) : (
+            <option value="default">Ombor tanlang</option>
+          )}
           {storeData?.data?.map((item) => {
             return (
               <option value={item?.name} key={item.id}>
@@ -140,28 +157,6 @@ export const StorageDep = () => {
           })}
         </select>
       </UniversalModal>
-      <UniversalUModal type="dep" setChecked={setChecked}>
-        <p>Taxrirlash</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Bo'lim nomi*"
-          defaultValue={acItem.name}
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        <input type="hidden" name="id" value={acItem?.id} />
-        <select name="storage">
-          <option value={acItem.storage}>{acItem.storage}</option>
-          {storeData?.data?.map((item) => {
-            return (
-              <option value={item?.name} key={item.id}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-      </UniversalUModal>
     </div>
   );
 };

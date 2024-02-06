@@ -8,7 +8,7 @@ export const cashTransaction_Api = apiSlice.injectEndpoints({
         url: `get/transactions/${user?.user?.id}`,
         method: "GET",
       }),
-      providesTags: ["expenditure"],
+      providesTags: ["cashbox-transaction"],
     }),
 
     addCashTransaction: builder.mutation({
@@ -17,7 +17,7 @@ export const cashTransaction_Api = apiSlice.injectEndpoints({
         method: "POST",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox-transaction"],
     }),
 
     updateCashTransaction: builder.mutation({
@@ -26,15 +26,16 @@ export const cashTransaction_Api = apiSlice.injectEndpoints({
         method: "PATCH",
         body: value,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox-transaction"],
     }),
 
     deleteCashTransaction: builder.mutation({
-      query: (id) => ({
-        url: `delete/transaction/${id}`,
+      query: (ids) => ({
+        url: `delete/transaction`,
         method: "DELETE",
+        body: ids,
       }),
-      invalidatesTags: ["expenditure"],
+      invalidatesTags: ["cashbox-transaction"],
     }),
   }),
 });

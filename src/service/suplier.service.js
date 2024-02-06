@@ -30,9 +30,10 @@ export const suplierApi = apiSlice.injectEndpoints({
     }),
 
     deleteStSuplier: builder.mutation({
-      query: (id) => ({
-        url: `delete/suppliers/${id}`,
+      query: (ids) => ({
+        url: `delete/suppliers`,
         method: "DELETE",
+        body: ids,
       }),
       invalidatesTags: ["suplier"],
     }),
