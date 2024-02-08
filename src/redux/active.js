@@ -1,20 +1,9 @@
 const user = JSON?.parse(localStorage.getItem("user"))?.user || null;
 
-export const reActive = (
-  state = {
-    res_id: user?.id,
-    id: "",
-    name: "",
-    storage: "",
-    department: "",
-    unit: "",
-    group: "",
-  },
-  action
-) => {
+export const reActive = (state = false, action) => {
   switch (action.type) {
-    case "ACTIVE_ITEM":
-      return action.payload;
+    case "SIDE_ACTIVE":
+      return !state;
     default:
       return state;
   }
@@ -79,7 +68,7 @@ export const reStorageId = (state = "", action) => {
   }
 };
 
-export const acActive = (payload) => ({ type: "ACTIVE_ITEM", payload });
+export const acActive = (payload) => ({ type: "SIDE_ACTIVE", payload });
 export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
 export const acPassiveThing = (payload) => ({ type: "PASSIVE_THING", payload });
 export const acStorageId = (payload) => ({ type: "STORAGE_ID", payload });

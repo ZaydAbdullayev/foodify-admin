@@ -1,7 +1,10 @@
 .making_foods_box > h1 {
-  font-size: var(--fs2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs3);
   inline-size: 100%;
-  text-align: center;
+  font-weight: 400;
 }
 
 .cooking_food {

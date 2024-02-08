@@ -87,6 +87,7 @@ export const Router = () => {
     const y = event.clientY;
     span.style.top = `${y - 30}px`;
     span.style.left = `${x - 30}px`;
+    span.style.zIndex = `999999999`;
     span.classList.add("active");
   });
   span.addEventListener("animationend", function () {

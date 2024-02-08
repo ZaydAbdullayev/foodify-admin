@@ -12,6 +12,7 @@
 
 /* ============== search section ================= */
 .search_container {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -55,6 +56,21 @@
   border: none;
   font-size: var(--fs5);
   color: #ddd;
+}
+
+.more {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0% 1%;
+  background: #5496d4;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs8);
+  color: #fff;
 }
 
 /* ==================== filter by category ===================== */
@@ -130,7 +146,6 @@
   height: 80px;
   border-radius: 15px;
   overflow: hidden;
-  background: red;
 }
 
 .img_box > span {
@@ -159,7 +174,6 @@
 .img_box > img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
 
 ._item_info-box {
@@ -186,7 +200,8 @@
 }
 
 .item > input,
-._item_info-box > input {
+._item_info-box > input,
+._item_action-box > input {
   height: 35px;
   padding: 0 1%;
   border: none;
@@ -197,6 +212,7 @@
 }
 
 ._count {
+  position: relative;
   width: var(--btn);
   height: var(--btn);
   display: flex;
@@ -205,6 +221,15 @@
   border-radius: 50%;
   background: #32ff09a2;
   color: #fff;
+}
+
+._count.active::after {
+  content: "∞";
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  font-size: var(--fs3);
 }
 
 ._item_action-box {
@@ -238,7 +263,7 @@
   color: #d82a0c;
 }
 
-._item_action-box > span {
+._item_action-box > :where(span, input) {
   display: none;
 }
 
@@ -305,7 +330,7 @@
     display: none;
   }
 
-  ._item_action-box > span {
+  ._item_action-box > :where(span, input) {
     display: flex;
   }
 

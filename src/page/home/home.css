@@ -1,5 +1,6 @@
 :root {
   --obtn: 25px;
+  --p-icon: 35px;
 }
 
 .home_page {
@@ -65,7 +66,7 @@
   transition: all 0.1s ease-in-out;
 }
 
-._orders > h1 > span:hover {
+._orders > h1 > span > svg:hover {
   color: #65ff57;
 }
 
@@ -275,6 +276,28 @@
 
 .cirscle_container * {
   color: #eee;
+}
+
+.swipe-pages {
+  display: flex;
+  align-items: center;
+  gap: var(--gap6);
+}
+
+.swipe-pages > span {
+  width: var(--p-icon);
+  height: var(--p-icon);
+  font-size: var(--fs4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #787aff;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.swipe-pages > span.active {
+  transform: scale(1.2);
 }
 
 @media (max-width: 600px) {

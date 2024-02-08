@@ -8,6 +8,8 @@ import { acNavStatus } from "../../redux/navbar.status";
 import { NumericFormat } from "react-number-format";
 import { ResolveModal } from "./resolve.modal";
 import socket from "../../socket.config";
+import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
 
 import { BsCheck2All } from "react-icons/bs";
 import { AiOutlineFullscreen } from "react-icons/ai";
@@ -15,6 +17,9 @@ import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+import { RiBoxingFill } from "react-icons/ri";
+import { GiCook } from "react-icons/gi";
+import { MdFastfood } from "react-icons/md";
 import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
 import { acResolve } from "../../redux/resolve";
@@ -27,9 +32,11 @@ export const Home = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState({});
   const [full, setFull] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const search = useSelector((state) => state.search);
   const id = user?.user?.id;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
@@ -138,6 +145,22 @@ export const Home = () => {
     }
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleSwipe("LEFT"),
+    onSwipedRight: () => handleSwipe("RIGHT"),
+    trackMouse: true,
+  });
+
+  const handleSwipe = async (direction) => {
+    const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
+    await setActiveIndex((newIndex + 3) % 3);
+    navigate(
+      `/orders/${
+        newIndex === 0 ? "" : newIndex === 1 ? "cooking/food" : "prepared/food"
+      }`
+    );
+  };
+
   const filteredData = orders?.filter((item) => {
     return (
       item?.id?.toLowerCase().includes(search?.toLowerCase()) ||
@@ -157,7 +180,29 @@ export const Home = () => {
     >
       <div className="_orders">
         <h1>
-          Yangi Buyurtmalar{" "}
+          <i></i>
+          <i></i>
+          <span {...handlers} className="swipe-pages">
+            <span
+              className={activeIndex === 0 ? "active" : ""}
+              onClick={() => navigate("/orders")}
+            >
+              <RiBoxingFill />
+            </span>
+            <span
+              className={activeIndex === 1 ? "active" : ""}
+              onClick={() => navigate("/orders/cooking/food")}
+            >
+              <GiCook />
+            </span>
+            <span
+              className={activeIndex === 2 ? "active" : ""}
+              onClick={() => navigate("/orders/prepared/food")}
+            >
+              <MdFastfood />
+            </span>
+          </span>
+          <i></i>
           <span onClick={() => setFull(!full)}>
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>

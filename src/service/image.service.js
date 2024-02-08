@@ -1,4 +1,4 @@
-import default_img from "../components/assets/images/noimagedefault.jpg";
+import default_img from "../assets/images/default-food.jpg";
 export const ImgService = ({
   src,
   fallbackSrc,

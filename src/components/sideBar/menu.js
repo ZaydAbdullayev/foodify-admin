@@ -132,21 +132,21 @@ export const Category = [
     positions: width ? [0, 0, 80] : [90, -90, 90],
     icon: <RiBoxingFill />,
   },
-
   {
     id: "2",
-    path: "/cooking/food",
-    name: "Tayyorlanayotgan taomlar",
+    name: "Taomlar hisoboti",
+    path: "/items",
     positions: width ? [-45, 45, 80] : [45, -45, 90],
-    icon: <GiCook />,
+    icon: <MdRestaurantMenu />,
   },
   {
     id: "2",
-    path: "/prepared/food",
-    name: "Tayyor bo'lgan taomlar",
+    name: "Bekor qilindan taomlar",
+    path: "/rejects",
     positions: width ? [-90, 90, 75] : [0, 0, 90],
-    icon: <MdFastfood />,
+    icon: <TbPlaylistX />,
   },
+
   {
     id: "2",
     name: "Oldindan buyurtma",
@@ -161,7 +161,20 @@ export const Category = [
     positions: width ? [-180, 180, 80] : [-90, 90, 90],
     icon: <MdTableBar />,
   },
-
+  {
+    id: "22",
+    path: "/cooking/food",
+    name: "Tayyorlanayotgan taomlar",
+    positions: [],
+    icon: <GiCook />,
+  },
+  {
+    id: "22",
+    path: "/prepared/food",
+    name: "Tayyor bo'lgan taomlar",
+    positions: [],
+    icon: <MdFastfood />,
+  },
   {
     id: "3",
     path: "",
@@ -301,20 +314,6 @@ export const Category = [
     path: "/cashbox/transaction-group",
     positions: [],
     icon: <MdStorage />,
-  },
-  {
-    id: "765433",
-    name: "Taomlar hisoboti",
-    path: "/items",
-    positions: [],
-    icon: <MdRestaurantMenu />,
-  },
-  {
-    id: "765433",
-    name: "Bekor qilindan taomlar",
-    path: "/rejects",
-    positions: [],
-    icon: <TbPlaylistX />,
   },
   {
     id: "765433",

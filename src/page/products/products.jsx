@@ -12,12 +12,15 @@ import { useDeleteStProductMutation } from "../../service/s-products.service";
 import { useUpdateStProductMutation } from "../../service/s-products.service";
 import { useUpdateStProductImageMutation } from "../../service/s-products.service";
 import { useGetStCategoryQuery } from "../../service/category.service";
+import { ImgService } from "../../service/image.service";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
 import { ImCancelCircle } from "react-icons/im";
 import { FaPen, FaCheck } from "react-icons/fa";
+import { IoIosMore } from "react-icons/io";
 import { TbInfoSquareRounded } from "react-icons/tb";
+import { PiInfinityThin } from "react-icons/pi";
 
 export const Products = () => {
   const { search, pathname } = useLocation();
@@ -99,6 +102,9 @@ export const Products = () => {
             onChange={handleSearch}
           />
         </form>
+        <span className="more" onClick={() => navigate("/sections/s-products")}>
+          Ko'proq <IoIosMore />
+        </span>
       </div>
       <div className="search_src">
         <Link to={pathname}>All</Link>
@@ -118,144 +124,166 @@ export const Products = () => {
             <LoadingBtn />
           </span>
         ) : (
-          filteredProducts?.map((product) => (
-            <div className="item" key={product.id}>
-              <label className="img_box">
-                <span className="upload_img">
-                  Mahsulot rasmini o'zgartirish
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => updateImg(product, e.target.files[0])}
-                />
-                <img src={product?.img} alt="foto" />
-              </label>
-              <div className="_item_info-box">
-                {update === product?.id ? (
-                  <>
-                    <input
-                      type="text"
-                      defaultValue={product.name}
-                      style={{ textTransform: "capitalize" }}
-                      autoFocus
-                      onChange={(e) => handleInfoChange("name", e.target.value)}
-                      autoComplete="off"
-                    />
-                    <input
-                      type="text"
-                      defaultValue={product.description}
-                      onChange={(e) =>
-                        handleInfoChange("description", e.target.value)
-                      }
-                      autoComplete="off"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <p className="name">{product.name}</p>
-                    <p>{product.description}</p>
-                  </>
-                )}
-                <NumericFormat
-                  displayType={update === product?.id ? "input" : "text"}
-                  defaultValue={product.price}
-                  thousandSeparator=" "
-                  suffix=" so'm"
-                  onChange={(e) =>
-                    handleInfoChange(
-                      "price",
-                      e.target.value.split(" ").join("")
-                    )
-                  }
-                />
-              </div>
-              <NumericFormat
-                className={update === product?.id ? "" : "_count"}
-                displayType={update === product?.id ? "input" : "text"}
-                style={{
-                  background:
-                    product?.food_count <= 15 && product?.food_count >= 10
-                      ? "#f07167"
-                      : product?.food_count < 10
-                      ? "#ef233c"
-                      : "",
-                }}
-                defaultValue={product?.food_count || 12}
-                onChange={(e) => handleInfoChange("cost_count")}
-              />
-              <div className="_item_action-box">
-                <div className="status">
-                  <span
-                    style={
-                      product.status === 1
-                        ? { background: "#33ff09" }
-                        : { color: "#aaaa" }
-                    }
-                    onClick={() => handleUpdate({ id: product.id, status: 1 })}
-                  >
-                    active
+          filteredProducts?.map((product) => {
+            const st = parseInt(product?.stop_list);
+            return (
+              <div className="item" key={product.id}>
+                <label className="img_box">
+                  <span className="upload_img">
+                    Mahsulot rasmini o'zgartirish
                   </span>
-                  <span
-                    style={
-                      product.status === 0
-                        ? { background: "#d82" }
-                        : { color: "#aaaa" }
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => updateImg(product, e.target.files[0])}
+                  />
+                  <ImgService src={product?.img} fallbackSrc alt="images" />
+                </label>
+                <div className="_item_info-box">
+                  {update === product?.id ? (
+                    <>
+                      <input
+                        type="text"
+                        defaultValue={product.name}
+                        style={{ textTransform: "capitalize" }}
+                        autoFocus
+                        onChange={(e) =>
+                          handleInfoChange("name", e.target.value)
+                        }
+                        autoComplete="off"
+                      />
+                      <input
+                        type="text"
+                        defaultValue={product.description}
+                        onChange={(e) =>
+                          handleInfoChange("description", e.target.value)
+                        }
+                        autoComplete="off"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <p className="name">{product.name}</p>
+                      <p>{product.description}</p>
+                    </>
+                  )}
+                  <NumericFormat
+                    displayType={update === product?.id ? "input" : "text"}
+                    defaultValue={product.price}
+                    thousandSeparator=" "
+                    suffix=" so'm"
+                    onChange={(e) =>
+                      handleInfoChange(
+                        "price",
+                        e.target.value.split(" ").join("")
+                      )
                     }
-                    onClick={() => handleUpdate({ id: product.id, status: 0 })}
-                  >
-                    passive
-                  </span>
+                  />
                 </div>
-                <span
+                <NumericFormat
+                  className={
+                    update === product?.id
+                      ? ""
+                      : st > 999
+                      ? "_count active"
+                      : "_count"
+                  }
+                  displayType={update === product?.id ? "input" : "text"}
                   style={{
-                    color:
-                      product?.food_count <= 15 && product?.food_count >= 10
+                    background:
+                      st <= 15 && st >= 10
                         ? "#f07167"
-                        : product?.food_count < 10
+                        : st < 10
                         ? "#ef233c"
                         : "",
                   }}
-                >
-                  {product.food_count}x
-                </span>
-                <div className="update_btn">
-                  {update === product?.id ? (
-                    <>
-                      <span
-                        onClick={() =>
-                          handleUpdate({ ...info, id: product.id })
-                        }
-                      >
-                        <FaCheck />
-                      </span>{" "}
-                      <span onClick={() => setUpdate(false)}>
-                        <ImCancelCircle />
-                      </span>
-                    </>
-                  ) : (
-                    <span onClick={() => setUpdate(product.id)}>
-                      <FaPen />
+                  defaultValue={st > 999 ? "" : st}
+                  onChange={(e) =>
+                    handleInfoChange("stop_list", e.target.value)
+                  }
+                />
+                <div className="_item_action-box">
+                  <div className="status">
+                    <span
+                      style={
+                        product.status === 1
+                          ? { background: "#33ff09" }
+                          : { color: "#aaaa" }
+                      }
+                      onClick={() =>
+                        handleUpdate({ id: product.id, status: 1 })
+                      }
+                    >
+                      active
                     </span>
-                  )}
+                    <span
+                      style={
+                        product.status === 0
+                          ? { background: "#d82" }
+                          : { color: "#aaaa" }
+                      }
+                      onClick={() =>
+                        handleUpdate({ id: product.id, status: 0 })
+                      }
+                    >
+                      passive
+                    </span>
+                  </div>
+                  <NumericFormat
+                    className={update === product?.id ? "" : "_count"}
+                    displayType={update === product?.id ? "input" : "text"}
+                    style={{
+                      background:
+                        st <= 15 && st >= 10
+                          ? "#f07167"
+                          : st < 10
+                          ? "#ef233c"
+                          : "",
+                    }}
+                    defaultValue={st > 999 ? 1 : st}
+                    suffix={st >= 999 ? "∞" : ""}
+                    onChange={(e) =>
+                      handleInfoChange("stop_list", e.target.value)
+                    }
+                  />
+                  <div className="update_btn">
+                    {update === product?.id ? (
+                      <>
+                        <span
+                          onClick={() =>
+                            handleUpdate({ ...info, id: product.id })
+                          }
+                        >
+                          <FaCheck />
+                        </span>{" "}
+                        <span onClick={() => setUpdate(false)}>
+                          <ImCancelCircle />
+                        </span>
+                      </>
+                    ) : (
+                      <span onClick={() => setUpdate(product.id)}>
+                        <FaPen />
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
+                    onClick={() => handleDelete(product.id)}
+                  >
+                    <AiFillDelete />
+                  </button>
+
+                  <button
+                    style={{ fontSize: "var(--fs4)", color: "#219ebc" }}
+                    onClick={() => navigate(`/more/info/${product.id}`)}
+                  >
+                    <TbInfoSquareRounded />
+                  </button>
                 </div>
-
-                <button
-                  style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
-                  onClick={() => handleDelete(product.id)}
-                >
-                  <AiFillDelete />
-                </button>
-
-                <button
-                  style={{ fontSize: "var(--fs4)", color: "#219ebc" }}
-                  onClick={() => navigate(`/more/info/${product.id}`)}
-                >
-                  <TbInfoSquareRounded />
-                </button>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

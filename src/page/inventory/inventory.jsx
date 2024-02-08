@@ -5,6 +5,11 @@ import { useGetStoreQuery } from "../../service/store.service";
 import { useAddSyncMutation } from "../../service/invenory.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
+import { useDispatch } from "react-redux";
+import { acNavStatus } from "../../redux/navbar.status";
+
+import { AiOutlineFileSync, AiOutlineFileDone } from "react-icons/ai";
+import { MdOutlineHistory } from "react-icons/md";
 
 export const Inventory = () => {
   const { data: stores = [] } = useGetStoreQuery();
@@ -14,6 +19,10 @@ export const Inventory = () => {
   const [selected, setSelected] = useState(null);
   const [newData, setNewData] = useState([]);
   const [addSync] = useAddSyncMutation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(acNavStatus([100]));
+  }, [dispatch]);
 
   const storageItemsQuery = useGetStorageItemsQuery(storageId);
   const storageItems = storageItemsQuery.data || [];
@@ -91,9 +100,20 @@ export const Inventory = () => {
             ))}
           </select>
         </div>
-        <button onClick={() => syncData(!snc)} className="relative">
-          {loading ? <LoadingBtn /> : snc ? "Yakunlash" : "Sinxronlashtirish"}
-        </button>
+        <div className="inventory_btn-box">
+          <button>
+            <MdOutlineHistory />
+          </button>
+          <button onClick={() => syncData(!snc)} className="relative">
+            {loading ? (
+              <LoadingBtn />
+            ) : snc ? (
+              <AiOutlineFileDone />
+            ) : (
+              <AiOutlineFileSync />
+            )}
+          </button>
+        </div>
       </div>
       <div
         className="worker"

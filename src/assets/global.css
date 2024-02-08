@@ -46,6 +46,13 @@ textarea {
   outline: none;
 }
 
+.skeleton {
+  object-fit: cover;
+  background: linear-gradient(-90deg, #eee, #aaa, #eee, #eee, #eee);
+  background-size: 400%;
+  animation: skeleton 4s linear infinite;
+}
+
 @media (max-width: 500px) {
   ::selection {
     display: none;
@@ -134,5 +141,15 @@ textarea {
   to {
     transform: scale(1);
     opacity: 0;
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 0%;
+  }
+
+  100% {
+    background-position: 400%;
   }
 }

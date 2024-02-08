@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./sidebar.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import { acShrink } from "../../redux/shrink";
-import { useLocation } from "react-router-dom";
 import { Menu, Menu_customer, Category } from "./menu";
 
-// import { HiChevronRight, HiChevronLeft } from "react-icons/hi";
-import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import logo from "../../assets/images/logo.png";
 
 export const Sidebar = () => {
   const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
   const dWidth = useSelector((state) => state.dWidth);
+  const side = useSelector((state) => state.side);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const location = useLocation().pathname;
   const [dFromTop, setDFromTop] = useState(0);
+  const location = useLocation().pathname;
+
+  useEffect(() => {
+    setActiveCategoryId(null);
+  }, [side]);
 
   const handleCategoryClick = (e, c) => {
     setActiveCategoryId((prevCategoryId) =>
@@ -78,11 +79,10 @@ export const Sidebar = () => {
             >
               <Link
                 className={
-                  location.startsWith(item?.path)
+                  activeCategoryId === item.id || location.startsWith(item.path)
                     ? "menu_box_item active_menu"
                     : "menu_box_item"
                 }
-                to={item?.path}
                 onClick={(e) => handleCategoryClick(e, { id: item?.id })}
               >
                 <span>{item?.icon}</span>
@@ -98,7 +98,7 @@ export const Sidebar = () => {
                         <li
                           key={catItem?.path}
                           className={`inner_menu-item ${
-                            location === item?.path ? "active" : ""
+                            item.id === activeCategoryId ? "active" : ""
                           }`}
                           style={{
                             "--value1": `${catItem?.positions[0]}deg`,
