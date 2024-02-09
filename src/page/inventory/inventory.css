@@ -44,13 +44,26 @@
   border-radius: 10px;
 }
 
+.inventory-item > p > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.inventory-item > p > span > del {
+  color: #ff0000;
+  /* font-size: var(--fs7); */
+}
+
 .inventory_btn-box {
   display: flex;
   align-items: center;
   gap: var(--gap6);
 }
 
-.inventory_btn-box > button {
+.inventory_btn-box > :where(button, div) {
+  position: relative;
   width: var(--icon-w-h);
   height: var(--icon-w-h);
   display: flex;
@@ -61,6 +74,50 @@
   background: #787aff;
   border: none;
   border-radius: 50%;
+}
+
+.inventory-history {
+  transition: all 0.5s ease-in-out;
+}
+
+._history-body {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 300px;
+  height: 0px;
+  padding: 10% 0;
+  display: none;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #333;
+  z-index: 9999;
+  overflow: hidden;
+  box-shadow: 0px 9px 30px rgba(19, 18, 18, 0.658);
+  transition: all 0.5s ease-in-out;
+}
+
+.inventory-history.active ._history-body {
+  height: 300px;
+  display: flex;
+  transition: all 0.5s ease-in-out;
+  overflow: unset;
+  overflow-y: auto;
+}
+
+._history-body > p {
+  width: 100%;
+  padding: 2% 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs6);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+._history-body > p:hover {
+  background: #444;
 }
 
 .inventory_body .worker > :first-child {

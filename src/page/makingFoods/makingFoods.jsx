@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./makingFoods.css";
 import { useSelector, useDispatch } from "react-redux";
-import { ApiGetService } from "../../service/api.service";
 import { acUpload } from "../../redux/upload";
 import { acNavStatus } from "../../redux/navbar.status";
 import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
+import { useGetMakingOrderQuery } from "../../service/order.service";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -17,35 +17,25 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi";
 
 export const MakingFoods = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || [];
-  const department = JSON.parse(localStorage.getItem("department")) || null;
-  const newOrder = useSelector((state) => state.upload);
+  // const user = JSON.parse(localStorage.getItem("user")) || [];
+  // const department = JSON.parse(localStorage.getItem("department")) || null;
+  // const newOrder = useSelector((state) => state.upload);
   const dispatch = useDispatch();
-  const [orders, setOrders] = useState([]);
   const [activeIndex, setActiveIndex] = useState(1);
   const [stution, setStution] = useState(null);
   const [full, setFull] = useState(false);
   const navigate = useNavigate();
   const search = useSelector((state) => state.search);
-  const id = user?.user?.id;
+  // const id = user?.user?.id;
+  const { data = [] } = useGetMakingOrderQuery();
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
-  const point =
-    department === "kassir" || department === "owner"
-      ? `get/orders/${id}`
-      : `get/depOrders/${id}/${department}`;
+  // const point =
+  //   department === "kassir" || department === "owner"
+  //     ? `get/orders/${id}`
+  //     : `get/depOrders/${id}/${department}`;
 
-  useEffect(() => {
-    setTimeout(() => {
-      ApiGetService.fetching(point)
-        .then((res) => {
-          console.log(res?.data?.innerData);
-          setOrders(res?.data?.innerData);
-        })
-        .catch((err) => console.log(err));
-    }, 800);
-  }, [id, newOrder, point]);
 
   const orderAccept = (order) => {
     socket.emit("/accept/order", {
@@ -80,7 +70,7 @@ export const MakingFoods = () => {
   //   return dateB - dateA;
   // });
 
-  const filteredData = orders?.filter((item) => {
+  const filteredData = data?.data?.filter((item) => {
     return item?.id?.toLowerCase().includes(search?.toLowerCase());
   });
 

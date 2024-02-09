@@ -4,6 +4,7 @@
 }
 
 .worker_container {
+  min-height: 90vh;
   overflow-x: auto;
 }
 .worker_container::-webkit-scrollbar {

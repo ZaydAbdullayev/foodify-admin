@@ -42,6 +42,18 @@ export const order_Api = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getMakingOrder: builder.query({
+      query: () => ({
+        url: `/get/foodsBeingMade/${user?.user?.id}`,
+        method: "GET",
+      }),
+    }),
+    getMakedOrder: builder.query({
+      query: () => ({
+        url: `/get/readyFoods/${user?.user?.id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -51,4 +63,6 @@ export const {
   useResolveItemMutation,
   useGetOrderByWaiterIdQuery,
   useGetOrderByStatusQuery,
+  useGetMakedOrderQuery,
+  useGetMakingOrderQuery,
 } = order_Api;

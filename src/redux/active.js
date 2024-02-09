@@ -47,8 +47,6 @@ const initialState = {
 };
 
 export const reActiveThing = (state = initialState, action) => {
-  console.log("state", state);
-  console.log("reActiveThing", action);
   switch (action.type) {
     case "ACTIVE_THING":
       return { ...state, ...action.payload };

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { ApiGetService } from "../../service/api.service";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
+import { useGetMakedOrderQuery } from "../../service/order.service";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -15,24 +14,17 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi";
 
 export const MakedFoods = () => {
-  const user = JSON?.parse(localStorage?.getItem("user")) || [];
-  const newOrder = useSelector((state) => state.upload);
-  const [orders, setOrders] = useState([]);
+  // const user = JSON?.parse(localStorage?.getItem("user")) || [];
+  // const newOrder = useSelector((state) => state.upload);
+  // const [orders, setOrders] = useState([]);
   const [full, setFull] = useState(false);
   const [activeIndex, setActiveIndex] = useState(2);
-  const id = user?.user?.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { data = [] } = useGetMakedOrderQuery();
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
-  useEffect(() => {
-    ApiGetService.fetching(`get/orders/${id}/3`)
-      .then((res) => {
-        setOrders(res?.data?.innerData);
-      })
-      .catch((err) => console.log(err));
-  }, [id, newOrder]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => handleSwipe("LEFT"),
@@ -50,7 +42,7 @@ export const MakedFoods = () => {
     );
   };
 
-  const newOrders = orders?.sort((a, b) => {
+  const newOrders = data?.data?.sort((a, b) => {
     const dateA = new Date(a.receivedAt);
     const dateB = new Date(b.receivedAt);
     return dateB - dateA;
