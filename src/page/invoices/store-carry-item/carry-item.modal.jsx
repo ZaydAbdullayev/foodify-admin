@@ -116,7 +116,7 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "15%" }}
-          defaultValue={acItem?.date.split["T"][0]}
+          defaultValue={new Date(acItem?.date).toLocaleDateString()}
         />
         <select
           name="storage_sender"

@@ -25,7 +25,7 @@ import { useUpdateStExpenditureMutation } from "../../service/expenditures.servi
 import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
 import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
 import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
-import { acActiveThing, acPassiveThing } from "../../redux/active";
+import { acPassiveThing } from "../../redux/active";
 import { useUpdateItemsMutation } from "../../service/store.service";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
@@ -169,30 +169,29 @@ export const UniversalControlModal = ({
     const result = calculateTotal(data);
     dispatch(acCalc(result));
     if (type === "product") {
-      setFetchdata({ ...acP, ...data, ...result });
+      setFetchdata({ ...data, ...result });
     }
     if (type === "invoice") {
       setFetchdata({
-        ...acP,
         ...data,
         cost: result.prime_cost,
         leftover: result.prime_cost,
       });
     }
     if (type === "cutting") {
-      setFetchdata({ ...acP, ...data });
+      setFetchdata({ ...data });
     }
     if (type === "carryUp") {
-      setFetchdata({ ...acP, ...data });
+      setFetchdata({ ...data });
     }
     if (type === "damaged") {
-      setFetchdata({ ...acP, ...data, cost: result?.prime_cost });
+      setFetchdata({ ...data, cost: result?.prime_cost });
     }
     if (type === "making") {
-      setFetchdata({ ...acP, ...data, total_price: result?.prime_cost });
+      setFetchdata({ ...data, total_price: result?.prime_cost });
     }
     if (type === "preOrder") {
-      setFetchdata({ ...acP, ...data, cost: result?.prime_cost });
+      setFetchdata({ ...data, cost: result?.prime_cost });
     }
     console.log("data", data, "result", acP);
   };

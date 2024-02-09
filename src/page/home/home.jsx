@@ -190,7 +190,7 @@ export const Home = () => {
               <RiBoxingFill />
             </span>
             <span
-              className={activeIndex === 1 ? "active" : ""}
+              className={activeIndex === 1 ? "active after before" : ""}
               onClick={() => navigate("/orders/cooking/food")}
             >
               <GiCook />

@@ -45,7 +45,7 @@ export const apiSlice = createApi({
     "worker",
     "pre-order",
     "transaction",
-    "transaction-group",
+    "tr-group",
     "cashbox",
     "cashbox-report",
     "cashbox-transaction",

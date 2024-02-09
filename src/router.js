@@ -146,6 +146,8 @@ export const Router = () => {
               <Route path="pre-orders" element={<InvoicePreOrders />} />
               <Route path="tables" element={<TableBox />} />
               <Route path="tables/:type/:number/:id" element={<OrderById />} />
+              <Route path="items" element={<ReportItems />} />
+              <Route path="rejects" element={<ReportRejects />} />
             </Route>
             <Route path="financial" element={<Blog />}>
               <Route path="" element={<Payment />} />
@@ -185,8 +187,6 @@ export const Router = () => {
               <Route path="making-food" element={<InvoicesMakingFood />} />
             </Route>
             <Route path="reports" element={<Blog />}>
-              <Route path="items" element={<ReportItems />} />
-              <Route path="rejects" element={<ReportRejects />} />
               <Route path="ingredients" element={<ReportIngredients />} />
               <Route path="suppliers" element={<ReportSuppliers />} />
             </Route>

@@ -32,7 +32,7 @@ export const cashTransaction_Api = apiSlice.injectEndpoints({
     deleteCashTransaction: builder.mutation({
       query: (ids) => ({
         url: `delete/transaction`,
-        method: "DELETE",
+        method: "PATCH",
         body: ids,
       }),
       invalidatesTags: ["cashbox-transaction"],

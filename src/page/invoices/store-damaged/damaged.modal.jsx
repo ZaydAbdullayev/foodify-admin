@@ -85,8 +85,9 @@ export const InvoicesModal = ({
         <input
           type="date"
           name="date"
+          defaultValue={acItem?.date || today}
           style={{ "--input-width": "12%" }}
-          defaultValue={acItem?.date}
+          // defaultValue={acItem?.date}
         />
         <select
           name="storage"

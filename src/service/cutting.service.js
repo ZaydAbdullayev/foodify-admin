@@ -32,7 +32,7 @@ export const cutting_Api = apiSlice.injectEndpoints({
     deleteStCutting: builder.mutation({
       query: (ids) => ({
         url: `reverse/cutting`,
-        method: "DELETE",
+        method: "PATCH",
         body: ids,
       }),
       invalidatesTags: ["cutting"],

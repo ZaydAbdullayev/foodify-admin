@@ -10,7 +10,9 @@ import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 
 import { AiOutlineFileSync, AiOutlineFileDone } from "react-icons/ai";
-import { MdOutlineHistory } from "react-icons/md";
+import { MdOutlineHistory, MdCloudDone } from "react-icons/md";
+import { TbArrowBarLeft } from "react-icons/tb";
+import { RxCross2 } from "react-icons/rx";
 
 export const Inventory = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
@@ -23,6 +25,7 @@ export const Inventory = () => {
   const [newData, setNewData] = useState([]);
   const [oneold, setOneOld] = useState([]);
   const [oneNew, setOneNew] = useState([]);
+  const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
   const [addSync] = useAddSyncMutation();
@@ -106,6 +109,7 @@ export const Inventory = () => {
     const newData = JSON.parse(oneData.new_data);
     setOneOld(oldData);
     setOneNew(newData);
+    setActive(oneData);
     setSeeOne(true);
     setSyncs(false);
   };
@@ -115,40 +119,66 @@ export const Inventory = () => {
       <div className="workers_header">
         <div className="inventory_header">
           <p>Invantarizatsiya</p>{" "}
-          <select name="storage" onChange={(e) => setStorageId(e.target.value)}>
-            {stores.data?.map((store) => (
-              <option key={store.id} value={store.id}>
-                {store.name}
-              </option>
-            ))}
-          </select>
+          {seeOne ? (
+            <span>
+              {" "}
+              {active.st_name} —{" "}
+              {new Date(active.sync_time).toLocaleDateString()}
+            </span>
+          ) : (
+            <select
+              name="storage"
+              onChange={(e) => setStorageId(e.target.value)}
+            >
+              {stores.data?.map((store) => (
+                <option key={store.id} value={store.id}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <div className="inventory_btn-box">
-          <div
-            className={syncs ? "inventory-history active" : "inventory-history"}
-            onClick={() => setSyncs(!syncs)}
-          >
-            <MdOutlineHistory />
-            <div className="_history-body">
-              {syncsData?.data?.map((item, index) => {
-                const day = new Date(item.sync_time).toLocaleDateString();
-                return (
-                  <p key={index} onClick={() => getOneSyncData(item.id)}>
-                    {item.st_name} <span>{day}</span>
-                  </p>
-                );
-              })}
-            </div>
-          </div>
-          <button onClick={() => syncData(!snc)} className="relative">
-            {loading ? (
-              <LoadingBtn />
-            ) : snc ? (
-              <AiOutlineFileDone />
-            ) : (
-              <AiOutlineFileSync />
-            )}
-          </button>
+          {seeOne ? (
+            <button onClick={() => setSeeOne(false)}>
+              <TbArrowBarLeft />
+            </button>
+          ) : (
+            <>
+              <div
+                className={
+                  syncs ? "inventory-history active" : "inventory-history"
+                }
+                onClick={() => setSyncs(!syncs)}
+              >
+                <MdOutlineHistory />
+                <div className="_history-body">
+                  {syncsData?.data?.map((item, index) => {
+                    const day = new Date(item.sync_time).toLocaleDateString();
+                    return (
+                      <p key={index} onClick={() => getOneSyncData(item.id)}>
+                        {item.st_name} <span>{day}</span>
+                      </p>
+                    );
+                  })}
+                </div>
+              </div>
+              <button onClick={() => syncData(!snc)} className="relative">
+                {loading ? (
+                  <LoadingBtn />
+                ) : snc ? (
+                  <MdCloudDone />
+                ) : (
+                  <AiOutlineFileSync />
+                )}
+              </button>
+              {snc && (
+                <button onClick={() => setSnc(false)}>
+                  <RxCross2 />
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
       <div
@@ -162,7 +192,7 @@ export const Inventory = () => {
         ))}
       </div>
       <div className="workers_body inventory_body">
-        {!seeOne
+        {seeOne
           ? oneNew?.map((ingredient, ind) => {
               const old = oneold?.[ind];
               return (

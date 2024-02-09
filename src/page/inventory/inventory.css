@@ -27,6 +27,10 @@
   font-size: var(--fs3);
 }
 
+.inventory_header span{
+  font-size: var(--fs5);
+}
+
 .inventory_header > select {
   height: var(--bwh);
   padding: 0 5%;
