@@ -10,21 +10,21 @@ export const Sidebar = () => {
   const login = useSelector((state) => state?.permission);
   const isShrinkView = useSelector((state) => state.shrink);
   const dWidth = useSelector((state) => state.dWidth);
-  const side = useSelector((state) => state.side);
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [dFromTop, setDFromTop] = useState(0);
   const location = useLocation().pathname;
-
-  useEffect(() => {
-    setActiveCategoryId(null);
-  }, [side]);
+  const [categoryToActivate, setCategoryToActivate] = useState({});
 
   const handleCategoryClick = (e, c) => {
-    setActiveCategoryId((prevCategoryId) =>
-      prevCategoryId === c.id ? null : c.id
-    );
+    setCategoryToActivate(c);
     findDFromTop(e.target);
   };
+
+  useEffect(() => {
+    setActiveCategoryId((prevCategoryId) =>
+      prevCategoryId === categoryToActivate?.id ? null : categoryToActivate?.id
+    );
+  }, [categoryToActivate]);
 
   function findDFromTop(element) {
     if (element) {
@@ -59,16 +59,6 @@ export const Sidebar = () => {
           </div>
         )}
       </div>
-      {/* {media && (
-        <div className="shrink_box">
-          <h3 onClick={handleSidebarView}>
-            {isShrinkView ? <RiMenu2Line /> : "Dashboard"}
-          </h3>
-          <button onClick={handleSidebarView} type="button">
-            {isShrinkView ? <HiChevronRight /> : <HiChevronLeft />}
-          </button>
-        </div>
-      )} */}
       <ul className="menu_box">
         {sides?.map((item) => {
           return (
@@ -77,7 +67,7 @@ export const Sidebar = () => {
               className="menu_container"
               style={item?.permission ? {} : { display: "none" }}
             >
-              <Link
+              <div
                 className={
                   activeCategoryId === item.id || location.startsWith(item.path)
                     ? "menu_box_item active_menu"
@@ -114,7 +104,7 @@ export const Sidebar = () => {
                     </div>
                   </ul>
                 )}
-              </Link>
+              </div>
             </div>
           );
         })}

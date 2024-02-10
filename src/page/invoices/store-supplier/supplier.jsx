@@ -138,7 +138,7 @@ export const StorageSupplier = () => {
                         navigate(`?page-code=supplier`);
                       }}
                     >
-                      <input type="checkbox" checked={check} />
+                      <input type="checkbox" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p

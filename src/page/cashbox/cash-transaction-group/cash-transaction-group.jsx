@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
-import { acActive, acActiveThing, acPassiveThing } from "../../../redux/active";
+import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -127,7 +127,7 @@ export const TransactionGroups = () => {
                       navigate(`?page-code=cashboxGr`);
                     }}
                   >
-                    <input type="checkbox" name="id" checked={check} />
+                    <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
                   {displayKeys?.map(({ name, size, position }) => (

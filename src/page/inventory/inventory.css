@@ -27,7 +27,7 @@
   font-size: var(--fs3);
 }
 
-.inventory_header span{
+.inventory_header span {
   font-size: var(--fs5);
 }
 
@@ -84,44 +84,95 @@
   transition: all 0.5s ease-in-out;
 }
 
+.history-box {
+  position: relative;
+  height: auto;
+}
+
+.ticket {
+  position: absolute;
+  top: 135%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  background: #787aff;
+  opacity: 1;
+  transform: rotate(45deg) translate(-50%, 0%);
+  z-index: 99999;
+}
+
 ._history-body {
   position: absolute;
-  top: 110%;
-  right: 0;
+  top: 135%;
+  right: -50%;
   width: 300px;
   height: 0px;
-  padding: 10% 0;
-  display: none;
+  padding: 0;
+  /* display: none; */ /* Remove this line */
   flex-direction: column;
-  border-radius: 10px;
-  background: #333;
+  border-radius: 5px;
+  background: #787aff;
   z-index: 9999;
   overflow: hidden;
   box-shadow: 0px 9px 30px rgba(19, 18, 18, 0.658);
-  transition: all 0.5s ease-in-out;
+  transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Updated transition properties */
+  opacity: 0;
 }
 
 .inventory-history.active ._history-body {
-  height: 300px;
-  display: flex;
-  transition: all 0.5s ease-in-out;
+  height: auto;
+  max-height: 300px;
+  padding: 5px 15px;
+  /* display: flex; */ /* Remove this line */
+  transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Updated transition properties */
   overflow: unset;
   overflow-y: auto;
+  opacity: 1;
+}
+
+.inventory-history.active ._history-body::-webkit-scrollbar {
+  width: 3px;
+  border-radius: 3px;
+  background: #333;
+}
+
+.inventory-history.active ._history-body::-webkit-scrollbar-thumb {
+  background: #eee;
+  border-radius: 3px;
 }
 
 ._history-body > p {
+  position: relative;
   width: 100%;
-  padding: 2% 5%;
+  padding: 3% 1%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: var(--fs6);
   transition: all 0.3s ease;
   cursor: pointer;
+  border-bottom: 1px solid #eee9;
+  color: #ccc;
+}
+
+._history-body > p::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  transform: translate(0%, -50%);
+  width: 3px;
+  height: 80%;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+._history-body > p:last-child {
+  border-bottom: none;
 }
 
 ._history-body > p:hover {
-  background: #444;
+  color: #fff;
 }
 
 .inventory_body .worker > :first-child {

@@ -135,7 +135,7 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
+                    defaultChecked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

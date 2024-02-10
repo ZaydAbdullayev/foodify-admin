@@ -103,7 +103,7 @@ export const Storage = () => {
                       navigate(`?page-code=main`);
                     }}
                   >
-                    <input type="checkbox" name="id" checked={check} />
+                    <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>

@@ -102,7 +102,7 @@ export const Cashboxes = () => {
                       navigate(`?page-code=cashbox`);
                     }}
                   >
-                    <input type="checkbox" name="id" checked={check} />
+                    <input type="checkbox" name="id" defaultValue={check} />
                   </label>
                   <p>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>

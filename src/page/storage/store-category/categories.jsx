@@ -139,7 +139,7 @@ export const StorageCatgegories = () => {
                         navigate(`?page-code=category`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p style={{ "--data-line-size": "40%" }}>{item.name}</p>

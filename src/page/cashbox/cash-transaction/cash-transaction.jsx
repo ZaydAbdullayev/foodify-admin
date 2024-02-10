@@ -168,7 +168,11 @@ export const CashboxTransaction = () => {
                         navigate(`?page-code=trsn`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={isChecked} />
+                      <input
+                        type="checkbox"
+                        name="id"
+                        defaultChecked={isChecked}
+                      />
                     </label>
                     <p>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>

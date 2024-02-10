@@ -149,9 +149,10 @@ export const Inventory = () => {
                 className={
                   syncs ? "inventory-history active" : "inventory-history"
                 }
-                onClick={() => setSyncs(!syncs)}
+                onClick={() => setTimeout(() => setSyncs(!syncs), 100)}
               >
                 <MdOutlineHistory />
+                <span className="ticket"></span>
                 <div className="_history-body">
                   {syncsData?.data?.map((item, index) => {
                     const day = new Date(item.sync_time).toLocaleDateString();

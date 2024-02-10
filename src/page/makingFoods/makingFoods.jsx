@@ -14,28 +14,54 @@ import { MdFastfood } from "react-icons/md";
 import { GiCook } from "react-icons/gi";
 import { RiBoxingFill } from "react-icons/ri";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
-import { HiCheck } from "react-icons/hi";
+import { BsCheck2All } from "react-icons/bs";
+import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 export const MakingFoods = () => {
-  // const user = JSON.parse(localStorage.getItem("user")) || [];
-  // const department = JSON.parse(localStorage.getItem("department")) || null;
+  const user = JSON.parse(localStorage.getItem("user"))?.user || [];
+  const department = JSON.parse(localStorage.getItem("department")) || null;
+  const { data = [] } = useGetMakingOrderQuery();
   // const newOrder = useSelector((state) => state.upload);
   const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(1);
-  const [stution, setStution] = useState(null);
+  const [situation, setSituation] = useState({});
   const [full, setFull] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const id = user?.id;
+
   const navigate = useNavigate();
   const search = useSelector((state) => state.search);
-  // const id = user?.user?.id;
-  const { data = [] } = useGetMakingOrderQuery();
   useEffect(() => {
+    setOrders(data?.innerData);
     dispatch(acNavStatus([100]));
-  }, [dispatch]);
-  // const point =
-  //   department === "kassir" || department === "owner"
-  //     ? `get/orders/${id}`
-  //     : `get/depOrders/${id}/${department}`;
+  }, [dispatch, data?.innerData]);
 
+  socket.on(`/get/newOrdersOne/${id}`, (newData) => {
+    console.log("new socket", newData);
+    setOrders((prevOrders) => {
+      const updatedOrders = [...prevOrders];
+      if (newData[0] === "update") {
+        const existingIndex = updatedOrders.findIndex(
+          (order) => order?.id === newData[1]?.id
+        );
+        if (existingIndex !== -1) {
+          updatedOrders[existingIndex] = newData[1];
+        }
+      } else if (newData[0] === "delete") {
+        const deleted = updatedOrders.findIndex(
+          (order) => order.id === newData[1].id
+        );
+        if (deleted !== -1) {
+          updatedOrders.splice(deleted, 1);
+        }
+      } else {
+        updatedOrders.push(newData);
+      }
+      return updatedOrders;
+    });
+    socket.off(`/get/newOrdersOne/${id}`);
+  });
 
   const orderAccept = (order) => {
     socket.emit("/accept/order", {
@@ -44,8 +70,27 @@ export const MakingFoods = () => {
       user_id: order?.user_id,
     });
     socket.emit("/update/order/status", order);
-    setStution(order?.id);
+    setSituation({ status: order?.status, id: order?.id });
     dispatch(acUpload());
+  };
+
+  const orderSituation = (order) => {
+    console.log("upP", order);
+    try {
+      socket.emit("/accept/order", {
+        status: true,
+        variant: order?.status,
+        user_id: order?.user_id,
+      });
+      socket.emit("/update/ProductSt", order);
+      if (
+        data?.innerData.find(
+          ({ id, status }) => id === order?.order_id && status === 3
+        )
+      ) {
+        setSituation(order?.order_id);
+      }
+    } catch (err) {}
   };
 
   const handlers = useSwipeable({
@@ -64,13 +109,7 @@ export const MakingFoods = () => {
     );
   };
 
-  // const newOrders = orders?.sort((a, b) => {
-  //   const dateA = new Date(a.receivedAt);
-  //   const dateB = new Date(b.receivedAt);
-  //   return dateB - dateA;
-  // });
-
-  const filteredData = data?.data?.filter((item) => {
+  const filteredData = orders?.filter((item) => {
     return item?.id?.toLowerCase().includes(search?.toLowerCase());
   });
 
@@ -113,15 +152,23 @@ export const MakingFoods = () => {
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
               const pds = JSON?.parse(order?.product_data);
-              const { pd, received_at } = Object.values(pds)[0];
-              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-              });
+              const { pd } = Object.values(pds)[0];
+              const time = new Date(order?.receivedAt)?.toLocaleString(
+                "uz-UZ",
+                {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: false,
+                }
+              );
               return (
                 <div
                   key={order?.id}
+                  className={
+                    situation?.id === order?.id && situation?.status !== 2
+                      ? "accepted"
+                      : ""
+                  }
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
@@ -136,6 +183,12 @@ export const MakingFoods = () => {
                       <span>{time}</span>
                       <div className="btn_box">
                         <button
+                          className="relative"
+                          onClick={() => orderAccept({ ...order, status: 4 })}
+                        >
+                          <RxCross2 />
+                        </button>
+                        <button
                           onClick={() =>
                             orderAccept({
                               id: order?.id,
@@ -144,7 +197,7 @@ export const MakingFoods = () => {
                             })
                           }
                         >
-                          Tayyor
+                          <BsCheck2All />
                         </button>
                       </div>
                     </div>
@@ -153,30 +206,14 @@ export const MakingFoods = () => {
                         return (
                           <figcaption key={product?.id + ind}>
                             <i
-                            // onClick={() => {
-                            //   let newStatus;
-                            //   if (order?.type === "online") {
-                            //     newStatus = 2;
-                            //   } else {
-                            //     newStatus = 4;
-                            //   }
-
-                            //   if (product?.status === 4) {
-                            //     orderSituation({
-                            //       order_id: order?.id,
-                            //       product_id: product?.id,
-                            //       status: 5,
-                            //       department: department,
-                            //     });
-                            //   } else {
-                            //     orderSituation({
-                            //       order_id: order?.id,
-                            //       product_id: product?.id,
-                            //       status: newStatus,
-                            //       department: department,
-                            //     });
-                            //   }
-                            // }}
+                              onClick={() =>
+                                orderSituation({
+                                  order_id: order?.id,
+                                  product_id: product?.id,
+                                  status: 4,
+                                  department: department,
+                                })
+                              }
                             ></i>
                             {product?.status === 3 && <i></i>}
                             <p className="qty">{product?.quantity}</p>
@@ -194,9 +231,16 @@ export const MakingFoods = () => {
                             <div className="order_stution">
                               <button
                                 style={{ color: "#3CE75B" }}
-                                className="relative"
+                                onClick={() =>
+                                  orderSituation({
+                                    order_id: order?.id,
+                                    product_id: product?.id,
+                                    status: 4,
+                                    department: department,
+                                  })
+                                }
                               >
-                                <HiCheck />
+                                <IoCheckmarkDoneCircleSharp />
                               </button>
                             </div>
                           </figcaption>

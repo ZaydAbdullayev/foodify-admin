@@ -20,7 +20,7 @@ export const InvoicesModal = ({
   setId,
   id,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
+  // const today = new Date().toISOString().split("T")[0];
   const [pId, setPId] = useState(null);
   const [qty, setQty] = useState(0);
   const [activePart, setActivePart] = useState(1);
@@ -208,7 +208,7 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
+                    defaultChecked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

@@ -198,7 +198,7 @@ export const StorageProducts = () => {
                         navigate(`?page-code=products`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }) => (
@@ -388,7 +388,7 @@ export const StorageProducts = () => {
                   <label>
                     <input
                       type="checkbox"
-                      checked={checked || false}
+                      defaultChecked={checked}
                       onChange={() =>
                         getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                       }

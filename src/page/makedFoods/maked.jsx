@@ -12,6 +12,7 @@ import { GiCook } from "react-icons/gi";
 import { RiBoxingFill } from "react-icons/ri";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi";
+// import { BsCheck2All } from "react-icons/bs";
 
 export const MakedFoods = () => {
   // const user = JSON?.parse(localStorage?.getItem("user")) || [];
@@ -42,11 +43,11 @@ export const MakedFoods = () => {
     );
   };
 
-  const newOrders = data?.data?.sort((a, b) => {
-    const dateA = new Date(a.receivedAt);
-    const dateB = new Date(b.receivedAt);
-    return dateB - dateA;
-  });
+  // const newOrders = data?.innerData?.sort((a, b) => {
+  //   const dateA = new Date(a.receivedAt);
+  //   const dateB = new Date(b.receivedAt);
+  //   return dateB - dateA;
+  // });
 
   return (
     <div
@@ -83,16 +84,21 @@ export const MakedFoods = () => {
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
-        {newOrders?.length ? (
+        {data?.innerData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
-            {newOrders?.map((order) => {
+            {data?.innerData?.map((order) => {
               const pds = JSON?.parse(order?.product_data);
-              const { pd, received_at } = Object.values(pds)[0];
-              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-              });
+              const { pd } = Object.values(pds)[0];
+              console.log(pd, "pd");
+              console.log(order?.receivedAt, "received_at");
+              const time = new Date(order?.receivedAt)?.toLocaleString(
+                "uz-UZ",
+                {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: false,
+                }
+              );
               return (
                 <div
                   key={order?.id}
@@ -108,7 +114,11 @@ export const MakedFoods = () => {
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
                       <span>{time}</span>
-                      <div className="btn_box">Olib ketilishi kutilmoqda</div>
+                      <div className="btn_box">
+                        <sub style={{ background: "none" }}>
+                          Olib ketilishi kutilmoqda
+                        </sub>
+                      </div>
                     </div>
                     <div className="order_item-body">
                       {pd?.map((product, ind) => {

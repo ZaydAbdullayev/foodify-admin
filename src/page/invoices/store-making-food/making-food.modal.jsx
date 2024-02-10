@@ -7,7 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
-import { useGetStProductQuery } from "../../../service/s-products.service";
+// import { useGetStProductQuery } from "../../../service/s-products.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -24,7 +24,7 @@ export const InvoicesModal = ({
   const [activePart, setActivePart] = useState(1);
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: storageItems = [] } = useGetStorageItemsQuery(id);
-  const { data: productData = [] } = useGetStProductQuery();
+  // const { data: productData = [] } = useGetStProductQuery();
   const parsedData = storageItems?.data;
 
   const updatedData = checkedData.map((newItem) => {
@@ -169,7 +169,7 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
+                    defaultChecked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

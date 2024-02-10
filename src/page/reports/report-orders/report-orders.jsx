@@ -160,7 +160,7 @@ export const ReportOrders = () => {
                         navigate(`?page-code=orderReport`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={chek} />
+                      <input type="checkbox" name="id" defaultChecked={chek} />
                     </label>
                     <p>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }) => (

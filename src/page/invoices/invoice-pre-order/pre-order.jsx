@@ -192,7 +192,7 @@ export const InvoicePreOrders = () => {
                         navigate(`?page-code=preOrder`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p

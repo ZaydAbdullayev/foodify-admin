@@ -189,7 +189,7 @@ export const StorageDamaged = () => {
                         navigate(`?page-code=damaged`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "16.5%" }}>{date}</p>

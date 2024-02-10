@@ -18,7 +18,7 @@ export const InvoicesModal = ({
   setId,
   id,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
+  // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data: storeData = [] } = useGetStoreQuery();
   const { data: groupsData = [] } = useGetStGroupsQuery();
@@ -155,7 +155,7 @@ export const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
+                    defaultChecked={checked || false}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

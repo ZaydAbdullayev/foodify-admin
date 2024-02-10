@@ -189,7 +189,7 @@ export const StorageCarryUp = () => {
                         navigate(`?page-code=carry`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "14%" }}>{date}</p>

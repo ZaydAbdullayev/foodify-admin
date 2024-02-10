@@ -22,7 +22,7 @@ export const StorageInvoices = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const [payment, setPayment] = useState(null);
+  // const [payment, setPayment] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
@@ -192,7 +192,7 @@ export const StorageInvoices = () => {
                         navigate(`?page-code=invoice`);
                       }}
                     >
-                      <input type="checkbox" name="id" checked={check} />
+                      <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
                     <p style={{ "--data-line-size": "13%" }}>{date}</p>
