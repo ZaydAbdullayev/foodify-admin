@@ -213,24 +213,24 @@ export const CashboxTransaction = () => {
               <select name="transaction_category">
                 {modalType === "income" && (
                   <>
-                    <option value="send">Kirim</option>
-                    <option value="delivery_send">Dastavka kirim</option>
-                    <option value="food_send">Oziq-ovqat kirim</option>
-                    <option value="expense">Chiqim</option>
-                    <option value="delivery_payment">Dastavka to'lovi</option>
-                    <option value="food_payment">Oziq-ovqat to'lovi</option>
+                    <option value="income">Kirim</option>
+                    <option value="delivery_income">Dastavka kirim</option>
+                    <option value="food_income">Oziq-ovqat kirim</option>
+                    <option value="invoice">Chiqim</option>
+                    <option value="delivery_invoice">Dastavka to'lovi</option>
+                    <option value="food_invoice">Oziq-ovqat to'lovi</option>
                     <option value="cash_withdrawal">Kassaga o'tkazish</option>
                     <option value="deposit">Depozit</option>
                   </>
                 )}
                 {modalType === "expenses" && (
                   <>
-                    <option value="expense">Chiqim</option>
-                    <option value="send">Kirim</option>
-                    <option value="delivery_send">Dastavka kirim</option>
-                    <option value="food_send">Oziq-ovqat kirim</option>
-                    <option value="delivery_payment">Dastavka to'lovi</option>
-                    <option value="food_payment">Oziq-ovqat to'lovi</option>
+                    <option value="invoice">Chiqim</option>
+                    <option value="income">Kirim</option>
+                    <option value="delivery_income">Dastavka kirim</option>
+                    <option value="food_income">Oziq-ovqat kirim</option>
+                    <option value="delivery_invoice">Dastavka to'lovi</option>
+                    <option value="food_invoice">Oziq-ovqat to'lovi</option>
                     <option value="cash_withdrawal">Kassaga o'tkazish</option>
                     <option value="deposit">Depozit</option>
                   </>

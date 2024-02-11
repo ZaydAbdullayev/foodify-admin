@@ -212,11 +212,14 @@ export const Home = () => {
             {filteredData?.map((order) => {
               const pds = JSON?.parse(order?.product_data);
               const { pd, received_at } = Object.values(pds)[0];
-              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-              });
+              const time = new Date(order?.receivedAt)?.toLocaleString(
+                "uz-UZ",
+                {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: false,
+                }
+              );
               return (
                 <div
                   key={order?.id}
@@ -391,16 +394,6 @@ export const Home = () => {
                       })}
                     </div>
                   </figure>
-                  {department === "kassir" && (
-                    <div className="order_footer">
-                      <button>Orqaga qaytish</button>
-                      <button
-                        onClick={() => orderAccept({ ...order, status: 1 })}
-                      >
-                        Tayyorlashga berish
-                      </button>
-                    </div>
-                  )}
                 </div>
               );
             })}

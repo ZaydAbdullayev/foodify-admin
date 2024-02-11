@@ -91,13 +91,21 @@
 
 .ticket {
   position: absolute;
-  top: 135%;
+  top: 50%;
   left: 50%;
   width: 15px;
   height: 15px;
   background: #787aff;
-  opacity: 1;
+  opacity: 0;
   transform: rotate(45deg) translate(-50%, 0%);
+  transition: opacity 0.7s ease-in;
+  z-index: -9;
+}
+
+.inventory-history.active .ticket {
+  top: 135%;
+  opacity: 1;
+  transition: opacity 0.7s ease-in;
   z-index: 99999;
 }
 
@@ -173,6 +181,10 @@
 
 ._history-body > p:hover {
   color: #fff;
+}
+
+._history-body > p:hover::after {
+  background: #fff;
 }
 
 .inventory_body .worker > :first-child {

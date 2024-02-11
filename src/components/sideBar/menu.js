@@ -19,6 +19,7 @@ import { TbReport, TbPlaylistX } from "react-icons/tb";
 import { PiDotsNineFill } from "react-icons/pi";
 import { FaSitemap } from "react-icons/fa6";
 import { LiaListAlt } from "react-icons/lia";
+import { PiDotsThreeCircleVerticalFill } from "react-icons/pi";
 
 const width = window.innerWidth <= 600 ? true : false;
 
@@ -87,11 +88,19 @@ export const Menu_customer = [
     list: true,
     permission: true,
   },
+  {
+    id: "6",
+    path: "/other-pages",
+    name: "Boshqalar",
+    icon: <PiDotsThreeCircleVerticalFill />,
+    list: true,
+    permission: true,
+  },
 ];
 
 export const Category = [
   {
-    id: "1453",
+    id: "6",
     path: "/",
     name: "Dashboard",
     positions: [65, -65, 70],
@@ -316,14 +325,14 @@ export const Category = [
     icon: <MdStorage />,
   },
   {
-    id: "765433",
+    id: "6",
     name: "Yetkazuvchi hisoboti",
     path: "/supplier",
     positions: [],
     icon: <TbPlaylistX />,
   },
   {
-    id: "765433",
+    id: "6",
     name: "Mahsulotlar hisoboti",
     path: "/ingredients",
     positions: [],

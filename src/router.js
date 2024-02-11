@@ -169,7 +169,6 @@ export const Router = () => {
               <Route path="departments" element={<StorageDep />} />
               <Route path="categories" element={<StorageCatgegories />} />
               <Route path="groups" element={<StorageGroups />} />
-              <Route path="ingredients" element={<StorageIngredients />} />
               <Route path="s-products" element={<StorageProducts />} />
               <Route path="" element={<StorageSupplier />} />
               <Route path="invoice-group" element={<InvoicesGroups />} />
@@ -187,7 +186,11 @@ export const Router = () => {
               <Route path="making-food" element={<InvoicesMakingFood />} />
             </Route>
             <Route path="reports" element={<Blog />}>
-              <Route path="ingredients" element={<ReportIngredients />} />
+              <Route
+                path="ingredients-report"
+                element={<ReportIngredients />}
+              />
+              <Route path="ingredients" element={<StorageIngredients />} />
               <Route path="suppliers" element={<ReportSuppliers />} />
             </Route>
             <Route path="sidebar" element={<Sidebar />} />

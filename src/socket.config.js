@@ -1,9 +1,8 @@
 // socket.js
 
 import io from "socket.io-client";
-// https://bvtrj1n0-80.euw.devtunnels.ms
-// https://backend.foodify.uz
-const socket = io("https://backup.foodify.uz", {
+const base_url = process.env.REACT_APP_SOCKET_BASE_URL;
+const socket = io(base_url, {
   transportOptions: {
     polling: {
       extraHeaders: {

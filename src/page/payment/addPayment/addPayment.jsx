@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { usePaymentOrderMutation } from "../../../service/user.service";
 import { enqueueSnackbar as es } from "notistack";
+import { useAddCashTransactionMutation } from "../../../service/cash-transaction.service";
 
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -18,19 +19,47 @@ export const AddPayment = memo(({ active, actives }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || "";
   const dep = JSON.parse(localStorage.getItem("department")) || "";
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState({ id: 1, comment: "Naqd to'lov" }); // ["ofline", "online"]
+  const [addCashTransaction] = useAddCashTransactionMutation();
+  const [type, setType] = useState({
+    id: 1,
+    comment: "Naqd to'lov",
+    value: "cash",
+  }); // ["ofline", "online"]
   const id = useLocation().search.split("?dt=").pop();
   const { data: order = [], isLoading } = useGetpOrderQuery(id);
   const [paymentOrder] = usePaymentOrderMutation();
   const [price, setPrice] = useState(null); // ["ofline", "online"]
   const navigate = useNavigate();
 
-  const addPayment = async (data) => {
+  const addPayment = async () => {
+    const data = {
+      id: orderData.id,
+      status: type.value === "cash" ? 1 : type.value === "depozit" ? 3 : 2,
+      payment_type: type.value,
+      paid: price ? price : orderData?.total,
+      role: dep || "not awaible",
+      worker_id: user.id || "not awaible",
+    };
+    const trsn = {
+      res_id: user.id,
+      transaction_group: "income",
+      cashier_receiver: dep,
+      activity_kind: "income",
+      payment_type: type.value,
+      amount: price ? price : orderData?.total,
+      description: "",
+      transaction_type: "income",
+      transaction_category: "food_income",
+    };
     setLoading(true);
     try {
       console.log("data", data);
       const res = await paymentOrder(data);
-      if (res === 200) {
+      const second_res = await addCashTransaction(trsn);
+      if (
+        res.data.message === "All Orders" &&
+        second_res.data.message === "All Orders"
+      ) {
         es("To'lov qilindi!", { variant: "success" });
       }
       if (res.error) {
@@ -133,7 +162,9 @@ export const AddPayment = memo(({ active, actives }) => {
                 className={
                   type.id === 3 ? "payment_type active" : "payment_type"
                 }
-                onClick={() => setType({ id: 3, comment: "Click/Payme" })}
+                onClick={() =>
+                  setType({ id: 3, comment: "Click/Payme", value: "credit" })
+                }
               >
                 <GiCardExchange />
                 <span>Click/Payme</span>
@@ -142,7 +173,13 @@ export const AddPayment = memo(({ active, actives }) => {
                 className={
                   type.id === 2 ? "payment_type active" : "payment_type"
                 }
-                onClick={() => setType({ id: 2, comment: "Pul o'tkazma" })}
+                onClick={() =>
+                  setType({
+                    id: 2,
+                    comment: "Pul o'tkazma",
+                    value: "bank_card",
+                  })
+                }
               >
                 <BsFillCreditCard2BackFill />
                 <span>Karta orqali</span>
@@ -151,7 +188,9 @@ export const AddPayment = memo(({ active, actives }) => {
                 className={
                   type.id === 1 ? "payment_type active" : "payment_type"
                 }
-                onClick={() => setType({ id: 1, comment: "Naqd to'lov" })}
+                onClick={() =>
+                  setType({ id: 1, comment: "Naqd to'lov", value: "cash" })
+                }
               >
                 <FaMoneyBillAlt />
                 <span>Naqd to'lov</span>
@@ -164,19 +203,7 @@ export const AddPayment = memo(({ active, actives }) => {
                   onChange={(e) => setPrice(e.target.value)}
                   name="price"
                 />
-                <span
-                  className="relative"
-                  onClick={() =>
-                    addPayment({
-                      id: orderData.id,
-                      status: 1,
-                      payment_type: type.comment,
-                      payment: price ? price : orderData?.total,
-                      role: dep || "not awaible",
-                      cashier: user.username || "not awaible",
-                    })
-                  }
-                >
+                <span className="relative" onClick={() => addPayment()}>
                   {loading ? <LoadingBtn /> : <BsCheckLg />}
                 </span>
               </div>
