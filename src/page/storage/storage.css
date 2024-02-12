@@ -25,6 +25,25 @@
   color: #eee;
 }
 
+.storage_body > i {
+  inline-size: 100%;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap6);
+  transition: all 0.5s ease;
+
+  > svg {
+    cursor: pointer;
+  }
+}
+
+.storage_body > i > svg.active {
+  transform: scale(1.4);
+  color: #787aff;
+}
+
 .storage_body > p {
   inline-size: 100%;
   height: var(--univslH);
@@ -33,20 +52,26 @@
   justify-content: center;
   font-size: var(--fs4);
   border-bottom: 1px solid #2227;
-  background: #787aff;
+  background: #787aff !important;
   color: #fff;
   border-radius: 10px 10px 0 0;
+}
+
+.storage_body > p.df-aic-gap > span {
+  display: flex;
+  align-items: center;
+  gap: var(--gap3);
 }
 
 .storage_body input {
   cursor: pointer;
 }
 
-.storage_body > :nth-child(2) > :where(label, p):hover {
+._item-header > :where(label, p):hover {
   background: linear-gradient(to bottom, #333, #ccc5);
 }
 
-.storage_body > :nth-child(2) > label {
+._item-header > label {
   transition: all 0.5s ease-in-out;
 }
 
@@ -84,7 +109,7 @@
   border-right: 1px solid #ccc5;
 }
 
-.storage_body > :nth-child(2) {
+._item-header {
   background: #3335;
   border-bottom: 1px solid #eee2;
 }

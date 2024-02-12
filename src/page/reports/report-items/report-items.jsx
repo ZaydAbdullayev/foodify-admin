@@ -88,7 +88,7 @@ export const ReportItems = () => {
         <p>
           <span>Taomlar uchun hisobot</span>
         </p>
-        <div className="storage_body_item reports_item">
+        <div className="storage_body_item reports_item _item-header">
           {headerData?.map((item, index) => {
             return (
               <label

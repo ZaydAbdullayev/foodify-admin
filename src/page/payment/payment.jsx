@@ -13,7 +13,7 @@ import noResult from "../../assets/images/20231109_144621.png";
 export const Payment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  // const search = useSelector((state) => state.search);
+  // const search = useLocation().search?.split("=").pop();
   const [date, setDate] = useState({
     start: new Date().toISOString().split("T")[0],
     end: new Date().toISOString().split("T")[0],

@@ -1,5 +1,5 @@
 import axios from "axios";
-const base_url = process.env.REACT_APP_BASE_URL; 
+const base_url = process.env.REACT_APP_BASE_URL;
 // const base_url = "https://backend.foodify.uz";
 const user = JSON.parse(localStorage.getItem("user")) || [];
 
@@ -36,4 +36,4 @@ export const ApiDeleteService = {
     const response = await axios.delete(`${base_url}/${url}`);
     return response;
   },
-};                     
+};

@@ -10,16 +10,16 @@ import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
+
+import { GoDotFill } from "react-icons/go";
 
 export const InvoicesGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(2);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
@@ -40,18 +40,42 @@ export const InvoicesGroups = () => {
     });
 
   const handlers = useSwipeable({
-    onSwipedRight: () => navigate("/sections/groups"),
+    onSwipedLeft: () => handleSwipe("LEFT"),
+    onSwipedRight: () => handleSwipe("RIGHT"),
     trackMouse: true,
   });
+
+  const handleSwipe = async (direction) => {
+    const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
+    await setActiveIndex((newIndex + 3) % 3);
+    navigate(
+      `/sections/${
+        newIndex === 0
+          ? "cashbox/transaction-group"
+          : newIndex === 1
+          ? "groups"
+          : "invoice-group"
+      }`
+    );
+  };
 
   return (
     <div className="storage_container">
       <UniversalFilterBox />
       <div className="storage_body">
-        <p {...handlers}>
-          <span>To'lov guruhlari</span>
+        <i>
+          <GoDotFill
+            onClick={() => navigate("/sections/cashbox/transaction-group")}
+          />
+          <GoDotFill onClick={() => navigate("/sections/groups")} />
+          <GoDotFill className="active" />
+        </i>
+        <p {...handlers} className="df-aic-gap">
+          <span>
+            {"< "} To'lov guruhlari {" >"}
+          </span>
         </p>
-        <div className="storage_body_item">
+        <div className="storage_body_item _item-header">
           <label>
             <input
               type="checkbox"

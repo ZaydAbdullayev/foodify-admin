@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./document.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MdDateRange } from "react-icons/md";
 import { LuArrowLeftRight } from "react-icons/lu";
 import AnimatedNumber from "animated-number-react";
 import { useGetByDateQuery } from "../../service/product.service";
 import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { LiaCalendarDaySolid } from "react-icons/lia";
 
@@ -21,7 +21,7 @@ export const Document = () => {
     tdate: new Date().toISOString().split("T")[0],
   });
   const { data = [], isLoading } = useGetByDateQuery(date);
-  const search = useSelector((state) => state.search);
+  const search = useLocation().search?.split("=").pop();
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));

@@ -9,7 +9,7 @@ import { getFormattedDate } from "../../service/calc-date.service";
 import { calculateWeekRange } from "../../service/calc-date.service";
 
 import { BsSearch } from "react-icons/bs";
-
+import { useNavigate } from "react-router-dom";
 
 export const UniversalFilter = (data, key, value) => {
   return data.filter((item) => {
@@ -29,6 +29,7 @@ export const UniversalFilterBox = () => {
   const { date } = useSelector((state) => state.uSearch);
   const status = useSelector((state) => state.status);
   const { data = [] } = useGetCashboxQuery();
+  const navigate = useNavigate();
 
   const today = getFormattedDate(0);
   const yesterday = getFormattedDate(1);
@@ -39,10 +40,9 @@ export const UniversalFilterBox = () => {
   const lastMonth = calculateMonthRange(-1);
   const thisYear = getFormattedDate(365);
 
-
-
   const uploadData = (e, fieldName) => {
     const newValue = e.target.value;
+    navigate(`?${fieldName}=${newValue}`);
     if (fieldName === "date")
       return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
     const time = {

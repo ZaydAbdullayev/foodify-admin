@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./makingFoods.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { acUpload } from "../../redux/upload";
 import { acNavStatus } from "../../redux/navbar.status";
 import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { useGetMakingOrderQuery } from "../../service/order.service";
 
@@ -31,7 +31,8 @@ export const MakingFoods = () => {
   const id = user?.id;
 
   const navigate = useNavigate();
-  const search = useSelector((state) => state.search);
+  const search = useLocation().search?.split("=").pop();
+
   useEffect(() => {
     setOrders(data?.innerData);
     dispatch(acNavStatus([100]));

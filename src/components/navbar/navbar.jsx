@@ -62,6 +62,7 @@ export const Navbar = () => {
 
   const handleSort = (value) => {
     dispatch(acSearch(value));
+    navigate(`?search=${value}`);
   };
 
   const log_out = () => {
@@ -78,20 +79,21 @@ export const Navbar = () => {
         <img src={logo} alt="" />
       </div>
       {status?.includes(0) && (
-        <div className="short_hands">
+        <form className="short_hands">
           {status?.includes(1) && (
-            <button onClick={openUModal}>
+            <button type="button" onClick={openUModal}>
               <BiPlus />
             </button>
           )}
           {status.includes(101) && (
-            <button onClick={openUModal}>
+            <button type="button" onClick={openUModal}>
               <b>+</b>
               <MdTableBar />{" "}
             </button>
           )}
           {status?.includes(2) && (
             <button
+              type="button"
               style={
                 delDocuments?.[page_code]?.length === 1
                   ? {}
@@ -104,6 +106,7 @@ export const Navbar = () => {
           )}
           {status?.includes(3) && (
             <button
+              type="button"
               style={
                 delDocuments?.[page_code]?.length > 0
                   ? {}
@@ -115,7 +118,7 @@ export const Navbar = () => {
             </button>
           )}
           <UniversalFilterBox />
-        </div>
+        </form>
       )}
 
       {status.includes(100) && (

@@ -21,6 +21,7 @@ export const OrderById = () => {
   const newLocation = location.split("/orders/tables").join("");
   const { data = [], isLoading } = useGetpOrderQuery(lc[5]);
   let queue;
+  let order_id;
 
   const finish = () => {
     const uData = {
@@ -31,6 +32,7 @@ export const OrderById = () => {
       worker_id: "",
     };
     socket.emit("/update/table", uData);
+    socket.emit("/close/order", { id: order_id });
     navigate("/orders/tables");
   };
 
@@ -45,6 +47,7 @@ export const OrderById = () => {
           const p_data = JSON.parse(item?.product_data || "[]");
           const product_data = Object.values(p_data)[0]?.pd;
           queue = Object.keys(p_data)[0];
+          order_id = item?.id;
 
           return product_data?.map((item) => {
             return (

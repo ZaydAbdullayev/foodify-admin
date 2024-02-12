@@ -9,7 +9,7 @@ import { NumericFormat } from "react-number-format";
 import { ResolveModal } from "./resolve.modal";
 import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { BsCheck2All } from "react-icons/bs";
 import { AiOutlineFullscreen } from "react-icons/ai";
@@ -33,7 +33,7 @@ export const Home = () => {
   const [loading, setLoading] = useState({});
   const [full, setFull] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const search = useSelector((state) => state.search);
+  const search = useLocation().search?.split("=").pop();
   const id = user?.user?.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();

@@ -75,7 +75,7 @@ export const InvoiceInvantar = () => {
         <p>
           <span>Envantarizatsiya</span>
         </p>
-        <div className="storage_body_item">
+        <div className="storage_body_item _item-header">
           <label>
             <input
               type="checkbox"

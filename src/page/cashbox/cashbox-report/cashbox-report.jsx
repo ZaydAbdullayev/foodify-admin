@@ -17,6 +17,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
+  const [details, setDetails] = useState({ ind: null, title: "" });
   const acItem = useSelector((state) => state.activeThing);
   const search = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
@@ -28,8 +29,9 @@ export const TransactionRapor = () => {
     dispatch(acNavStatus([0, 6, 7, 15]));
   }, [dispatch]);
   let total = 0;
+  console.log(details);
 
-  console.log(trData?.data);
+  // console.log(trData?.data);
   const headerData = [
     { name: "Turi", size: "11.3%" },
     { name: "Naqd pul", size: "10.7%" },
@@ -84,7 +86,7 @@ export const TransactionRapor = () => {
         <p>
           <span>Tranzaksiyalar hisoboti</span>
         </p>
-        <div className="storage_body_item">
+        <div className="storage_body_item _item-header">
           <p>№</p>
           {headerData?.map((item, index) => {
             return (
@@ -117,7 +119,6 @@ export const TransactionRapor = () => {
             </span>
           ) : (
             trData?.data?.map((item, index) => {
-              console.log(CalculateTotalByLine(trData.data, "type"));
               return (
                 <div className={"storage_body__box"} key={index}>
                   <div
@@ -204,12 +205,12 @@ export const TransactionRapor = () => {
             </pre>
             {trIncData?.data?.map((inner, index) => {
               return (
-                <div className="_body__item" key={index}>
+                <div className="_body__item" key={index + 1}>
                   <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transactions?.map((tr, ind) => {
-                      return (
-                        <div className="_details__item" key={tr?.id}>
+                    {inner?.transactions?.map((tr, ind) => (
+                      <>
+                        <div className="_details__item" key={ind + 121}>
                           <p>{tr?.payment_type}</p>
                           <NumericFormat
                             value={CalculateTotalQuantity(
@@ -223,13 +224,27 @@ export const TransactionRapor = () => {
                             style={{
                               "--data-line-size": "15%",
                               justifyContent: "center",
+                              cursor: "pointer",
                             }}
+                            onClick={() =>
+                              setDetails({ ind: ind, title: tr?.payment_type })
+                            }
                           >
                             <u>tafsilot</u>
                           </p>
                         </div>
-                      );
-                    })}
+                        {details.ind === ind &&
+                          details.title === tr?.payment_type && (
+                            <div className="_details__item-info">
+                              {tr?.details.map((item, id) => (
+                                <div className="__item-info-piece" key={id}>
+                                  <p>{item.amount}</p> <p>{item.description}</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                      </>
+                    ))}
                   </div>
                 </div>
               );

@@ -4,7 +4,7 @@ import { useDeleteWorkerMutation } from "../../service/workers.service";
 import { useGetWorkersQuery } from "../../service/workers.service";
 import { useUpdateWorkerMutation } from "../../service/workers.service";
 import { enqueueSnackbar as es } from "notistack";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
@@ -15,10 +15,11 @@ import { FaCheck } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { FaUserLock } from "react-icons/fa";
 import { acNavStatus } from "../../redux/navbar.status";
+import { useLocation } from "react-router-dom";
 
 export const Workers = () => {
   const permission = JSON.parse(localStorage.getItem("permission")) || null;
-  const search = useSelector((state) => state.search);
+  const search = useLocation().search?.split("=").pop();
   const [show, setShow] = useState("");
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(null);

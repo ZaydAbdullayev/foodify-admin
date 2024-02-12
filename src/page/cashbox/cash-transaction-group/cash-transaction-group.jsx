@@ -14,6 +14,7 @@ import {
   setDocuments,
   setRelease,
 } from "../../../redux/deleteFoods";
+import { GoDotFill } from "react-icons/go";
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -39,10 +40,26 @@ export const TransactionGroups = () => {
       }
     });
 
+  const [activeIndex, setActiveIndex] = useState(0);
   const handlers = useSwipeable({
-    onSwipedLeft: () => navigate("/sections/groups"),
+    onSwipedLeft: () => handleSwipe("LEFT"),
+    onSwipedRight: () => handleSwipe("RIGHT"),
     trackMouse: true,
   });
+
+  const handleSwipe = async (direction) => {
+    const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
+    await setActiveIndex((newIndex + 3) % 3);
+    navigate(
+      `/sections/${
+        newIndex === 0
+          ? "cashbox/transaction-group"
+          : newIndex === 1
+          ? "groups"
+          : "invoice-group"
+      }`
+    );
+  };
 
   const headerData = [
     { name: "Nomi", size: "60%" },
@@ -58,10 +75,17 @@ export const TransactionGroups = () => {
     <div className="storage_container">
       <UniversalFilterBox />
       <div className="storage_body">
-        <p {...handlers}>
-          <span>O'tkazma guruhlari</span>
+        <i>
+          <GoDotFill className="active" />
+          <GoDotFill onClick={() => navigate("/sections/groups")} />
+          <GoDotFill onClick={() => navigate("/sections/invoice-group")} />
+        </i>
+        <p {...handlers} className="df-aic-gap">
+          <span>
+            {"< "} O'tkazma guruhlari {" >"}
+          </span>
         </p>
-        <div className="storage_body_item">
+        <div className="storage_body_item _item-header">
           <label>
             <input
               type="checkbox"
