@@ -26,7 +26,9 @@
 }
 
 .storage_body > i {
-  inline-size: 100%;
+  position: sticky;
+  left: 0;
+  width: 100vw;
   padding-bottom: 10px;
   display: flex;
   align-items: center;

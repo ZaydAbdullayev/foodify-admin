@@ -132,6 +132,7 @@ export const StorageGroups = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
+                  key={item.id}
                 >
                   <div
                     className={

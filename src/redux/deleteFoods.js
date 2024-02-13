@@ -15,6 +15,7 @@ const initialState = {
   group: [],
   ing: [],
   newIngGr: [],
+  ingGroup: [],
   supplier: [],
   invGr: [],
   cashbox: [],

@@ -45,3 +45,13 @@ export const {
   useGetMakedFoodQuery,
   useUpdateMakedFoodMutation,
 } = makingFood_api;
+
+export const usApi = (builder) => {
+  return builder.query({
+    query: (ids) => ({
+      url: `delete/preparedFoods`,
+      method: "DELETE",
+      body: ids,
+    }),
+  });
+};

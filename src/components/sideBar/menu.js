@@ -265,14 +265,14 @@ export const Category = [
     id: "5",
     name: "Yetkazuvchilar",
     path: "",
-    positions: width ? [-90, 90, 192] : [90, -90, 90],
+    positions: width ? [0, 0, 80] : [90, -90, 90],
     icon: <TbTruckDelivery />,
   },
   {
     id: "5",
     path: "/storage",
     name: "Ombor",
-    positions: width ? [-90, 90, 132] : [45, -45, 90],
+    positions: width ? [-45, 45, 80] : [45, -45, 90],
     icon: <FaLayerGroup />,
   },
   {

@@ -347,9 +347,9 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
       {data?.map((item, index) => (
         <div className="product_box_item" key={item.id + index}>
           <label>{index + 1}</label>
-          {displayKeys?.map(({ name, size, position }) => (
+          {displayKeys?.map(({ name, size, position }, ind) => (
             <p
-              key={name}
+              key={ind}
               style={{
                 "--data-line-size": size,
                 justifyContent: position

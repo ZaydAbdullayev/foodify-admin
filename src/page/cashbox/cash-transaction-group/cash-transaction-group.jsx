@@ -154,9 +154,9 @@ export const TransactionGroups = () => {
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
-                  {displayKeys?.map(({ name, size, position }) => (
+                  {displayKeys?.map(({ name, size, position }, ind) => (
                     <p
-                      key={name}
+                      key={ind}
                       style={{
                         "--data-line-size": size,
                         justifyContent: position

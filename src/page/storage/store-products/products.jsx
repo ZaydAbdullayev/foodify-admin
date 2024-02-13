@@ -201,9 +201,9 @@ export const StorageProducts = () => {
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
-                    {displayKeys?.map(({ name, size, position }) => (
+                    {displayKeys?.map(({ name, size, position }, ind) => (
                       <p
-                        key={name}
+                        key={ind}
                         style={{
                           "--data-line-size": size,
                           justifyContent: position
@@ -273,22 +273,24 @@ export const StorageProducts = () => {
                           >
                             {ind + 1}
                           </p>
-                          {innerDisplayKeys?.map(({ name, size, position }) => (
-                            <p
-                              key={name}
-                              style={{
-                                "--data-line-size": size,
-                                justifyContent: position
-                                  ? position === 1
-                                    ? "center"
-                                    : "flex-end"
-                                  : "flex-start",
-                                borderRight: "1px solid #ccc4",
-                              }}
-                            >
-                              {product[name]}
-                            </p>
-                          ))}
+                          {innerDisplayKeys?.map(
+                            ({ name, size, position }, innerind) => (
+                              <p
+                                key={innerind}
+                                style={{
+                                  "--data-line-size": size,
+                                  justifyContent: position
+                                    ? position === 1
+                                      ? "center"
+                                      : "flex-end"
+                                    : "flex-start",
+                                  borderRight: "1px solid #ccc4",
+                                }}
+                              >
+                                {product[name]}
+                              </p>
+                            )
+                          )}
                           <p
                             style={{
                               "--data-line-size": "16.5%",
