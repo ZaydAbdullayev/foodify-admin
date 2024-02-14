@@ -9,7 +9,7 @@ import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 
-import { AiOutlineFileSync, AiOutlineFileDone } from "react-icons/ai";
+import { AiOutlineFileSync } from "react-icons/ai";
 import { MdOutlineHistory, MdCloudDone } from "react-icons/md";
 import { TbArrowBarLeft } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
@@ -21,7 +21,6 @@ export const Inventory = () => {
   const [storageId, setStorageId] = useState(stores.data?.[0]?.id);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [newData, setNewData] = useState([]);
   const [oneold, setOneOld] = useState([]);
   const [oneNew, setOneNew] = useState([]);
@@ -69,7 +68,6 @@ export const Inventory = () => {
     });
 
     setNewData(updatedData);
-    setSelected(null);
   };
 
   const getStorageName = (id) => {
@@ -211,15 +209,8 @@ export const Inventory = () => {
                   <p style={{ "--worker-t-w": "20%" }}>
                     <span>{ingredient?.price}</span>
                   </p>
-                  <p
-                    style={{ "--worker-t-w": "15%", cursor: "pointer" }}
-                    onDoubleClick={() => {
-                      if (snc) {
-                        setSelected(ingredient?.id);
-                      }
-                    }}
-                  >
-                    {selected === ingredient?.id ? (
+                  <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
+                    {snc ? (
                       <form
                         onSubmit={(e) => changeQuantity(e, ingredient?.id)}
                         className="changed_tool"
@@ -262,15 +253,8 @@ export const Inventory = () => {
                 <p style={{ "--worker-t-w": "20%" }}>
                   <span>{ingredient?.price}</span>
                 </p>
-                <p
-                  style={{ "--worker-t-w": "15%", cursor: "pointer" }}
-                  onDoubleClick={() => {
-                    if (snc) {
-                      setSelected(ingredient?.id);
-                    }
-                  }}
-                >
-                  {selected === ingredient?.id ? (
+                <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
+                  {snc ? (
                     <form
                       onSubmit={(e) => changeQuantity(e, ingredient?.id)}
                       className="changed_tool"

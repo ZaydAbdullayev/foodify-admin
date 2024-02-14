@@ -42,6 +42,20 @@ export const StorageIngredients = () => {
       }
     });
 
+  const headerKeys = [
+    { name: "Nomi", size: "40%" },
+    { name: "O'lchov birligi", size: "20%" },
+    { name: "Guruh", size: "30%" },
+    { name: "Narxi", size: "20%" },
+  ];
+
+  const displayKeys = [
+    { name: "name", size: 40 },
+    { name: "unit", size: 20, position: "center" },
+    { name: "group", size: 30 },
+    { name: "price", size: 20, position: "flex-end" },
+  ];
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -65,50 +79,20 @@ export const StorageIngredients = () => {
             />
           </label>
           <p>№</p>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
-          >
-            <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "20%" }}
-          >
-            <p>O'lchov birligi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
-            <p>Guruh</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
-          <label
-            onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "20%" }}
-          >
-            <p>Narxi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
-          </label>
+          {headerKeys.map((title, index) => (
+            <label
+              onClick={() => setSort({ id: 1, state: !sort.state })}
+              style={{ "--data-line-size": title.size }}
+              key={index + 3280}
+            >
+              <p>{title.name}</p>
+              {sort.id === 1 && sort.state ? (
+                <RiArrowUpSLine />
+              ) : (
+                <RiArrowDownSLine />
+              )}
+            </label>
+          ))}
           <p style={{ "--data-line-size": "20%", justifyContent: "center" }}>
             Oyqatlar
           </p>
@@ -156,17 +140,17 @@ export const StorageIngredients = () => {
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
-                    <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
-                    <p style={{ "--data-line-size": "20%" }}>{item.unit}</p>
-                    <p style={{ "--data-line-size": "30%" }}>{item.group}</p>
-                    <p
-                      style={{
-                        "--data-line-size": "20%",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      {item.price}
-                    </p>
+                    {displayKeys.map((key, ind) => (
+                      <p
+                        style={{
+                          "--data-line-size": `${key.size}%`,
+                          justifyContent: key.position || "flex-start",
+                        }}
+                        key={ind + key.size}
+                      >
+                        {item[key.name]}
+                      </p>
+                    ))}
                     <p
                       style={{
                         "--data-line-size": "20%",

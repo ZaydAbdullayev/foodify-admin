@@ -1,25 +1,20 @@
 import { MdDashboard, MdFastfood, MdTableBar } from "react-icons/md";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
 import { IoIosRestaurant } from "react-icons/io";
-import { GiCook, GiRiceCooker } from "react-icons/gi";
+import { GiCook, GiRiceCooker, GiPizzaCutter } from "react-icons/gi";
 import { BsCashCoin } from "react-icons/bs";
-import { RiBoxingFill } from "react-icons/ri";
+import { RiBoxingFill, RiFileDamageFill } from "react-icons/ri";
 import { MdFormatListBulleted, MdAddBusiness } from "react-icons/md";
 import { HiOutlineClipboardList } from "react-icons/hi";
-import { HiMiniUserGroup } from "react-icons/hi2";
-// import { FiPlusCircle } from "react-icons/fi";
-import { MdStorage } from "react-icons/md";
+import { HiMiniUserGroup, HiRectangleGroup } from "react-icons/hi2";
 import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
-import { FaLayerGroup, FaMoneyCheckDollar } from "react-icons/fa6";
+import { FaLayerGroup, FaMoneyCheckDollar, FaSitemap } from "react-icons/fa6";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
-import { RiFileDamageFill } from "react-icons/ri";
-import { GiPizzaCutter } from "react-icons/gi";
-import { MdMoveUp, MdRestaurantMenu } from "react-icons/md";
+import { MdMoveUp, MdRestaurantMenu, MdStorage } from "react-icons/md";
 import { TbReport, TbPlaylistX } from "react-icons/tb";
-import { PiDotsNineFill } from "react-icons/pi";
-import { FaSitemap } from "react-icons/fa6";
-import { LiaListAlt } from "react-icons/lia";
+import { LiaListAlt, LiaOpencart } from "react-icons/lia";
 import { PiDotsThreeCircleVerticalFill } from "react-icons/pi";
+import { VscUngroupByRefType } from "react-icons/vsc";
 
 const width = window.innerWidth <= 600 ? true : false;
 
@@ -100,13 +95,6 @@ export const Menu_customer = [
 
 export const Category = [
   {
-    id: "6",
-    path: "/",
-    name: "Dashboard",
-    positions: [65, -65, 70],
-    icon: <MdDashboard />,
-  },
-  {
     id: "1",
     path: "",
     name: "Taomlar",
@@ -144,7 +132,7 @@ export const Category = [
   {
     id: "2",
     name: "Taomlar hisoboti",
-    path: "/items",
+    path: "/items-report",
     positions: width ? [-45, 45, 80] : [45, -45, 90],
     icon: <MdRestaurantMenu />,
   },
@@ -214,8 +202,8 @@ export const Category = [
   },
   {
     id: "3",
-    name: "Buyurtmalar hisoboti",
-    path: "/orders",
+    name: "Buyurtmalar",
+    path: "/order-reports",
     positions: width ? [-180, 180, 80] : [-90, 90, 90],
     icon: <TbReport />,
   },
@@ -243,7 +231,7 @@ export const Category = [
   {
     id: "4",
     name: "Zararlangan taomlar",
-    path: "/damaget-items",
+    path: "/damaged-items",
     positions: width ? [-135, 135, 80] : [-45, 45, 90],
     icon: <RiFileDamageFill />,
   },
@@ -327,16 +315,30 @@ export const Category = [
   {
     id: "6",
     name: "Yetkazuvchi hisoboti",
-    path: "/supplier",
-    positions: [],
-    icon: <TbPlaylistX />,
+    path: "/supplier-reports",
+    positions: width ? [-45, 45, 80] : [45, -45, 90],
+    icon: <LiaOpencart />,
   },
   {
     id: "6",
     name: "Mahsulotlar hisoboti",
-    path: "/ingredients",
-    positions: [],
-    icon: <PiDotsNineFill />,
+    path: "/ingredient-reports",
+    positions: width ? [-90, 90, 75] : [0, 0, 90],
+    icon: <HiRectangleGroup />,
+  },
+  {
+    id: "6",
+    name: "Mahsulotlar hisoboti",
+    path: "/navigation",
+    positions: width ? [-135, 135, 80] : [-45, 45, 90],
+    icon: <VscUngroupByRefType />,
+  },
+  {
+    id: "6",
+    name: "Mahsulotlar hisoboti",
+    path: "/documents",
+    positions: width ? [-180, 180, 80] : [-90, 90, 90],
+    icon: <MdDashboard />,
   },
   {
     id: "0765435",

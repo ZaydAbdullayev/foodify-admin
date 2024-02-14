@@ -50,7 +50,7 @@ import { NavigationPanel } from "./page/navigation/navigation";
 import { TableBox } from "./page/table-box/table-box";
 import { Orders } from "./page/orders/orders";
 import { OrderById } from "./page/order-by-id/order-by-id";
-import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
+// import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
 import { Howl } from "howler";
 import audio from "./assets/images/nothification.mp3";
 import { acDeviceWidth } from "./redux/media";
@@ -104,26 +104,18 @@ export const Router = () => {
         <Route path="/" element={<Auth />}>
           <Route path="check" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
-            <Route path="orders" element={<Home />} />
-            <Route path="my-receive-orders" element={<MyOrder />} />
-            <Route path="" element={<Document />} />
+            {/* ============== pages of the navbar ================= */}
             <Route path="statistics" element={<Statistics />} />
-            <Route path="category/:type/:number/:id" element={<Orders />} />
-            <Route
-              path="update-order/:type/:number/:id/:ProductId/:queue"
-              element={<Orders />}
-            />
-            <Route path="navigation" element={<NavigationPanel />} />
-            <Route path="add/product" element={<Addproduct />} />
+            <Route path="my-receive-orders" element={<MyOrder />} />
             <Route path="nothifications" element={<NothificationPage />} />
-            <Route path="more/info/:id" element={<ShowProduct />} />
+
+            {/* ============== pages of the sidebar ================= */}
             <Route path="managment" element={<Blog />}>
               <Route path="" element={<Products />} />
               <Route path="workers" element={<Workers />} />
-              <Route path="workers/add" element={<AddWorker />} />
-              <Route path="envantarisation" element={<InvoiceInvantar />} />
               <Route path="inventory" element={<Inventory />} />
             </Route>
+
             <Route path="orders" element={<Blog />}>
               <Route path="" element={<Home />} />
               <Route path="cooking/food" element={<MakingFoods />} />
@@ -131,13 +123,13 @@ export const Router = () => {
               <Route path="pre-orders" element={<InvoicePreOrders />} />
               <Route path="tables" element={<TableBox />} />
               <Route path="tables/:type/:number/:id" element={<OrderById />} />
-              <Route path="items" element={<ReportItems />} />
+              <Route path="items-report" element={<ReportItems />} />
               <Route path="rejects" element={<ReportRejects />} />
             </Route>
             <Route path="financial" element={<Blog />}>
               <Route path="" element={<Payment />} />
               <Route path="cashbox" element={<Cashboxes />} />
-              <Route path="orders" element={<ReportOrders />} />
+              <Route path="order-reports" element={<ReportOrders />} />
               <Route path="payment" element={<AddPayment />} />
               <Route
                 path="cashbox/transactions"
@@ -153,6 +145,7 @@ export const Router = () => {
               <Route path="storage" element={<Storage />} />
               <Route path="departments" element={<StorageDep />} />
               <Route path="categories" element={<StorageCatgegories />} />
+              <Route path="ingredients" element={<StorageIngredients />} />
               <Route path="groups" element={<StorageGroups />} />
               <Route path="s-products" element={<StorageProducts />} />
               <Route path="" element={<StorageSupplier />} />
@@ -166,18 +159,32 @@ export const Router = () => {
               <Route path="" element={<StorageInvoices />} />
               <Route path="expenses" element={<StorageExpenditures />} />
               <Route path="cutting" element={<StorageCutting />} />
-              <Route path="damaget-items" element={<StorageDamaged />} />
+              <Route path="damaged-items" element={<StorageDamaged />} />
               <Route path="carry-up" element={<StorageCarryUp />} />
               <Route path="making-food" element={<InvoicesMakingFood />} />
             </Route>
-            <Route path="reports" element={<Blog />}>
+            <Route path="other-pages" element={<Blog />}>
+              <Route path="supplier-reports" element={<ReportSuppliers />} />
+              <Route path="documents" element={<Document />} />
+              <Route path="navigation" element={<NavigationPanel />} />
               <Route
-                path="ingredients-report"
+                path="ingredient-reports"
                 element={<ReportIngredients />}
               />
-              <Route path="ingredients" element={<StorageIngredients />} />
-              <Route path="suppliers" element={<ReportSuppliers />} />
             </Route>
+
+            {/* ============== pages of the single ================= */}
+            <Route path="more/info/:id" element={<ShowProduct />} />
+            <Route path="category/:type/:number/:id" element={<Orders />} />
+            <Route
+              path="update-order/:type/:number/:id/:ProductId/:queue"
+              element={<Orders />}
+            />
+            {/* ============== pages of the modal ================= */}
+            <Route path="add/product" element={<Addproduct />} />
+            <Route path="workers/add" element={<AddWorker />} />
+
+            {/* ============== pages of the other ================= */}
             <Route path="sidebar" element={<Sidebar />} />
             <Route path="*" element={<NotFound />} />
           </Route>

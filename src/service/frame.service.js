@@ -1,7 +1,7 @@
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 const user = JSON?.parse(localStorage.getItem("user")) || [];
-const base_url = process.env.REACT_APP_BASE_URL;
-// const base_url = "https://qhc2cc97-8081.euw.devtunnels.ms";
+// const base_url = process.env.REACT_APP_BASE_URL;
+const base_url = "https://qhc2cc97-8081.euw.devtunnels.ms";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: base_url,

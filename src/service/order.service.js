@@ -54,6 +54,11 @@ export const order_Api = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getOrderReport: builder.query({
+      query: (date) => ({
+        url: `/get/ordersReport/${user?.user?.id}/${date?.start}/${date?.end}`,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +70,5 @@ export const {
   useGetOrderByStatusQuery,
   useGetMakedOrderQuery,
   useGetMakingOrderQuery,
+  useGetOrderReportQuery,
 } = order_Api;
