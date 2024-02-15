@@ -105,6 +105,7 @@ export const Router = () => {
           <Route path="check" element={<CheackDepartment />} />
           <Route path="/" element={<Layout />}>
             {/* ============== pages of the navbar ================= */}
+            <Route path="" element={<Statistics />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="my-receive-orders" element={<MyOrder />} />
             <Route path="nothifications" element={<NothificationPage />} />

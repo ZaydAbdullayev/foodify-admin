@@ -3,123 +3,110 @@ import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector, useDispatch } from "react-redux";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
-import { useGetAllFoodReportQuery } from "../../../service/s-products.service";
-// import { useGetFoodReportQuery } from "../../../service/s-products.service";
+// import { useGetAllFoodReportQuery } from "../../../service/s-products.service";
+import { useGetFoodReportQuery } from "../../../service/s-products.service";
 import { CalculateTotalCH } from "../../../service/calc.service";
+import { useLocation } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 
-export const ReportItems = () => {
+export const ReportOneItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const search = useSelector((state) => state.uSearch);
-  const { data = [], isLoading } = useGetAllFoodReportQuery(search.date);
+  const id = useLocation().pathname.split("/").pop();
+  const { data = [], isLoading } = useGetFoodReportQuery({
+    ...search.date,
+    id: id,
+  });
   console.log(data);
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(acNavStatus([0, 3, 6, 7, 15]));
+    dispatch(acNavStatus([0, 6, 7, 10, 11, 12, 15]));
   }, [dispatch]);
 
   const ds = [
     {
-      name: "sandvich",
-      quantity: 10,
-      sale_price: {
-        average_price: 22000,
-        total: 220000,
-      },
-      prime_cost: {
-        average_price: 1700,
-        total: 17000,
-      },
-      profit: {
-        average_price: 20300,
-        total: 203000,
-      },
-      percentage: "1194.12",
-    },
-    {
-      name: "second test",
-      quantity: 1,
-      sale_price: {
-        average_price: 20000,
-        total: 20000,
-      },
-      prime_cost: {
-        average_price: 18000,
-        total: 18000,
-      },
-      profit: {
-        average_price: 2000,
-        total: 2000,
-      },
-      percentage: "11.11",
-    },
-    {
-      name: "xs",
+      id: "344418b2",
+      payment_status: 1,
+      receivedAt: "2024-02-15T10:54:05.000Z",
+      closed_at: "2024-02-14T19:00:00.000Z",
+      worker_name: "owner",
+      table_name: "1",
       quantity: 2,
       sale_price: {
-        average_price: 233,
-        total: 466,
+        average_price: "22000",
+        total: 44000,
       },
       prime_cost: {
-        average_price: 184500,
-        total: 369000,
+        average_price: "1700",
+        total: 3400,
       },
       profit: {
-        average_price: -184267,
-        total: -368534,
+        average_price: "20300",
+        total: 40600,
       },
-      percentage: "-99.87",
+      percentage: "1194.12",
     },
   ];
 
   const headerData = [
     { name: "№", size: "4%" },
-    { name: "Nomi", size: "14%" },
-    { name: "Soni", size: "6%", position: 1 },
+    { name: "Turi", size: "5.8%" },
+    { name: "Ochildi", size: "5.8%", position: 1 },
+    { name: "Yopildi", size: "5.8%", position: 1 },
+    { name: "Offitsant", size: "5.8%", position: 1 },
+    { name: "Xona/Stoll", size: "5.8%", position: 1 },
+    { name: "Soni", size: "5.8%", position: 1 },
     {
       name: "Narxi",
-      size: "19%",
+      size: "17%",
       position: 1,
       items: { a_price: "O'rtalamasi", qty: "Narxi" },
     },
     {
       name: "Tan narxi",
-      size: "19%",
+      size: "17%",
       position: 1,
       items: { a_price: "O'rtalamasi", qty: "Narxi" },
     },
     {
       name: "Foyda",
-      size: "19%",
+      size: "17%",
       position: 1,
       items: { a_price: "O'rtalamasi", qty: "Narxi" },
     },
-    { name: "O'rtalama narx o'sishi", size: "12%", position: 2 },
-    { name: "Tafsilot", size: "7%" },
+    { name: "O'rtalama narx o'sishi", size: "10%", position: 2 },
   ];
 
   const displayKeys = [
-    { name: "name", size: "14%", position: 1 },
-    { name: "quantity", size: "6%", position: 1 },
-    { name: "sale_price", size: "19%", position: 1, child: true },
-    { name: "prime_cost", size: "19%", position: 1, child: true },
-    { name: "profit", size: "19%", position: 1, child: true },
-    { name: "percentage", size: "12%", position: 2, tick: "%" },
+    { name: "payment_status", size: "5.8%", position: 1 },
+    { name: "receivedAt", size: "5.8%", position: 1 },
+    { name: "closed_at", size: "5.8%", position: 1 },
+    { name: "worker_name", size: "5.8%", position: 1 },
+    { name: "table_name", size: "5.8%", position: 1 },
+    { name: "quantity", size: "17%", position: 1 },
+    { name: "sale_price", size: "17%", position: 1, child: true },
+    { name: "prime_cost", size: "17%", position: 1, child: true },
+    { name: "profit", size: "17%", position: 1, child: true },
+    { name: "percentage", size: "10%", position: 2, tick: "%" },
   ];
 
   const displayTotalKeys = [
-    { name: "name", size: "14%", position: 1, tittle: "Jami" },
-    { name: "quantity", size: "6%", position: 1, flex: 1 },
-    { name: "sale_price", size: "19%", position: 1, child: true },
-    { name: "prime_cost", size: "19%", position: 1, flex: 1, child: true },
-    { name: "profit", size: "19%", position: 1, child: true },
-    { name: "percentage", size: "12%", position: 2, tick: "%", flex: 1 },
+    { name: "payment_status", size: "5.8%", position: 1, tittle: "Jami" },
+    { name: "receivedAt", size: "5.8%", position: 1 },
+    { name: "closed_at", size: "5.8%", position: 1 },
+    { name: "worker_name", size: "5.8%", position: 1 },
+    { name: "table_name", size: "5.8%", position: 1 },
+    { name: "quantity", size: "5.8%", position: 1, flex: 1 },
+    { name: "sale_price", size: "17%", position: 1, child: true },
+    { name: "prime_cost", size: "17%", position: 1, flex: 1, child: true },
+    { name: "profit", size: "17%", position: 1, child: true },
+    { name: "percentage", size: "10%", position: 2, tick: "%", flex: 1 },
   ];
 
   return (

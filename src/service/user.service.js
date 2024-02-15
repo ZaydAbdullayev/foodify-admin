@@ -8,7 +8,6 @@ export const userApi = apiSlice.injectEndpoints({
       query: (value) => ({
         url: "/login/admin",
         method: "POST",
-        headers: {},
         body: value,
       }),
     }),
@@ -76,9 +75,9 @@ export const userApi = apiSlice.injectEndpoints({
         body: {
           payment_status: data?.status,
           payment_type: data?.payment_type,
-          payment: data?.payment,
+          paid: data?.paid,
           role: data.role,
-          cashier: data.cashier,
+          worker_id: data.worker_id,
         },
       }),
       invalidatesTags: ["order"],

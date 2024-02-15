@@ -66,6 +66,22 @@ export const s_productApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["s-products", "product"],
     }),
+
+    getFoodReport: builder.query({
+      query: (value) => ({
+        url: `get/foodReport/${user?.user?.id}/${value?.start}/${value?.end}/${value?.foodId}`,
+        method: "GET",
+      }),
+      providesTags: ["s-products", "product"],
+    }),
+
+    getAllFoodReport: builder.query({
+      query: (value) => ({
+        url: `get/generateFoodsReport/${user?.user?.id}/${value?.start}/${value?.end}`,
+        method: "GET",
+      }),
+      providesTags: ["s-products", "product"],
+    }),
   }),
 });
 
@@ -77,4 +93,6 @@ export const {
   useUpdateStProductImageMutation,
   useGetStProductByIdQuery,
   useDeleteStProductsMutation,
+  useGetAllFoodReportQuery,
+  useGetFoodReportQuery,
 } = s_productApi;

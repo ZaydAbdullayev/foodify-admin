@@ -79,6 +79,7 @@ export const UniversalFilterBox = () => {
           />
         </label>
       )}
+
       {status?.includes(6) && (
         <select onChange={(e) => uploadData(e, "date")}>
           <option value={JSON.stringify({ start: today, end: today })}>
@@ -143,6 +144,36 @@ export const UniversalFilterBox = () => {
             </option>
           ))}
         </select>
+      )}
+      {status?.includes(10) && (
+        <label>
+          <input
+            type="search"
+            name="waiter"
+            placeholder="Offitsant bo'yicha qidirish..."
+            onChange={(e) => setSearch({ ...search, waiter: e.target.value })}
+          />
+        </label>
+      )}
+      {status?.includes(11) && (
+        <label>
+          <input
+            type="search"
+            name="location"
+            placeholder="Joylashuv bo'yicha qidirish..."
+            onChange={(e) => setSearch({ ...search, location: e.target.value })}
+          />
+        </label>
+      )}
+      {status?.includes(12) && (
+        <label>
+          <input
+            type="search"
+            name="table"
+            placeholder="Stoll/Xona bo'yicha qidirish..."
+            onChange={(e) => setSearch({ ...search, table: e.target.value })}
+          />
+        </label>
       )}
       {status?.includes(15) && (
         <button

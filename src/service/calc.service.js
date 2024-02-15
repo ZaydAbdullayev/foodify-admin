@@ -52,3 +52,15 @@ export const CalculateTotal = (data, key) => {
   });
   return total;
 };
+
+export const CalculateTotalCH = (data, key, vl) => {
+  let total = 0;
+
+  data?.forEach((item) => {
+    const value = item[key]?.[vl];
+    total += value ? value : 0; // Eğer value undefined ise 0 kullan
+  });
+
+  return total;
+};
+

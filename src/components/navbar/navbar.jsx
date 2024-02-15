@@ -134,6 +134,7 @@ export const Navbar = () => {
           />
         </form>
       )}
+      {status?.length === 0 && <i></i>}
       <div className="profile">
         {department === "owner" && (
           <span onClick={() => navigate("/statistics")}>
