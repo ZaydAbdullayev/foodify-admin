@@ -4,6 +4,8 @@ import { NumericFormat } from "react-number-format";
 // import { CalculateTotalPrice } from "../../service/calc.service";
 import { useGetpOrderQuery } from "../../service/user.service";
 import { useLocation } from "react-router-dom";
+// import { useFetchDataQuery } from "../../service/api.service";
+// import { usePostDataMutation } from "../../service/api.service";
 
 export const PaymentCheck = memo(() => {
   const user = JSON.parse(localStorage.getItem("user")).user || [];
@@ -110,3 +112,34 @@ export const PaymentCheck = memo(() => {
     </div>
   );
 });
+
+export const Test = () => {
+  // const fd = {
+  //   res_id: "5678",
+  //   order: "Burger",
+  //   responsible: "John Doe",
+  //   ingredients:
+  //     "Beef, lettuce, tomato, onion, cheese, ketchup, mustard, mayonnaise",
+  //   cost: "$9.99",
+  // };
+  // const { data = [] } = useFetchDataQuery(`get/preOrders/2899b5`, {
+  //   tags: ["test"],
+  // });
+  // const [postMutation1] = usePostDataMutation();
+
+  // console.log("get", data);
+
+  // const fetch = async () => {
+  //   const { data = null } = await postMutation1(
+  //     { url: "add/preOrders", data: fd },
+  //     { tags: ["test"] }
+  //   );
+  //   console.log(data);
+  // };
+
+  return (
+    <div className="test">
+      <button >test</button>
+    </div>
+  );
+};

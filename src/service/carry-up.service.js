@@ -5,7 +5,7 @@ export const carryUp_Api = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStCarryUp: builder.query({
       query: () => ({
-        url: `get/moved/goods`,
+        url: `/get/movedGoods/${user?.user?.id}`,
         method: "GET",
       }),
       providesTags: ["carry-up"],

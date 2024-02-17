@@ -7,6 +7,7 @@ import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { useGetFoodReportQuery } from "../../../service/s-products.service";
 import { CalculateTotalCH } from "../../../service/calc.service";
 import { useLocation } from "react-router-dom";
+import { useFetchDataQuery } from "../../../service/api.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -14,11 +15,20 @@ import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const ReportOneItems = () => {
+  const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const search = useSelector((state) => state.uSearch);
   const id = useLocation().pathname.split("/").pop();
+  // const { data: fetch1 } = useFetchDataQuery({
+  //   url: `get/foodReport/${user?.user?.id}/${search.date?.start}/${search.date?.end}/${id}`,
+  //   tags: ["report"],
+  // });
+  // const { data: fetch2 } = useFetchDataQuery({
+  //   url: `get/generatedReport/${user?.user?.id}/${search.date?.start}/${search.date?.end}`,
+  //   tags: ["all-report"],
+  // });
   const { data = [], isLoading } = useGetFoodReportQuery({
     ...search.date,
     id: id,
@@ -29,30 +39,30 @@ export const ReportOneItems = () => {
     dispatch(acNavStatus([0, 6, 7, 10, 11, 12, 15]));
   }, [dispatch]);
 
-  const ds = [
-    {
-      id: "344418b2",
-      payment_status: 1,
-      receivedAt: "2024-02-15T10:54:05.000Z",
-      closed_at: "2024-02-14T19:00:00.000Z",
-      worker_name: "owner",
-      table_name: "1",
-      quantity: 2,
-      sale_price: {
-        average_price: "22000",
-        total: 44000,
-      },
-      prime_cost: {
-        average_price: "1700",
-        total: 3400,
-      },
-      profit: {
-        average_price: "20300",
-        total: 40600,
-      },
-      percentage: "1194.12",
-    },
-  ];
+  // const ds = [
+  //   {
+  //     id: "344418b2",
+  //     payment_status: 1,
+  //     receivedAt: "2024-02-15T10:54:05.000Z",
+  //     closed_at: "2024-02-14T19:00:00.000Z",
+  //     worker_name: "owner",
+  //     table_name: "1",
+  //     quantity: 2,
+  //     sale_price: {
+  //       average_price: "22000",
+  //       total: 44000,
+  //     },
+  //     prime_cost: {
+  //       average_price: "1700",
+  //       total: 3400,
+  //     },
+  //     profit: {
+  //       average_price: "20300",
+  //       total: 40600,
+  //     },
+  //     percentage: "1194.12",
+  //   },
+  // ];
 
   const headerData = [
     { name: "№", size: "4%" },

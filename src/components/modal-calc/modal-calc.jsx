@@ -178,11 +178,17 @@ export const UniversalControlModal = ({
         leftover: result.prime_cost,
       });
     }
+    if (type === "edr") {
+      setFetchdata({
+        ...data,
+        cost: result.prime_cost,
+      });
+    }
     if (type === "cutting") {
       setFetchdata({ ...data });
     }
     if (type === "carryUp") {
-      setFetchdata({ ...data });
+      setFetchdata({ ...data, amount: result?.prime_cost });
     }
     if (type === "damaged") {
       setFetchdata({ ...data, cost: result?.prime_cost });
@@ -193,7 +199,7 @@ export const UniversalControlModal = ({
     if (type === "preOrder") {
       setFetchdata({ ...data, cost: result?.prime_cost });
     }
-    console.log("data", data, "result", acP);
+    console.log("data", data, "result", result);
   };
 
   const closeModal = () => {

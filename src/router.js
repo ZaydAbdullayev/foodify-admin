@@ -18,7 +18,7 @@ import { Payment } from "./page/payment/payment";
 import { AddPayment } from "./page/payment/addPayment/addPayment.jsx";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
-import { PaymentCheck } from "./components/payment-check/check";
+import { PaymentCheck, Test } from "./components/payment-check/check";
 import { useSelector, useDispatch } from "react-redux";
 import { Storage, Blog } from "./page/storage/storage";
 import { StorageDep } from "./page/storage/store-department/department";
@@ -58,6 +58,7 @@ import { acNothification } from "./redux/nothification";
 import { NothificationPage } from "./page/nothification/nothification.jsx";
 import { Inventory } from "./page/inventory/inventory.jsx";
 import { MyOrder } from "./page/my-orders/my-order.jsx";
+import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -176,6 +177,7 @@ export const Router = () => {
 
             {/* ============== pages of the single ================= */}
             <Route path="more/info/:id" element={<ShowProduct />} />
+            <Route path="view/food-report/:id" element={<ReportOneItems />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"
@@ -184,6 +186,7 @@ export const Router = () => {
             {/* ============== pages of the modal ================= */}
             <Route path="add/product" element={<Addproduct />} />
             <Route path="workers/add" element={<AddWorker />} />
+            <Route path="test" element={<Test />} />
 
             {/* ============== pages of the other ================= */}
             <Route path="sidebar" element={<Sidebar />} />

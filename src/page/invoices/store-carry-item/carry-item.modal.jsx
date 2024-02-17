@@ -9,6 +9,7 @@ import { useGetStoreQuery } from "../../../service/store.service";
 import { useGetStGroupsQuery } from "../../../service/groups.service";
 import { useCalcStCarryUpMutation } from "../../../service/carry-up.service";
 import { useGetStProductQuery } from "../../../service/s-products.service";
+import { CalculateTotalP } from "../../../service/calc.service";
 
 import { BsReceiptCutoff } from "react-icons/bs";
 
@@ -116,7 +117,7 @@ export const InvoicesModal = ({
           type="date"
           name="date"
           style={{ "--input-width": "15%" }}
-          defaultValue={new Date(acItem?.date).toLocaleDateString()}
+          defaultValue={new Date(acItem?.date)?.toLocaleDateString()}
         />
         <select
           name="storage_sender"

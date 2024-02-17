@@ -6,6 +6,7 @@ import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { useGetAllFoodReportQuery } from "../../../service/s-products.service";
 // import { useGetFoodReportQuery } from "../../../service/s-products.service";
 import { CalculateTotalCH } from "../../../service/calc.service";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -17,6 +18,7 @@ export const ReportItems = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const search = useSelector((state) => state.uSearch);
+  const navigate = useNavigate();
   const { data = [], isLoading } = useGetAllFoodReportQuery(search.date);
   console.log(data);
   const dispatch = useDispatch();

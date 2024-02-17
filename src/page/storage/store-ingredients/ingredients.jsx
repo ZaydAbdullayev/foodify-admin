@@ -278,7 +278,7 @@ export const StorageIngredients = () => {
         {newIngGr === "new" && (
           <input
             type="text"
-            name="name"
+            name="group"
             placeholder="Yangi guruh nomi*"
             required
             onChange={(e) => setNewGrData(e.target.value)}

@@ -93,7 +93,7 @@ export const data = [
 export const calculateTotal = (data) => {
   let total = 0;
 
-  data.ingredients.forEach((ingredient) => {
+  data?.ingredients?.forEach((ingredient) => {
     const amount = ingredient.amount || 0;
     const price = ingredient.price || 0;
 

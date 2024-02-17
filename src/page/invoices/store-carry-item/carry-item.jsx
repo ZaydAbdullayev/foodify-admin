@@ -3,18 +3,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./carry-item.modal";
-import { useGetStCuttingQuery } from "../../../service/cutting.service";
 import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useGetStCarryUpQuery } from "../../../service/carry-up.service";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -30,7 +27,7 @@ export const StorageCarryUp = () => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
   const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: cuttingData = [], isLoading } = useGetStCuttingQuery();
+  const { data: cuttingData = [], isLoading } = useGetStCarryUpQuery();
   const acIngredients = acItem?.ingredients
     ? JSON.parse(acItem?.ingredients)
     : [];
@@ -71,9 +68,9 @@ export const StorageCarryUp = () => {
   ];
 
   const displayKeys = [
-    { name: "sender_storage", size: "14%" },
-    { name: "receiver_storage", size: "14%" },
-    { name: "waste", size: "14%", position: "flex-end" },
+    { name: "storage_sender", size: "14%" },
+    { name: "storage_receiver", size: "14%" },
+    { name: "amount", size: "14%", position: "flex-end" },
     { name: "ingredient_group", size: "14%" },
     { name: "description", size: "14%" },
   ];

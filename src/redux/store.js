@@ -1,8 +1,4 @@
-import {
-  combineReducers,
-  configureStore,
-  getDefaultMiddleware,
-} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { reAuth } from "./auth";
 import { reModal } from "./modal";
 import { reShrink } from "./shrink";
@@ -20,6 +16,7 @@ import { reDeviceWidth, reMedia } from "./media";
 import { reNothification } from "./nothification";
 import { resolve } from "./resolve";
 import { rootDocuments } from "./deleteFoods";
+// import api from "../service/api.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -44,6 +41,7 @@ export const store = configureStore({
     storageId: reStorageId,
     delRouter: rootDocuments,
     [apiSlice.reducerPath]: apiSlice.reducer,
+    // [api.reducerPath]: api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

@@ -25,6 +25,7 @@ const initialState = {
   ingradient: [],
   envanter: [],
   orderReport: [],
+  ingredient: [],
 };
 
 export const rootDocuments = (state = initialState, action) => {

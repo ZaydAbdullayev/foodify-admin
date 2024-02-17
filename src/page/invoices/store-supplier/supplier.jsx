@@ -187,7 +187,7 @@ export const StorageSupplier = () => {
           <option value="person">Oddiy shaxs</option>
           <option value="juridical">Yuridik shaxs</option>
         </select>
-        {acItem?.type === "person" ? (
+        {acItem?.type === "person" || type === "person" ? (
           <>
             <input
               type="text"
@@ -270,7 +270,7 @@ export const StorageSupplier = () => {
             />
           </>
         ) : (
-          acItem?.type === "juridical" && (
+          (acItem?.type === "juridical" || type === "juridical") && (
             <>
               <input
                 type="text"
