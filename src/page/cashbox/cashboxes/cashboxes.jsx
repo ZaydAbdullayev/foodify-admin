@@ -4,14 +4,11 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { useGetCashboxQuery } from "../../../service/cashbox.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
 
 export const Cashboxes = () => {
@@ -22,7 +19,10 @@ export const Cashboxes = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({
+    url: `get/cashbox/${user?.user?.id}`,
+    tags: ["cashbox"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

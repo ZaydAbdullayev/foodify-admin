@@ -1,12 +1,12 @@
 import React, { useState, memo } from "react";
 import "./addPayment.css";
 import { NumericFormat } from "react-number-format";
-import { useGetpOrderQuery } from "../../../service/user.service";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { usePaymentOrderMutation } from "../../../service/user.service";
 import { enqueueSnackbar as es } from "notistack";
-import { useAddCashTransactionMutation } from "../../../service/cash-transaction.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
+import { usePatchDataMutation } from "../../../service/fetch.service";
+import { usePostDataMutation } from "../../../service/fetch.service";
 
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -19,27 +19,22 @@ export const AddPayment = memo(({ active, actives }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || "";
   const dep = JSON.parse(localStorage.getItem("department")) || "";
   const [loading, setLoading] = useState(false);
-  const [addCashTransaction] = useAddCashTransactionMutation();
   const [type, setType] = useState({
     id: 1,
     comment: "Naqd to'lov",
     value: "cash",
   }); // ["ofline", "online"]
   const id = useLocation().search.split("?dt=").pop();
-  const { data: order = [], isLoading } = useGetpOrderQuery(id);
-  const [paymentOrder] = usePaymentOrderMutation();
+  const { data: order = [], isLoading } = useFetchDataQuery({
+    url: `/get/oneOrder/${id}`,
+    tags: ["order"],
+  });
+  const [patchData] = usePatchDataMutation();
+  const [postData] = usePostDataMutation();
   const [price, setPrice] = useState(null); // ["ofline", "online"]
   const navigate = useNavigate();
 
   const addPayment = async () => {
-    const data = {
-      id: orderData.id,
-      status: type.value === "cash" ? 1 : type.value === "depozit" ? 3 : 2,
-      payment_type: type.value,
-      paid: price ? price : orderData?.total,
-      role: dep || "not awaible",
-      worker_id: user.id || "not awaible",
-    };
     const trsn = {
       res_id: user.id,
       transaction_group: "income",
@@ -53,9 +48,23 @@ export const AddPayment = memo(({ active, actives }) => {
     };
     setLoading(true);
     try {
-      console.log("data", data);
-      const res = await paymentOrder(data);
-      const second_res = await addCashTransaction(trsn);
+      const res = await patchData({
+        url: `/update/payment/status/${orderData.id}`,
+        data: {
+          payment_status:
+            type.value === "cash" ? 1 : type.value === "depozit" ? 3 : 2,
+          payment_type: type.value,
+          paid: price ? price : orderData?.total,
+          role: dep || "not awaible",
+          worker_id: user.id || "not awaible",
+        },
+        tags: ["order"],
+      });
+      const second_res = await postData({
+        url: "add/transaction",
+        data: trsn,
+        tags: ["cashbox-transaction"],
+      });
       if (
         res.data.message === "All Orders" &&
         second_res.data.message === "All Orders"

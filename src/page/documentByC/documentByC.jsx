@@ -2,11 +2,13 @@ import React, { memo } from "react";
 import "./documentByC.css";
 import { useLocation } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import { useGetDepProductsQuery } from "../../service/product.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
 import { LoadingBtn } from "../../components/loading/loading";
+import { useSelector } from "react-redux";
 
 export const DocumentByC = memo(({ open, setOpen }) => {
   const ct = useLocation().search.split("?cp=").pop();
+  const res_id = useSelector((state) => state?.res_id);
   const department = ct.split("|").shift();
   const date = ct.split("|dateby=").pop();
   const dData = {
@@ -14,7 +16,10 @@ export const DocumentByC = memo(({ open, setOpen }) => {
     start: date.split("&").shift(),
     end: date.split("&").pop(),
   };
-  const { data = [], isLoading } = useGetDepProductsQuery(dData);
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/departmentProfit/${res_id}/${dData?.dep}/${dData?.start}/${dData?.end}`,
+    tags: [""],
+  });
 
   return (
     <div className={open ? "document_conatainer open" : "document_conatainer"}>

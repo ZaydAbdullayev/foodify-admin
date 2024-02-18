@@ -2,19 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { ClearForm } from "../service/form.service";
-import { useLoginUserMutation } from "../service/user.service";
-import { useCheckDepMutation } from "../service/user.service";
-import { useLoginDepMutation } from "../service/user.service";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { acPermission } from "../redux/permission";
 import { useDispatch } from "react-redux";
+import { usePostDataMutation } from "../service/fetch.service";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [err, setErr] = useState(false);
   const [check, setCheck] = useState("");
-  const [loginUser] = useLoginUserMutation();
-  const [loginDep] = useLoginDepMutation();
+  const [postData] = usePostDataMutation();
   const [show, setShow] = useState(true);
   const dispatch = useDispatch();
 
@@ -32,7 +29,11 @@ export const Login = () => {
   };
 
   const handleWorkerLogin = async (loginData) => {
-    const { error, data } = await loginDep(loginData);
+    const { error, data } = await postData({
+      url: "/login/worker",
+      data: loginData,
+      tags: [""],
+    });
     if (error) {
       handleLoginError();
       return;
@@ -47,7 +48,11 @@ export const Login = () => {
   };
 
   const handleUserLogin = async (loginData) => {
-    const { data, error } = await loginUser(loginData);
+    const { data, error } = await postData({
+      url: "/login/admin",
+      data: loginData,
+      tags: [""],
+    });
     if (error) {
       handleLoginError();
       return;
@@ -136,7 +141,7 @@ export const Login = () => {
 export const CheackDepartment = () => {
   const [pass, setPass] = useState("");
   const [err, setErr] = useState(false);
-  const [checkDep] = useCheckDepMutation();
+  const [postData] = usePostDataMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -145,7 +150,10 @@ export const CheackDepartment = () => {
   const loginD = async () => {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     try {
-      const { data, error } = await checkDep(pass);
+      const { data, error } = await postData({
+        url: `/check/worker/${user?.user?.id}/${pass}`,
+        tags: [""],
+      });
       if (error) {
         setErr(true);
         setPass("");

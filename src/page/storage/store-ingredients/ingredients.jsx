@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useGetStGroupsQuery } from "../../../service/groups.service";
-import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -27,8 +23,14 @@ export const StorageIngredients = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: groupData = [] } = useGetStGroupsQuery();
-  const { data: ingredientData = [], isLoading } = useGetStIngredientsQuery();
+  const { data: groupData = [] } = useFetchDataQuery({
+    url: `get/ingredientGroups/${user?.user?.id}`,
+    tags: ["groups"],
+  });
+  const { data: ingredientData = [], isLoading } = useFetchDataQuery({
+    url: `get/ingredients/${user?.id}`,
+    tags: ["ingredient"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
   }, [dispatch]);

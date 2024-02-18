@@ -4,16 +4,13 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 import { GoDotFill } from "react-icons/go";
 
 export const TransactionGroups = () => {
@@ -25,7 +22,10 @@ export const TransactionGroups = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useGetCashboxGrQuery();
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/${user?.user?.id}/transactionGroups`,
+    tags: ["tr-group"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

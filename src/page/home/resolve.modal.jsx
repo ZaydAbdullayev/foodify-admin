@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./resolve.modal.css";
 import { enqueueSnackbar as es } from "notistack";
 import { useSelector } from "react-redux";
-import { useResolveItemMutation } from "../../service/order.service";
+import { usePostDataMutation } from "../../service/fetch.service";
 import { useDispatch } from "react-redux";
 import { acResolve } from "../../redux/resolve";
 import socket from "../../socket.config";
@@ -13,7 +13,7 @@ export const ResolveModal = () => {
   const [storage, setStorage] = useState(true);
   const [dailyLimit, setDailyLimit] = useState(true);
   const resolve = useSelector((state) => state.resolve);
-  const [resolveItem] = useResolveItemMutation();
+  const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
 
   const orderSituation = async (e) => {
@@ -27,17 +27,21 @@ export const ResolveModal = () => {
         status: resolve?.status,
         department: resolve?.department,
       });
-      const { data = [] } = await resolveItem({
-        ...value,
-        order_id: resolve?.order_id,
-        product_data: JSON.stringify({
-          ...resolve?.product,
-          status: resolve?.status,
-        }),
-        worker_id: user?.user?.worker_id || user?.user?.id,
-        res_id: user?.user?.id,
-        storage,
-        dailyLimit,
+      const { data = [] } = await postData({
+        url: `/cancel/item`,
+        body: {
+          ...value,
+          order_id: resolve?.order_id,
+          product_data: JSON.stringify({
+            ...resolve?.product,
+            status: resolve?.status,
+          }),
+          worker_id: user?.user?.worker_id || user?.user?.id,
+          res_id: user?.user?.id,
+          storage,
+          dailyLimit,
+        },
+        tags: [""],
       });
 
       if (data?.message === "Product has been added") {

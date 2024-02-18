@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./workers.css";
-import { useDeleteWorkerMutation } from "../../service/workers.service";
-import { useGetWorkersQuery } from "../../service/workers.service";
-import { useUpdateWorkerMutation } from "../../service/workers.service";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
+import { useFetchDataQuery } from "../../service/fetch.service";
+import { useDelDataMutation } from "../../service/fetch.service";
+import { usePatchDataMutation } from "../../service/fetch.service";
 
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
@@ -19,22 +19,30 @@ import { useLocation } from "react-router-dom";
 
 export const Workers = () => {
   const permission = JSON.parse(localStorage.getItem("permission")) || null;
+  const user = JSON.parse(localStorage.getItem("user")) || null;
   const search = useLocation().search?.split("=").pop();
   const [show, setShow] = useState("");
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState(null);
   const [type, setType] = useState(1); // 1 - add worker, 2 - add permission
   const [info, setInfo] = useState({});
-  const { data: workersData = [] } = useGetWorkersQuery();
-  const [deleteWorkerMutation] = useDeleteWorkerMutation();
-  const [updateWorkerMutation] = useUpdateWorkerMutation();
+  const { data: workersData = [] } = useFetchDataQuery({
+    url: `/get/workers/${user?.user?.id}`,
+    tags: ["worker"],
+  });
+  const [patchData] = usePatchDataMutation();
+  const [delData] = useDelDataMutation();
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
 
   const handleEdit = async (value) => {
-    const { error, data } = await updateWorkerMutation(value);
+    const { error, data } = await patchData({
+      url: `/update/worker/${value.id}`,
+      data: value,
+      tags: ["worker"],
+    });
     if (error) {
       return es("Xatolik", { variant: "error" });
     }
@@ -50,7 +58,10 @@ export const Workers = () => {
   };
 
   const handleDelete = async (id) => {
-    const { error, data } = await deleteWorkerMutation(id);
+    const { error, data } = await delData({
+      url: `/delete/worker/${id}`,
+      tags: ["worker"],
+    });
     if (error) {
       return es("Xatolik", { variant: "error" });
     }

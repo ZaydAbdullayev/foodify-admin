@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // import { acActive } from "../../../redux/active";
-import { useGetStProductQuery } from "../../../service/s-products.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
@@ -10,20 +9,16 @@ import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { data } from "../../../components/modal-calc/components";
-import { useGetStIngredientsQuery } from "../../../service/ingredient.service";
-import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageProducts = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -35,14 +30,24 @@ export const StorageProducts = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const id = useSelector((state) => state.storageId);
   const img = useSelector((state) => state.image);
+  const res_id = useSelector((state) => state.res_id);
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: products = [], isLoading } = useGetStProductQuery();
-  const { data: ingredients = [] } = useGetStIngredientsQuery();
-  const { data: category = [] } = useGetStCategoryQuery();
+  const { data: products = [], isLoading } = useFetchDataQuery({
+    url: `get/foods/${res_id}`,
+    tags: ["s-products", "product"],
+  });
+  const { data: ingredients = [] } = useFetchDataQuery({
+    url: `get/ingredients/${res_id}`,
+    tags: ["ingredient"],
+  });
+  const { data: category = [] } = useFetchDataQuery({
+    url: `get/${res_id}/categories`,
+    tags: ["category"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
   }, [dispatch]);

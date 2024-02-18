@@ -1,7 +1,6 @@
 import React from "react";
 import "./order-by-id.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetpOrderQuery } from "../../service/user.service";
 import { NumericFormat } from "react-number-format";
 import socket from "../../socket.config";
 
@@ -9,7 +8,7 @@ import { GiHotMeal } from "react-icons/gi";
 import { BiSolidTimer } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useGetWaitersQuery } from "../../service/workers.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const OrderById = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -19,7 +18,10 @@ export const OrderById = () => {
   const t_id = lc[4].split("-").pop();
   const navigate = useNavigate();
   const newLocation = location.split("/orders/tables").join("");
-  const { data = [], isLoading } = useGetpOrderQuery(lc[5]);
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `/get/oneOrder/${lc[5]}`,
+    tags: [""],
+  });
   let queue;
   let order_id;
 
@@ -105,7 +107,10 @@ export const OrderById = () => {
 };
 
 export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
-  const { data = [] } = useGetWaitersQuery();
+  const { data = [] } = useFetchDataQuery({
+    url: `/get/waiters/${res_id}`,
+    tags: [""],
+  });
   const [option, setOption] = React.useState(data?.innerData?.[0]?.id);
 
   const updateOrder = (e) => {

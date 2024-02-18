@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./inventory.css";
-import { useGetStorageItemsQuery } from "../../service/invoices.service";
-import { useGetStoreQuery } from "../../service/store.service";
-import { useAddSyncMutation } from "../../service/invenory.service";
-import { useGetSyncQuery } from "../../service/invenory.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
+import { usePostDataMutation } from "../../service/fetch.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
@@ -16,8 +14,14 @@ import { RxCross2 } from "react-icons/rx";
 
 export const Inventory = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
-  const { data: stores = [] } = useGetStoreQuery();
-  const { data: syncsData = [] } = useGetSyncQuery();
+  const { data: stores = [] } = useFetchDataQuery({
+    url: `get/storage/${user?.id}`,
+    tags: ["store"],
+  });
+  const { data: syncsData = [] } = useFetchDataQuery({
+    url: `get/syncStorage/${user?.id}`,
+    tags: ["inventory"],
+  });
   const [storageId, setStorageId] = useState(stores.data?.[0]?.id);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,13 +31,16 @@ export const Inventory = () => {
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
-  const [addSync] = useAddSyncMutation();
+  const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
 
-  const storageItemsQuery = useGetStorageItemsQuery(storageId);
+  const storageItemsQuery = useFetchDataQuery({
+    url: `get/storageItems/${user?.id}/${storageId}`,
+    tags: ["invoices"],
+  });
   const storageItems = storageItemsQuery.data || [];
 
   useEffect(() => {
@@ -85,7 +92,11 @@ export const Inventory = () => {
           st_name: getStorageName(storageId),
           res_id: user?.id,
         };
-        const { data = null } = await addSync(uData);
+        const { data = null } = await postData({
+          url: `/sync/storage`,
+          data: uData,
+          tags: ["inventory"],
+        });
         if (data.message === "syncStorage has been added") {
           setSnc(status);
           es("Sinxronlashtirish yakunlandi", { variant: "success" });

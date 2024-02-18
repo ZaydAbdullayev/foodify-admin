@@ -2,29 +2,10 @@ import React, { useState } from "react";
 import "./modal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { acCloseUModal } from "../../redux/u-modal";
-import { useAddStoreMutation } from "../../service/store.service";
-import { useUpdateStoreMutation } from "../../service/store.service";
-import { useAddStoreDepMutation } from "../../service/dep.service";
+import { usePostDataMutation } from "../../service/fetch.service";
+import { usePatchDataMutation } from "../../service/fetch.service";
 import { enqueueSnackbar as es } from "notistack";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useAddStCategoryMutation } from "../../service/category.service";
-import { useUpdateStCategoryMutation } from "../../service/category.service";
-import { useAddStGroupsMutation } from "../../service/groups.service";
-import { useUpdateStGroupsMutation } from "../../service/groups.service";
-import { useUpdateDepMutation } from "../../service/dep.service";
-import { useAddStIngredientsMutation } from "../../service/ingredient.service";
-import { useUpdateStIngredientsMutation } from "../../service/ingredient.service";
-import { useAddStSuplierMutation } from "../../service/suplier.service";
-import { useAddStInvoiceGroupMutation } from "../../service/invoice-group.service";
-import { useAddCashboxMutation } from "../../service/cashbox.service";
-import { useAddCashboxGrMutation } from "../../service/cashbox-group.service";
-import { useAddCashTransactionMutation } from "../../service/cash-transaction.service";
-import { useUpdateStSuplierMutation } from "../../service/suplier.service";
-import { useUpdateStInvoiceGroupMutation } from "../../service/invoice-group.service";
-import { useUpdateCashboxMutation } from "../../service/cashbox.service";
-import { useUpdateCashboxGrMutation } from "../../service/cashbox-group.service";
-import { useUpdateCashTransactionMutation } from "../../service/cash-transaction.service";
-import { useAddTableMutation } from "../../service/table.service";
 import { ClearForm } from "../../service/form.service";
 
 export const UniversalModal = ({
@@ -37,84 +18,114 @@ export const UniversalModal = ({
 }) => {
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
-  const [addStorage] = useAddStoreMutation();
-  const [addStorageDep] = useAddStoreDepMutation();
-  const [addStCategory] = useAddStCategoryMutation();
-  const [addStGroups] = useAddStGroupsMutation();
-  const [addStIngredients] = useAddStIngredientsMutation();
-  const [addStSuplier] = useAddStSuplierMutation();
-  const [addStInvoiceGroup] = useAddStInvoiceGroupMutation();
-  const [addCashbox] = useAddCashboxMutation();
-  const [addCashboxGr] = useAddCashboxGrMutation();
-  const [addCashTransaction] = useAddCashTransactionMutation();
-  const [addTable] = useAddTableMutation();
+  const [postData] = usePostDataMutation();
   // service for update
-  const [updateStorage] = useUpdateStoreMutation();
-  const [updateStCategory] = useUpdateStCategoryMutation();
-  const [updateStGroups] = useUpdateStGroupsMutation();
-  const [updateDep] = useUpdateDepMutation();
-  const [updateStIngredients] = useUpdateStIngredientsMutation();
-  const [updateStSuplier] = useUpdateStSuplierMutation();
-  const [updateStInvoiceGroup] = useUpdateStInvoiceGroupMutation();
-  const [updateCashbox] = useUpdateCashboxMutation();
-  const [updateCashboxGr] = useUpdateCashboxGrMutation();
-  const [updateCashTransaction] = useUpdateCashTransactionMutation();
+  const [patchData] = usePatchDataMutation();
   const [loading, setLoading] = useState(false);
 
   const fetchValues = async (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
     const value = Object.fromEntries(formdata.entries());
-
     if (value.department === "default") {
       return es({ message: "Taxrirlash tugallanmadi!", variant: "warning" });
     }
-
     if (type === "supp") {
       value.number.split(" ").join("");
     }
-
     try {
       let result;
 
       if (status) {
         switch (type) {
           case "main":
-            result = await addStorage(value);
+            result = await postData({
+              url: `add/storage`,
+              data: value,
+              tags: ["store"],
+            });
             break;
           case "dep":
-            result = await addStorageDep(value);
+            result = await postData({
+              url: `add/department`,
+              data: value,
+              tags: ["department"],
+            });
             break;
           case "category":
-            result = await addStCategory(value);
+            result = await postData({
+              url: `add/category`,
+              data: value,
+              tags: ["category"],
+            });
             break;
           case "group":
-            result = await addStGroups(value);
+            result = await postData({
+              url: `add/ingredientGroup`,
+              data: value,
+              tags: ["groups"],
+            });
             break;
           case "ing":
-            result = await addStIngredients(value);
+            result = await postData({
+              url: `add/ingredient`,
+              data: value,
+              tags: ["ingredient"],
+            });
             break;
           case "newIngGr":
-            result = await addStGroups(newGrData);
-            result = await addStIngredients(value);
+            result = await postData({
+              url: `add/ingredientGroup`,
+              data: newGrData,
+              tags: ["groups"],
+            });
+            result = await postData({
+              url: `add/ingredient`,
+              data: value,
+              tags: ["ingredient"],
+            });
             break;
           case "supp":
-            result = await addStSuplier(value);
+            result = await postData({
+              url: `add/supplier`,
+              data: value,
+              tags: ["suplier"],
+            });
             break;
           case "invGr":
-            result = await addStInvoiceGroup(value);
+            result = await postData({
+              url: `add/invoiceGroup`,
+              data: value,
+              tags: ["invoice-group"],
+            });
             break;
           case "cashbox":
-            result = await addCashbox(value);
+            result = await postData({
+              url: `add/cashbox`,
+              data: value,
+              tags: ["cashbox"],
+            });
             break;
           case "cashboxGr":
-            result = await addCashboxGr(value);
+            result = await postData({
+              url: `add/transactionGroups`,
+              data: value,
+              tags: ["tr-group"],
+            });
             break;
           case "trsn":
-            result = await addCashTransaction(value);
+            result = await postData({
+              url: `add/transaction`,
+              data: value,
+              tags: ["cashbox-transaction"],
+            });
             break;
           case "table":
-            result = await addTable(value);
+            result = await postData({
+              url: `add/table`,
+              data: value,
+              tags: ["table"],
+            });
             break;
           default:
             break;
@@ -122,38 +133,100 @@ export const UniversalModal = ({
       } else {
         switch (type) {
           case "main":
-            result = await updateStorage(value);
+            result = await patchData({
+              url: `update/storage/${value.id}`,
+              data: { res_id: value.res_id, name: value.name },
+              tags: ["store"],
+            });
             break;
           case "dep":
-            result = await updateDep(value);
+            result = await patchData({
+              url: `update/department/${value.id}`,
+              data: value,
+              tags: ["department"],
+            });
             break;
           case "category":
-            result = await updateStCategory(value);
+            result = await patchData({
+              url: `update/category/${value.id}`,
+              data: {
+                res_id: value.res_id,
+                name: value.name,
+                department: value.department,
+              },
+              tags: ["category"],
+            });
             break;
           case "group":
-            result = await updateStGroups(value);
+            result = await patchData({
+              url: `update/ingredientGroup/${value.id}`,
+              data: { res_id: value.res_id, name: value.name },
+              tags: ["groups"],
+            });
             break;
           case "ing":
-            result = await updateStIngredients(value);
+            result = await patchData({
+              url: `update/ingredient/${value.id}`,
+              data: {
+                res_id: value.res_id,
+                name: value.name,
+                unit: value.unit,
+                group: value.group,
+              },
+              tags: ["ingredient"],
+            });
             break;
           case "newIngGr":
-            result = await addStGroups(newGrData);
-            result = await updateStIngredients(value);
+            result = await postData({
+              url: `add/ingredientGroup`,
+              data: newGrData,
+              tags: ["groups"],
+            });
+            result = await patchData({
+              url: `update/ingredient/${value.id}`,
+              data: {
+                res_id: value.res_id,
+                name: value.name,
+                unit: value.unit,
+                group: value.group,
+              },
+              tags: ["ingredient"],
+            });
             break;
           case "supp":
-            result = await updateStSuplier(value);
+            result = await patchData({
+              url: `update/suppliers/${value.id}`,
+              data: value,
+              tags: ["suplier"],
+            });
             break;
           case "invGr":
-            result = await updateStInvoiceGroup(value);
+            result = await patchData({
+              url: `update/invoiceGroup/${value.id}`,
+              data: value,
+              tags: ["invoice-group"],
+            });
             break;
           case "cashbox":
-            result = await updateCashbox(value);
+            result = await patchData({
+              url: `update/cashbox/${value.id}`,
+              data: value,
+              tags: ["cashbox"],
+            });
             break;
           case "cashboxGr":
-            result = await updateCashboxGr(value);
+            result = await patchData({
+              url: `update/transactionGroups/${value.id}`,
+              data: value,
+              tags: ["tr-group"],
+            });
             break;
           case "trsn":
-            result = await updateCashTransaction(value);
+            result = await patchData({
+              url: `update/transaction/${value.id}`,
+              data: value,
+              tags: ["cashbox-transaction"],
+            });
             break;
           default:
             break;

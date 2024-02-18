@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import "./my-order.css";
-import { useGetOrderByStatusQuery } from "../../service/order.service";
 import { NumericFormat } from "react-number-format";
 import { useSwipeable } from "react-swipeable";
 
 import { RiArrowUpSLine, RiArrowDownSLine } from "react-icons/ri";
 import { TiChevronLeft, TiChevronRight } from "react-icons/ti";
 import { calculateDifTime } from "../../service/calc-date.service";
+import { useSelector } from "react-redux";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const MyOrder = () => {
-  const { data: order = [] } = useGetOrderByStatusQuery();
+  const res_id = useSelector((state) => state?.res_id);
+  const { data: order = [] } = useFetchDataQuery({
+    url: `/get/foodsBySt/${res_id}`,
+    tags: [""],
+  });
   const [dr, setDr] = useState("left");
   const media = window.matchMedia("(max-width: 768px)");
   console.log(order);

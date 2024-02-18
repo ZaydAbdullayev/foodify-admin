@@ -5,10 +5,7 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { NumericFormat } from "react-number-format";
 import AnimatedNumber from "animated-number-react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { useGetTransactionQuery } from "../../../service/transaction-rapor.service";
-import { useGetTransactionExpenseQuery } from "../../../service/transaction-rapor.service";
-import { useGetTransactionIncomeQuery } from "../../../service/transaction-rapor.service";
-import { useGetBalanceQuery } from "../../../service/transaction-rapor.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { CalculateTotal } from "../../../service/calc.service";
 import { CalculateTotalByLine } from "../../../service/calc.service";
@@ -19,12 +16,25 @@ export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [details, setDetails] = useState({ ind: null, title: "" });
   const acItem = useSelector((state) => state.activeThing);
-  const search = useSelector((state) => state.uSearch);
+  const res_id = useSelector((state) => state.res_id);
+  const { date } = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
-  const { data: trData = [], isLoading } = useGetTransactionQuery(search?.date);
-  const { data: trExpData = [] } = useGetTransactionExpenseQuery(search?.date);
-  const { data: trIncData = [] } = useGetTransactionIncomeQuery(search?.date);
-  const { data: balance = [] } = useGetBalanceQuery(search?.date);
+  const { data: trData = [], isLoading } = useFetchDataQuery({
+    url: `get/transactionsTable/${res_id}/${date?.start}/${date?.end}`,
+    tags: ["transaction-report"],
+  });
+  const { data: trExpData = [] } = useFetchDataQuery({
+    url: `get/expenseTransactions/${res_id}/${date?.start}/${date?.end}`,
+    tags: ["transaction-report"],
+  });
+  const { data: trIncData = [] } = useFetchDataQuery({
+    url: `get/incomeTransactions/${res_id}/${date?.start}/${date?.end}`,
+    tags: ["transaction-report"],
+  });
+  const { data: balance = [] } = useFetchDataQuery({
+    url: `get/balance/${res_id}/${date?.start}`,
+    tags: ["transaction-report"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 6, 7, 15]));
   }, [dispatch]);

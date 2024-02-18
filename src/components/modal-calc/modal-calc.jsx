@@ -6,27 +6,11 @@ import { acCloseUModal } from "../../redux/u-modal";
 import { calculateTotal } from "./components";
 import { acCalc } from "../../redux/calc";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useAddStProductMutation } from "../../service/s-products.service";
-import { useGetStoreQuery } from "../../service/store.service";
-import { useGetStGroupsQuery } from "../../service/groups.service";
-import { useAddStInvoiceMutation } from "../../service/invoices.service";
-import { useAddStCuttingMutation } from "../../service/cutting.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
+import { usePostDataMutation } from "../../service/fetch.service";
+import { usePatchDataMutation } from "../../service/fetch.service";
 import { ClearForm } from "../../service/clear-form.service";
-import { useAddStDamagedMutation } from "../../service/damaged.service";
-import { useAddStExpenditureMutation } from "../../service/expenditures.service";
-import { useAddStCarryUpMutation } from "../../service/carry-up.service";
-import { useAddMakingFoodMutation } from "../../service/making-food.service";
-import { useAddPreOrderMutation } from "../../service/pre-order.service";
-import { useUpdateStProductMutation } from "../../service/s-products.service";
-import { useUpdateStInvoiceMutation } from "../../service/invoices.service";
-import { useUpdateStCuttingMutation } from "../../service/cutting.service";
-import { useUpdateStDamagedMutation } from "../../service/damaged.service";
-import { useUpdateStExpenditureMutation } from "../../service/expenditures.service";
-import { useUpdateStCarryUpMutation } from "../../service/carry-up.service";
-import { useUpdateMakedFoodMutation } from "../../service/making-food.service";
-import { useUpdatePreOrderMutation } from "../../service/pre-order.service";
 import { acPassiveThing } from "../../redux/active";
-import { useUpdateItemsMutation } from "../../service/store.service";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
 
@@ -48,61 +32,80 @@ export const UniversalControlModal = ({
   const image = useSelector((state) => state.image);
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
-  const [addStProduct] = useAddStProductMutation();
-  const [addStInvoice] = useAddStInvoiceMutation();
-  const [addStCutting] = useAddStCuttingMutation();
-  const [addStDamaged] = useAddStDamagedMutation();
-  const [addStExpenditure] = useAddStExpenditureMutation();
-  const [addStCarryUp] = useAddStCarryUpMutation();
-  const [addMakingFood] = useAddMakingFoodMutation();
-  const [addPreOrder] = useAddPreOrderMutation();
+  const [postData] = usePostDataMutation();
   //update points
-  const [updateStProduct] = useUpdateStProductMutation();
-  const [updateStInvoice] = useUpdateStInvoiceMutation();
-  const [updateStCutting] = useUpdateStCuttingMutation();
-  const [updateStDamaged] = useUpdateStDamagedMutation();
-  const [updateStExpenditure] = useUpdateStExpenditureMutation();
-  const [updateStCarryUp] = useUpdateStCarryUpMutation();
-  const [updateMakedFood] = useUpdateMakedFoodMutation();
-  const [updatePreOrder] = useUpdatePreOrderMutation();
-  const [updateItems] = useUpdateItemsMutation();
+  const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
-  const acP = useSelector((state) => state.activeThing);
-
-  const fetchValues = async (values) => {
+  // const acP = useSelector((state) => state.activeThing);
+  const fetchValues = async (value) => {
     setLoading(true);
-    if (values.ingredients && Array.isArray(values.ingredients)) {
-      values.ingredients = JSON.stringify(values.ingredients);
+    if (value.ingredients && Array.isArray(value.ingredients)) {
+      value.ingredients = JSON.stringify(value.ingredients);
     }
-
     try {
       let result;
 
       if (status) {
         switch (type) {
           case "product":
-            result = await updateStProduct(values);
+            result = await patchData({
+              url: `update/foods/${value.id}`,
+              data: value,
+              tags: ["s-products"],
+            });
             break;
           case "invoice":
-            result = await updateStInvoice(values);
+            result = await patchData({
+              url: `update/receivedGoods/${value.id}`,
+              data: value,
+              tags: ["invoices"],
+            });
             break;
           case "cutting":
-            result = await updateStCutting(values);
+            result = await patchData({
+              url: `update/cutting/${value.id}`,
+              data: value,
+              tags: ["cutting"],
+            });
             break;
           case "damaged":
-            result = await updateStDamaged(values);
+            result = await patchData({
+              url: `update/damagedGoods/${value.id}`,
+              data: value,
+              tags: ["damaged"],
+            });
             break;
           case "edr":
-            result = await updateStExpenditure(values);
+            result = await patchData({
+              url: `update/usedGoods/${value.id}`,
+              data: value,
+              tags: ["expenditure"],
+            });
             break;
           case "carryUp":
-            result = await updateStCarryUp(values);
+            result = await patchData({
+              url: `update/carry-up/${value.id}`,
+              data: value,
+              tags: ["carry-up"],
+            });
             break;
           case "making":
-            result = await updateMakedFood(values);
+            result = await patchData({
+              url: `update/preparedFoods/${value.id}`,
+              data: value,
+              tags: ["makingFood"],
+            });
             break;
           case "preOrder":
-            result = await updatePreOrder(values);
+            result = await patchData({
+              url: `update/preOrders/${value.id}`,
+              data: {
+                res_id: value.res_id,
+                name: value.name,
+                department: value.department,
+              },
+              tags: ["pre-order"],
+            });
             break;
           default:
             break;
@@ -110,29 +113,65 @@ export const UniversalControlModal = ({
       } else {
         switch (type) {
           case "product":
-            result = await addStProduct(values);
+            result = await postData({
+              url: "add/food",
+              data: value,
+              tags: ["s-products"],
+            });
             break;
           case "invoice":
-            result = await addStInvoice(values);
-            result = await updateItems({ id, ing: Udata });
+            result = await postData({
+              url: "add/receivedGoods",
+              data: value,
+              tags: ["invoices"],
+            });
+            result = await patchData({
+              url: `update/storageItems/${id}`,
+              data: { ingredients: Udata },
+              tags: ["inventory"],
+            });
             break;
           case "cutting":
-            result = await addStCutting(values);
+            result = await postData({
+              url: "add/cutting",
+              data: value,
+              tags: ["cutting"],
+            });
             break;
           case "damaged":
-            result = await addStDamaged(values);
+            result = await postData({
+              url: "add/damagedGoods",
+              data: value,
+              tags: ["damaged"],
+            });
             break;
           case "edr":
-            result = await addStExpenditure(values);
+            result = await postData({
+              url: "add/usedGoods",
+              data: value,
+              tags: ["expenditure"],
+            });
             break;
           case "carryUp":
-            result = await addStCarryUp(values);
+            result = await postData({
+              url: "move/goods",
+              data: value,
+              tags: ["carry-up"],
+            });
             break;
           case "making":
-            result = await addMakingFood(values);
+            result = await postData({
+              url: "make/food",
+              data: value,
+              tags: ["makingFood"],
+            });
             break;
           case "preOrder":
-            result = await addPreOrder(values);
+            result = await postData({
+              url: "add/preOrders",
+              data: value,
+              tags: ["pre-order"],
+            });
             break;
           default:
             break;
@@ -257,8 +296,14 @@ export const UniversalProductControl = ({
   activePart,
   type,
 }) => {
-  const { data: store = [] } = useGetStoreQuery();
-  const { data: groups = [] } = useGetStGroupsQuery();
+  const { data: store = [] } = useFetchDataQuery({
+    url: `/get/storage/${user?.id}`,
+    tags: ["store"],
+  });
+  const { data: groups = [] } = useFetchDataQuery({
+    url: `get/ingredientGroups/${user?.id}`,
+    tags: ["groups"],
+  });
   const dispatch = useDispatch();
   React.useEffect(() => {
     if (store?.data?.length > 0) {

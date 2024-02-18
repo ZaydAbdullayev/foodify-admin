@@ -4,7 +4,6 @@ import { acNavStatus } from "../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
-import { useGetMakedOrderQuery } from "../../service/order.service";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -12,17 +11,21 @@ import { GiCook } from "react-icons/gi";
 import { RiBoxingFill } from "react-icons/ri";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { HiCheck } from "react-icons/hi";
+import { useFetchDataQuery } from "../../service/fetch.service";
 // import { BsCheck2All } from "react-icons/bs";
 
 export const MakedFoods = () => {
-  // const user = JSON?.parse(localStorage?.getItem("user")) || [];
+  const user = JSON?.parse(localStorage?.getItem("user"))?.user || [];
   // const newOrder = useSelector((state) => state.upload);
   // const [orders, setOrders] = useState([]);
   const [full, setFull] = useState(false);
   const [activeIndex, setActiveIndex] = useState(2);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [] } = useGetMakedOrderQuery();
+  const { data = [] } = useFetchDataQuery({
+    url: `/get/readyFoods/${user?.id}`,
+    tags: [""],
+  });
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);

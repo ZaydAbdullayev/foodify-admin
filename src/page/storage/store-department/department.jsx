@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useGetStoreDepQuery } from "../../../service/dep.service";
-import { useGetStoreQuery } from "../../../service/store.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +10,7 @@ import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageDep = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -21,8 +20,14 @@ export const StorageDep = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: depData = [], isLoading } = useGetStoreDepQuery();
-  const { data: storeData = [] } = useGetStoreQuery();
+  const { data: depData = [], isLoading } = useFetchDataQuery({
+    url: `get/${user?.user?.id}/departments`,
+    tags: ["department"],
+  });
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${user?.id}`,
+    tags: ["store"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

@@ -3,19 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalModal } from "../../../components/modal/modal";
-import { useGetCashboxQuery } from "../../../service/cashbox.service";
-import { useGetCashboxGrQuery } from "../../../service/cashbox-group.service";
-import { useGetCashTransactionQuery } from "../../../service/cash-transaction.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
 
 export const CashboxTransaction = () => {
   const user = JSON?.parse(localStorage.getItem("user"))?.user || [];
@@ -27,9 +22,18 @@ export const CashboxTransaction = () => {
   const ckddt = useSelector((state) => state.delTouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useGetCashboxQuery();
-  const { data: cashboxGrData = [] } = useGetCashboxGrQuery();
-  const { data: cashTrData = [] } = useGetCashTransactionQuery();
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({
+    url: `get/cashbox/${user?.id}`,
+    tags: ["cashbox"],
+  });
+  const { data: cashboxGrData = [] } = useFetchDataQuery({
+    url: `get/${user?.id}/transactionGroups`,
+    tags: ["tr-group"],
+  });
+  const { data: cashTrData = [] } = useFetchDataQuery({
+    url: `get/transactions/${user?.user?.id}`,
+    tags: ["cashbox-transaction"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

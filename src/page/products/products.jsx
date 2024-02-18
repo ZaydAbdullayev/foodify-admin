@@ -3,16 +3,14 @@ import "./products.css";
 import { Link, useLocation } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { enqueueSnackbar as es } from "notistack";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
-import { useGetStProductQuery } from "../../service/s-products.service";
-import { useDeleteStProductMutation } from "../../service/s-products.service";
-import { useUpdateStProductMutation } from "../../service/s-products.service";
-import { useUpdateStProductImageMutation } from "../../service/s-products.service";
-import { useGetStCategoryQuery } from "../../service/category.service";
 import { ImgService } from "../../service/image.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
+import { useDelDataMutation } from "../../service/fetch.service";
+import { usePatchDataMutation } from "../../service/fetch.service";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
@@ -20,19 +18,24 @@ import { ImCancelCircle } from "react-icons/im";
 import { FaPen, FaCheck } from "react-icons/fa";
 import { IoIosMore } from "react-icons/io";
 import { TbInfoSquareRounded } from "react-icons/tb";
-import { PiInfinityThin } from "react-icons/pi";
 
 export const Products = () => {
   const { search, pathname } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [update, setUpdate] = useState(false);
+  const res_id = useSelector((state) => state?.res_id);
   const [info, setInfo] = useState({});
   // const [detail, setDetail] = useState(false);
-  const { data: products = [], isLoading } = useGetStProductQuery();
-  const { data: categorys = [] } = useGetStCategoryQuery();
-  const [deleteStProduct] = useDeleteStProductMutation();
-  const [updateStProduct] = useUpdateStProductMutation();
-  const [updateStProductImage] = useUpdateStProductImageMutation();
+  const { data: products = [], isLoading } = useFetchDataQuery({
+    url: `get/foods/${res_id}`,
+    tags: ["s-products", "product"],
+  });
+  const { data: categorys = [] } = useFetchDataQuery({
+    url: `get/${res_id}/categories`,
+    tags: ["category"],
+  });
+  const [delData] = useDelDataMutation();
+  const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   React.useEffect(() => {
@@ -46,7 +49,11 @@ export const Products = () => {
   };
 
   const handleUpdate = async (product) => {
-    const { data } = await updateStProduct(product);
+    const { data } = await patchData({
+      url: `update/foods/${product.id}`,
+      data: product,
+      tags: ["s-products"],
+    });
     if (data) {
       es("Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!", {
         variant: "success",
@@ -57,7 +64,10 @@ export const Products = () => {
   };
 
   const handleDelete = async (id) => {
-    const { data } = await deleteStProduct(id);
+    const { data } = await delData({
+      url: `delete/food/${id}`,
+      tags: ["s-products"],
+    });
     if (data) {
       const msg = "Mahsulotni O'zgartirishda qandaydir xatolik yuz berdi";
       es(msg, { variant: "error" });
@@ -65,7 +75,14 @@ export const Products = () => {
   };
 
   const updateImg = async (product) => {
-    const { data } = await updateStProductImage(product);
+    const { data } = await patchData({
+      url: `update/productImg/${product.id}`,
+      data: {
+        img: product?.image,
+        deleteImg: product.deleteImg,
+      },
+      tags: ["s-products"],
+    });
     if (data) {
       const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
       es(msg, { variant: "success" });

@@ -5,8 +5,8 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStGroupsQuery } from "../../../service/groups.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
+import { useSelector } from "react-redux";
 
 export const InvoicesModal = ({
   checkedData,
@@ -20,8 +20,15 @@ export const InvoicesModal = ({
   acItem,
 }) => {
   const today = new Date().toISOString().split("T")[0];
-  const { data: storeData = [] } = useGetStoreQuery();
-  const { data: groupsData = [] } = useGetStGroupsQuery();
+  const res_id = useSelector((state) => state?.res_id);
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
+  const { data: groupsData = [] } = useFetchDataQuery({
+    url: `get/ingredientGroups/${res_id}`,
+    tags: ["groups"],
+  });
   const [activePart, setActivePart] = useState(1);
 
   const updatedData = checkedData?.map((newItem) => {

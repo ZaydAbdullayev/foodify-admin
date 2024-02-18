@@ -3,18 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./expenditures.modal";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
-import { useGetStExpenditureQuery } from "../../../service/expenditures.service";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageExpenditures = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -24,10 +20,17 @@ export const StorageExpenditures = () => {
   const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
+  const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useGetStorageItemsQuery(id);
-  const { data: invoiceData = [], isLoading } = useGetStExpenditureQuery();
+  const { data: ingredientData = [] } = useFetchDataQuery({
+    url: `get/storageItems/${res_id}/${id}`,
+    tags: ["invoices"],
+  });
+  const { data: invoiceData = [], isLoading } = useFetchDataQuery({
+    url: `get/usedGoods/${res_id}`,
+    tags: ["expenditure"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);

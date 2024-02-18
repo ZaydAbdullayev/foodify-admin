@@ -5,13 +5,12 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStGroupsQuery } from "../../../service/groups.service";
-import { useCalcStCarryUpMutation } from "../../../service/carry-up.service";
-import { useGetStProductQuery } from "../../../service/s-products.service";
-import { CalculateTotalP } from "../../../service/calc.service";
+import { usePostDataMutation } from "../../../service/fetch.service";
+// import { CalculateTotalP } from "../../../service/calc.service";
 
 import { BsReceiptCutoff } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const InvoicesModal = ({
   data,
@@ -27,10 +26,20 @@ export const InvoicesModal = ({
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1);
   const [calcData, setCalcData] = useState([]); // [{id: 1, amount: 1, sender_storage : id}]
-  const { data: storeData = [] } = useGetStoreQuery();
-  const { data: groupsData = [] } = useGetStGroupsQuery();
-  const [calcStCarryUp] = useCalcStCarryUpMutation();
-  const { data: productData = [] } = useGetStProductQuery();
+  const res_id = useSelector((state) => state?.res_id);
+  const [postData] = usePostDataMutation();
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
+  const { data: groupsData = [] } = useFetchDataQuery({
+    url: `get/ingredientGroups/${res_id}`,
+    tags: ["groups"],
+  });
+  const { data: productData = [] } = useFetchDataQuery({
+    url: `get/foods/${res_id}`,
+    tags: ["s-products", "product"],
+  });
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = data?.find((old) => old.id === newItem.id) || {};
@@ -74,7 +83,11 @@ export const InvoicesModal = ({
 
   const revordCalcData = async (data) => {
     if (id === null) return alert("Ombor tanlanmagan");
-    const value = await calcStCarryUp(data);
+    const value = await postData({
+      url: `calculate/goods`,
+      data: data,
+      tags: ["carry-up"],
+    });
     setCheckedData((prevFoodsData) => {
       const updatedFoodsData = [...prevFoodsData];
 

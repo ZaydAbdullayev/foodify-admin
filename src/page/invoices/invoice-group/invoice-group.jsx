@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useGetStInvoiceGroupQuery } from "../../../service/invoice-group.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
@@ -24,7 +24,10 @@ export const InvoicesGroups = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: groupData = [], isLoading } = useGetStInvoiceGroupQuery();
+  const { data: groupData = [], isLoading } = useFetchDataQuery({
+    url: `get/InvoiceGroups/${user?.id}`,
+    tags: ["invoice-group"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

@@ -3,11 +3,9 @@ import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector, useDispatch } from "react-redux";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
-// import { useGetAllFoodReportQuery } from "../../../service/s-products.service";
-import { useGetFoodReportQuery } from "../../../service/s-products.service";
 import { CalculateTotalCH } from "../../../service/calc.service";
 import { useLocation } from "react-router-dom";
-import { useFetchDataQuery } from "../../../service/api.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -19,19 +17,11 @@ export const ReportOneItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
-  const search = useSelector((state) => state.uSearch);
+  const { date } = useSelector((state) => state.uSearch);
   const id = useLocation().pathname.split("/").pop();
-  // const { data: fetch1 } = useFetchDataQuery({
-  //   url: `get/foodReport/${user?.user?.id}/${search.date?.start}/${search.date?.end}/${id}`,
-  //   tags: ["report"],
-  // });
-  // const { data: fetch2 } = useFetchDataQuery({
-  //   url: `get/generatedReport/${user?.user?.id}/${search.date?.start}/${search.date?.end}`,
-  //   tags: ["all-report"],
-  // });
-  const { data = [], isLoading } = useGetFoodReportQuery({
-    ...search.date,
-    id: id,
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/foodReport/${user?.id}/${date?.start}/${date?.end}/${id}`,
+    tags: ["s-products", "product"],
   });
   console.log(data);
   const dispatch = useDispatch();

@@ -3,23 +3,25 @@ import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector, useDispatch } from "react-redux";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
-import { useGetAllFoodReportQuery } from "../../../service/s-products.service";
-// import { useGetFoodReportQuery } from "../../../service/s-products.service";
 import { CalculateTotalCH } from "../../../service/calc.service";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
-  const search = useSelector((state) => state.uSearch);
-  const navigate = useNavigate();
-  const { data = [], isLoading } = useGetAllFoodReportQuery(search.date);
+  const { date } = useSelector((state) => state.uSearch);
+  const res_id = useSelector((state) => state.res_id);
+  // const navigate = useNavigate();
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/generateFoodsReport/${res_id}/${date?.start}/${date?.end}`,
+  });
   console.log(data);
   const dispatch = useDispatch();
   React.useEffect(() => {

@@ -4,8 +4,6 @@ import "./cart.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CalculateTotalPrice } from "../../service/calc.service";
 import { CalculateTotalQuantity } from "../../service/calc.service";
-import { useGetStProductQuery } from "../../service/s-products.service";
-import { useGetStCategoryQuery } from "../../service/category.service";
 import { NumericFormat } from "react-number-format";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
@@ -15,9 +13,10 @@ import { LuShoppingBasket } from "react-icons/lu";
 import { BiCircle, BiCheck } from "react-icons/bi";
 import { FiCheckCircle } from "react-icons/fi";
 import { TbMessage2Plus } from "react-icons/tb";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const Orders = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const navigate = useNavigate();
   const [update, setUpdate] = useState(false);
   const [open, setOpen] = useState(false);
@@ -25,8 +24,14 @@ export const Orders = () => {
   const [desc, setDesc] = useState(false);
   const [extra, setExtra] = useState("");
   const location = useLocation();
-  const { data = [], isLoading } = useGetStProductQuery();
-  const { data: categoryData = [] } = useGetStCategoryQuery();
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/foods/${user?.id}`,
+    tags: ["s-products", "product"],
+  });
+  const { data: categoryData = [] } = useFetchDataQuery({
+    url: `get/${user?.id}/categories`,
+    tags: ["category"],
+  });
   const position = location.pathname.split("/");
   const ct = categoryData?.data?.[0]?.name?.toLowerCase().replace(/\s|'/g, "");
   const category = location.search.split("=")[1] || ct;
@@ -38,7 +43,7 @@ export const Orders = () => {
 
   const paymentData = {
     address: `&${position[3]}-stoll`,
-    restaurant_id: user?.user?.id,
+    restaurant_id: user?.id,
     user_id: position[4],
     product_data: JSON.stringify({ 1: { pd: cart } }),
     food_total: total?.totalPrice,
@@ -48,8 +53,8 @@ export const Orders = () => {
     paid: 0,
     online_paymentToken: "token",
     table_name: position[3],
-    worker_name: user?.user?.name || "owner",
-    worker_id: user?.user?.user_id || user?.user?.id,
+    worker_name: user?.name || "owner",
+    worker_id: user?.user_id || user?.id,
     order_type: "offline",
     t_location: position[2],
     table_id: position[4],
@@ -97,9 +102,9 @@ export const Orders = () => {
     const uData = {
       id: position[4],
       status: 2,
-      res_id: user?.user?.id,
+      res_id: user?.id,
       location: position[2],
-      worker_id: user?.user?.worker_id,
+      worker_id: user?.worker_id,
     };
     if (!cart.length) {
       alert("Savatcha bo'sh");

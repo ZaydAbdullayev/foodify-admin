@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import "./check.css";
 import { NumericFormat } from "react-number-format";
 // import { CalculateTotalPrice } from "../../service/calc.service";
-import { useGetpOrderQuery } from "../../service/user.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
 import { useLocation } from "react-router-dom";
 // import { useFetchDataQuery } from "../../service/api.service";
 // import { usePostDataMutation } from "../../service/api.service";
@@ -10,7 +10,10 @@ import { useLocation } from "react-router-dom";
 export const PaymentCheck = memo(() => {
   const user = JSON.parse(localStorage.getItem("user")).user || [];
   const id = useLocation().pathname.split("/").pop();
-  const { data: order = [] } = useGetpOrderQuery(id);
+  const { data: order = [] } = useFetchDataQuery({
+    url: `/get/depW/${id}`,
+    tags: [""],
+  });
 
   const orderData = order?.innerData || [];
   const pds = JSON?.parse(orderData?.product_data);

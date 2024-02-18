@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./envater.modal";
-import { useGetStProductQuery } from "../../../service/s-products.service";
-import { useGetPreOrderQuery } from "../../../service/pre-order.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
@@ -20,10 +19,17 @@ export const InvoiceInvantar = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
+  const res_id = useSelector((state) => state.re_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useGetStProductQuery();
-  const { data: preOrder = [], isLoading } = useGetPreOrderQuery();
+  const { data: ingredientData = [] } = useFetchDataQuery({
+    url: `get/foods/${res_id}`,
+    tag: ["s-product"],
+  });
+  const { data: preOrder = [], isLoading } = useFetchDataQuery({
+    url: `get/preOrders/${res_id}`,
+    tags: ["pre-order"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);

@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import "./addWorker.css";
-import { useAddWorkerMutation } from "../../../service/workers.service";
-import { useGetDepWQuery } from "../../../service/user.service";
-import { usePermissionMutation } from "../../../service/user.service";
 import { enqueueSnackbar as es } from "notistack";
 // import { useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../../../components/loading/loading";
+import { useFetchDataQuery } from "../../../service/fetch.service";
+import { usePostDataMutation } from "../../../service/fetch.service";
 
 export const AddWorker = ({ open, setOpen, state }) => {
   const res = JSON.parse(localStorage.getItem("user"))?.user || [];
   const [newDep, setNewDep] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [addWorkerMutation] = useAddWorkerMutation();
-  const { data: depData = [] } = useGetDepWQuery(res.id);
-  const [permissionMutation] = usePermissionMutation();
+  const [postData] = usePostDataMutation();
+  const { data: depData = [] } = useFetchDataQuery({
+    url: `/get/depW/${res?.id}`,
+    tags: [""],
+  });
   // const navigate = useNavigate();
 
   const addWorker = async (e) => {
@@ -22,7 +23,11 @@ export const AddWorker = ({ open, setOpen, state }) => {
     const value = Object.fromEntries(wdata.entries());
     console.log(value);
     try {
-      const { data } = await addWorkerMutation(value).unwrap();
+      const { data } = await postData({
+        url: "/add/worker",
+        data: value,
+        tags: ["worker"],
+      });
       if (data) {
         setOpen(false);
         es("Ishchi qo'shildi", { variant: "success" });
@@ -40,7 +45,11 @@ export const AddWorker = ({ open, setOpen, state }) => {
     const value = Object.fromEntries(formData);
     try {
       setLoading(true);
-      const { data } = await permissionMutation(value);
+      const { data } = await postData({
+        url: `/add/loginInfo/${res?.id}`,
+        data: value,
+        tags: [""],
+      });
       localStorage.setItem("permission", JSON.stringify(data));
       window.location.reload();
     } catch (err) {

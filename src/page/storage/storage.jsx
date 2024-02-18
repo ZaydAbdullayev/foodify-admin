@@ -5,16 +5,13 @@ import { UniversalModal } from "../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../redux/active";
 import { Outlet } from "react-router-dom";
-import { useGetStoreQuery } from "../../service/store.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalFilterBox } from "../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../redux/deleteFoods";
+import { setAllDocuments } from "../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -22,9 +19,13 @@ export const Storage = () => {
   const [checked, setChecked] = useState(false);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
+  const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useGetStoreQuery();
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
   useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

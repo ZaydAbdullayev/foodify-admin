@@ -4,10 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { MdDateRange } from "react-icons/md";
 import { LuArrowLeftRight } from "react-icons/lu";
 import AnimatedNumber from "animated-number-react";
-import { useGetByDateQuery } from "../../service/product.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
 import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { LiaCalendarDaySolid } from "react-icons/lia";
 
@@ -15,12 +15,16 @@ import noResult from "../../assets/images/20231109_144621.png";
 
 export const Document = () => {
   const navigate = useNavigate();
+  const res_id = useSelector((state) => state.res_id);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState({
     fdate: new Date().toISOString().split("T")[0],
     tdate: new Date().toISOString().split("T")[0],
   });
-  const { data = [], isLoading } = useGetByDateQuery(date);
+  const { data = [], isLoading } = useFetchDataQuery({
+    url: `get/departmentSales/${res_id}/${date?.fdate}/${date?.tdate}`,
+    tags: [""],
+  });
   const search = useLocation().search?.split("=").pop();
   const dispatch = useDispatch();
   React.useEffect(() => {

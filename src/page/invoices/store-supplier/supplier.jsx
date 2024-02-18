@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useGetStSuplierQuery } from "../../../service/suplier.service";
 import { PatternFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import { setAllDocuments, setRelease } from "../../../redux/deleteFoods";
@@ -12,6 +11,7 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments } from "../../../redux/deleteFoods";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -22,7 +22,10 @@ export const StorageSupplier = () => {
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: suplierData = [], isLoading } = useGetStSuplierQuery();
+  const { data: suplierData = [], isLoading } = useFetchDataQuery({
+    url: `get/suppliers/${user?.id}`,
+    tags: ["suplier"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

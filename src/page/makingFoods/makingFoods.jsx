@@ -7,7 +7,6 @@ import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import { useGetMakingOrderQuery } from "../../service/order.service";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -17,11 +16,15 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { BsCheck2All } from "react-icons/bs";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
   const department = JSON.parse(localStorage.getItem("department")) || null;
-  const { data = [] } = useGetMakingOrderQuery();
+  const { data = [] } = useFetchDataQuery({
+    url: `/get/foodsBeingMade/${user?.id}`,
+    tags: ["add-order"],
+  });
   // const newOrder = useSelector((state) => state.upload);
   const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(1);

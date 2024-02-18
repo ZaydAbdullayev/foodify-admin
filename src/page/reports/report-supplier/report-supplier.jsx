@@ -3,7 +3,6 @@ import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector } from "react-redux";
 import { storageD } from "../../storage/store-data";
-import { useGetStCategoryQuery } from "../../../service/category.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { UniversalModal } from "../../../components/modal/modal";
 import { acOpenUModal } from "../../../redux/u-modal";
@@ -12,13 +11,18 @@ import { useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
-  const { data: storeData = [] } = useGetStCategoryQuery();
+  const res_id = useSelector((state) => state.res_id);
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/${res_id}/categories`,
+    tags: ["category"],
+  });
   const today = new Date().toISOString().slice(0, 10);
   console.log(storeData);
   const isLoading = false;

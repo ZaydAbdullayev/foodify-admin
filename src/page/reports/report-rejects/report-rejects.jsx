@@ -3,23 +3,27 @@ import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector, useDispatch } from "react-redux";
 import { storageD } from "../../storage/store-data";
-import { useGetStCategoryQuery } from "../../../service/category.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalFilterBox } from "../../../components/filter/filter";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
+  const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
-  const { data: storeData = [] } = useGetStCategoryQuery();
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/${res_id}/categories`,
+    tags: ["category"],
+  });
   console.log(storeData);
   const isLoading = false;
 

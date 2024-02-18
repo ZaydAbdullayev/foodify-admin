@@ -5,10 +5,8 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
-import { useGetStSuplierQuery } from "../../../service/suplier.service";
 import { useSelector } from "react-redux";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -19,11 +17,21 @@ export const InvoicesModal = ({
 }) => {
   // const today = new Date().toISOString().split("T")[0];
   const acItem = useSelector((state) => state.activeThing);
+  const res_id = useSelector((state) => state.res_id);
   const [id, setId] = useState(null);
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
-  const { data: storeData = [] } = useGetStoreQuery();
-  const { data: storageItems = [] } = useGetStorageItemsQuery(id);
-  const { data: suplierData = [] } = useGetStSuplierQuery();
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
+  const { data: storageItems = [] } = useFetchDataQuery({
+    url: `get/storageItems/${res_id}/${id}`,
+    tags: ["invoices"],
+  });
+  const { data: suplierData = [] } = useFetchDataQuery({
+    url: `get/suppliers/${res_id}`,
+    tags: ["suplier"],
+  });
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];

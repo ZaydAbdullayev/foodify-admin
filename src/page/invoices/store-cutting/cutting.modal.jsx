@@ -5,11 +5,10 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStGroupsQuery } from "../../../service/groups.service";
 import { CalculateTotalP } from "../../../service/calc.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { useSelector } from "react-redux";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const InvoicesModal = ({
   checkedData,
@@ -24,9 +23,16 @@ export const InvoicesModal = ({
   const [pId, setPId] = useState(null);
   const [qty, setQty] = useState(0);
   const [activePart, setActivePart] = useState(1);
-  const { data: storeData = [] } = useGetStoreQuery();
-  const { data: groupsData = [] } = useGetStGroupsQuery();
   const acItem = useSelector((state) => state.activeThing);
+  const res_id = useSelector((state) => state.res_id);
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
+  const { data: groupsData = [] } = useFetchDataQuery({
+    url: `get/ingredientGroups/${res_id}`,
+    tags: ["groups"],
+  });
   const acIngredients = acItem?.ingredients
     ? JSON.parse(acItem?.ingredients)
     : [];

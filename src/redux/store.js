@@ -4,19 +4,18 @@ import { reModal } from "./modal";
 import { reShrink } from "./shrink";
 import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
-import { rePermission } from "./permission";
+import { rePermission, resId } from "./permission";
 import { reGetUrl, reUModal } from "./u-modal";
 import { reActive, reStorageId } from "./active";
 import { reCalc } from "./calc";
 import { reModalType } from "./u-modal";
-import { apiSlice } from "../service/frame.service";
 import { reActiveThing } from "./active";
 import { reNavStatus } from "./navbar.status";
 import { reDeviceWidth, reMedia } from "./media";
 import { reNothification } from "./nothification";
 import { resolve } from "./resolve";
 import { rootDocuments } from "./deleteFoods";
-// import api from "../service/api.service";
+import api from "../service/fetch.service";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -36,13 +35,13 @@ export const store = configureStore({
     media: reMedia,
     image: reGetUrl,
     dWidth: reDeviceWidth,
+    res_id: resId,
     nothificate: reNothification,
     resolve: resolve,
     storageId: reStorageId,
     delRouter: rootDocuments,
-    [apiSlice.reducerPath]: apiSlice.reducer,
-    // [api.reducerPath]: api.reducer,
+    [api.reducerPath]: api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(api.middleware),
 });

@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { storageD } from "../../storage/store-data";
 import { useNavigate } from "react-router-dom";
-import { useGetOrderReportQuery } from "../../../service/order.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -15,6 +14,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -22,15 +22,17 @@ export const ReportOrders = () => {
   const [showMore, setShowMore] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
-  const search = useSelector((state) => state.uSearch);
+  const res_id = useSelector((state) => state.res_id);
+  const { date } = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
-  const { data: reports = [], isLoading } = useGetOrderReportQuery(
-    search?.date
-  );
+  const { data: reports = [], isLoading } = useFetchDataQuery({
+    url: `/get/ordersReport/${res_id}/${date?.start}/${date?.end}`,
+    tags: ["add-order"],
+  });
 
   console.log(reports);
 

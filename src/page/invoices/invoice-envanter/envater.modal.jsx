@@ -5,8 +5,8 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useGetStoreQuery } from "../../../service/store.service";
-import { useGetStorageItemsQuery } from "../../../service/invoices.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
+import { useSelector } from "react-redux";
 // import { CalculateTotalP } from "../../../service/calc.service";
 // import { CalculateTotalQuantity } from "../../../service/calc.service";
 
@@ -20,9 +20,16 @@ export const InvoicesModal = ({
   const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = React.useState(1);
   const [id, setId] = React.useState(null);
+  const res_id = useSelector((state) => state?.res_id);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
-  const { data: storeData = [] } = useGetStoreQuery();
-  const { data: storageItems = [] } = useGetStorageItemsQuery(id);
+  const { data: storeData = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["store"],
+  });
+  const { data: storageItems = [] } = useFetchDataQuery({
+    url: `get/storageItems/${user?.user?.id}/${id}`,
+    tags: ["invoices"],
+  });
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = storageItems?.data?.find((old) => old.id === newItem.id);

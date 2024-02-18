@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
 import { acGetNewData } from "../../redux/search";
-import { useGetCashboxQuery } from "../../service/cashbox.service";
+import { useFetchDataQuery } from "../../service/fetch.service";
 import { calculateMonthRange } from "../../service/calc-date.service";
 import { getFormattedDate } from "../../service/calc-date.service";
 import { calculateWeekRange } from "../../service/calc-date.service";
@@ -28,7 +28,11 @@ export const UniversalFilterBox = () => {
   const dispatch = useDispatch();
   const { date } = useSelector((state) => state.uSearch);
   const status = useSelector((state) => state.status);
-  const { data = [] } = useGetCashboxQuery();
+  const res_id = useSelector((state) => state.res_id);
+  const { data = [] } = useFetchDataQuery({
+    url: `get/cashbox/${res_id}`,
+    tags: ["cashbox"],
+  });
   const navigate = useNavigate();
 
   const today = getFormattedDate(0);

@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useGetStoreDepQuery } from "../../../service/dep.service";
-import { useGetStCategoryQuery } from "../../../service/category.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import {
-  setAllDocuments,
-  setDocuments,
-  setRelease,
-} from "../../../redux/deleteFoods";
+import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setAllDocuments } from "../../../redux/deleteFoods";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const StorageCatgegories = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -25,8 +21,14 @@ export const StorageCatgegories = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: depData = [] } = useGetStoreDepQuery();
-  const { data: storeData = [], isLoading } = useGetStCategoryQuery();
+  const { data: depData = [] } = useFetchDataQuery({
+    url: `get/${user?.id}/departments`,
+    tags: ["department"],
+  });
+  const { data: storeData = [], isLoading } = useFetchDataQuery({
+    url: `get/${user?.user?.id}/categories`,
+    tags: ["category"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

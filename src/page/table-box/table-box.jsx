@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./table-box.css";
 import { Table } from "../../components/table/table";
-import { useGetLocationQuery } from "../../service/table.service";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalModal } from "../../components/modal/modal";
 import { PatternFormat } from "react-number-format";
 import socket from "../../socket.config";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const TableBox = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const { data: category = [] } = useGetLocationQuery();
+  const { data: category = [] } = useFetchDataQuery({
+    url: `/get/tlocations/${user?.id}`,
+    tags: ["table"],
+  });
   const [active, setActive] = useState(category?.data?.[0]);
   const [newType, setNewType] = useState("");
   const [type, setType] = useState("stoll");

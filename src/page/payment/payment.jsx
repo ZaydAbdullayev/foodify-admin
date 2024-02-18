@@ -3,22 +3,26 @@ import "./payment.css";
 import { useNavigate } from "react-router-dom";
 import { AddPayment } from "./addPayment/addPayment";
 import { LuArrowLeftRight } from "react-icons/lu";
-import { useGetPaymentOrderQuery } from "../../service/user.service";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { LiaCalendarDaySolid } from "react-icons/lia";
 
 import noResult from "../../assets/images/20231109_144621.png";
+import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const Payment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const res_id = useSelector((state) => state?.res_id);
   // const search = useLocation().search?.split("=").pop();
   const [date, setDate] = useState({
     start: new Date().toISOString().split("T")[0],
     end: new Date().toISOString().split("T")[0],
   });
-  const { data: ordersData = [] } = useGetPaymentOrderQuery(date);
+  const { data: ordersData = [] } = useFetchDataQuery({
+    url: `/get/resOrders/${res_id}/${date.start}/${date.end}`,
+    tags: ["order"],
+  });
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([100]));
