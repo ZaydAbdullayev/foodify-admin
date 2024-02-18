@@ -4,8 +4,7 @@ import { NumericFormat } from "react-number-format";
 // import { CalculateTotalPrice } from "../../service/calc.service";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { useLocation } from "react-router-dom";
-// import { useFetchDataQuery } from "../../service/api.service";
-// import { usePostDataMutation } from "../../service/api.service";
+
 
 export const PaymentCheck = memo(() => {
   const user = JSON.parse(localStorage.getItem("user")).user || [];
