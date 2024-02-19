@@ -151,6 +151,7 @@ export const Orders = () => {
                     ? "active"
                     : ""
                 }
+                aria-label="to filter info according to this category"
               >
                 {item?.name}
               </span>
@@ -172,6 +173,7 @@ export const Orders = () => {
                   className="res_menu_item"
                   key={item?.id}
                   onClick={() => addToCart(item)}
+                  aria-label="click this aria for add basket this product"
                 >
                   <p style={{ textTransform: "capitalize" }}>{item?.name}</p>
                   <span>{item?.description}</span>
@@ -183,10 +185,12 @@ export const Orders = () => {
         </div>
       </div>
       <div className="book_order">
-        <span onClick={() => setOpen(!open)}>
+        <span onClick={() => setOpen(!open)} aria-label="see basket">
           <LuShoppingBasket />
         </span>
-        <button onClick={() => resieveOrderS()}>Rasmiylashtirish</button>
+        <button onClick={() => resieveOrderS()} aria-label="send order">
+          Rasmiylashtirish
+        </button>
       </div>
       <div className={open ? "cart_box open" : "cart_box"}>
         <p>
@@ -225,7 +229,7 @@ export const Orders = () => {
                   suffix=" so'm"
                 />
                 <div className="update_item">
-                  <button>
+                  <button aria-label="add message">
                     {desc === item.id ? (
                       <BiCheck
                         onClick={() => addExtr({ id: item.id, comment: extra })}
@@ -238,6 +242,7 @@ export const Orders = () => {
                     onClick={() =>
                       updateCart({ id: item.id, quantity: item.quantity - 1 })
                     }
+                    aria-label="minus 1x"
                   >
                     –
                   </button>
@@ -250,11 +255,13 @@ export const Orders = () => {
                         quantity: e.target.value,
                       })
                     }
+                    aria-label="quantity of this product"
                   />
                   <button
                     onClick={() =>
                       updateCart({ id: item.id, quantity: item.quantity + 1 })
                     }
+                    aria-label="plus 1x"
                   >
                     +
                   </button>
@@ -275,6 +282,7 @@ export const Orders = () => {
         <label
           className={takeaway ? "takeaway active" : "takeaway"}
           onClick={() => setTakeaway(!takeaway)}
+          aria-label="change status of takeaway"
         >
           {takeaway ? <FiCheckCircle /> : <BiCircle />}
           Olib ketish

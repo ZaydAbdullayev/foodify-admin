@@ -91,6 +91,7 @@ export const InvoiceInvantar = () => {
                     : setAllDocuments("envanter", preOrder?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -158,6 +159,7 @@ export const InvoiceInvantar = () => {
                         dispatch(setDocuments("envanter", item));
                         navigate(`?page-code=envanter`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

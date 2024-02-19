@@ -122,7 +122,7 @@ export const InvoicesModal = ({
         type="envanter"
       >
         <div className="product_box_item">
-          <label>
+          <label aria-label="checked this elements">
             <input type="checkbox" name="id" onClick={() => getProduct(data)} />
           </label>
           <p style={{ "--data-line-size": "25%" }}>Nomi</p>

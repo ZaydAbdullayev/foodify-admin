@@ -131,24 +131,30 @@ export const MakingFoods = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
+              aria-label='target this link "/orders"'
             >
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active" : ""}
               onClick={() => navigate("/orders/cooking/food")}
+              aria-label='target this link "/orders/cooking/food"'
             >
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
+              aria-label='target this link "/orders/prepared/food"'
             >
               <MdFastfood />
             </span>
           </span>
           <i></i>
-          <span onClick={() => setFull(!full)}>
+          <span
+            onClick={() => setFull(!full)}
+            aria-label="enter fullscreen and exit fullscreen"
+          >
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
@@ -189,6 +195,7 @@ export const MakingFoods = () => {
                         <button
                           className="relative"
                           onClick={() => orderAccept({ ...order, status: 4 })}
+                          aria-label="to cancel this order"
                         >
                           <RxCross2 />
                         </button>
@@ -200,6 +207,7 @@ export const MakingFoods = () => {
                               user_id: order?.user_id,
                             })
                           }
+                          aria-label="to prepare thi r oreder"
                         >
                           <BsCheck2All />
                         </button>
@@ -243,7 +251,9 @@ export const MakingFoods = () => {
                                     department: department,
                                   })
                                 }
+                                aria-label="to prepare this product"
                               >
+
                                 <IoCheckmarkDoneCircleSharp />
                               </button>
                             </div>

@@ -130,6 +130,7 @@ export const ReportOneItems = () => {
                     : "flex-start",
                 }}
                 key={index}
+                aria-label="for sort data and see al info about this product"
               >
                 <p>{item.name}</p>
                 {item?.items && (

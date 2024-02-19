@@ -212,7 +212,11 @@ export const AddPayment = memo(({ active, actives }) => {
                   onChange={(e) => setPrice(e.target.value)}
                   name="price"
                 />
-                <span className="relative" onClick={() => addPayment()}>
+                <span
+                  className="relative"
+                  onClick={() => addPayment()}
+                  aria-label="add payment"
+                >
                   {loading ? <LoadingBtn /> : <BsCheckLg />}
                 </span>
               </div>
@@ -223,7 +227,7 @@ export const AddPayment = memo(({ active, actives }) => {
               onClick={() => navigate(`/get/check/${orderData?.id}`)}
             >
               <BsJournalCheck />
-              <span>Check olish</span>
+              <span aria-label="get check">Check olish</span>
             </div>
           )}
         </div>
@@ -233,6 +237,7 @@ export const AddPayment = memo(({ active, actives }) => {
           navigate("/financial");
           active(false);
         }}
+        aria-label="close this modal"
       ></i>
     </div>
   );

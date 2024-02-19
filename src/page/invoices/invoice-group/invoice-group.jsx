@@ -69,8 +69,12 @@ export const InvoicesGroups = () => {
         <i>
           <GoDotFill
             onClick={() => navigate("/sections/cashbox/transaction-group")}
+            aria-label='target thi link "/sections/cashbox/transaction-group"'
           />
-          <GoDotFill onClick={() => navigate("/sections/groups")} />
+          <GoDotFill
+            onClick={() => navigate("/sections/groups")}
+            aria-label='target thi link "/sections/groups"'
+          />
           <GoDotFill className="active" />
         </i>
         <p {...handlers} className="df-aic-gap">
@@ -91,6 +95,7 @@ export const InvoicesGroups = () => {
                     : setAllDocuments("invGr", groupData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -139,6 +144,7 @@ export const InvoicesGroups = () => {
                         dispatch(setDocuments("invGr", item));
                         navigate(`?page-code=invGr`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

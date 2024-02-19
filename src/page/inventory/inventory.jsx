@@ -149,7 +149,10 @@ export const Inventory = () => {
         </div>
         <div className="inventory_btn-box">
           {seeOne ? (
-            <button onClick={() => setSeeOne(false)}>
+            <button
+              onClick={() => setSeeOne(false)}
+              aria-label="backword all inventory informstion"
+            >
               <TbArrowBarLeft />
             </button>
           ) : (
@@ -173,7 +176,11 @@ export const Inventory = () => {
                   })}
                 </div>
               </div>
-              <button onClick={() => syncData(!snc)} className="relative">
+              <button
+                onClick={() => syncData(!snc)}
+                className="relative"
+                aria-label="to async and upload new info"
+              >
                 {loading ? (
                   <LoadingBtn />
                 ) : snc ? (
@@ -183,7 +190,7 @@ export const Inventory = () => {
                 )}
               </button>
               {snc && (
-                <button onClick={() => setSnc(false)}>
+                <button onClick={() => setSnc(false)} aria-label="cancel async">
                   <RxCross2 />
                 </button>
               )}

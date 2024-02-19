@@ -82,17 +82,25 @@ export const OrderById = () => {
         })
       )}
       <div className="order-footer">
-        <button onClick={() => finish()}>Hisobni yakunlash</button>
+        <button onClick={() => finish()} aria-label="close this order">
+          Hisobni yakunlash
+        </button>
         <button
           onClick={() =>
             navigate(
               `/update-order${newLocation}/${data?.innerData[0]?.id}/${queue}`
             )
           }
+          aria-label="add other order to thir order"
         >
           Buyutma qo'shish
         </button>
-        <button onClick={() => setOpen(true)}>Buyurtmani o'tkazish</button>
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="transaction thir order tho other waiter"
+        >
+          Buyurtmani o'tkazish
+        </button>
       </div>
       <TransactionWaiter
         data={[]}
@@ -143,6 +151,7 @@ export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
                       : "resolve_option"
                   }
                   key={item.id}
+                  aria-label="the modal of transaction order"
                 >
                   <input type="radio" name="worker" value={item?.id} />
                   <span style={{ textTransform: "capitalize" }}>
@@ -153,10 +162,14 @@ export const TransactionWaiter = ({ open, setOpen, t_id, res_id, lc }) => {
             })}
           </div>
           <div className="resolve_options resolve_btn_box">
-            <button type="button" onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="close this modal"
+            >
               Bekor qilish
             </button>
-            <button>OK</button>
+            <button aria-label="submit">OK</button>
           </div>
         </form>
       </div>

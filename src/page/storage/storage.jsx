@@ -59,10 +59,14 @@ export const Storage = () => {
                     : setAllDocuments("main", data?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
-          <label onClick={() => setSort({ id: 1, state: !sort.state })}>
+          <label
+            onClick={() => setSort({ id: 1, state: !sort.state })}
+            aria-label="for sort data and see al info about this product"
+          >
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -103,6 +107,7 @@ export const Storage = () => {
                       dispatch(setDocuments("main", item));
                       navigate(`?page-code=main`);
                     }}
+                    aria-label="checked this elements"
                   >
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>

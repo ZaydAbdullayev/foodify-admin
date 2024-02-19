@@ -116,6 +116,7 @@ export const StorageCarryUp = () => {
                     : setAllDocuments("carry", cuttingData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -191,6 +192,7 @@ export const StorageCarryUp = () => {
                         dispatch(setDocuments("carry", item));
                         navigate(`?page-code=carry`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

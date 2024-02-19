@@ -81,12 +81,20 @@ export const Navbar = () => {
       {status?.includes(0) && (
         <form className="short_hands">
           {status?.includes(1) && (
-            <button type="button" onClick={openUModal}>
+            <button
+              type="button"
+              onClick={openUModal}
+              aria-label="open modal belong's to active page"
+            >
               <BiPlus />
             </button>
           )}
           {status.includes(101) && (
-            <button type="button" onClick={openUModal}>
+            <button
+              type="button"
+              onClick={openUModal}
+              aria-label="open modal for add table's modal"
+            >
               <b>+</b>
               <MdTableBar />{" "}
             </button>
@@ -100,6 +108,7 @@ export const Navbar = () => {
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
               onClick={openUModalU}
+              aria-label="open modal for edit belong's active page"
             >
               <BiEdit />
             </button>
@@ -113,6 +122,7 @@ export const Navbar = () => {
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
               onClick={() => deleteDocuments()}
+              aria-label="open modal for delete belong's active page"
             >
               <MdDelete />
             </button>
@@ -137,17 +147,24 @@ export const Navbar = () => {
       {status?.length === 0 && <i></i>}
       <div className="profile">
         {department === "owner" && (
-          <span onClick={() => navigate("/statistics")}>
+          <span
+            onClick={() => navigate("/statistics")}
+            aria-label="target statistics page"
+          >
             <ImStatsBars />
           </span>
         )}
-        <span onClick={() => navigate("/nothifications")}>
+        <span
+          onClick={() => navigate("/nothifications")}
+          aria-label="target nothification page"
+        >
           <FaBell />
         </span>
         <img
           src={user?.user?.img || default_img}
           alt="user_photo"
           onClick={openModal}
+          aria-label="user's image and open the modal when click"
         />
       </div>
       <div
@@ -158,15 +175,30 @@ export const Navbar = () => {
           <b>{name}</b>
           <figure>
             <img src={user?.user?.img || default_img} alt="user_photo" />
-            <button onClick={closeModal}>x</button>
+            <button
+              onClick={closeModal}
+              aria-label="close user's information modal"
+            >
+              x
+            </button>
           </figure>
         </div>
         <ul>
-          <Link to="/">Ma'lumotlarim</Link>
-          <Link to="/">Manzillarim</Link>
-          <Link to="/my-receive-orders">Buyurtlarim</Link>
-          <Link to="/">Bildirishnomalar</Link>
-          <li onClick={log_out}>Chiqish</li>
+          <Link to="/" aria-label="Ma'lumotlarim">
+            Ma'lumotlarim
+          </Link>
+          <Link to="/" aria-label="Manzillarim">
+            Manzillarim
+          </Link>
+          <Link to="/my-receive-orders" aria-label="Buyurtlarim">
+            Buyurtlarim
+          </Link>
+          <Link to="/" aria-label="Bildirishnomalar">
+            Bildirishnomalar
+          </Link>
+          <li onClick={log_out} aria-label="log out">
+            Chiqish
+          </li>
         </ul>
       </div>
     </div>

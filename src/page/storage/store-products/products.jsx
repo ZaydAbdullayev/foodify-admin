@@ -139,6 +139,7 @@ export const StorageProducts = () => {
                     : setAllDocuments("products", products.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -148,6 +149,7 @@ export const StorageProducts = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size }}
                 key={index}
+                aria-label="sort data down of top or top of down"
               >
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
@@ -202,6 +204,7 @@ export const StorageProducts = () => {
                         dispatch(setDocuments("products", item));
                         navigate(`?page-code=products`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

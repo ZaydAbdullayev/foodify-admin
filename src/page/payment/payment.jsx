@@ -122,8 +122,18 @@ export const Payment = () => {
                 <span>{item?.total} so'm</span>
               </p>
               <div className="p_btn__box">
-                <button onClick={() => getDetails(item.id)}>Edit</button>
-                <button onClick={() => getDetails(item.id)}>Payment</button>
+                <button
+                  onClick={() => getDetails(item.id)}
+                  aria-label="Edit this product for payment"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => getDetails(item.id)}
+                  aria-label="Payment this product for payment"
+                >
+                  Payment
+                </button>
               </div>
             </div>
           );

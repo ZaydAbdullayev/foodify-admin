@@ -74,6 +74,7 @@ export const Sidebar = () => {
                     : "menu_box_item"
                 }
                 onClick={(e) => handleCategoryClick(e, { id: item?.id })}
+                aria-label="links section"
               >
                 <span>{item?.icon}</span>
                 {item.id === activeCategoryId && (

@@ -116,6 +116,7 @@ export const StorageDamaged = () => {
                     : setAllDocuments("damaged", demagedData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -191,6 +192,7 @@ export const StorageDamaged = () => {
                         dispatch(setDocuments("damaged", item));
                         navigate(`?page-code=damaged`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

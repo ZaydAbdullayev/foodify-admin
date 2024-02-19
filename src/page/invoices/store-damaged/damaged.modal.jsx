@@ -144,7 +144,7 @@ export const InvoicesModal = ({
         setActivePart={setActivePart}
       >
         <div className="product_box_item">
-          <label>
+          <label aria-label="checked this elements">
             <input type="checkbox" name="id" onClick={() => getProduct(data)} />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>

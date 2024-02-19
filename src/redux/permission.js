@@ -1,5 +1,6 @@
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 const user = JSON.parse(localStorage.getItem("user"))?.user || {};
+const res_id = user?.id || null;
 
 export const rePermission = (state = dep, action) => {
   switch (action.type) {
@@ -10,7 +11,7 @@ export const rePermission = (state = dep, action) => {
   }
 };
 
-export const resId = (state = user?.id, action) => {
+export const resId = (state = res_id, action) => {
   switch (action.type) {
     case "RES_ID":
       return action.payload;

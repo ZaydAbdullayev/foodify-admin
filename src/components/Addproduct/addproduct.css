@@ -154,6 +154,13 @@
   margin: 3% 0 2%;
 }
 
+/* =========== img section ============ */
+.view-selected-image {
+  width: calc(320px + (500 - 320) * (100vw - 320px) / (1440 - 320));
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
 @media (max-width: 768px) {
   .product_item {
     padding: var(--pd3);

@@ -51,8 +51,10 @@ export const DocumentByC = memo(({ open, setOpen }) => {
           )}
         </div>
         <div className="category_footer">
-          <button onClick={() => setOpen(false)}>Orqaga</button>
-          <button>lorem</button>
+          <button onClick={() => setOpen(false)} aria-label="backword">
+            Orqaga
+          </button>
+          <button aria-label="as">lorem</button>
         </div>
       </div>
     </div>

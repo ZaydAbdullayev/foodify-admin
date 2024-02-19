@@ -100,6 +100,7 @@ export const InvoicesMakingFood = () => {
                     : setAllDocuments("making", makedFood?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -171,6 +172,7 @@ export const InvoicesMakingFood = () => {
                         dispatch(setDocuments("making", item));
                         navigate(`?page-code=making`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

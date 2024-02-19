@@ -184,6 +184,7 @@ export const UniversalFilterBox = () => {
           style={
             search.length ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
           }
+          aria-label="to click for search"
         >
           <BsSearch />
         </button>

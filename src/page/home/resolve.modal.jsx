@@ -69,6 +69,7 @@ export const ResolveModal = () => {
               className={
                 option === 1 ? "resolve_option active" : "resolve_option"
               }
+              aria-label="canceled user"
             >
               <input type="radio" name="description" value="cancel" />
               <span>Mijoz bekor qildi</span>
@@ -78,6 +79,7 @@ export const ResolveModal = () => {
               className={
                 option === 2 ? "resolve_option active" : "resolve_option"
               }
+              aria-label="waiter bad"
             >
               <input type="radio" name="description" value="waiter_bad" />
               <span>Offitsant hatosi</span>
@@ -87,6 +89,7 @@ export const ResolveModal = () => {
               className={
                 option === 3 ? "resolve_option active" : "resolve_option"
               }
+              aria-label="write other cancel reason"
             >
               <input type="radio" name="description" value="other" />
               <span>Boshqa...</span>
@@ -105,6 +108,7 @@ export const ResolveModal = () => {
               className={
                 dailyLimit ? "resolve_option2 active" : "resolve_option2"
               }
+              aria-label="back to stop list"
             >
               <span>
                 StopListga qaytarilsinmi?: {dailyLimit ? " Ha" : " Yo'q"}
@@ -113,19 +117,24 @@ export const ResolveModal = () => {
             <label
               onClick={() => setStorage(!storage)}
               className={storage ? "resolve_option2 active" : "resolve_option2"}
+              aria-label="back to storage"
             >
               <span>Omborga qaytarilsinmi?: {storage ? " Ha" : " Yo'q"}</span>
             </label>
           </div>
           <div className="resolve_options resolve_btn_box">
-            <button type="button" onClick={() => dispatch(acResolve({}))}>
+            <button
+              type="button"
+              onClick={() => dispatch(acResolve({}))}
+              aria-label="close modal"
+            >
               Bekor qilish
             </button>
             <button>OK</button>
           </div>
         </form>
       </div>
-      <i onClick={() => dispatch(acResolve({}))}></i>
+      <i onClick={() => dispatch(acResolve({}))} aria-label="close modal"></i>
     </div>
   );
 };

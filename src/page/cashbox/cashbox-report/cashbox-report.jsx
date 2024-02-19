@@ -109,6 +109,7 @@ export const TransactionRapor = () => {
                 onClick={() => {
                   setSort({ id: index, state: !sort.state });
                 }}
+                aria-label="sort data down of top or top of down"
               >
                 {item?.name}{" "}
                 {sort.id === index ? (

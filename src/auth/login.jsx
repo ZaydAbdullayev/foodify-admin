@@ -105,7 +105,11 @@ export const Login = () => {
             className="input"
             style={err ? { border: "1px solid tomato" } : {}}
           />
-          <span onClick={handleShow} style={show ? {} : { color: "orange" }}>
+          <span
+            onClick={handleShow}
+            style={show ? {} : { color: "orange" }}
+            aria-label="parolni ko'rish"
+          >
             {show ? <BsEyeSlash /> : <BsEye />}
           </span>
           <p style={err ? { display: "flex" } : {}} className="failed">
@@ -221,14 +225,24 @@ export const CheackDepartment = () => {
             value={pass}
           />
           {digits.map((digit) => (
-            <button key={digit} onClick={() => setPass(`${pass}${digit}`)}>
+            <button
+              key={digit}
+              onClick={() => setPass(`${pass}${digit}`)}
+              aria-label="son yozish"
+            >
               {digit}
             </button>
           ))}
-          <button onClick={() => setPass("")}>AC</button>
-          <button onClick={removeLastDigit}>⨉</button>
+          <button onClick={() => setPass("")} aria-label="delete all number">
+            AC
+          </button>
+          <button onClick={removeLastDigit} aria-label="delete last number">
+            ⨉
+          </button>
         </label>
-        <button onClick={loginD}>Kirish</button>
+        <button onClick={loginD} aria-label="log in (hisobga kirish)">
+          Kirish
+        </button>
       </label>
     </div>
   );

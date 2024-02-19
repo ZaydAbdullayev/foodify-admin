@@ -44,36 +44,41 @@ export const Addproduct = memo(() => {
 
   return (
     <div className={image.st ? "product_box open" : "product_box"}>
-      <form className="add_product" onSubmit={handleSubmit}>
-        <label
-          style={files.length ? { border: "none" } : {}}
-          className="product_img"
-          htmlFor="image"
-        >
-          {files.length ? "" : <IoIosRestaurant />}
-          <input
-            type="file"
-            name="img"
-            accept="image/*"
-            required
-            onChange={takeImg}
-            id="image"
-          />
-          {files.length > 0 && (
-            <img src={files[0]} alt="Selected" className="selected_image" />
-          )}
-        </label>
-        <button
-          type="button"
-          className="product_box_btn"
-          onClick={() => dispatch(acGetUrl({ st: false, img: "" }))}
-        >
-          Chiqish
-        </button>
-        <button className="product_box_btn relative">
-          {loading ? <LoadingBtn /> : "Tasdiqlash"}
-        </button>
-      </form>
+      {image?.type === "view" ? (
+        <img src={image?.img} alt="product's images" />
+      ) : (
+        <form className="add_product" onSubmit={handleSubmit}>
+          <label
+            style={files.length ? { border: "none" } : {}}
+            className="product_img"
+            htmlFor="image"
+          >
+            {files.length ? "" : <IoIosRestaurant />}
+            <input
+              type="file"
+              name="img"
+              accept="image/*"
+              required
+              onChange={takeImg}
+              id="image"
+            />
+            {files.length > 0 && (
+              <img src={files[0]} alt="Selected" className="selected_image" />
+            )}
+          </label>
+          <button
+            type="button"
+            className="product_box_btn"
+            onClick={() => dispatch(acGetUrl({ st: false, img: "" }))}
+            aria-label="get out from add picture page"
+          >
+            Chiqish
+          </button>
+          <button className="product_box_btn relative">
+            {loading ? <LoadingBtn /> : "Tasdiqlash"}
+          </button>
+        </form>
+      )}
     </div>
   );
 });
@@ -136,11 +141,12 @@ export const ShowProduct = memo(() => {
         <button
           className="product_box_btn"
           onClick={() => navigate("/managment")}
+          aria-label="backword all products page"
         >
           Orqaga qaytish
         </button>
       </div>
-      <i onClick={() => navigate("/managment")}></i>
+      <i onClick={() => navigate("/managment")} aria-label="close modal"></i>
     </div>
   );
 });

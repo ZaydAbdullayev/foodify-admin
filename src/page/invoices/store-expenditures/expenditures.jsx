@@ -95,6 +95,7 @@ export const StorageExpenditures = () => {
                     : setAllDocuments("invoice", invoiceData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -167,6 +168,7 @@ export const StorageExpenditures = () => {
                         dispatch(setDocuments("invoice", item));
                         navigate(`?page-code=invoice`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

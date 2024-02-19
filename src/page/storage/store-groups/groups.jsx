@@ -91,6 +91,7 @@ export const StorageGroups = () => {
                     : setAllDocuments("ingGroup", groupData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -157,6 +158,7 @@ export const StorageGroups = () => {
                         dispatch(setDocuments("ingGroup", item));
                         navigate(`?page-code=ingGroup`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

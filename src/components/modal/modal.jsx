@@ -261,7 +261,7 @@ export const UniversalModal = ({
             {loading ? <LoadingBtn /> : "Qo'shish"}
           </button>
         </form>
-        <i onClick={() => setClose()}></i>
+        <i onClick={() => setClose()} aria-label="close modal"></i>
       </div>
     </div>
   );

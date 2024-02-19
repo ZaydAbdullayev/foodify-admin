@@ -101,6 +101,7 @@ export const StorageCutting = () => {
                     : setAllDocuments("cutting", dmData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -168,6 +169,7 @@ export const StorageCutting = () => {
                         dispatch(setDocuments("cutting", item));
                         navigate(`?page-code=cutting`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

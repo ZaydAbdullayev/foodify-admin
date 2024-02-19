@@ -62,6 +62,7 @@ export const StorageCatgegories = () => {
                     : setAllDocuments("category", storeData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -140,6 +141,7 @@ export const StorageCatgegories = () => {
                         dispatch(setDocuments("category", item));
                         navigate(`?page-code=category`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

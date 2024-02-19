@@ -130,7 +130,10 @@ export const AddWorker = ({ open, setOpen, state }) => {
           </form>
         )}
 
-        <i onClick={() => setOpen(false)}></i>
+        <i
+          onClick={() => setOpen(false)}
+          aria-label="close add new worker modal"
+        ></i>
       </div>
     </div>
   );

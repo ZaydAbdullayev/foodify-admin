@@ -116,6 +116,7 @@ export const ReportSuppliers = () => {
                       : "flex-end"
                     : "flex-start",
                 }}
+                aria-label="sort data down of top or top of down"
                 key={index}
               >
                 <p>{item.name}</p>
@@ -190,6 +191,7 @@ export const ReportSuppliers = () => {
                         justifyContent: "center",
                       }}
                       onClick={openUModal}
+                      aria-label="to click to add paymetn this order"
                     >
                       <u>to'lov</u>
                     </p>

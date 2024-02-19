@@ -131,6 +131,7 @@ export const ReportOrders = () => {
                     : setAllDocuments("orderReport", storageD)
                 );
               }}
+              aria-label="for chacked this product"
             />
           </label>
           <p>№</p>
@@ -140,6 +141,7 @@ export const ReportOrders = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item?.size }}
                 key={index}
+                aria-label="for sort data and see al info about this product"
               >
                 <p>{item?.name}</p>
                 {item.dis ? (
@@ -192,6 +194,7 @@ export const ReportOrders = () => {
                         dispatch(setDocuments("orderReport", item));
                         navigate(`?page-code=orderReport`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={chek} />
                     </label>

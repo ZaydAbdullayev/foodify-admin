@@ -66,24 +66,30 @@ export const MakedFoods = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
+              aria-label='target this link "/orders"'
             >
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active" : ""}
               onClick={() => navigate("/orders/cooking/food")}
+              aria-label='target this link "/orders/cooking/food"'
             >
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
+              aria-label='target this link "/orders/prepared/food"'
             >
               <MdFastfood />
             </span>
           </span>
           <i></i>
-          <span onClick={() => setFull(!full)}>
+          <span
+            onClick={() => setFull(!full)}
+            aria-label="enter fullscreen and exit fullscreen"
+          >
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>

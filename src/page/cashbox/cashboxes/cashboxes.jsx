@@ -45,7 +45,7 @@ export const Cashboxes = () => {
           <span>Kassalar ro'yxati</span>
         </p>
         <div className="storage_body_item _item-header">
-          <label>
+          <label aria-label="checked this elements">
             <input
               type="checkbox"
               name="id"
@@ -60,7 +60,10 @@ export const Cashboxes = () => {
             />
           </label>
           <p>№</p>
-          <label onClick={() => setSort({ id: 1, state: !sort.state })}>
+          <label
+            onClick={() => setSort({ id: 1, state: !sort.state })}
+            aria-label="sort data down of top or top of down"
+          >
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -94,6 +97,7 @@ export const Cashboxes = () => {
                   }}
                 >
                   <label
+                    aria-label="checked this elements"
                     onClick={() => {
                       dispatch(
                         !acItem?.id ? acActiveThing(item) : acPassiveThing()

@@ -91,7 +91,10 @@ export const Workers = () => {
       <div className="workers_header">
         <p>Ishchilar</p>
         {permission && (
-          <button onClick={() => openModal(1)}>
+          <button
+            onClick={() => openModal(1)}
+            aria-label="open modal for add worker"
+          >
             Ishchi qo'shish <HiUserPlus />
           </button>
         )}
@@ -120,6 +123,7 @@ export const Workers = () => {
                     onClick={() =>
                       handleEdit({ id: worker.id, status: !worker.status })
                     }
+                    aria-label="to change this worker status active/passsive"
                   >
                     <GoDotFill />
                   </span>
@@ -183,6 +187,7 @@ export const Workers = () => {
                       <span
                         onClick={() => setShow(show === "" ? worker.id : "")}
                         style={show !== worker.id ? {} : { color: "orange" }}
+                        aria-label="see password of the this worker"
                       >
                         {show !== worker.id ? <BsEyeSlash /> : <BsEye />}
                       </span>
@@ -194,6 +199,7 @@ export const Workers = () => {
                     <button
                       style={{ background: "red" }}
                       onClick={() => setUpdate(null)}
+                      aria-label=" cancel changes"
                     >
                       <ImCancelCircle />
                     </button>
@@ -202,6 +208,7 @@ export const Workers = () => {
                     <button
                       style={{ background: "#76c893" }}
                       onClick={() => handleEdit({ ...info, id: worker.id })}
+                      aria-label="confirm changes"
                     >
                       <FaCheck />
                     </button>
@@ -209,11 +216,15 @@ export const Workers = () => {
                     <button
                       style={{ background: "#76c893" }}
                       onClick={() => setUpdate(worker.id)}
+                      aria-label="open change mode this worker's info"
                     >
                       <MdModeEditOutline />
                     </button>
                   )}
-                  <button onClick={() => handleDelete(worker.id)}>
+                  <button
+                    onClick={() => handleDelete(worker.id)}
+                    aria-label="delete this worker"
+                  >
                     <MdDelete />
                   </button>
                 </div>
@@ -221,7 +232,11 @@ export const Workers = () => {
             );
           })
         ) : (
-          <button className="universal_key" onClick={() => openModal(2)}>
+          <button
+            className="universal_key"
+            onClick={() => openModal(2)}
+            aria-label="open modal for add new worker"
+          >
             <span>+</span>
             <FaUserLock />
           </button>

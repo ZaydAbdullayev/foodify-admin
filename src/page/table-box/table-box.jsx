@@ -57,6 +57,7 @@ export const TableBox = () => {
                 }
                 key={item}
                 onClick={() => filterData(item)}
+                aria-label="filter data  according to this category"
               >
                 {item}
               </span>

@@ -30,6 +30,7 @@ export const Table = ({ data = [] }) => {
               ? "var(--table-w-3)"
               : "var(--table-w-1)",
         }}
+        aria-label="tables component"
       >
         <div
           className={

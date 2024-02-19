@@ -59,6 +59,7 @@ export const StorageSupplier = () => {
                     : setAllDocuments("supplier", suplierData?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -140,6 +141,7 @@ export const StorageSupplier = () => {
                         dispatch(setDocuments("supplier", item));
                         navigate(`?page-code=supplier`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" defaultChecked={check} />
                     </label>

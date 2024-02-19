@@ -52,6 +52,7 @@ export const Restaurant = () => {
         <label
           style={files.length ? { border: "none" } : {}}
           className="add_img"
+          aria-label="the aria for add restaurant's image"
         >
           {files.length ? "" : <MdOutlineAddBusiness />}
           <input
@@ -72,7 +73,7 @@ export const Restaurant = () => {
           placeholder="Restoran nomini kiriting"
           required
         />
-        <label className="label">
+        <label className="label" aria-label="see password">
           <input
             type={show ? "password" : "text"}
             name="password"
@@ -113,7 +114,7 @@ export const Restaurant = () => {
           </div>
         </div>
         <input type="hidden" name="role" value="restaurant" />
-        <button className="relative">
+        <button className="relative" aria-label="add values">
           {loading ? (
             <LoadingBtn />
           ) : (

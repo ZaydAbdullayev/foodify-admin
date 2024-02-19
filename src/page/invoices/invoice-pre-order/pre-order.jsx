@@ -126,6 +126,7 @@ export const InvoicePreOrders = () => {
                     : setAllDocuments("preOrder", preOrder?.data)
                 );
               }}
+              aria-label="checked this elements"
             />
           </label>
           <p>№</p>
@@ -194,6 +195,7 @@ export const InvoicePreOrders = () => {
                         dispatch(setDocuments("preOrder", item));
                         navigate(`?page-code=preOrder`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>

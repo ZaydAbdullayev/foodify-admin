@@ -77,8 +77,14 @@ export const TransactionGroups = () => {
       <div className="storage_body">
         <i>
           <GoDotFill className="active" />
-          <GoDotFill onClick={() => navigate("/sections/groups")} />
-          <GoDotFill onClick={() => navigate("/sections/invoice-group")} />
+          <GoDotFill
+            onClick={() => navigate("/sections/groups")}
+            aria-label="target thi link '/sections/groups'"
+          />
+          <GoDotFill
+            onClick={() => navigate("/sections/invoice-group")}
+            aria-label="target thi link '/sections/invoice-group'"
+          />
         </i>
         <p {...handlers} className="df-aic-gap">
           <span>
@@ -86,7 +92,7 @@ export const TransactionGroups = () => {
           </span>
         </p>
         <div className="storage_body_item _item-header">
-          <label>
+          <label aria-label="checked this elements">
             <input
               type="checkbox"
               name="id"
@@ -107,6 +113,7 @@ export const TransactionGroups = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size, border: "none" }}
                 key={index}
+                aria-label=" sort data down of top or top of down"
               >
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
@@ -150,6 +157,7 @@ export const TransactionGroups = () => {
                       dispatch(setDocuments("cashboxGr", item));
                       navigate(`?page-code=cashboxGr`);
                     }}
+                    aria-label="checked this elements"
                   >
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>

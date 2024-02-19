@@ -33,6 +33,7 @@ export const UniversalControlModal = ({
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
+  const [imgFullScreen, setImgFullScreen] = useState(false);
   //update points
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
@@ -259,11 +260,20 @@ export const UniversalControlModal = ({
           open ? "u-control_action__box active" : "u-control_action__box"
         }
       >
-        {image.img !== "" && <img src={image?.img} alt="." />}
+        {image.img !== "" && (
+          <figure
+            onClick={() =>
+              dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))
+            }
+          >
+            <img src={image?.img} alt="peoduct images" />
+          </figure>
+        )}
         {type === "product" && (
           <button
             type="button"
             onClick={() => dispatch(acGetUrl({ st: true, img: "" }))}
+            aria-label="modal of add image"
           >
             <RiImageAddFill />
           </button>
@@ -272,13 +282,21 @@ export const UniversalControlModal = ({
           type="button"
           className="relative"
           onClick={() => fetchValues(fetchdata)}
+          aria-label="add values of the all input's value"
         >
           {loading ? <LoadingBtn /> : <FaCheck />}
         </button>
-        <button type="submit">
+        <button
+          type="submit"
+          aria-label="calculate values of the all input's value"
+        >
           <FaCalculator />
         </button>
-        <button type="button" onClick={() => closeModal()}>
+        <button
+          type="button"
+          onClick={() => closeModal()}
+          aria-label="close modal"
+        >
           <TbArrowBarLeft />
         </button>
       </div>
@@ -323,19 +341,25 @@ export const UniversalProductControl = ({
                 <span
                   className={activePart === 1 ? "active" : "passive"}
                   onClick={() => setActivePart(1)}
+                  aria-label="target ingredient section"
                 >
                   ingredientlar
                 </span>
                 <span
                   className={activePart === 2 ? "active" : "passive"}
                   onClick={() => setActivePart(2)}
+                  aria-label=" target product section"
                 >
                   taomlar
                 </span>
               </>
             )}
           </div>
-          <input type="search" placeholder="Qidirish..." />
+          <input
+            type="search"
+            placeholder="Qidirish..."
+            aria-label="search ingredient or products for add"
+          />
           {activePart === 1 && (
             <>
               <select>

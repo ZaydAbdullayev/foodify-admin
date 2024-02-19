@@ -186,24 +186,30 @@ export const Home = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
+              aria-label='"target thi link "/orders"'
             >
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active after before" : ""}
               onClick={() => navigate("/orders/cooking/food")}
+              aria-label='"target thi link "/orders/cooking/food"'
             >
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
+              aria-label='target thi link "/orders/prepared/food"'
             >
               <MdFastfood />
             </span>
           </span>
           <i></i>
-          <span onClick={() => setFull(!full)}>
+          <span
+            onClick={() => setFull(!full)}
+            aria-label="enter fullscrenn or exit fullscreen"
+          >
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
@@ -251,6 +257,7 @@ export const Home = () => {
                             onClick={() =>
                               orderAccept({ ...order, status: 4 }, received_at)
                             }
+                            aria-label="cancel this order"
                           >
                             {loading.id === order.id && loading.status === 4 ? (
                               <LoadingBtn />
@@ -278,6 +285,7 @@ export const Home = () => {
                                 received_at
                               );
                             }}
+                            aria-label="to accept or to prepare"
                           >
                             {loading.id === order.id && loading.status === 1 ? (
                               <LoadingBtn />
@@ -345,6 +353,7 @@ export const Home = () => {
                                       })
                                     )
                                   }
+                                  aria-label="cancel this product"
                                 >
                                   {loading.id === product.id &&
                                   loading.status === 3 ? (
@@ -381,6 +390,7 @@ export const Home = () => {
                                     });
                                   }
                                 }}
+                                aria-label="to accept or to prepare this product"
                               >
                                 {product?.status === 1 ? (
                                   <HiCheck />

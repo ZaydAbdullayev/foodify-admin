@@ -119,7 +119,11 @@ export const Products = () => {
             onChange={handleSearch}
           />
         </form>
-        <span className="more" onClick={() => navigate("/sections/s-products")}>
+        <span
+          className="more"
+          onClick={() => navigate("/sections/s-products")}
+          aria-label='target this link "/sections/s-products" for can see more info'
+        >
           Ko'proq <IoIosMore />
         </span>
       </div>
@@ -145,7 +149,10 @@ export const Products = () => {
             const st = parseInt(product?.stop_list);
             return (
               <div className="item" key={product.id}>
-                <label className="img_box">
+                <label
+                  className="img_box"
+                  aria-label="the input is update product image"
+                >
                   <span className="upload_img">
                     Mahsulot rasmini o'zgartirish
                   </span>
@@ -230,6 +237,7 @@ export const Products = () => {
                       onClick={() =>
                         handleUpdate({ id: product.id, status: 1 })
                       }
+                      aria-label="change to active this product for sell"
                     >
                       active
                     </span>
@@ -242,6 +250,7 @@ export const Products = () => {
                       onClick={() =>
                         handleUpdate({ id: product.id, status: 0 })
                       }
+                      aria-label="change to  passive this product for sell"
                     >
                       passive
                     </span>
@@ -270,15 +279,22 @@ export const Products = () => {
                           onClick={() =>
                             handleUpdate({ ...info, id: product.id })
                           }
+                          aria-label="to confirm chnages"
                         >
                           <FaCheck />
                         </span>{" "}
-                        <span onClick={() => setUpdate(false)}>
+                        <span
+                          onClick={() => setUpdate(false)}
+                          aria-label="to cancel  thi s changes"
+                        >
                           <ImCancelCircle />
                         </span>
                       </>
                     ) : (
-                      <span onClick={() => setUpdate(product.id)}>
+                      <span
+                        onClick={() => setUpdate(product.id)}
+                        aria-label="to click edit this product info"
+                      >
                         <FaPen />
                       </span>
                     )}
@@ -287,6 +303,7 @@ export const Products = () => {
                   <button
                     style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
                     onClick={() => handleDelete(product.id)}
+                    aria-label="the button for delete this product"
                   >
                     <AiFillDelete />
                   </button>
@@ -294,6 +311,7 @@ export const Products = () => {
                   <button
                     style={{ fontSize: "var(--fs4)", color: "#219ebc" }}
                     onClick={() => navigate(`/more/info/${product.id}`)}
+                    aria-label="the button is for get more info about this product"
                   >
                     <TbInfoSquareRounded />
                   </button>

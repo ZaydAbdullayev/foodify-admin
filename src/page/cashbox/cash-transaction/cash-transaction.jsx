@@ -95,7 +95,7 @@ export const CashboxTransaction = () => {
           <span>Tranzaksiyalar</span>
         </p>
         <div className="storage_body_item _item-header">
-          <label>
+          <label aria-label="checked this elements">
             <input
               type="checkbox"
               name="id"
@@ -171,6 +171,7 @@ export const CashboxTransaction = () => {
                         dispatch(setDocuments("trsn", item));
                         navigate(`?page-code=trsn`);
                       }}
+                      aria-label="checked this elements"
                     >
                       <input
                         type="checkbox"

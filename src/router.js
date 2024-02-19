@@ -81,11 +81,21 @@ export const Router = () => {
   }
 
   if (nothificate) {
-    sound.play();
-    setTimeout(() => {
-      dispatch(acNothification(false));
-      sound.stop();
-    }, 1000);
+    document.addEventListener(
+      "load",
+      () => {
+        var audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        if (audioContext) {
+          sound.play();
+          setTimeout(() => {
+            dispatch(acNothification(false));
+            sound.stop();
+          }, 1000);
+        }
+      },
+      { once: true }
+    );
   }
 
   return (

@@ -103,6 +103,7 @@ export const ReportIngredients = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size, border: "none" }}
                 key={index}
+                aria-label="sort data for down of otp or top of down"
               >
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
