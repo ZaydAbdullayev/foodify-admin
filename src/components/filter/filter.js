@@ -1,6 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
+import { DatePicker, Select } from "antd";
+import dayjs from "dayjs";
 
 import { acGetNewData } from "../../redux/search";
 import { useFetchDataQuery } from "../../service/fetch.service";
@@ -10,6 +12,7 @@ import { calculateWeekRange } from "../../service/calc-date.service";
 
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+const { RangePicker } = DatePicker;
 
 export const UniversalFilter = (data, key, value) => {
   return data.filter((item) => {
@@ -85,69 +88,74 @@ export const UniversalFilterBox = () => {
       )}
 
       {status?.includes(6) && (
-        <select onChange={(e) => uploadData(e, "date")}>
-          <option value={JSON.stringify({ start: today, end: today })}>
-            Bugun
-          </option>
-          <option value={JSON.stringify({ start: yesterday, end: today })}>
-            Kecha
-          </option>
-          <option
-            value={JSON.stringify({
-              start: beforeyesterday,
-              end: beforeyesterday,
-            })}
-          >
-            Avvalgi kun
-          </option>
-          <option value={JSON.stringify(thisWeek)}>Bu hafta</option>
-          <option value={JSON.stringify(lastWeek)}>O'tgan hafta</option>
-          <option value={JSON.stringify(thisMonth)}>Bu oy</option>
-          <option value={JSON.stringify(lastMonth)}>O'tgan oy</option>
-          <option value={JSON.stringify({ start: thisYear, end: today })}>
-            Bu yil
-          </option>
-        </select>
+        <Select
+          defaultValue={{
+            value: JSON.stringify({ start: today, end: today }),
+            label: "Bugun",
+          }}
+          aria-label="select data from to end"
+          onChange={(e) => uploadData(e, "date")}
+          options={[
+            {
+              value: JSON.stringify({ start: today, end: today }),
+              label: "Bugun",
+            },
+            {
+              value: JSON.stringify({ start: yesterday, end: today }),
+              label: "Kecha",
+            },
+            {
+              value: JSON.stringify({
+                start: beforeyesterday,
+                end: beforeyesterday,
+              }),
+              label: "Avvalgi kun",
+            },
+            { value: JSON.stringify(thisWeek), label: "Bu hafta" },
+            { value: JSON.stringify(lastWeek), label: "O'tgan hafta" },
+            { value: JSON.stringify(thisMonth), label: "Bu oy" },
+            { value: JSON.stringify(lastMonth), label: "O'tgan oy" },
+            {
+              value: JSON.stringify({ start: thisYear, end: today }),
+              label: "Bu yil",
+            },
+          ]}
+        />
       )}
+
       {status?.includes(7) && (
-        <>
-          <label>
-            <input
-              type="date"
-              name="start"
-              value={date?.start}
-              onChange={(e) => uploadData(e, "start")}
-            />
-          </label>
-          <label>
-            <input
-              type="date"
-              name="end"
-              value={date?.end}
-              onChange={(e) => uploadData(e, "end")}
-            />
-          </label>
-        </>
+        <label>
+          <RangePicker
+            defaultValue={[dayjs(today), dayjs(today)]}
+            aria-label="select data from to end"
+          />
+        </label>
       )}
       {status?.includes(8) && (
-        <select onChange={(e) => uploadData(e, "cashier")}>
-          <option value="all">Kassa bo'yicha</option>
-          {data?.data?.map((item) => (
-            <option value={item.id} key={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          defaultValue={{ value: "all", label: "Kassa bo'yicha" }}
+          aria-label="select data from to end"
+          onChange={(e) => uploadData(e, "cashier")}
+          options={
+            data?.data?.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })) || []
+          }
+        />
       )}
       {status?.includes(9) && (
-        <select onChange={(e) => uploadData(e, "storage")}>
-          <option value="all">Ombor bo'yicha</option>
-          {data?.data?.map((item) => (
-            <option value={item.id} key={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          defaultValue={{ value: "all", label: "Ombor bo'yicha" }}
+          aria-label="select data from to end"
+          onChange={(e) => uploadData(e, "storage")}
+          options={
+            data?.data?.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })) || []
+          }
+        />
       )}
       {status?.includes(10) && (
         <label>

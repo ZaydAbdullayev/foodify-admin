@@ -33,7 +33,6 @@ export const UniversalControlModal = ({
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
-  const [imgFullScreen, setImgFullScreen] = useState(false);
   //update points
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();

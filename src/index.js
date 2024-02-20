@@ -5,6 +5,8 @@ import { Router } from "./router";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { SnackbarProvider } from "notistack";
+import { ConfigProvider } from "antd";
+import { themeConfig } from "./ant.theme-config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,9 +20,11 @@ root.render(
         }}
         autoHideDuration={2000}
       >
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
+        <ConfigProvider theme={themeConfig}>
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+        </ConfigProvider>
       </SnackbarProvider>
     </Provider>
   </Fragment>

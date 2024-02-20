@@ -20,7 +20,7 @@ export const Cashboxes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: cashboxData = [], isLoading } = useFetchDataQuery({
-    url: `get/cashbox/${user?.user?.id}`,
+    url: `get/cashbox/${user?.id}`,
     tags: ["cashbox"],
   });
   React.useEffect(() => {

@@ -184,7 +184,7 @@ export const InvoicesModal = ({
         />
         <input type="hidden" name="storage_id" value={id} />
         <input type="hidden" name="ingredient_id" value={ingID} />
-        <input type="hidden" name="waste" value={3844} />
+        <input type="hidden" name="waste" value={qty - total_quantity} />
       </UniversalForm>
       <UniversalProductControl
         activePart={activePart}
@@ -255,7 +255,10 @@ export const InvoicesModal = ({
                     <select
                       name="storage"
                       onChange={(e) =>
-                        getProduct({ ...item, storage: e.target.value }, 1)
+                        getProduct(
+                          { ...checked, st_receiver: e.target.value },
+                          1
+                        )
                       }
                     >
                       {acItem?.storage ? (
@@ -267,7 +270,7 @@ export const InvoicesModal = ({
                       )}
                       {storeData?.data?.map((item) => {
                         return (
-                          <option key={item?.id} value={item?.name}>
+                          <option key={item?.id} value={item?.id}>
                             {item?.name}
                           </option>
                         );
@@ -287,7 +290,7 @@ export const InvoicesModal = ({
                       name="amount"
                       defaultValue={acItem?.amount}
                       onChange={(e) =>
-                        getProduct({ ...item, amount: e.target.value }, 1)
+                        getProduct({ ...checked, amount: e.target.value }, 1)
                       }
                     />
                   )}

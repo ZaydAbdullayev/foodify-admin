@@ -31,7 +31,7 @@ export const CashboxTransaction = () => {
     tags: ["tr-group"],
   });
   const { data: cashTrData = [] } = useFetchDataQuery({
-    url: `get/transactions/${user?.user?.id}`,
+    url: `get/transactions/${user?.id}`,
     tags: ["cashbox-transaction"],
   });
   React.useEffect(() => {
