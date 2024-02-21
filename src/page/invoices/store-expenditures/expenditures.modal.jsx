@@ -7,6 +7,8 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { DatePicker, Select, InputNumber, Input } from "antd";
+import dayjs from "dayjs";
 
 export const InvoicesModal = ({
   checkedData,
@@ -19,6 +21,7 @@ export const InvoicesModal = ({
 }) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
+  const [values, setValues] = useState({});
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
@@ -49,15 +52,16 @@ export const InvoicesModal = ({
     return newItem;
   });
 
-  const handleSelectChange = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item?.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
-
-    setId(selectedId);
+  const handleSelectChange = (value) => {
+    const [status, data] = value.split("=");
+    if (status === "store") {
+      const [name, id] = data.split("|");
+      setId(id);
+      setValues({ ...values, name, id });
+    }
+    if (status === "group") {
+      setId({ ...values, gr_name: data });
+    }
   };
   useEffect(() => {
     if (acItem?.storage) {
@@ -70,6 +74,9 @@ export const InvoicesModal = ({
     }
   }, [acItem?.storage, setId, storeData?.data]);
   const num = acItem?.order ? acItem?.order : NUM.num;
+  const day = acItem?.date
+    ? acItem?.date
+    : new Date().toISOString().split("T")[0];
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -78,7 +85,7 @@ export const InvoicesModal = ({
       setCheckedData={setCheckedData}
     >
       <UniversalForm>
-        <input
+        {/* <input
           type="number"
           name="order"
           placeholder="Tartib raqam*"
@@ -86,51 +93,52 @@ export const InvoicesModal = ({
           defaultValue={num}
           autoComplete="off"
           style={{ "--input-width": "15%" }}
+        /> */}
+        <InputNumber
+          name="order"
+          required
+          defaultValue={num || 1}
+          min={1}
+          max={100000}
         />
-        <input
-          type="date"
+        <DatePicker
+          style={{ width: "15%" }}
           name="date"
-          style={{ "--input-width": "12%" }}
-          defaultValue={acItem?.date}
+          defaultValue={dayjs(day)}
         />
-        <select
-          name="storage"
-          style={{ "--input-width": "15%" }}
+        <Select
+          style={{ width: "15%" }}
+          defaultValue={{
+            value: "all",
+            label: "Ombor tanlang*",
+          }}
           onChange={handleSelectChange}
-        >
-          {acItem?.storage ? (
-            <option value={acItem?.storage}>{acItem?.storage}</option>
-          ) : (
-            <option value="default">Ombor tanlang*</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
+          options={storeData?.data?.map((item) => ({
+            value: `store=${item?.name}|${item?.id}`,
+            label: item?.name,
+          }))}
+        />
+        <input type="hidden" name="storage" value={values.name} />
+        <input type="hidden" name="storage_id" value={values.id} />
+        <Select
+          style={{ width: "15%" }}
+          name="group"
+          defaultValue={{
+            value: "all",
+            label: "Guruh tanlang*",
+          }}
+          options={groupsData?.data?.map((item) => {
+            return {
+              value: item?.name,
+              label: item?.name,
+            };
           })}
-        </select>
-        <select name="group">
-          {acItem?.group ? (
-            <option value={acItem?.group}>{acItem?.group}</option>
-          ) : (
-            <option value="default">Guruh tanlang*</option>
-          )}
-          {groupsData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
+        />
+        <Input
           name="description"
           defaultValue={acItem?.description ? acItem?.description : ""}
           placeholder="Tavsif*"
-          style={{ "--input-width": "12%" }}
+          style={{ width: "12%" }}
         />
       </UniversalForm>
       <UniversalProductControl

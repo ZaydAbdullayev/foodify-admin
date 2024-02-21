@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { DatePicker, Select } from "antd";
+import { DatePicker, Select, Input } from "antd";
 import dayjs from "dayjs";
 
 import { acGetNewData } from "../../redux/search";
@@ -67,7 +67,7 @@ export const UniversalFilterBox = () => {
   return (
     <div className="short-hands_sort__box">
       {status?.includes(5) && (
-        <label>
+        <label aria-label="to filter the data according by name">
           <input
             type="search"
             name="name"
@@ -77,7 +77,7 @@ export const UniversalFilterBox = () => {
         </label>
       )}
       {status?.includes(4) && (
-        <label>
+        <label aria-label="to filter the data according by group">
           <input
             type="search"
             name="groups"
@@ -134,7 +134,7 @@ export const UniversalFilterBox = () => {
       {status?.includes(8) && (
         <Select
           defaultValue={{ value: "all", label: "Kassa bo'yicha" }}
-          aria-label="select data from to end"
+          aria-label="select cashbox"
           onChange={(e) => uploadData(e, "cashier")}
           options={
             data?.data?.map((item) => ({
@@ -147,7 +147,7 @@ export const UniversalFilterBox = () => {
       {status?.includes(9) && (
         <Select
           defaultValue={{ value: "all", label: "Ombor bo'yicha" }}
-          aria-label="select data from to end"
+          aria-label="select storage"
           onChange={(e) => uploadData(e, "storage")}
           options={
             data?.data?.map((item) => ({
@@ -158,7 +158,7 @@ export const UniversalFilterBox = () => {
         />
       )}
       {status?.includes(10) && (
-        <label>
+        <label aria-label="to filter the data according by waiter">
           <input
             type="search"
             name="waiter"
@@ -168,7 +168,7 @@ export const UniversalFilterBox = () => {
         </label>
       )}
       {status?.includes(11) && (
-        <label>
+        <label aria-label="to filter the data according by table/room's location">
           <input
             type="search"
             name="location"
@@ -178,7 +178,7 @@ export const UniversalFilterBox = () => {
         </label>
       )}
       {status?.includes(12) && (
-        <label>
+        <label aria-label="to filter the data according by table or room">
           <input
             type="search"
             name="table"

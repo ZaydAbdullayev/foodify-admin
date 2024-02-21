@@ -65,10 +65,22 @@ export const Router = () => {
   const nothificate = useSelector((state) => state.nothificate);
   const location = useLocation();
   const dispatch = useDispatch();
-  const sound = new Howl({
-    src: [audio],
-    html5: true,
-  });
+  let sound;
+
+  document.addEventListener(
+    "load",
+    () => {
+      var audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      if (audioContext) {
+        sound = new Howl({
+          src: [audio],
+          html5: true,
+        });
+      }
+    },
+    { once: true }
+  );
 
   useEffect(() => {
     dispatch(acCloseUModal());
@@ -81,21 +93,11 @@ export const Router = () => {
   }
 
   if (nothificate) {
-    document.addEventListener(
-      "load",
-      () => {
-        var audioContext = new (window.AudioContext ||
-          window.webkitAudioContext)();
-        if (audioContext) {
-          sound.play();
-          setTimeout(() => {
-            dispatch(acNothification(false));
-            sound.stop();
-          }, 1000);
-        }
-      },
-      { once: true }
-    );
+    sound.play();
+    setTimeout(() => {
+      dispatch(acNothification(false));
+      sound.stop();
+    }, 1000);
   }
 
   return (

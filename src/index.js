@@ -5,8 +5,9 @@ import { Router } from "./router";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { SnackbarProvider } from "notistack";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, theme } from "antd";
 import { themeConfig } from "./ant.theme-config";
+import "./assets/ant.design.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,7 +21,13 @@ root.render(
         }}
         autoHideDuration={2000}
       >
-        <ConfigProvider theme={themeConfig}>
+        <ConfigProvider
+          theme={{
+            algorithm: theme.darkAlgorithm,
+            token: themeConfig.token,
+            components: themeConfig.components,
+          }}
+        >
           <BrowserRouter>
             <Router />
           </BrowserRouter>

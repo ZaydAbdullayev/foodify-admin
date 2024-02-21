@@ -81,6 +81,7 @@ export const Sidebar = () => {
                   <ul
                     className="inner_menu"
                     style={{ "--top": `${dFromTop}px` }}
+                    aria-label="Total paths to reach all pages"
                   >
                     <div className="inner_menu-box">
                       {Category?.filter(
@@ -96,6 +97,7 @@ export const Sidebar = () => {
                             "--value2": `${catItem?.positions[1]}deg`,
                             "--value3": `${catItem?.positions[2]}px`,
                           }}
+                          aria-label={`the path target to ${item?.path}${catItem?.path}`}
                         >
                           <Link to={`${item?.path}${catItem?.path}`}>
                             {catItem?.icon}

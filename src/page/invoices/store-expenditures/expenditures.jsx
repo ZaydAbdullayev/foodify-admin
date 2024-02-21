@@ -107,6 +107,7 @@ export const StorageExpenditures = () => {
                   justifyContent: "center",
                   cursor: "pointer",
                 }}
+                key={index}
                 onClick={() =>
                   setSort({
                     id: index,
@@ -144,6 +145,7 @@ export const StorageExpenditures = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
+                  key={item?.id}
                 >
                   <div
                     className={
@@ -151,7 +153,6 @@ export const StorageExpenditures = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item?.id}
                     onDoubleClick={() => {
                       dispatch(
                         !acItem?.id ? acActiveThing(item) : acPassiveThing()

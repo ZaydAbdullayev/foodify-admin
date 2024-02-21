@@ -410,7 +410,11 @@ export const Home = () => {
           </div>
         ) : (
           <figure className="no_result">
-            <img src={noResult} alt="foto" />
+            <img
+              src={noResult}
+              alt="foto"
+              aria-label="image for there is no data"
+            />
           </figure>
         )}
       </div>
