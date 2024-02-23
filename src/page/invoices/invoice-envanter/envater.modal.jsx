@@ -17,17 +17,17 @@ export const InvoicesModal = ({
   NUM,
   setCheckedData,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = React.useState(1);
-  const [id, setId] = React.useState(null);
   const res_id = useSelector((state) => state?.res_id);
+  const acItem = useSelector((state) => state?.activeThing);
+  const id = useSelector((state) => state?.activeSt_id);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${user?.user?.id}/${id}`,
+    url: `get/storageItems/${user?.id}/${id}`,
     tags: ["invoices"],
   });
 
@@ -64,58 +64,50 @@ export const InvoicesModal = ({
     }
   });
 
-  const getId = (e) => {
-    const selectedItem = storeData?.data?.find((item) => item?.name === e);
-    const selectedId =
-      e === "default" || !selectedItem ? null : selectedItem?.id;
-
-    setId(selectedId);
-  };
-
+  const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       type="envanter"
       Pdata={checkedData}
       setCheckedData={setCheckedData}
     >
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          defaultValue={NUM.num}
-          required
-          autoComplete="off"
-          style={{ "--input-width": "12%" }}
-        />
-        <input
-          type="date"
-          name="date"
-          style={{ "--input-width": "15%" }}
-          defaultValue={today}
-        />
-        <select
-          name="store"
-          style={{ "--input-width": "15%" }}
-          onChange={(e) => getId(e.target.value)}
-        >
-          <option value="default" disabled hidden>
-            Ombor tanlang
-          </option>
-          {storeData?.data?.map((item) => (
-            <option key={item.id} value={item.name}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          name="description"
-          placeholder="Tavsif*"
-          style={{ "--input-width": "12%" }}
-        />
-        <input type="hidden" value={user?.id} />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "select",
+            name: "storage",
+            take_id: true,
+            size: "15%",
+            df_value: { value: "default", label: "Ombor tanlang*" },
+            options: storeData?.data,
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description,
+          },
+          {
+            type: "inputH",
+            name: "res_id",
+            df_value: user?.id,
+          },
+        ]}
+      />
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}

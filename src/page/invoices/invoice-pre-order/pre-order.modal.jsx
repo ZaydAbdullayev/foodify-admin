@@ -28,38 +28,42 @@ export const InvoicesModal = ({ checkedData, data, getProduct, NUM }) => {
 
   return (
     <UniversalControlModal type="preOrder" Pdata={checkedData}>
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          defaultValue={NUM.num}
-          required
-          autoComplete="off"
-          style={{ "--input-width": "12%" }}
-        />
-        <input
-          type="date"
-          name="date"
-          style={{ "--input-width": "15%" }}
-          defaultValue={today}
-        />
-        <input
-          type="text"
-          name="responsible"
-          placeholder="Javobgar*"
-          required
-          autoComplete="off"
-          style={{ "--input-width": "12%" }}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Tavsif*"
-          style={{ "--input-width": "12%" }}
-        />
-        <input type="hidden" value={user?.id} />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: Number.num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: today,
+            size: "15%",
+          },
+          {
+            type: "input",
+            name: "responsible",
+            plc_hr: "Javobgar*",
+            size: "12%",
+            df_value: "",
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: "",
+          },
+          {
+            type: "inputH",
+            name: "res_id",
+            df_value: user?.id,
+          },
+        ]}
+      />
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}

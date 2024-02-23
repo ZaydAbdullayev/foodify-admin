@@ -16,12 +16,9 @@ export const InvoicesModal = ({
   getProduct,
   NUM,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
-  const [id, setId] = useState(null);
-  const [pId, setPId] = useState(null);
-  const [rId, setRId] = useState(null);
-  const [qty, setQty] = useState(0);
   const res_id = useSelector((state) => state?.res_id);
+  const acItem = useSelector((state) => state?.activeThing);
+  const id = useSelector((state) => state?.activeSt_id);
   const [activePart, setActivePart] = useState(1);
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
@@ -53,107 +50,68 @@ export const InvoicesModal = ({
     return newItem;
   });
 
-  const selectSenderS = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? 0 : selectedItem.id;
-
-    setId(selectedId);
-  };
-
-  const selectReceiverS = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? 0 : selectedItem.id;
-
-    setRId(selectedId);
-  };
-
-  const selectPId = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = data?.find((item) => item.name === selectedName);
-    const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem.id;
-
-    setPId(selectedId);
-  };
-
   const currentData = activePart === 1 ? data : storageItems?.data;
-
   return (
     <UniversalControlModal type="making" Pdata={checkedData} id={id}>
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          defaultValue={NUM.num}
-          required
-          autoComplete="off"
-          style={{ "--input-width": "12%" }}
-        />
-
-        <select onChange={selectPId} style={{ "--input-width": "15%" }}>
-          <option value="default">Mahsulot tanlang*</option>
-          {data?.map((item) => {
-            return (
-              <option key={item.id} value={item.name}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
-          name="amount"
-          placeholder="Miqdori"
-          required
-          autoComplete="off"
-          style={{ "--input-width": "12%" }}
-          onChange={(e) => setQty(e.target.value)}
-        />
-        <input
-          type="date"
-          name="date"
-          style={{ "--input-width": "12%" }}
-          defaultValue={today}
-        />
-        <select style={{ "--input-width": "15%" }} onChange={selectSenderS}>
-          <option value="default">Beruvchi ombor*</option>
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item.id} value={item.name}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <select style={{ "--input-width": "15%" }} onChange={selectReceiverS}>
-          <option value="default">Oluvchi ombor*</option>
-          {storeData?.data?.map((item, ind) => {
-            return (
-              <option key={item.id + ind} value={item.name}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
-          name="description"
-          placeholder="Tavsif*"
-          style={{ "--input-width": "12%" }}
-        />
-        <input type="hidden" name="storage_sender" value={id} />
-        <input type="hidden" name="storage_receiver" value={rId} />
-        <input type="hidden" name="food_id" value={pId} />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: NUM.num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "s_extra",
+            extra: "food_id",
+            size: "15%",
+            df_value: acItem?.food_id
+              ? { value: "default", label: "Mahsulot tanlang*" }
+              : { value: acItem?.food_id, label: acItem?.food_id },
+            options: data,
+          },
+          {
+            type: "s_extra",
+            take_id: true,
+            extra: "storage_sender",
+            size: "15%",
+            df_value: acItem?.storage
+              ? { value: acItem?.storage, label: acItem?.storage }
+              : { value: "default", label: "Beruvchi ombor*" },
+            options: storeData?.data,
+          },
+          {
+            type: "s_extra",
+            extra: "storage_receiver",
+            size: "15%",
+            df_value: acItem?.storage
+              ? { value: acItem?.storage, label: acItem?.storage }
+              : { value: "default", label: "Oluvchi ombor*" },
+            options: storeData?.data,
+          },
+          {
+            type: "inputN",
+            name: "amount",
+            plc_hr: "Miqdori*",
+            size: "12%",
+            df_value: acItem?.amount || "",
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description || "",
+          },
+        ]}
+      />
       <UniversalProductControl
         activePart={activePart}
         setActivePart={setActivePart}

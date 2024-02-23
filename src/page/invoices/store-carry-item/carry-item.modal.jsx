@@ -7,6 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { usePostDataMutation } from "../../../service/fetch.service";
 // import { CalculateTotalP } from "../../../service/calc.service";
+// import { Select } from "antd";
 
 import { BsReceiptCutoff } from "react-icons/bs";
 import { useSelector } from "react-redux";
@@ -25,7 +26,7 @@ export const InvoicesModal = ({
 }) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1);
-  const [calcData, setCalcData] = useState([]); // [{id: 1, amount: 1, sender_storage : id}]
+  const [calcData, setCalcData] = useState([]);
   const res_id = useSelector((state) => state?.res_id);
   const [postData] = usePostDataMutation();
   const { data: storeData = [] } = useFetchDataQuery({
@@ -58,17 +59,6 @@ export const InvoicesModal = ({
 
     return newItem;
   });
-
-  const handleSelectChange = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? 0 : selectedItem.id;
-
-    setId(selectedId);
-  };
 
   useEffect(() => {
     if (acItem?.storage) {
@@ -109,6 +99,7 @@ export const InvoicesModal = ({
 
   const activeData = activePart === 1 ? data : productData?.data;
   const num = acItem?.order ? acItem?.order : NUM?.num;
+
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -116,78 +107,54 @@ export const InvoicesModal = ({
       Pdata={[...checkedData, ...acIngredients]}
       setCheckedData={setCheckedData}
     >
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          defaultValue={num}
-          required
-          autoComplete="off"
-          style={{ "--input-width": "8%" }}
-        />
-        <input
-          type="date"
-          name="date"
-          style={{ "--input-width": "15%" }}
-          defaultValue={new Date(acItem?.date)?.toLocaleDateString()}
-        />
-        <select
-          name="storage_sender"
-          onChange={handleSelectChange}
-          style={{ "--input-width": "15%" }}
-        >
-          {acItem?.storage ? (
-            <option value={acItem?.storage}>{acItem?.storage}</option>
-          ) : (
-            <option value="default">Beruvchi ombor*</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <select name="storage_receiver" style={{ "--input-width": "15%" }}>
-          {acItem?.storage ? (
-            <option value={acItem?.storage}>{acItem?.storage}</option>
-          ) : (
-            <option value="default">Oluvchi ombor*</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <select name="ingredient_group">
-          {acItem?.ingredient_group ? (
-            <option value={acItem?.ingredient_group}>
-              {acItem?.ingredient_group}
-            </option>
-          ) : (
-            <option value="default">Guruh tanlang*</option>
-          )}
-          {groupsData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
-          name="description"
-          defaultValue={acItem?.description}
-          placeholder="Tavsif"
-          style={{ "--input-width": "12%" }}
-        />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "s_extra",
+            name: "storage_sender",
+            extra: "s_storage",
+            take_id: true,
+            size: "15%",
+            df_value: { value: "default", label: "Beruvchi ombor*" },
+            options: storeData?.data,
+          },
+          {
+            type: "s_extra",
+            name: "storage_receiver",
+            extra: "r_storage",
+            size: "15%",
+            df_value: { value: "default", label: "Oluvchi ombor*" },
+            options: storeData?.data,
+          },
+          {
+            type: "select",
+            name: "invoice_group",
+            size: "15%",
+            df_value: { value: "default", label: "Guruh tanlang*" },
+            options: groupsData?.data,
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description,
+          },
+        ]}
+      />
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}

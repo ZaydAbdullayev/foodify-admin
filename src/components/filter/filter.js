@@ -48,7 +48,7 @@ export const UniversalFilterBox = () => {
   const thisYear = getFormattedDate(365);
 
   const uploadData = (e, fieldName) => {
-    const newValue = e.target.value;
+    const newValue = e;
     navigate(`?${fieldName}=${newValue}`);
     if (fieldName === "date")
       return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));

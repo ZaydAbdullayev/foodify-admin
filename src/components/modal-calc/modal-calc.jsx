@@ -13,6 +13,9 @@ import { ClearForm } from "../../service/clear-form.service";
 import { acPassiveThing } from "../../redux/active";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
+import { notification } from "antd";
+import middlewareService from "../../middleware/form.middleware";
+import { GenerateField } from "../../hooks/generate.tags";
 
 import { FaCalculator, FaCheck } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -36,7 +39,17 @@ export const UniversalControlModal = ({
   //update points
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
-  // const acP = useSelector((state) => state.activeThing);
+
+  const [api, contextHolder] = notification.useNotification();
+  const openWarning = (placement) => {
+    api.warning({
+      message: "Yaroqsiz ma'lumot",
+      description:
+        "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
+      placement,
+    });
+  };
+
   const fetchValues = async (value) => {
     setLoading(true);
     if (value.ingredients && Array.isArray(value.ingredients)) {
@@ -198,7 +211,8 @@ export const UniversalControlModal = ({
   const getValues = async (e) => {
     e.preventDefault();
     const formdata = new FormData(e.target);
-    const value = Object.fromEntries(formdata.entries());
+    const ds = Object.fromEntries(formdata.entries());
+    const value = middlewareService(ds, openWarning);
     const data = { ...value, ingredients: Pdata };
     data.res_id = user.id;
     if (type !== "cutting") {
@@ -248,63 +262,70 @@ export const UniversalControlModal = ({
   };
 
   return (
-    <form
-      className={open ? "u-control-container open" : "u-control-container"}
-      onSubmit={getValues}
-      id="u-control-form"
-    >
-      {children}
-      <div
-        className={
-          open ? "u-control_action__box active" : "u-control_action__box"
-        }
+    <>
+      {contextHolder}
+      <form
+        className={open ? "u-control-container open" : "u-control-container"}
+        onSubmit={getValues}
+        id="u-control-form"
       >
-        {image.img !== "" && (
-          <figure
-            onClick={() =>
-              dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))
-            }
-          >
-            <img src={image?.img} alt="peoduct images" />
-          </figure>
-        )}
-        {type === "product" && (
+        {children}
+        <div
+          className={
+            open ? "u-control_action__box active" : "u-control_action__box"
+          }
+        >
+          {image.img !== "" && (
+            <figure
+              onClick={() =>
+                dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))
+              }
+            >
+              <img src={image?.img} alt="peoduct images" />
+            </figure>
+          )}
+          {type === "product" && (
+            <button
+              type="button"
+              onClick={() => dispatch(acGetUrl({ st: true, img: "" }))}
+              aria-label="modal of add image"
+            >
+              <RiImageAddFill />
+            </button>
+          )}
           <button
             type="button"
-            onClick={() => dispatch(acGetUrl({ st: true, img: "" }))}
-            aria-label="modal of add image"
+            className="relative"
+            onClick={() => fetchValues(fetchdata)}
+            aria-label="add values of the all input's value"
           >
-            <RiImageAddFill />
+            {loading ? <LoadingBtn /> : <FaCheck />}
           </button>
-        )}
-        <button
-          type="button"
-          className="relative"
-          onClick={() => fetchValues(fetchdata)}
-          aria-label="add values of the all input's value"
-        >
-          {loading ? <LoadingBtn /> : <FaCheck />}
-        </button>
-        <button
-          type="submit"
-          aria-label="calculate values of the all input's value"
-        >
-          <FaCalculator />
-        </button>
-        <button
-          type="button"
-          onClick={() => closeModal()}
-          aria-label="close modal"
-        >
-          <TbArrowBarLeft />
-        </button>
-      </div>
-    </form>
+          <button
+            type="submit"
+            aria-label="calculate values of the all input's value"
+          >
+            <FaCalculator />
+          </button>
+          <button
+            type="button"
+            onClick={() => closeModal()}
+            aria-label="close modal"
+          >
+            <TbArrowBarLeft />
+          </button>
+        </div>
+      </form>
+    </>
   );
 };
 
-export const UniversalForm = ({ children }) => {
-  return <div className="wdfaic u-control_form_box">{children}</div>;
+export const UniversalForm = ({ children, formData }) => {
+  return (
+    <div className="wdfaic u-control_form_box">
+      {formData?.map((field, index) => GenerateField(field, index))}
+    </div>
+  );
 };
 
 export const UniversalProductControl = ({

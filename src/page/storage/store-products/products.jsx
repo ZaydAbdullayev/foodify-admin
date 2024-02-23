@@ -322,45 +322,44 @@ export const StorageProducts = () => {
         Pdata={[...checkedData, ...acIngredients]}
         setCheckedData={setCheckedData}
       >
-        <UniversalForm>
-          <input
-            type="text"
-            name="name"
-            defaultValue={acItem?.name}
-            placeholder="Nomi*"
-            required
-            autoComplete="off"
-            style={{ "--input-width": "15%" }}
-          />
-          <select name="category" style={{ "--input-width": "15%" }}>
-            {acItem?.id ? (
-              <option value={acItem?.category}>{acItem?.category}</option>
-            ) : (
-              <option value="default">Kategoriya tanlang*</option>
-            )}
-            {category?.data?.map((item) => {
-              return (
-                <option value={item.name} key={item.id}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
-          <input
-            type="number"
-            name="price"
-            placeholder="Narxi*"
-            style={{ "--input-width": "12%" }}
-            defaultValue={acItem?.price}
-          />
-          <input
-            type="date"
-            name="date"
-            style={{ "--input-width": "12%" }}
-            defaultValue={acItem?.date}
-          />
-          <input type="hidden" name="img" value={img?.img} />
-        </UniversalForm>
+        <UniversalForm
+          formData={[
+            {
+              type: "input",
+              name: "name",
+              plc_hr: "Nomi*",
+              df_value: acItem?.name,
+              size: "15%",
+            },
+            {
+              type: "s_extra",
+              name: "category",
+              size: "15%",
+              df_value: acItem?.category
+                ? { value: "default", label: "Kategoriya tanlang*" }
+                : { value: acItem?.category, label: acItem?.category },
+              options: category?.data,
+            },
+            {
+              type: "inputN",
+              name: "price",
+              plc_hr: "Narxi*",
+              df_value: acItem?.price,
+              size: "15%",
+            },
+            {
+              type: "inputD",
+              name: "date",
+              df_value: acItem?.date,
+              size: "15%",
+            },
+            {
+              type: "inputH",
+              name: "img",
+              df_value: img?.img,
+            },
+          ]}
+        />
         <UniversalProductControl
           activePart={activePart}
           setActivePart={setActivePart}

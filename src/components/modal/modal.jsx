@@ -251,6 +251,7 @@ export const UniversalModal = ({
     dispatch(acCloseUModal());
     ClearForm(".u_modal");
   };
+
   return (
     <div className={open ? "u_modal_container open" : "u_modal_container"}>
       <div className="u_modal_box">

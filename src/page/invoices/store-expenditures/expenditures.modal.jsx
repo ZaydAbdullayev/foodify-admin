@@ -21,7 +21,6 @@ export const InvoicesModal = ({
 }) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
-  const [values, setValues] = useState({});
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
@@ -51,18 +50,6 @@ export const InvoicesModal = ({
 
     return newItem;
   });
-
-  const handleSelectChange = (value) => {
-    const [status, data] = value.split("=");
-    if (status === "store") {
-      const [name, id] = data.split("|");
-      setId(id);
-      setValues({ ...values, name, id });
-    }
-    if (status === "group") {
-      setId({ ...values, gr_name: data });
-    }
-  };
   useEffect(() => {
     if (acItem?.storage) {
       const selectedItem = storeData?.data?.find(
@@ -74,9 +61,6 @@ export const InvoicesModal = ({
     }
   }, [acItem?.storage, setId, storeData?.data]);
   const num = acItem?.order ? acItem?.order : NUM.num;
-  const day = acItem?.date
-    ? acItem?.date
-    : new Date().toISOString().split("T")[0];
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -84,63 +68,53 @@ export const InvoicesModal = ({
       Pdata={[...checkedData, ...acIngredients]}
       setCheckedData={setCheckedData}
     >
-      <UniversalForm>
-        {/* <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          required
-          defaultValue={num}
-          autoComplete="off"
-          style={{ "--input-width": "15%" }}
-        /> */}
-        <InputNumber
-          name="order"
-          required
-          defaultValue={num || 1}
-          min={1}
-          max={100000}
-        />
-        <DatePicker
-          style={{ width: "15%" }}
-          name="date"
-          defaultValue={dayjs(day)}
-        />
-        <Select
-          style={{ width: "15%" }}
-          defaultValue={{
-            value: "all",
-            label: "Ombor tanlang*",
-          }}
-          onChange={handleSelectChange}
-          options={storeData?.data?.map((item) => ({
-            value: `store=${item?.name}|${item?.id}`,
-            label: item?.name,
-          }))}
-        />
-        <input type="hidden" name="storage" value={values.name} />
-        <input type="hidden" name="storage_id" value={values.id} />
-        <Select
-          style={{ width: "15%" }}
-          name="group"
-          defaultValue={{
-            value: "all",
-            label: "Guruh tanlang*",
-          }}
-          options={groupsData?.data?.map((item) => {
-            return {
-              value: item?.name,
-              label: item?.name,
-            };
-          })}
-        />
-        <Input
-          name="description"
-          defaultValue={acItem?.description ? acItem?.description : ""}
-          placeholder="Tavsif*"
-          style={{ width: "12%" }}
-        />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "s_extra",
+            name: "storage",
+            take_id: true,
+            extra: "storage_id",
+            size: "15%",
+            df_value: acItem?.storage
+              ? { value: acItem?.storage, label: acItem?.storage }
+              : { value: "default", label: "Ombor tanlang*" },
+            options: storeData?.data,
+          },
+          {
+            type: "select",
+            name: "group",
+            size: "15%",
+            df_value: acItem?.invoice_group
+              ? {
+                  value: acItem?.invoice_group,
+                  label: acItem?.invoice_group,
+                }
+              : { value: "default", label: "Guruh tanlang*" },
+            options: groupsData?.data,
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description || "",
+          },
+        ]}
+      />
       <UniversalProductControl
         activePart={activePart}
         setActivePart={setActivePart}

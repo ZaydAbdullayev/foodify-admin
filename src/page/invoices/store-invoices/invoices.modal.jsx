@@ -18,7 +18,8 @@ export const InvoicesModal = ({
   // const today = new Date().toISOString().split("T")[0];
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
-  const [id, setId] = useState(null);
+  const s_id = useSelector((state) => state.activeSt_id);
+  const [id, setId] = useState(s_id);
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
@@ -57,17 +58,6 @@ export const InvoicesModal = ({
     }
   });
 
-  const handleSelectChange = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item?.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
-
-    setId(selectedId);
-  };
-
   useEffect(() => {
     if (acItem?.storage) {
       const selectedItem = storeData?.data?.find(
@@ -91,72 +81,76 @@ export const InvoicesModal = ({
       id={id}
       setCheckedData={setCheckedData}
     >
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          required
-          autoComplete="off"
-          defaultValue={num}
-          style={{ "--input-width": "15%" }}
-        />
-        <input
-          type="date"
-          name="date"
-          style={{
-            "--input-width": "12%",
-          }}
-          defaultValue={acItem?.date}
-        />
-        <select name="supplier" style={{ "--input-width": "12%" }}>
-          {acItem?.supplier ? (
-            <option value={acItem?.supplier}>{acItem?.supplier}</option>
-          ) : (
-            <option value="default">Yetkazuvchi tanlang*</option>
-          )}
-          {suplierData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <select
-          name="storage"
-          style={{ "--input-width": "15%" }}
-          onChange={handleSelectChange}
-        >
-          {acItem?.storage ? (
-            <option value={acItem?.storage}>{acItem?.storage}</option>
-          ) : (
-            <option value="default">Ombor tanlang*</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
-          name="responsible"
-          placeholder="Javobgar*"
-          required
-          defaultValue={acItem?.responsible}
-          style={{ "--input-width": "12%" }}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Tavsif*"
-          defaultValue={acItem?.description}
-          style={{ "--input-width": "12%" }}
-        />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "s_extra",
+            name: "ingredient",
+            extra: "ingredient_id",
+            size: "15%",
+            df_value: acItem?.ingredient
+              ? { value: "default", label: "Ingredient tanlang*" }
+              : { value: acItem?.ingredient, label: acItem?.ingredient },
+            options: data,
+          },
+          {
+            type: "input",
+            name: "amount",
+            plc_hr: "Miqdori*",
+            size: "12%",
+            df_value: acItem?.amount || 0,
+          },
+          {
+            type: "select",
+            name: "supplier",
+            size: "15%",
+            df_value: acItem?.supplier
+              ? {
+                  value: acItem?.supplier,
+                  label: acItem?.supplier,
+                }
+              : { value: "default", label: "Yetkazuvchi tanlang*" },
+            options: suplierData?.data,
+          },
+          {
+            type: "select",
+            name: "storage",
+            take_id: true,
+            size: "15%",
+            df_value: acItem?.storage
+              ? { value: acItem?.storage, label: acItem?.storage }
+              : { value: "default", label: "Ombor tanlang*" },
+            options: storeData?.data,
+          },
+          {
+            type: "input",
+            name: "responsible",
+            plc_hr: "Javobgar*",
+            size: "12%",
+            df_value: acItem?.responsible || "",
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description || "",
+          },
+        ]}
+      />
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}

@@ -19,7 +19,6 @@ export const InvoicesModal = ({
   acIngredients,
   acItem,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
   const res_id = useSelector((state) => state?.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
@@ -49,17 +48,6 @@ export const InvoicesModal = ({
 
   console.log(updatedData);
 
-  const handleSelectChange = (event) => {
-    const selectedName = event.target.value;
-    const selectedItem = storeData?.data?.find(
-      (item) => item?.name === selectedName
-    );
-    const selectedId =
-      selectedName === "default" || !selectedItem ? null : selectedItem?.id;
-
-    setId(selectedId);
-  };
-
   useEffect(() => {
     if (acItem?.storage) {
       const selectedItem = storeData?.data?.find(
@@ -79,66 +67,53 @@ export const InvoicesModal = ({
       Pdata={[...checkedData, ...acIngredients]}
       setCheckedData={setCheckedData}
     >
-      <UniversalForm>
-        <input
-          type="number"
-          name="order"
-          placeholder="Tartib raqam*"
-          required
-          defaultValue={num}
-          autoComplete="off"
-          style={{ "--input-width": "8%" }}
-        />
-        <input
-          type="date"
-          name="date"
-          defaultValue={acItem?.date || today}
-          style={{ "--input-width": "12%" }}
-          // defaultValue={acItem?.date}
-        />
-        <select
-          name="storage"
-          style={{ "--input-width": "15%" }}
-          onChange={handleSelectChange}
-        >
-          {acItem?.storage ? (
-            <option value={acItem?.storage}>{acItem?.storage}</option>
-          ) : (
-            <option value="default">Ombor tanlang*</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <select name="ingredient_group">
-          {acItem?.ingredient_group ? (
-            <option value={acItem?.ingredient_group}>
-              {acItem?.ingredient_group}
-            </option>
-          ) : (
-            <option value="default">Guruh tanlang*</option>
-          )}
-          {groupsData?.data?.map((item) => {
-            return (
-              <option key={item?.id} value={item?.name}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-        <input
-          type="text"
-          name="description"
-          defaultValue={acItem?.description}
-          placeholder="Tavsif*"
-          style={{ "--input-width": "12%" }}
-        />
-        <input type="hidden" name="storage_id" value={id} />
-      </UniversalForm>
+      <UniversalForm
+        formData={[
+          {
+            type: "inputN",
+            name: "order",
+            plc_hr: "Tartib raqam*",
+            df_value: num || 1,
+            size: "5%",
+          },
+          {
+            type: "inputD",
+            name: "date",
+            df_value: acItem?.date,
+            size: "15%",
+          },
+          {
+            type: "s_extra",
+            name: "storage",
+            take_id: true,
+            extra: "storage_id",
+            size: "15%",
+            df_value: acItem?.storage
+              ? { value: acItem?.storage, label: acItem?.storage }
+              : { value: "default", label: "Ombor tanlang*" },
+            options: storeData?.data,
+          },
+          {
+            type: "select",
+            name: "invoice_group",
+            size: "15%",
+            df_value: acItem?.invoice_group
+              ? {
+                  value: acItem?.invoice_group,
+                  label: acItem?.invoice_group,
+                }
+              : { value: "default", label: "Guruh tanlang*" },
+            options: groupsData?.data,
+          },
+          {
+            type: "input",
+            name: "description",
+            plc_hr: "Tavsif",
+            size: "12%",
+            df_value: acItem?.description || "",
+          },
+        ]}
+      />
       <UniversalProductControl
         activePart={activePart}
         setActivePart={setActivePart}

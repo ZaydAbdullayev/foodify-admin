@@ -361,10 +361,19 @@
   background: #333;
 }
 
-/* @media (max-width: 980px) {
-  .u-control-container {
+@media (max-width: 600px) {
+  /* .u-control-container {
     flex-direction: column;
     flex-wrap: nowrap;
     overflow-y: auto;
+  } */
+  .u-control-container {
+    left: 0;
+    bottom: -100vh;
+    width: 100%;
+    height: calc(100vh - calc(var(--nwh) * 2));
   }
-} */
+  .u-control-container.open {
+    bottom: var(--nwh);
+  }
+}

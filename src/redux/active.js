@@ -8,6 +8,7 @@ export const reActive = (state = false, action) => {
       return state;
   }
 };
+const today = new Date().toISOString().split("T")[0];
 
 const initialState = {
   id: null,
@@ -15,7 +16,7 @@ const initialState = {
   group: "",
   ingredient_group: "",
   category: "",
-  date: "",
+  date: today,
   storage: "",
   description: "",
   amount: "",
