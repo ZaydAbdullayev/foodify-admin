@@ -5,13 +5,21 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-// import { CalculateTotalP } from "../../../service/calc.service";
-// import { CalculateTotalQuantity } from "../../../service/calc.service";
+import { useFetchDataQuery } from "../../../service/fetch.service";
 
-export const InvoicesModal = ({ checkedData, data, getProduct, NUM }) => {
+export const InvoicesModal = ({
+  checkedData,
+  getProduct,
+  NUM,
+  setCheckedData,
+}) => {
   const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = React.useState(1);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
+  const { data = [] } = useFetchDataQuery({
+    url: `get/foods/${user?.id}`,
+    tags: ["s-product"],
+  });
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = data?.find((old) => old.id === newItem.id) || {};
@@ -71,7 +79,11 @@ export const InvoicesModal = ({ checkedData, data, getProduct, NUM }) => {
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": "60%" }}>Nomi</p>
           <p style={{ "--data-line-size": "30%" }}>Miqdor</p>

@@ -14,13 +14,10 @@ import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const InvoicesModal = ({
-  data,
   checkedData,
   setCheckedData,
   getProduct,
   NUM,
-  setId,
-  id,
   acItem,
   acIngredients,
 }) => {
@@ -28,7 +25,13 @@ export const InvoicesModal = ({
   const [activePart, setActivePart] = useState(1);
   const [calcData, setCalcData] = useState([]);
   const res_id = useSelector((state) => state?.res_id);
+  const acS = useSelector((state) => state?.activeSt_id);
+  const [id, setId] = useState(acS);
   const [postData] = usePostDataMutation();
+  const { data = [] } = useFetchDataQuery({
+    url: `get/storageItems/${res_id}/${id}`,
+    tags: ["invoices"],
+  });
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
     tags: ["store"],
@@ -161,7 +164,11 @@ export const InvoicesModal = ({
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": activePart === 1 ? "20%" : "60%" }}>
             Nomi

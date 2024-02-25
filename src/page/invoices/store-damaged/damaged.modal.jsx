@@ -11,15 +11,18 @@ import { useSelector } from "react-redux";
 export const InvoicesModal = ({
   checkedData,
   setCheckedData,
-  data,
   getProduct,
   NUM,
-  setId,
-  id,
   acIngredients,
   acItem,
 }) => {
   const res_id = useSelector((state) => state?.res_id);
+  const acS = useSelector((state) => state?.activeSt_id);
+  const [id, setId] = useState(acS);
+  const { data = [] } = useFetchDataQuery({
+    url: `get/storageItems/${res_id}/${id}`,
+    tags: ["invoices"],
+  });
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
     tags: ["store"],
@@ -120,7 +123,11 @@ export const InvoicesModal = ({
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
           <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>

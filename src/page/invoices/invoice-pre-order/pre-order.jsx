@@ -23,10 +23,6 @@ export const InvoicePreOrders = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/foods/${res_id}`,
-    tags: ["s-product"],
-  });
   const { data: preOrder = [], isLoading } = useFetchDataQuery({
     url: `get/preOrders/${res_id}`,
     tags: ["pre-order"],
@@ -338,9 +334,8 @@ export const InvoicePreOrders = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
-        setCheckedData={setChecked}
+        setCheckedData={setCheckedData}
         getProduct={getProduct}
         NUM={
           !isLoading && {

@@ -49,7 +49,12 @@ export const UniversalFilterBox = () => {
 
   const uploadData = (e, fieldName) => {
     const newValue = e;
-    navigate(`?${fieldName}=${newValue}`);
+    if (fieldName === "date") {
+      const rewordValue = JSON.parse(newValue);
+      navigate(`?start=${rewordValue.start}&&end=${rewordValue.end}`);
+    } else {
+      navigate(`?${fieldName}=${newValue}`);
+    }
     if (fieldName === "date")
       return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
     const time = {
@@ -122,15 +127,6 @@ export const UniversalFilterBox = () => {
           ]}
         />
       )}
-
-      {status?.includes(7) && (
-        <label>
-          <RangePicker
-            defaultValue={[dayjs(today), dayjs(today)]}
-            aria-label="select data from to end"
-          />
-        </label>
-      )}
       {status?.includes(8) && (
         <Select
           defaultValue={{ value: "all", label: "Kassa bo'yicha" }}
@@ -187,6 +183,69 @@ export const UniversalFilterBox = () => {
           />
         </label>
       )}
+      {status?.includes(7) && (
+        <label>
+          <RangePicker
+            defaultValue={[dayjs(date.start), dayjs(date.end)]}
+            aria-label="select data from to end"
+            onChange={(date, dateString) =>
+              uploadData(
+                JSON.stringify({
+                  start: dateString?.[0],
+                  end: dateString?.[1],
+                }),
+                "date"
+              )
+            }
+          />
+        </label>
+      )}
+
+      {status?.includes(13) && (
+        <Select
+          showSearch
+          style={{
+            width: 200,
+          }}
+          placeholder="Mahsulot tanlang*"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.label ?? "").includes(input)
+          }
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? "")
+              .toLowerCase()
+              .localeCompare((optionB?.label ?? "").toLowerCase())
+          }
+          options={[
+            {
+              value: "1",
+              label: "Not Identified",
+            },
+            {
+              value: "2",
+              label: "Closed",
+            },
+            {
+              value: "3",
+              label: "Communicated",
+            },
+            {
+              value: "4",
+              label: "Identified",
+            },
+            {
+              value: "5",
+              label: "Resolved",
+            },
+            {
+              value: "6",
+              label: "Cancelled",
+            },
+          ]}
+        />
+      )}
+
       {status?.includes(15) && (
         <button
           style={

@@ -22,10 +22,6 @@ export const InvoicesMakingFood = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/ingredients/${res_id}`,
-    tags: ["ingredient"],
-  });
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
     url: `get/preparedFoods/${res_id}`,
     tags: ["makingFood"],
@@ -33,6 +29,7 @@ export const InvoicesMakingFood = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 15]));
   }, [dispatch]);
+
   const getProduct = (item, status) => {
     const isChecked = checkedData?.some((i) => i.id === item?.id);
     if (status === 0) {
@@ -277,9 +274,8 @@ export const InvoicesMakingFood = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
-        setCheckedData={setChecked}
+        setCheckedData={setCheckedData}
         getProduct={getProduct}
         NUM={
           !isLoading && {

@@ -11,7 +11,7 @@ import { BiSolidCategory, BiSolidComponent } from "react-icons/bi";
 import { FaLayerGroup, FaMoneyCheckDollar, FaSitemap } from "react-icons/fa6";
 import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
 import { MdMoveUp, MdRestaurantMenu, MdStorage } from "react-icons/md";
-import { TbReport, TbPlaylistX } from "react-icons/tb";
+import { TbReport, TbPlaylistX, TbReportAnalytics } from "react-icons/tb";
 import { LiaListAlt, LiaOpencart } from "react-icons/lia";
 import { PiDotsThreeCircleVerticalFill } from "react-icons/pi";
 import { VscUngroupByRefType } from "react-icons/vsc";
@@ -311,6 +311,13 @@ export const Category = [
     path: "/cashbox/transaction-group",
     positions: [],
     icon: <MdStorage />,
+  },
+  {
+    id: "6",
+    name: "Mahsulotlar hisoboti",
+    path: "/report-according-by-one-ingredient",
+    positions: width ? [0, 0, 80] : [90, -90, 90],
+    icon: <TbReportAnalytics />,
   },
   {
     id: "6",

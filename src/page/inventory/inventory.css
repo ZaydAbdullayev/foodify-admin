@@ -31,21 +31,19 @@
   font-size: var(--fs5);
 }
 
-.inventory_header > select {
-  height: var(--bwh);
-  padding: 0 5%;
-  border: none;
-  background: #eee;
-  color: #222;
-  font-size: var(--fs6);
-  border-radius: 10px;
+.inventory_header
+  :where(.css-dev-only-do-not-override-1qxsxy1).ant-select
+  .ant-select-arrow
+  svg {
+  font-size: var(--fs8);
 }
 
-.inventory_header > select > option {
-  background: #eee;
-  color: #222;
-  font-size: var(--fs6);
-  border-radius: 10px;
+.inventory_header
+  :where(
+    .css-dev-only-do-not-override-1qxsxy1
+  ).ant-select-single.ant-select-show-arrow
+  .ant-select-selection-item {
+  font-size: var(--fs7);
 }
 
 .inventory-item > p > span {
@@ -57,7 +55,6 @@
 
 .inventory-item > p > span > del {
   color: #ff0000;
-  /* font-size: var(--fs7); */
 }
 
 .inventory_btn-box {

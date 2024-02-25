@@ -24,10 +24,7 @@ export const StorageInvoices = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/ingredients/${res_id}`,
-    tags: ["ingredient"],
-  });
+  
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
     url: `get/receivedGoods/${res_id}`,
     tags: ["invoices"],
@@ -333,7 +330,6 @@ export const StorageInvoices = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
         setCheckedData={setCheckedData}
         getProduct={getProduct}

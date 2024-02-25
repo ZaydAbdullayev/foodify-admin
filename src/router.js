@@ -59,6 +59,8 @@ import { NothificationPage } from "./page/nothification/nothification.jsx";
 import { Inventory } from "./page/inventory/inventory.jsx";
 import { MyOrder } from "./page/my-orders/my-order.jsx";
 import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx";
+import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
+import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -182,6 +184,10 @@ export const Router = () => {
               <Route path="documents" element={<Document />} />
               <Route path="navigation" element={<NavigationPanel />} />
               <Route
+                path="report-according-by-one-ingredient"
+                element={<ReportOneIngredient />}
+              />
+              <Route
                 path="ingredient-reports"
                 element={<ReportIngredients />}
               />
@@ -189,12 +195,18 @@ export const Router = () => {
 
             {/* ============== pages of the single ================= */}
             <Route path="more/info/:id" element={<ShowProduct />} />
+            <Route
+              path="get-full-report
+              /:start/:end/:res_id/:storage_id/:storage/:id/:item"
+              element={<FullReportById />}
+            />
             <Route path="view/food-report/:id" element={<ReportOneItems />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"
               element={<Orders />}
             />
+
             {/* ============== pages of the modal ================= */}
             <Route path="add/product" element={<Addproduct />} />
             <Route path="workers/add" element={<AddWorker />} />

@@ -6,6 +6,8 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
+import { DatePicker, ConfigProvider, theme } from "antd";
+import dayjs from "dayjs";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -37,20 +39,6 @@ export const CashboxTransaction = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
-  //   const getProduct = (item, status) => {
-  //     const isChecked = checkedData?.some((i) => i.id === item?.id);
-  //     if (status === 0) {
-  //       setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
-  //       return;
-  //     }
-  //     if (isChecked) {
-  //       setCheckedData((prevData) =>
-  //         prevData?.map((i) => (i.id === item?.id ? item : i))
-  //       );
-  //     } else {
-  //       setCheckedData((prevData) => [...prevData, item]);
-  //     }
-  //   };
 
   const sortData =
     cashTrData?.data &&
@@ -203,6 +191,15 @@ export const CashboxTransaction = () => {
       </div>
       <UniversalModal type="trsn">
         <input type="date" name="date" defaultValue={today} required />
+        <ConfigProvider
+          theme={{
+            DatePicker: {
+              algorithm: false,
+            },
+          }}
+        >
+          <DatePicker name="date" defaultValue={dayjs(today)} />
+        </ConfigProvider>
         <select
           name="transaction_type"
           onChange={(e) => setModalType(e.target.value)}

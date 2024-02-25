@@ -79,7 +79,7 @@ export const Orders = () => {
       cartItem.quantity++;
       localStorage?.setItem("cart", JSON?.stringify(cart));
     } else {
-      cart?.push({ ...item, quantity: 1 });
+      cart?.push({ ...item, quantity: 1, status: 0 });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   };

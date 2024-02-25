@@ -22,10 +22,6 @@ export const InvoiceInvantar = () => {
   const res_id = useSelector((state) => state.re_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/foods/${res_id}`,
-    tag: ["s-product"],
-  });
   const { data: preOrder = [], isLoading } = useFetchDataQuery({
     url: `get/preOrders/${res_id}`,
     tags: ["pre-order"],
@@ -271,7 +267,6 @@ export const InvoiceInvantar = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
         setCheckedData={setCheckedData}
         getProduct={getProduct}

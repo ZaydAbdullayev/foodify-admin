@@ -17,16 +17,11 @@ export const StorageDamaged = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
-    tags: ["invoices"],
-  });
   const { data: demagedData = [], isLoading } = useFetchDataQuery({
     url: `get/damagedGoods/${res_id}`,
     tags: ["damaged"],
@@ -297,7 +292,6 @@ export const StorageDamaged = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
         setCheckedData={setCheckedData}
         getProduct={getProduct}
@@ -308,8 +302,6 @@ export const StorageDamaged = () => {
               1,
           }
         }
-        setId={setId}
-        id={id}
         acIngredients={acIngredients}
         acItem={acItem}
       />

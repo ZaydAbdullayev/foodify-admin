@@ -7,22 +7,18 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { DatePicker, Select, InputNumber, Input } from "antd";
-import dayjs from "dayjs";
 
-export const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  data,
-  getProduct,
-  NUM,
-  setId,
-  id,
-}) => {
+export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const acItem = useSelector((state) => state.activeThing);
+  const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
+  const [id, setId] = useState(acS);
+  const { data = [] } = useFetchDataQuery({
+    url: `get/storageItems/${res_id}/${id}`,
+    tags: ["invoices"],
+  });
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
     tags: ["store"],
@@ -121,7 +117,11 @@ export const InvoicesModal = ({
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
           <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>

@@ -6,7 +6,7 @@ import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
 import { rePermission, resId } from "./permission";
 import { reGetUrl, reUModal } from "./u-modal";
-import { reActive, reStorageId } from "./active";
+import { reActive, reActiveSt_id, reStorageId } from "./active";
 import { reCalc } from "./calc";
 import { reModalType } from "./u-modal";
 import { reActiveThing } from "./active";
@@ -39,6 +39,7 @@ export const store = configureStore({
     nothificate: reNothification,
     resolve: resolve,
     storageId: reStorageId,
+    activeSt_id: reActiveSt_id,
     delRouter: rootDocuments,
     [api.reducerPath]: api.reducer,
   }),

@@ -10,20 +10,17 @@ import { useSelector } from "react-redux";
 // import { CalculateTotalP } from "../../../service/calc.service";
 // import { CalculateTotalQuantity } from "../../../service/calc.service";
 
-export const InvoicesModal = ({
-  checkedData,
-  data,
-  getProduct,
-  NUM,
-  setCheckedData,
-}) => {
+export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const [activePart, setActivePart] = React.useState(1);
-  const res_id = useSelector((state) => state?.res_id);
   const acItem = useSelector((state) => state?.activeThing);
   const id = useSelector((state) => state?.activeSt_id);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
+  const { data = [] } = useFetchDataQuery({
+    url: `get/foods/${user > id}`,
+    tag: ["s-product"],
+  });
   const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
+    url: `get/storage/${user?.id}`,
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
@@ -115,7 +112,11 @@ export const InvoicesModal = ({
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": "25%" }}>Nomi</p>
           <p style={{ "--data-line-size": "14%" }}>O'. birligi</p>

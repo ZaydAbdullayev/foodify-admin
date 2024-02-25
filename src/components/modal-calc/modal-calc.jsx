@@ -345,7 +345,7 @@ export const UniversalProductControl = ({
   const dispatch = useDispatch();
   React.useEffect(() => {
     if (store?.data?.length > 0) {
-      dispatch(acStorageId(store?.data[0]?.id));
+      dispatch(acStorageId(store?.data?.[0]?.id));
     }
   }, [dispatch, store?.data]);
 

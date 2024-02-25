@@ -17,7 +17,6 @@ export const StorageCarryUp = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState(null);
-  const [id, setId] = useState(0);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
@@ -26,10 +25,7 @@ export const StorageCarryUp = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
-    tags: ["invoices"],
-  });
+
   const { data: cuttingData = [], isLoading } = useFetchDataQuery({
     url: `/get/movedGoods/${res_id}`,
     tags: ["carry-up"],
@@ -282,7 +278,6 @@ export const StorageCarryUp = () => {
         </div>
       </div>
       <InvoicesModal
-        data={ingredientData?.data}
         checkedData={checkedData}
         setCheckedData={setCheckedData}
         getProduct={getProduct}
@@ -293,8 +288,6 @@ export const StorageCarryUp = () => {
               1,
           }
         }
-        setId={setId}
-        id={id}
         acItem={acItem}
         acIngredients={acIngredients}
       />

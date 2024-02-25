@@ -1,8 +1,12 @@
+import React from "react";
 import { useState } from "react";
-import { DatePicker, Input, InputNumber, Select, Checkbox } from "antd";
+import { DatePicker, Input, InputNumber, Select, Checkbox, Table } from "antd";
 import dayjs from "dayjs";
+import { useDispatch } from "react-redux";
+import { acActiveSt_id } from "../redux/active";
 
 export const GenerateField = (fieldData, index) => {
+  const dispatch = useDispatch();
   const [datas, setDatas] = useState({ name: "", id: "" });
   const {
     type = "text",
@@ -12,15 +16,17 @@ export const GenerateField = (fieldData, index) => {
     name = "",
     size = 0,
     extra = "",
+    take_id = false,
   } = fieldData;
 
   const getExtraValue = (extra) => {
     console.log(extra);
     const values = extra?.split("=")?.[1]?.split("|");
     console.log("gv", values);
-    // ext_name = values[0];
-    // ext_id = values[1];
     setDatas({ ...datas, name: values[0], id: values[1] });
+    if (take_id) {
+      dispatch(acActiveSt_id(values[1]));
+    }
   };
 
   switch (type) {
@@ -137,4 +143,13 @@ export const GenerateField = (fieldData, index) => {
     default:
       return null;
   }
+};
+
+export const DynamicTable = ({ data }) => {
+  const columns = Object.keys(data[0]).map((key) => ({
+    title: key,
+    dataIndex: key,
+    key: key,
+  }));
+  return <Table dataSource={data} columns={columns} />;
 };

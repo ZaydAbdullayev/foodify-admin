@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./inventory.css";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { usePostDataMutation } from "../../service/fetch.service";
@@ -6,6 +6,7 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
+import { Select } from "antd";
 
 import { AiOutlineFileSync } from "react-icons/ai";
 import { MdOutlineHistory, MdCloudDone } from "react-icons/md";
@@ -31,6 +32,8 @@ export const Inventory = () => {
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
+  const syncRef = useRef();
+  console.log("ref", syncRef);
   const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -135,16 +138,19 @@ export const Inventory = () => {
               {new Date(active.sync_time).toLocaleDateString()}
             </span>
           ) : (
-            <select
+            <Select
               name="storage"
-              onChange={(e) => setStorageId(e.target.value)}
-            >
-              {stores.data?.map((store) => (
-                <option key={store.id} value={store.id}>
-                  {store.name}
-                </option>
-              ))}
-            </select>
+              style={{ fontSize: "10px" }}
+              defaultValue={{
+                value: stores?.data?.[0]?.id,
+                label: "Ombor tanlang",
+              }}
+              onChange={setStorageId}
+              options={stores?.data?.map((item) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+            />
           )}
         </div>
         <div className="inventory_btn-box">

@@ -109,3 +109,5 @@ export const calculateTotal = (data) => {
     profit: remainingPrice,
   };
 };
+
+

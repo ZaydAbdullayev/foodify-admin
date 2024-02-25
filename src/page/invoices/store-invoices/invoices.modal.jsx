@@ -8,19 +8,16 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 
-export const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  data,
-  getProduct,
-  NUM,
-}) => {
-  // const today = new Date().toISOString().split("T")[0];
+export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const s_id = useSelector((state) => state.activeSt_id);
   const [id, setId] = useState(s_id);
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
+  const { data = [] } = useFetchDataQuery({
+    url: `get/ingredients/${res_id}`,
+    tags: ["ingredient"],
+  });
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
     tags: ["store"],
@@ -157,7 +154,11 @@ export const InvoicesModal = ({
       >
         <div className="product_box_item">
           <label aria-label="checked this elements">
-            <input type="checkbox" name="id" onClick={() => getProduct(data)} />
+            <input
+              type="checkbox"
+              name="id"
+              onClick={() => setCheckedData(data)}
+            />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
           <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>
