@@ -1,5 +1,5 @@
-import React from "react";
-import "./full-report";
+import React, { useState, memo } from "react";
+import "./full-report.css";
 import { useParams } from "react-router-dom";
 import { DynamicTable } from "../../../hooks/generate.tags";
 
@@ -17,7 +17,48 @@ export const data = {
   income_details: [
     {
       type: "Invoice Income",
-      details: null,
+      details: [
+        {
+          date: "2024-02-13T10:20:00.000Z",
+          order: 1,
+          quantity: 5,
+          orders: 1,
+          quantitys: 5,
+          orderd: 1,
+        },
+        {
+          date: "2024-02-13T15:50:00.000Z",
+          order: 20,
+          quantity: 5,
+          orders: 20,
+          quantitys: 5,
+          orderd: 20,
+        },
+        {
+          date: "2024-02-13T19:00:00.000Z",
+          order: 5,
+          quantity: 5,
+          orders: 5,
+          quantitys: 5,
+          orderd: 5,
+        },
+        {
+          date: "2024-02-13T15:50:00.000Z",
+          order: 20,
+          quantity: 5,
+          orders: 20,
+          quantitys: 5,
+          orderd: 20,
+        },
+        {
+          date: "2024-02-13T19:00:00.000Z",
+          order: 5,
+          quantity: 5,
+          orders: 5,
+          quantitys: 5,
+          orderd: 5,
+        },
+      ],
     },
     {
       type: "Displacement Income",
@@ -104,33 +145,53 @@ export const data = {
   final_quantity: 16,
 };
 
-export const FullReportById = () => {
+export const FullReportById = memo(() => {
   const values = useParams();
-  //   const location = useLocation()
-  const allDetails = [...data.income_details, ...data.expense_details];
+  const [type, setType] = useState(values.type || "income");
+  const today = new Date().toLocaleDateString();
+  const details =
+    type === "income" ? data.income_details : data.expense_details;
   return (
-    <div className="full-report-container">
+    <div className="container full-report-container">
       <p>
-        {values.start}-dan {values.end}-gacha {""}
-        {values.item} uchun umumiy hisobot
+        {values.start || today}-dan {values.end || today}-gacha {""}
+        {values.item || "Sabzi"} uchun umumiy hisobot
       </p>
       <div className="full-report-header">
         <p>Ombor: {data.storage}</p>
         <p>Ingredient: {data.ingredient_name}</p>
         <p>Boshlang'ich miqdori: {data.old_quantity}</p>
-        <p>Kirim: {data.income}</p>
-        <p>Chiqim: {data.expense}</p>
+        <p
+          className={type === "income" ? "active" : ""}
+          style={{ cursor: "pointer" }}
+          onClick={() => setType("income")}
+        >
+          Kirim: {data.income}
+        </p>
+        <p
+          className={type === "expense" ? "active" : ""}
+          style={{ cursor: "pointer" }}
+          onClick={() => setType("expense")}
+        >
+          Chiqim: {data.expense}
+        </p>
         <p>Qolgan miqdori: {data.final_quantity}</p>
       </div>
       <div className="full-report-details">
-        {allDetails.map((item, index) => {
+        {details.map((item, index) => {
           return (
-            <div className="_details-content">
-              <DynamicTable data={allDetails} />
-            </div>
+            item.details !== null && (
+              <div
+                className="_details-content"
+                style={{ "--grid-row-table-row": item.details.length + 2 }}
+              >
+                <p>{item.type}</p>
+                <DynamicTable data={item?.details} index={index} />
+              </div>
+            )
           );
         })}
       </div>
     </div>
   );
-};
+});

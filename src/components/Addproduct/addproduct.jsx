@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { LoadingBtn } from "../loading/loading";
 import { acGetUrl } from "../../redux/u-modal";
 import { useDispatch, useSelector } from "react-redux";
+import { useFetchDataQuery } from "../../service/fetch.service";
+import { useParams } from "react-router-dom";
 
 export const Addproduct = memo(() => {
   const [files, setFiles] = useState([]);
@@ -83,56 +85,52 @@ export const Addproduct = memo(() => {
   );
 });
 
-const data = {
-  id: "273f5f",
-  name: "qaynatma sho'rva",
-  category: "sho'rva",
-  storage: "oshxona ombori",
-  price: "550000",
-  res_id: "2899b5",
-  prime_cost: "100000",
-  profit: "150000",
-  markup: "29",
-  ingredients:
-    '[{"id":"2941f6","name":"kartoshka","unit":"kg","group":"sabzavotlar","res_id":"2899b5","price":100000,"type":"Ingredient","storage_id":null,"amount":"12"},{"id":"5d49b2","name":"hamir","unit":"kg","group":"chuchvaralar","res_id":"2899b5","price":1200,"type":"Ingredient","storage_id":null,"amount":"2"},{"id":"777d2b","name":"sharbat","unit":"l","group":"ichimliklar","res_id":"2899b5","price":"120","type":"Ingredient","storage_id":null,"amount":"2"}]',
-  date: "2023-12-15T19:00:00.000Z",
-  type: "Food",
-};
-
 export const ShowProduct = memo(() => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const ingredientData = JSON.parse(data?.ingredients);
+  const { data } = useFetchDataQuery({
+    url: `get/oneFood/${id}`,
+    tags: ["product"],
+  });
+  console.log(JSON.parse(data?.data?.ingredients));
+  const ingredientData = JSON?.parse(data?.data?.ingredients);
   return (
     <div className="product_box open p_info">
       <div className="product_item">
-        <h3>{data.name}</h3>
+        <h3>{data?.data?.name}</h3>
         <span>Product description</span>
         <div>
           Narxi: <i></i>
-          <span>{data.price.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm</span>
+          <span>
+            {data?.data?.price.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+          </span>
         </div>
         <div>
           Tan Narxi: <i></i>
-          <span>{data.prime_cost.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm</span>
+          <span>
+            {data?.data?.prime_cost.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+          </span>
         </div>
         <div>
           Foyda: <i></i>
-          <span>{data.profit.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm</span>
+          <span>
+            {data?.data?.profit.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+          </span>
         </div>
         <div>
-          Kategoriyasi: <i></i> <span>{data.category}</span>
+          Kategoriyasi: <i></i> <span>{data?.data?.category}</span>
         </div>
         <div>
-          Ombor: <i></i> <span>{data.storage}</span>
+          Ombor: <i></i> <span>{data?.data?.storage}</span>
         </div>
         <div>
           Ingredientlari:{" "}
           <ol>
             {ingredientData?.map((item) => {
               return (
-                <li>
-                  {item.name} - {item.amount} <span>{item.unit}</span>
-                  {item.price} so'm
+                <li key={item?.id}>
+                  {item?.name} - {item?.amount} <span>{item?.unit}</span>
+                  {item?.price} so'm
                 </li>
               );
             })}

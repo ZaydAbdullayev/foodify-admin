@@ -61,6 +61,7 @@ import { MyOrder } from "./page/my-orders/my-order.jsx";
 import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx";
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
+import { Result, Button } from "antd";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -70,7 +71,7 @@ export const Router = () => {
   let sound;
 
   document.addEventListener(
-    "load",
+    "DOMContentLoaded", // "load" yerine "DOMContentLoaded" kullanın
     () => {
       var audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
@@ -84,6 +85,14 @@ export const Router = () => {
     { once: true }
   );
 
+  if (nothificate && sound) {
+    sound.play();
+    setTimeout(() => {
+      dispatch(acNothification(false));
+      if (sound) sound.stop();
+    }, 1000);
+  }
+
   useEffect(() => {
     dispatch(acCloseUModal());
   }, [dispatch, location]);
@@ -92,14 +101,6 @@ export const Router = () => {
     dispatch(acDeviceWidth(true));
   } else {
     dispatch(acDeviceWidth(false));
-  }
-
-  if (nothificate) {
-    sound.play();
-    setTimeout(() => {
-      dispatch(acNothification(false));
-      sound.stop();
-    }, 1000);
   }
 
   return (
@@ -196,10 +197,10 @@ export const Router = () => {
             {/* ============== pages of the single ================= */}
             <Route path="more/info/:id" element={<ShowProduct />} />
             <Route
-              path="get-full-report
-              /:start/:end/:res_id/:storage_id/:storage/:id/:item"
+              path="get-full-report/:res_id/:storage_id/:storage/:id/:item/:type"
               element={<FullReportById />}
             />
+            <Route path="view/fullreport/:id" element={<FullReportById />} />
             <Route path="view/food-report/:id" element={<ReportOneItems />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
@@ -224,8 +225,15 @@ export const Router = () => {
 
 const NotFound = () => {
   return (
-    <>
-      <h1 style={{ color: "#fff" }}>Sahifa Topilmadi</h1>
-    </>
+    <Result
+      status="404"
+      title="404"
+      subTitle="Sahifa topilmadi!"
+      extra={
+        <Button onClick={() => (window.location.href = "/")}>
+          Bosh sahifaga qaytish
+        </Button>
+      }
+    />
   );
 };

@@ -36,6 +36,14 @@ export const UniversalFilterBox = () => {
     url: `get/cashbox/${res_id}`,
     tags: ["cashbox"],
   });
+  const { data: storage = [] } = useFetchDataQuery({
+    url: `get/storage/${res_id}`,
+    tags: ["storage"],
+  });
+  const { data: ingredientData = [] } = useFetchDataQuery({
+    url: `get/ingredients/${res_id}`,
+    tags: ["ingredient"],
+  });
   const navigate = useNavigate();
 
   const today = getFormattedDate(0);
@@ -73,21 +81,20 @@ export const UniversalFilterBox = () => {
     <div className="short-hands_sort__box">
       {status?.includes(5) && (
         <label aria-label="to filter the data according by name">
-          <input
-            type="search"
+          <Input
             name="name"
             placeholder="Nomi bo'yicha qidirish..."
-            onChange={(e) => setSearch({ ...search, name: e.target.value })}
+            aria-label="place for write info"
+            onChange={(e) => setSearch({ ...search, name: e })}
           />
         </label>
       )}
       {status?.includes(4) && (
         <label aria-label="to filter the data according by group">
-          <input
-            type="search"
-            name="groups"
+          <Input
+            name="group"
             placeholder="Guruh bo'yicha qidirish..."
-            onChange={(e) => setSearch({ ...search, groups: e.target.value })}
+            onChange={(e) => setSearch({ ...search, group: e })}
           />
         </label>
       )}
@@ -146,7 +153,7 @@ export const UniversalFilterBox = () => {
           aria-label="select storage"
           onChange={(e) => uploadData(e, "storage")}
           options={
-            data?.data?.map((item) => ({
+            storage?.data?.map((item) => ({
               value: item.id,
               label: item.name,
             })) || []
@@ -155,31 +162,28 @@ export const UniversalFilterBox = () => {
       )}
       {status?.includes(10) && (
         <label aria-label="to filter the data according by waiter">
-          <input
-            type="search"
+          <Input
             name="waiter"
             placeholder="Offitsant bo'yicha qidirish..."
-            onChange={(e) => setSearch({ ...search, waiter: e.target.value })}
+            onChange={(e) => setSearch({ ...search, waiter: e })}
           />
         </label>
       )}
       {status?.includes(11) && (
         <label aria-label="to filter the data according by table/room's location">
-          <input
-            type="search"
+          <Input
             name="location"
             placeholder="Joylashuv bo'yicha qidirish..."
-            onChange={(e) => setSearch({ ...search, location: e.target.value })}
+            onChange={(e) => setSearch({ ...search, location: e })}
           />
         </label>
       )}
       {status?.includes(12) && (
         <label aria-label="to filter the data according by table or room">
-          <input
-            type="search"
+          <Input
             name="table"
             placeholder="Stoll/Xona bo'yicha qidirish..."
-            onChange={(e) => setSearch({ ...search, table: e.target.value })}
+            onChange={(e) => setSearch({ ...search, table: e })}
           />
         </label>
       )}
@@ -217,32 +221,12 @@ export const UniversalFilterBox = () => {
               .toLowerCase()
               .localeCompare((optionB?.label ?? "").toLowerCase())
           }
-          options={[
-            {
-              value: "1",
-              label: "Not Identified",
-            },
-            {
-              value: "2",
-              label: "Closed",
-            },
-            {
-              value: "3",
-              label: "Communicated",
-            },
-            {
-              value: "4",
-              label: "Identified",
-            },
-            {
-              value: "5",
-              label: "Resolved",
-            },
-            {
-              value: "6",
-              label: "Cancelled",
-            },
-          ]}
+          options={
+            ingredientData?.data?.map((item) => ({
+              value: item?.id,
+              label: item?.name,
+            })) || []
+          }
         />
       )}
 

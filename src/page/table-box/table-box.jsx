@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./table-box.css";
 import { Table } from "../../components/table/table";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { UniversalModal } from "../../components/modal/modal";
 import { PatternFormat } from "react-number-format";
@@ -15,6 +15,7 @@ export const TableBox = () => {
     tags: ["table"],
   });
   const [active, setActive] = useState(category?.data?.[0]);
+  const acItem = useSelector((state) => state.acActiveThing);
   const [newType, setNewType] = useState("");
   const [type, setType] = useState("stoll");
   const dispatch = useDispatch();
@@ -69,7 +70,11 @@ export const TableBox = () => {
           <Table data={tablesData} />
         </div>
       </div>
-      <UniversalModal type="table">
+      <UniversalModal
+        type="table"
+        title="Stoll/Xona qo'shish"
+        status={acItem?.id ? false : true}
+      >
         <select name="location" onChange={(e) => setNewType(e.target.value)}>
           <option value="">Joylashuv tanlang</option>
           {category?.data?.map((item) => (

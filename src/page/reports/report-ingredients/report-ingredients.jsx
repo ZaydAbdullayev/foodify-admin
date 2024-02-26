@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { storageD } from "../../storage/store-data";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
 import { acNavStatus } from "../../../redux/navbar.status";
+import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -21,6 +22,7 @@ export const ReportIngredients = () => {
     tags: ["category"],
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
@@ -160,15 +162,9 @@ export const ReportIngredients = () => {
                         "--data-line-size": "8%",
                         justifyContent: "center",
                       }}
-                      onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
+                      onClick={() => navigate(`/report-ingredients/${item.id}`)}
                     >
-                      <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
-                        tafsilot
-                      </u>
+                      <u style={{ color: "#787aff" }}>tafsilot</u>
                     </p>
                     <p
                       style={{

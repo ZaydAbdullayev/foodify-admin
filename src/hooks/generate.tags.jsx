@@ -145,11 +145,11 @@ export const GenerateField = (fieldData, index) => {
   }
 };
 
-export const DynamicTable = ({ data }) => {
+export const DynamicTable = ({ data, index }) => {
   const columns = Object.keys(data[0]).map((key) => ({
     title: key,
     dataIndex: key,
     key: key,
   }));
-  return <Table dataSource={data} columns={columns} />;
+  return <Table dataSource={data} columns={columns} key={index} />;
 };
