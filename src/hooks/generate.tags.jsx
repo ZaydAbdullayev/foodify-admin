@@ -20,13 +20,15 @@ export const GenerateField = (fieldData, index) => {
   } = fieldData;
 
   const getExtraValue = (extra) => {
-    console.log(extra);
     const values = extra?.split("=")?.[1]?.split("|");
-    console.log("gv", values);
     setDatas({ ...datas, name: values[0], id: values[1] });
     if (take_id) {
       dispatch(acActiveSt_id(values[1]));
     }
+  };
+
+  const getSelectValue = (value) => {
+    setDatas({ ...datas, select: value });
   };
 
   switch (type) {
@@ -34,15 +36,20 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Select
-            key={name}
-            name={name}
-            style={{ width: size }}
+            key={index + 3490043}
             aria-label="place for choose option"
             defaultValue={df_value}
+            onChange={getSelectValue}
             options={options.map((item) => ({
               label: item?.name,
               value: item?.name,
             }))}
+          />
+          <input
+            name={name}
+            key={index + 349343}
+            type="hidden"
+            value={datas?.select}
           />
         </>
       );
@@ -51,11 +58,10 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Input
-            key={name}
+            key={index + 87590043}
             name={name}
             placeholder={plc_hr}
             defaultValue={df_value}
-            style={{ width: size }}
             aria-label="place for write info"
           />
         </>
@@ -65,10 +71,9 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <DatePicker
-            key={name}
+            key={index + 976543}
             name={name}
             defaultValue={dayjs(df_value)}
-            style={{ width: size }}
             aria-label="place for select date"
           />
         </>
@@ -78,7 +83,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Checkbox
-            key={name}
+            key={index + 123443}
             name={name}
             defaultChecked={df_value}
             aria-label="place for check this element"
@@ -89,13 +94,12 @@ export const GenerateField = (fieldData, index) => {
     case "inputN":
       return (
         <InputNumber
-          key={name}
+          key={index + 65343}
           name={name}
           placeholder={plc_hr}
           defaultValue={df_value}
           min={1}
           max={99999}
-          style={{ width: size }}
           aria-label="place for write number value"
         />
       );
@@ -104,7 +108,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <input
           type="hidden"
-          key={extra}
+          key={index + 87653}
           name={name}
           defaultValue={df_value}
           aria-label="place for secret value"
@@ -115,8 +119,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Select
-            key={name}
-            style={{ width: size }}
+            key={index + 85443}
             aria-label="place for choose option"
             defaultValue={df_value}
             onChange={getExtraValue}
@@ -126,6 +129,7 @@ export const GenerateField = (fieldData, index) => {
             }))}
           />
           <input
+            key={index + 12443}
             type="hidden"
             name={name}
             value={datas?.name}
@@ -134,6 +138,7 @@ export const GenerateField = (fieldData, index) => {
           <input
             type="hidden"
             name={extra}
+            key={index + 93853}
             value={datas?.id}
             aria-label={`place for secret value ${datas?.id}`}
           />
@@ -151,5 +156,5 @@ export const DynamicTable = ({ data, index }) => {
     dataIndex: key,
     key: key,
   }));
-  return <Table dataSource={data} columns={columns} key={index} />;
+  return <Table dataSource={data} columns={columns} key={index + 3490043} />;
 };

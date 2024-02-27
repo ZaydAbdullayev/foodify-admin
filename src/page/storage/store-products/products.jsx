@@ -335,9 +335,7 @@ export const StorageProducts = () => {
               type: "s_extra",
               name: "category",
               size: "15%",
-              df_value: acItem?.category
-                ? { value: "default", label: "Kategoriya tanlang*" }
-                : { value: acItem?.category, label: acItem?.category },
+              df_value: { value: "default", label: "Kategoriya tanlang*" },
               options: category?.data,
             },
             {
@@ -351,6 +349,13 @@ export const StorageProducts = () => {
               type: "inputD",
               name: "date",
               df_value: acItem?.date,
+              size: "15%",
+            },
+            {
+              type: "input",
+              name: "description",
+              plc_hr: "Tavsif*",
+              df_value: acItem?.description,
               size: "15%",
             },
             {

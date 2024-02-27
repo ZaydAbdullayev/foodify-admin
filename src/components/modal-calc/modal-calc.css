@@ -31,36 +31,14 @@
 }
 
 .u-control_form_box {
+  flex-wrap: wrap;
   gap: var(--gap6);
   color: #fff;
   z-index: 99;
 }
 
-.u-control_form_box > label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: var(--fs6);
-}
-
-/* .u-control_form_box :where(select, input, label) {
-  width: var(--input-width);
-  height: var(--univh);
-  padding: 0 0.5%;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #eee;
-  font-size: var(--fs7);
-  letter-spacing: 1px;
-} */
-
-.u-control_form_box > select > option {
-  line-height: 2;
-  font-size: var(--fs6);
-  background: #444;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
+.u-control_form_box > input {
+  width: 15%;
 }
 
 /* =========== universal control box ============ */
@@ -275,6 +253,7 @@
   flex-direction: column;
   gap: var(--gap6);
   border: 1px solid #ddd8;
+  overflow-y: auto;
 }
 /* 
 .u-control_calc_body .product_box_body {
@@ -361,12 +340,44 @@
   background: #333;
 }
 
-@media (max-width: 600px) {
-  /* .u-control-container {
-    flex-direction: column;
-    flex-wrap: nowrap;
+@media (max-width: 1200px) {
+  .u-control-container {
     overflow-y: auto;
-  } */
+  }
+
+  .u-control_add_box {
+    width: 100%;
+    height: 80%;
+  }
+
+  .section_u {
+    height: 100%;
+  }
+
+  .u-control_calc_box {
+    width: 100%;
+    height: auto;
+    padding-bottom: 8%;
+  }
+
+  .u-control_calc_box .u-control_calc_body {
+    height: 500px;
+  }
+}
+
+@media (max-width: 900px) {
+  .u-control_form_box > input {
+    width: 20%;
+  }
+  .u-control_add_box {
+    height: 70%;
+  }
+  .product_box_item > p > :where(input, select) {
+    width: 95%;
+  }
+}
+
+@media (max-width: 600px) {
   .u-control-container {
     left: 0;
     bottom: -100vh;
@@ -375,5 +386,16 @@
   }
   .u-control-container.open {
     bottom: var(--nwh);
+  }
+  .u-control_add_box {
+    height: 500px;
+    width: 100vw;
+    overflow-x: auto;
+  }
+  .u-control_calc_box .u-control_calc_body {
+    height: 400px;
+  }
+  .u-control_form_box > input {
+    width: 35%;
   }
 }

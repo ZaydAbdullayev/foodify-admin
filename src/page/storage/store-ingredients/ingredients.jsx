@@ -24,7 +24,7 @@ export const StorageIngredients = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${user?.user?.id}`,
+    url: `get/ingredientGroups/${user?.id}`,
     tags: ["groups"],
   });
   const { data: ingredientData = [], isLoading } = useFetchDataQuery({

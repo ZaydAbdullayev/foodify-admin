@@ -40,7 +40,7 @@ export const StorageGroups = () => {
 
   const handleSwipe = async (direction) => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
-    await setActiveIndex((newIndex + 3) % 3);
+    setActiveIndex((newIndex + 3) % 3);
     navigate(
       `/sections/${
         newIndex === 0

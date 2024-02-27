@@ -5,14 +5,20 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acActiveSt_id } from "../../../redux/active";
 
-export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+export const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+}) => {
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const s_id = useSelector((state) => state.activeSt_id);
-  const [id, setId] = useState(s_id);
+  const dispatch = useDispatch();
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data = [] } = useFetchDataQuery({
     url: `get/ingredients/${res_id}`,
@@ -23,7 +29,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
+    url: `get/storageItems/${res_id}/${s_id}`,
     tags: ["invoices"],
   });
   const { data: suplierData = [] } = useFetchDataQuery({
@@ -61,10 +67,9 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
         (item) => item?.name === acItem?.storage
       );
       const selectedId = selectedItem?.id;
-
-      setId(selectedId);
+      dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, storeData?.data]);
+  }, [acItem?.storage, dispatch, storeData?.data]);
 
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
 
@@ -75,7 +80,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
       type="invoice"
       Pdata={[...checkedData, ...acIngredients]}
       Udata={updatedData}
-      id={id}
+      id={s_id}
       setCheckedData={setCheckedData}
     >
       <UniversalForm
@@ -94,23 +99,6 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             size: "15%",
           },
           {
-            type: "s_extra",
-            name: "ingredient",
-            extra: "ingredient_id",
-            size: "15%",
-            df_value: acItem?.ingredient
-              ? { value: "default", label: "Ingredient tanlang*" }
-              : { value: acItem?.ingredient, label: acItem?.ingredient },
-            options: data,
-          },
-          {
-            type: "input",
-            name: "amount",
-            plc_hr: "Miqdori*",
-            size: "12%",
-            df_value: acItem?.amount || 0,
-          },
-          {
             type: "select",
             name: "supplier",
             size: "15%",
@@ -123,8 +111,9 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             options: suplierData?.data,
           },
           {
-            type: "select",
+            type: "s_extra",
             name: "storage",
+            extra: "storage_id",
             take_id: true,
             size: "15%",
             df_value: acItem?.storage
@@ -157,7 +146,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -168,7 +157,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
           <p style={{ "--data-line-size": "15%" }}>Jami</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item) => {
             const checked = [...checkedData, ...acIngredients]?.find(
               (i) => i.id === item?.id
             );

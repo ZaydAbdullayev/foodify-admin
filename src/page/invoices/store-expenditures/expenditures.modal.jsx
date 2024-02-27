@@ -5,18 +5,24 @@ import { UniversalProductControl } from "../../../components/modal-calc/modal-ca
 import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acActiveSt_id } from "../../../redux/active";
 
-export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+export const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+}) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const acItem = useSelector((state) => state.activeThing);
   const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
-  const [id, setId] = useState(acS);
+  const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
+    url: `get/storageItems/${res_id}/${acS}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -24,14 +30,14 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
     tags: ["store"],
   });
   const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${res_id}`,
-    tags: ["groups"],
+    url: `get/InvoiceGroups/${res_id}`,
+    tags: ["invoice-group"],
   });
   const acIngredients = acItem?.ingredients
     ? JSON?.parse(acItem?.ingredients)
     : [];
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem?.id) || {};
+    const oldData = data?.data?.find((old) => old.id === newItem?.id) || {};
 
     if (oldData) {
       return {
@@ -53,9 +59,9 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
       );
       const selectedId = selectedItem?.id;
 
-      setId(selectedId);
+      dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, setId, storeData?.data]);
+  }, [acItem?.storage, dispatch, storeData?.data]);
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
@@ -77,7 +83,6 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "s_extra",
@@ -120,7 +125,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -131,14 +136,14 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item, index) => {
             const checked = [...checkedData, ...acIngredients]?.find(
               (i) => i.id === item?.id
             );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item?.id}
+                key={index + 298283200}
               >
                 <label>
                   <input

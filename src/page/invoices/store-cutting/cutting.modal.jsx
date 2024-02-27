@@ -7,15 +7,21 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { CalculateTotalP } from "../../../service/calc.service";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acActiveSt_id } from "../../../redux/active";
 
-export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+export const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+}) => {
   const [activePart, setActivePart] = useState(1);
-  const acS = useSelector((state) => state.activeSt_id);
-  const [id, setId] = useState(acS);
+  const id = useSelector((state) => state.activeSt_id);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
+  const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
     url: `get/storageItems/${res_id}/${id}`,
     tags: ["invoices"],
@@ -56,10 +62,9 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
         (item) => item?.name === acItem?.storage
       );
       const selectedId = selectedItem?.id;
-
-      setId(selectedId);
+      dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, setId, storeData?.data]);
+  }, [acItem?.storage, dispatch, storeData?.data]);
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (

@@ -21,7 +21,7 @@ export const StorageDep = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: depData = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.user?.id}/departments`,
+    url: `get/${user?.id}/departments`,
     tags: ["department"],
   });
   const { data: storeData = [] } = useFetchDataQuery({

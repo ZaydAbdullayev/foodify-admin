@@ -10,8 +10,9 @@ import { usePostDataMutation } from "../../../service/fetch.service";
 // import { Select } from "antd";
 
 import { BsReceiptCutoff } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acActiveSt_id } from "../../../redux/active";
 
 export const InvoicesModal = ({
   checkedData,
@@ -25,8 +26,8 @@ export const InvoicesModal = ({
   const [activePart, setActivePart] = useState(1);
   const [calcData, setCalcData] = useState([]);
   const res_id = useSelector((state) => state?.res_id);
-  const acS = useSelector((state) => state?.activeSt_id);
-  const [id, setId] = useState(acS);
+  const id = useSelector((state) => state?.activeSt_id);
+  const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
   const { data = [] } = useFetchDataQuery({
     url: `get/storageItems/${res_id}/${id}`,
@@ -70,9 +71,9 @@ export const InvoicesModal = ({
       );
       const selectedId = selectedItem?.id;
 
-      setId(selectedId);
+      dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, setId, storeData?.data]);
+  }, [acItem?.storage, dispatch, storeData?.data]);
 
   const revordCalcData = async (data) => {
     if (id === null) return alert("Ombor tanlanmagan");

@@ -127,7 +127,7 @@ export const StorageExpenditures = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item) => {
+            sortData?.map((item, index) => {
               const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
                 day: "numeric",
                 month: "numeric",
@@ -141,7 +141,7 @@ export const StorageExpenditures = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item?.id}
+                  key={index + 29820093483949}
                 >
                   <div
                     className={

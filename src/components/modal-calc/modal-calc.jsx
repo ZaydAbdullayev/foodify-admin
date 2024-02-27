@@ -320,7 +320,7 @@ export const UniversalControlModal = ({
   );
 };
 
-export const UniversalForm = ({ children, formData }) => {
+export const UniversalForm = ({ formData }) => {
   return (
     <div className="wdfaic u-control_form_box">
       {formData?.map((field, index) => GenerateField(field, index))}

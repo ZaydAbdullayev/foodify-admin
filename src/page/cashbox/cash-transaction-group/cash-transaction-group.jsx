@@ -185,7 +185,7 @@ export const TransactionGroups = () => {
       </div>
       <UniversalModal
         type="cashboxGr"
-        title={"Kassa qo'shish"}
+        title={"To'lov guruhlari"}
         status={acItem?.id ? false : true}
       >
         <input type="text" name="name" placeholder="Kassa nomi*" required />

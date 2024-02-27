@@ -24,12 +24,13 @@ export const Addproduct = memo(() => {
 
     ApiService.fetching("get/imgUrl", { img: img })
       .then((res) => {
-        const img = res?.data?.data;
+        const image = res?.data?.data;
+        console.log(image);
+        dispatch(acGetUrl({ st: false, img: image }));
         es("Rasm muaffaqiyatli qo'shildi", { variant: "success" });
         ClearForm(".add_product");
         setFiles([]);
         setImg(null);
-        dispatch(acGetUrl({ st: false, img: img }));
       })
       .catch((err) => {
         es("Qo'shishda xatolik yuz berdi", { variant: "error" });

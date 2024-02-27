@@ -26,7 +26,7 @@ export const StorageCatgegories = () => {
     tags: ["department"],
   });
   const { data: storeData = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.user?.id}/categories`,
+    url: `get/${user?.id}/categories`,
     tags: ["category"],
   });
   React.useEffect(() => {

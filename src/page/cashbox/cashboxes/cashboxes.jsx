@@ -29,11 +29,11 @@ export const Cashboxes = () => {
 
   const sortData =
     cashboxData?.data &&
-    [...cashboxData.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
+    [...(cashboxData?.data || [])]?.sort((a, b) => {
+      if (sort?.state) {
+        return a?.name?.localeCompare(b?.name);
       } else {
-        return b.name.localeCompare(a.name);
+        return b?.name?.localeCompare(a?.name);
       }
     });
 
