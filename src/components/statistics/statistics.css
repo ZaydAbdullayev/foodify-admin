@@ -121,3 +121,14 @@
   background: #333333a1;
   border-radius: 30px;
 }
+
+@media (max-width: 600px) {
+  .wrapper_item {
+    width: 100%;
+  }
+
+  .statistic_product {
+    width: 100%;
+    height: 300px;
+  }
+}

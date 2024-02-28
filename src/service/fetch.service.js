@@ -19,7 +19,7 @@ const api = createApi({
   endpoints: (builder) => ({
     fetchData: builder.query({
       query: ({ url }) => url,
-      providesTags: (result, error, { tags }) => [{ type: "dynamic", tags }], // Eğer tags varsa, kullan; yoksa boş bir dizi kullan
+      providesTags: (result, error, { tags }) => [{ type: "dynamic", tags }],
     }),
     postData: builder.mutation({
       query: ({ url, data }) => ({

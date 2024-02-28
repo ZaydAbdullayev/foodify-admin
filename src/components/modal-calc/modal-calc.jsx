@@ -432,7 +432,7 @@ export const CalcResult = ({ children, status }) => {
   );
 };
 
-export const CalcResultHeader = ({ children }) => {
+export const CalcResultHeader = ({ children, headerKeys }) => {
   return <div className="product_box_item">{children}</div>;
 };
 

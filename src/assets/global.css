@@ -53,16 +53,6 @@ textarea {
   animation: skeleton 4s linear infinite;
 }
 
-@media (max-width: 500px) {
-  ::selection {
-    display: none;
-  }
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .stm-animate {
   width: 50px;
   height: 50px;
@@ -151,5 +141,15 @@ textarea {
 
   100% {
     background-position: 400%;
+  }
+}
+
+@media (max-width: 500px) {
+  ::selection {
+    display: none;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 }

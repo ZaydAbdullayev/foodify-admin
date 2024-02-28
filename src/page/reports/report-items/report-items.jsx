@@ -11,10 +11,13 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { useNavigate } from "react-router-dom";
 
 export const ReportItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState(null);
+  const navigate = useNavigate();
+  console.log(showMore);
   const acItem = useSelector((state) => state.activeThing);
   const { date } = useSelector((state) => state.uSearch);
   const res_id = useSelector((state) => state.res_id);
@@ -27,60 +30,6 @@ export const ReportItems = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
-
-  const ds = [
-    {
-      name: "sandvich",
-      quantity: 10,
-      sale_price: {
-        average_price: 22000,
-        total: 220000,
-      },
-      prime_cost: {
-        average_price: 1700,
-        total: 17000,
-      },
-      profit: {
-        average_price: 20300,
-        total: 203000,
-      },
-      percentage: "1194.12",
-    },
-    {
-      name: "second test",
-      quantity: 1,
-      sale_price: {
-        average_price: 20000,
-        total: 20000,
-      },
-      prime_cost: {
-        average_price: 18000,
-        total: 18000,
-      },
-      profit: {
-        average_price: 2000,
-        total: 2000,
-      },
-      percentage: "11.11",
-    },
-    {
-      name: "xs",
-      quantity: 2,
-      sale_price: {
-        average_price: 233,
-        total: 466,
-      },
-      prime_cost: {
-        average_price: 184500,
-        total: 369000,
-      },
-      profit: {
-        average_price: -184267,
-        total: -368534,
-      },
-      percentage: "-99.87",
-    },
-  ];
 
   const headerData = [
     { name: "№", size: "4%" },
@@ -183,17 +132,13 @@ export const ReportItems = () => {
             data?.data?.map((item, index) => {
               return (
                 <div
-                  className={
-                    showMore === item.id
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={"storage_body__box"}
                   key={item.id}
                   style={{ color: item.profit < 0 ? "#f07167" : "" }}
                 >
                   <div
                     className={
-                      acItem === item.id
+                      acItem === item.name
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
@@ -235,77 +180,10 @@ export const ReportItems = () => {
                         "--data-line-size": "7%",
                         justifyContent: "center",
                       }}
-                      onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
+                      onClick={() => navigate(`/view/food-report/${item.id}`)}
                     >
-                      <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
-                        ovqatlar
-                      </u>
+                      <u style={{ color: "#787aff" }}>ovqatlar</u>
                     </p>
-                  </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
-                    </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item">
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item.total}
-                          </p>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               );

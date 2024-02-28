@@ -9,6 +9,7 @@ import { useFetchDataQuery } from "../../service/fetch.service";
 import { calculateMonthRange } from "../../service/calc-date.service";
 import { getFormattedDate } from "../../service/calc-date.service";
 import { calculateWeekRange } from "../../service/calc-date.service";
+import { CgArrowsExchange } from "react-icons/cg";
 
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
@@ -189,19 +190,35 @@ export const UniversalFilterBox = () => {
       )}
       {status?.includes(7) && (
         <label>
-          <RangePicker
-            defaultValue={[dayjs(date.start), dayjs(date.end)]}
-            aria-label="select data from to end"
-            onChange={(date, dateString) =>
-              uploadData(
-                JSON.stringify({
-                  start: dateString?.[0],
-                  end: dateString?.[1],
-                }),
-                "date"
-              )
-            }
-          />
+          {window.innerWidth > 768 ? (
+            <RangePicker
+              defaultValue={[dayjs(date.start), dayjs(date.end)]}
+              aria-label="select data from to end"
+              onChange={(date, dateString) =>
+                uploadData(
+                  JSON.stringify({
+                    start: dateString?.[0],
+                    end: dateString?.[1],
+                  }),
+                  "date"
+                )
+              }
+            />
+          ) : (
+            <>
+              <DatePicker
+                defaultValue={dayjs(date.start)}
+                aria-label="select data from"
+                onChange={(date, dateString) => uploadData(dateString, "start")}
+              />{" "}
+              <CgArrowsExchange style={{ color: "#eee" }} />{" "}
+              <DatePicker
+                defaultValue={dayjs(date.end)}
+                aria-label="select data to"
+                onChange={(date, dateString) => uploadData(dateString, "end")}
+              />
+            </>
+          )}
         </label>
       )}
 

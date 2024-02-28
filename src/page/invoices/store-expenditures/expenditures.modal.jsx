@@ -44,7 +44,7 @@ export const InvoicesModal = ({
         ...newItem,
         old_quantity: oldData?.total_quantity || 0,
         total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + parseInt(newItem?.amount)
+          ? oldData?.total_quantity - parseInt(newItem?.amount)
           : parseInt(newItem?.amount),
         total_price: parseInt(newItem?.amount) * newItem?.price,
       };

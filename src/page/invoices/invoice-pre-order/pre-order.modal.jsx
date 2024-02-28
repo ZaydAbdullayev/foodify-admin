@@ -22,7 +22,7 @@ export const InvoicesModal = ({
   });
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem.id) || {};
+    const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
 
     if (oldData) {
       return {
@@ -89,7 +89,7 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "30%" }}>Miqdor</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item) => {
             const checked = checkedData.some((i) => i.id === item.id);
             return (
               <div

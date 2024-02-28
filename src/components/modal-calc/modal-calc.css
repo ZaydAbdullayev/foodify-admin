@@ -11,9 +11,9 @@
 .u-control-container {
   position: fixed;
   left: var(--nwh);
-  bottom: -100vh;
+  bottom: -100dvh;
   width: calc(100% - var(--nwh));
-  height: calc(100vh - var(--nwh));
+  height: calc(100dvh - var(--nwh));
   padding: var(--pd3);
   display: flex;
   flex-wrap: wrap;
@@ -283,6 +283,7 @@
   align-items: flex-end;
   gap: var(--gap6);
   transition: all 0.5s ease;
+  z-index: 999;
 }
 
 .u-control_action__box.active {
@@ -380,9 +381,13 @@
 @media (max-width: 600px) {
   .u-control-container {
     left: 0;
-    bottom: -100vh;
+    bottom: -100dvh;
     width: 100%;
-    height: calc(100vh - calc(var(--nwh) * 2));
+    height: calc(100dvh - calc(var(--nwh) * 2));
+  }
+
+  .u-control_action__box.active {
+    bottom: calc(var(--nwh) + 10px);
   }
   .u-control-container.open {
     bottom: var(--nwh);
@@ -394,6 +399,7 @@
   }
   .u-control_calc_box .u-control_calc_body {
     height: 400px;
+    padding-bottom: 50px;
   }
   .u-control_form_box > input {
     width: 35%;

@@ -102,6 +102,7 @@ export const Navbar = () => {
           {status?.includes(2) && (
             <button
               type="button"
+              disabled={delDocuments?.[page_code]?.length !== 1}
               style={
                 delDocuments?.[page_code]?.length === 1
                   ? {}
@@ -116,6 +117,7 @@ export const Navbar = () => {
           {status?.includes(3) && (
             <button
               type="button"
+              disabled={delDocuments?.[page_code]?.length === 0}
               style={
                 delDocuments?.[page_code]?.length > 0
                   ? {}

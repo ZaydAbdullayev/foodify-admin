@@ -57,8 +57,8 @@ export const ReportOneItems = () => {
   const headerData = [
     { name: "№", size: "4%" },
     { name: "Turi", size: "5.8%" },
-    { name: "Ochildi", size: "5.8%", position: 1 },
-    { name: "Yopildi", size: "5.8%", position: 1 },
+    { name: "Ochildi", size: "6.8%", position: 1 },
+    { name: "Yopildi", size: "6.8%", position: 1 },
     { name: "Offitsant", size: "5.8%", position: 1 },
     { name: "Xona/Stoll", size: "5.8%", position: 1 },
     { name: "Soni", size: "5.8%", position: 1 },
@@ -80,39 +80,39 @@ export const ReportOneItems = () => {
       position: 1,
       items: { a_price: "O'rtalamasi", qty: "Narxi" },
     },
-    { name: "O'rtalama narx o'sishi", size: "10%", position: 2 },
+    { name: "O'rtalama narx o'sishi", size: "8%", position: 2 },
   ];
 
   const displayKeys = [
     { name: "payment_status", size: "5.8%", position: 1 },
-    { name: "receivedAt", size: "5.8%", position: 1 },
-    { name: "closed_at", size: "5.8%", position: 1 },
+    { name: "receivedAt", size: "6.8%", position: 1, date: true },
+    { name: "closed_at", size: "6.8%", position: 1, date: true },
     { name: "worker_name", size: "5.8%", position: 1 },
     { name: "table_name", size: "5.8%", position: 1 },
-    { name: "quantity", size: "17%", position: 1 },
+    { name: "quantity", size: "5.8%", position: 1 },
     { name: "sale_price", size: "17%", position: 1, child: true },
     { name: "prime_cost", size: "17%", position: 1, child: true },
     { name: "profit", size: "17%", position: 1, child: true },
-    { name: "percentage", size: "10%", position: 2, tick: "%" },
+    { name: "percentage", size: "8%", position: 2, tick: "%" },
   ];
 
   const displayTotalKeys = [
     { name: "payment_status", size: "5.8%", position: 1, tittle: "Jami" },
-    { name: "receivedAt", size: "5.8%", position: 1 },
-    { name: "closed_at", size: "5.8%", position: 1 },
+    { name: "receivedAt", size: "6.8%", tittle: data?.data?.length },
+    { name: "closed_at", size: "6.8%", position: 1 },
     { name: "worker_name", size: "5.8%", position: 1 },
     { name: "table_name", size: "5.8%", position: 1 },
     { name: "quantity", size: "5.8%", position: 1, flex: 1 },
     { name: "sale_price", size: "17%", position: 1, child: true },
     { name: "prime_cost", size: "17%", position: 1, flex: 1, child: true },
     { name: "profit", size: "17%", position: 1, child: true },
-    { name: "percentage", size: "10%", position: 2, tick: "%", flex: 1 },
+    { name: "percentage", size: "8%", position: 2, tick: "%", flex: 1 },
   ];
 
   return (
     <div className="storage_container">
       <UniversalFilterBox />
-      <div className="storage_body">
+      <div className="storage_body small-font">
         <p>
           <span>Taomlar uchun hisobot</span>
         </p>
@@ -166,24 +166,14 @@ export const ReportOneItems = () => {
             data?.data?.map((item, index) => {
               return (
                 <div
-                  className={
-                    showMore === item.id
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={"storage_body__box"}
                   key={item.id}
                   style={{ color: item.profit < 0 ? "#f07167" : "" }}
                 >
-                  <div
-                    className={
-                      acItem === item.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
-                  >
+                  <div className={"storage_body_item"}>
                     <p style={{ "--data-line-size": "4%" }}>{index + 1}</p>
                     {displayKeys?.map(
-                      ({ size, position, name, tick, child }, index) => (
+                      ({ size, position, name, tick, child, date }, index) => (
                         <p
                           key={index}
                           style={{
@@ -206,89 +196,22 @@ export const ReportOneItems = () => {
                             </>
                           ) : (
                             <>
-                              {item[name]}
+                              {date
+                                ? item?.[name] === "0000-00-00"
+                                  ? ""
+                                  : `${item?.[name]
+                                      .split("T")[0]
+                                      .split("-")
+                                      .join(".")}  ${
+                                      item?.[name].split("T")[1].split(".")[0]
+                                    }  `
+                                : item?.[name]}
                               {tick}
                             </>
                           )}
                         </p>
                       )
                     )}
-                    <p
-                      style={{
-                        "--data-line-size": "7%",
-                        justifyContent: "center",
-                      }}
-                      onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
-                      <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
-                        ovqatlar
-                      </u>
-                    </p>
-                  </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
-                    </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item">
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item.total}
-                          </p>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               );
@@ -324,12 +247,6 @@ export const ReportOneItems = () => {
                 </p>
               )
             )}
-            <p
-              style={{
-                "--data-line-size": "7%",
-                justifyContent: "center",
-              }}
-            ></p>
           </div>
         </div>
       </div>

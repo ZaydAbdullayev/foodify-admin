@@ -64,3 +64,7 @@
 .reports_item > label:last-child {
   border-right: none;
 }
+
+.small-font .storage_body_item > :where(p, label) {
+  font-size: var(--fs8);
+}

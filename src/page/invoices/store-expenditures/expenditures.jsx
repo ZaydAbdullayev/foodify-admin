@@ -4,6 +4,7 @@ import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { InvoicesModal } from "./expenditures.modal";
 import { useNavigate } from "react-router-dom";
+import { CalculateTotalP } from "../../../service/calc.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -22,7 +23,7 @@ export const StorageExpenditures = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
     url: `get/usedGoods/${res_id}`,
     tags: ["expenditure"],
@@ -69,6 +70,27 @@ export const StorageExpenditures = () => {
     { name: "cost", size: "15.6%" },
     { name: "group", size: "15.6%" },
     { name: "description", size: "15.6%" },
+  ];
+
+  // ingredients: '[{"id":"0af650","name":"Olma sharbati","unit":"l","group":"Gazli-suv va sharbatlar","res_id":"2899b5","price":8000,"type":"Ingredient","storage_id":null,"amount":"50","old_quantity":0,"total_quantity":100}]';
+
+  const innerHEaderKeys = [
+    { name: "№", border: "1px solid #ccc5" },
+    { name: "Nomi", size: "18.7%", border: "1px solid #ccc5" },
+    { name: "Turi", size: "8.7%", border: "1px solid #ccc5" },
+    { name: "Narx", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "Oldingi soni", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "Soni", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "Keyingi soni", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "Jami", size: "13.7%" },
+  ];
+
+  const innerData = [
+    { name: "name", size: "18.7%", border: "1px solid #ccc5" },
+    { name: "type", size: "8.7%", border: "1px solid #ccc5", short: true },
+    { name: "price", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "total_quantity", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "amount", size: "13.7%", border: "1px solid #ccc5" },
   ];
 
   return (
@@ -134,6 +156,7 @@ export const StorageExpenditures = () => {
                 year: "numeric",
               });
               const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
+              const innerDatas = JSON.parse(item?.ingredients);
               return (
                 <div
                   className={
@@ -192,70 +215,83 @@ export const StorageExpenditures = () => {
                           showMore === item?.id ? { color: "#787aff" } : {}
                         }
                       >
-                        tarix
+                        Tafsilot
                       </u>
                     </p>
                   </div>
                   <div className=" storage-body_inner_item">
                     <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      {innerHEaderKeys.map((item, index) => {
+                        return (
+                          <p
+                            style={{
+                              "--data-line-size": item.size,
+                              borderRight: item.border,
+                            }}
+                            key={index}
+                          >
+                            {item.name}
+                          </p>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
+                    {innerDatas?.map((product, ind) => {
                       return (
                         <div className="storage_body_item inner_item" key={ind}>
                           <p
                             style={{
                               borderRight: "1px solid #ccc5",
+                              justifyContent: "center",
                             }}
                           >
                             {ind + 1}
                           </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
+                          {innerData.map((key, index) => {
+                            return (
+                              <p
+                                style={{
+                                  "--data-line-size": key.size,
+                                  borderRight: key.border,
+                                }}
+                                key={index}
+                              >
+                                {key.short
+                                  ? product[key.name]?.slice(0, 1)
+                                  : product[key.name]}
+                              </p>
+                            );
+                          })}
+                          <p
+                            style={{
+                              "--data-line-size": "13.7%",
+                              borderRight: "1px solid #ccc5",
+                            }}
+                          >
+                            {product?.total_quantity - product?.amount}
                           </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
+                          <p style={{ "--data-line-size": "13.7%" }}>
+                            {product?.price * product?.amount}
                           </p>
                         </div>
                       );
                     })}
+                    <div
+                      className="storage_body_item inner_item"
+                      style={{ background: "#3339" }}
+                    >
+                      <p></p>
+                      <p style={{ "--data-line-size": "66%" }}>
+                        {date} ga ko'ra Jami mablag'
+                      </p>
+                      <p
+                        style={{
+                          "--data-line-size": "30%",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {CalculateTotalP(innerDatas, "price", "amount")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
