@@ -47,7 +47,7 @@ export const InvoicesModal = ({
   });
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem.id) || {};
+    const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
 
     if (oldData) {
       const after = oldData?.total_quantity
@@ -101,7 +101,7 @@ export const InvoicesModal = ({
     });
   };
 
-  const activeData = activePart === 1 ? data : productData?.data;
+  const activeData = activePart === 1 ? data?.data : productData?.data;
   const num = acItem?.order ? acItem?.order : NUM?.num;
 
   return (
@@ -118,20 +118,17 @@ export const InvoicesModal = ({
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "s_extra",
             name: "storage_sender",
             extra: "s_storage",
             take_id: true,
-            size: "15%",
             df_value: { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
           },
@@ -139,14 +136,12 @@ export const InvoicesModal = ({
             type: "s_extra",
             name: "storage_receiver",
             extra: "r_storage",
-            size: "15%",
             df_value: { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
           },
           {
             type: "select",
             name: "invoice_group",
-            size: "15%",
             df_value: { value: "default", label: "Guruh tanlang*" },
             options: groupsData?.data,
           },
@@ -154,7 +149,6 @@ export const InvoicesModal = ({
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: acItem?.description,
           },
         ]}
@@ -168,7 +162,7 @@ export const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": activePart === 1 ? "20%" : "60%" }}>

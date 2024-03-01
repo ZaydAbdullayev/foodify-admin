@@ -43,26 +43,22 @@ export const InvoicesModal = ({
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: Number.num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: today,
-            size: "15%",
           },
           {
             type: "input",
             name: "responsible",
             plc_hr: "Javobgar*",
-            size: "12%",
             df_value: "",
           },
           {
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: "",
           },
           {
@@ -82,7 +78,7 @@ export const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "60%" }}>Nomi</p>

@@ -21,5 +21,8 @@ export const themeConfig = {
       optionSelectedBg: "#555",
       zIndexPopup: 9999,
     },
+    Notification: {
+      zIndexPopup: 9999,
+    },
   },
 };

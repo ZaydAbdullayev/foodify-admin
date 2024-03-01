@@ -81,29 +81,26 @@ export const InvoicesModal = ({
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "s_extra",
             name: "ingredient",
             extra: "ingredient_id",
-            size: "15%",
-            df_value: acItem?.ingredient
-              ? { value: "default", label: "Ingredient tanlang*" }
-              : { value: acItem?.ingredient, label: acItem?.ingredient },
+            df_value: {
+              value: acItem?.ingredient || "default",
+              label: acItem?.ingredient || "Ingredient tanlang*",
+            },
             options: data,
           },
           {
-            type: "input",
+            type: "inputN",
             name: "amount",
             plc_hr: "Miqdori*",
-            size: "12%",
             df_value: acItem?.amount || 0,
           },
           {
@@ -111,7 +108,6 @@ export const InvoicesModal = ({
             name: "storage",
             take_id: true,
             extra: "storage_id",
-            size: "15%",
             df_value: acItem?.storage
               ? { value: acItem?.storage, label: acItem?.storage }
               : { value: "default", label: "Ombor tanlang*" },
@@ -120,7 +116,6 @@ export const InvoicesModal = ({
           {
             type: "select",
             name: "invoice_group",
-            size: "15%",
             df_value: acItem?.invoice_group
               ? {
                   value: acItem?.invoice_group,
@@ -133,7 +128,6 @@ export const InvoicesModal = ({
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: acItem?.description || "",
           },
           {
@@ -152,7 +146,7 @@ export const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -163,7 +157,7 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item) => {
             const checked = [...checkedData, ...acIngredients].find(
               (i) => i.id === item?.id
             );

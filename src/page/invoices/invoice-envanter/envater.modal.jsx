@@ -75,19 +75,16 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "select",
             name: "storage",
             take_id: true,
-            size: "15%",
             df_value: { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
           },
@@ -95,7 +92,6 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: acItem?.description,
           },
           {
@@ -115,7 +111,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "25%" }}>Nomi</p>
@@ -125,7 +121,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
           <p style={{ "--data-line-size": "19%" }}>Miqdor</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item) => {
             const checked = checkedData.some((i) => i.id === item.id);
             return (
               <div

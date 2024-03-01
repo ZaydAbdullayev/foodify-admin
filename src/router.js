@@ -196,6 +196,7 @@ export const Router = () => {
 
             {/* ============== pages of the single ================= */}
             <Route path="more/info/:id" element={<ShowProduct />} />
+            <Route path="more/info/test" element={<FullReportById />} />
             <Route
               path="get-full-report/:res_id/:storage_id/:storage/:id/:item/:type"
               element={<FullReportById />}

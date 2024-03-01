@@ -90,18 +90,15 @@ export const InvoicesModal = ({
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "select",
             name: "supplier",
-            size: "15%",
             df_value: acItem?.supplier
               ? {
                   value: acItem?.supplier,
@@ -115,7 +112,6 @@ export const InvoicesModal = ({
             name: "storage",
             extra: "storage_id",
             take_id: true,
-            size: "15%",
             df_value: acItem?.storage
               ? { value: acItem?.storage, label: acItem?.storage }
               : { value: "default", label: "Ombor tanlang*" },
@@ -125,14 +121,12 @@ export const InvoicesModal = ({
             type: "input",
             name: "responsible",
             plc_hr: "Javobgar*",
-            size: "12%",
             df_value: acItem?.responsible || "",
           },
           {
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: acItem?.description || "",
           },
         ]}

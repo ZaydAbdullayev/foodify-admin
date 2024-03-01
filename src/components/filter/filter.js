@@ -27,6 +27,12 @@ export const UniversalFilter = (data, key, value) => {
   });
 };
 
+export const filterData = (filters) => {
+  // Filtreleme işlemleri burada gerçekleştirilir
+  // Örneğin, veriler üzerinde filter işlemleri yapabilirsiniz
+};
+
+
 export const UniversalFilterBox = () => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();

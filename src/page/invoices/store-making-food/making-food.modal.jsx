@@ -48,7 +48,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
     return newItem;
   });
 
-  const currentData = activePart === 1 ? data : storageItems?.data;
+  const currentData = activePart === 1 ? data?.data : storageItems?.data;
   return (
     <UniversalControlModal
       type="making"
@@ -63,18 +63,15 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             name: "order",
             plc_hr: "Tartib raqam*",
             df_value: NUM.num || 1,
-            size: "5%",
           },
           {
             type: "inputD",
             name: "date",
             df_value: acItem?.date,
-            size: "15%",
           },
           {
             type: "s_extra",
             extra: "food_id",
-            size: "15%",
             df_value: acItem?.food_id
               ? { value: "default", label: "Mahsulot tanlang*" }
               : { value: acItem?.food_id, label: acItem?.food_id },
@@ -84,7 +81,6 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             type: "s_extra",
             take_id: true,
             extra: "storage_sender",
-            size: "15%",
             df_value: acItem?.storage
               ? { value: acItem?.storage, label: acItem?.storage }
               : { value: "default", label: "Beruvchi ombor*" },
@@ -93,7 +89,6 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
           {
             type: "s_extra",
             extra: "storage_receiver",
-            size: "15%",
             df_value: acItem?.storage
               ? { value: acItem?.storage, label: acItem?.storage }
               : { value: "default", label: "Oluvchi ombor*" },
@@ -103,14 +98,12 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             type: "inputN",
             name: "amount",
             plc_hr: "Miqdori*",
-            size: "12%",
             df_value: acItem?.amount || "",
           },
           {
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            size: "12%",
             df_value: acItem?.description || "",
           },
         ]}
@@ -124,7 +117,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "27%" }}>Nomi</p>
@@ -135,7 +128,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
         </div>
         <div className="product_box_body">
           {currentData?.map((item) => {
-            const checked = checkedData.some((i) => i.id === item.id);
+            const checked = checkedData.find((i) => i.id === item.id);
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -178,7 +171,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
                       type="number"
                       defaultValue={item.price}
                       onChange={(e) =>
-                        getProduct({ ...item, price: e.target.value }, 1)
+                        getProduct({ ...checked, price: e.target.value }, 1)
                       }
                     />
                   ) : (
@@ -196,7 +189,7 @@ export const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) 
                       type="number"
                       name="amount"
                       onChange={(e) =>
-                        getProduct({ ...item, amount: e.target.value }, 1)
+                        getProduct({ ...checked, amount: e.target.value }, 1)
                       }
                     />
                   )}

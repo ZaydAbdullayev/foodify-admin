@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./modal-calc.css";
 import { enqueueSnackbar as es } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
@@ -39,6 +39,10 @@ export const UniversalControlModal = ({
   //update points
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setFetchdata({});
+  }, [Pdata, Udata]);
 
   const [api, contextHolder] = notification.useNotification();
   const openWarning = (placement) => {
@@ -293,20 +297,24 @@ export const UniversalControlModal = ({
               <RiImageAddFill />
             </button>
           )}
-          <button
-            type="button"
-            className="relative"
-            onClick={() => fetchValues(fetchdata)}
-            aria-label="add values of the all input's value"
-          >
-            {loading ? <LoadingBtn /> : <FaCheck />}
-          </button>
-          <button
-            type="submit"
-            aria-label="calculate values of the all input's value"
-          >
-            <FaCalculator />
-          </button>
+          {!fetchdata?.ingredients?.length !== 0 ? (
+            <button
+              type="submit"
+              aria-label="calculate values of the all input's value"
+            >
+              <FaCalculator />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="relative"
+              onClick={() => fetchValues(fetchdata)}
+              aria-label="add values of the all input's value"
+            >
+              {loading ? <LoadingBtn /> : <FaCheck />}
+            </button>
+          )}
+
           <button
             type="button"
             onClick={() => closeModal()}

@@ -14,7 +14,6 @@ export const GenerateField = (fieldData, index) => {
     plc_hr = "",
     df_value = "",
     name = "",
-    size = 0,
     extra = "",
     take_id = false,
   } = fieldData;

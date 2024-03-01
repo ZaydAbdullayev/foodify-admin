@@ -11,6 +11,7 @@ import { acOpenUModal } from "../../redux/u-modal";
 import DeleteSelectedElementss from "../../service/delete-elements.service";
 import { enqueueSnackbar as es } from "notistack";
 import { setRelease } from "../../redux/deleteFoods";
+import { notification } from "antd";
 
 import { BiEdit, BiPlus } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -34,13 +35,24 @@ export const Navbar = () => {
   const page_code = useLocation().search.split("=")[1];
   const delData = delDocuments?.[page_code];
 
+  const [api, contextHolder] = notification.useNotification();
+
   const deleteDocuments = async () => {
-    const result = await DeleteSelectedElementss(page_code, delData);
-    if (result.status === "success") {
-      es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
-      dispatch(setRelease(page_code));
+    if (delDocuments?.[page_code]?.length > 0) {
+      const result = await DeleteSelectedElementss(page_code, delData);
+      if (result.status === "success") {
+        es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
+        dispatch(setRelease(page_code));
+      } else {
+        es({ message: "Xatolik yuz berdi", variant: "error" });
+      }
     } else {
-      es({ message: "Xatolik yuz berdi", variant: "error" });
+      const placement = "topRight";
+      api.warning({
+        message: "Xatolik",
+        description: "O'chirish uchun mavjud malumot yo'q!",
+        placement,
+      });
     }
   };
 
@@ -57,7 +69,16 @@ export const Navbar = () => {
   };
 
   const openUModalU = () => {
-    dispatch(acOpenUModal());
+    if (delDocuments?.[page_code]?.length === 1) {
+      dispatch(acOpenUModal());
+    } else {
+      const placement = "topRight";
+      api.warning({
+        message: "Xatolik",
+        description: "O'zgartirish uchun mavjud malumot yo'q!",
+        placement,
+      });
+    }
   };
 
   const handleSort = (value) => {
@@ -72,6 +93,7 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
+      {contextHolder}
       <div
         className="nav_menu"
         onClick={() => dispatch(acMedia(media ? false : true))}
@@ -79,7 +101,7 @@ export const Navbar = () => {
         <img src={logo} alt="" />
       </div>
       {status?.includes(0) && (
-        <form className="short_hands">
+        <form className="short_hands" onSubmit={(e) => e.preventDefault()}>
           {status?.includes(1) && (
             <button
               type="button"
@@ -102,7 +124,6 @@ export const Navbar = () => {
           {status?.includes(2) && (
             <button
               type="button"
-              disabled={delDocuments?.[page_code]?.length !== 1}
               style={
                 delDocuments?.[page_code]?.length === 1
                   ? {}
@@ -117,7 +138,6 @@ export const Navbar = () => {
           {status?.includes(3) && (
             <button
               type="button"
-              disabled={delDocuments?.[page_code]?.length === 0}
               style={
                 delDocuments?.[page_code]?.length > 0
                   ? {}
