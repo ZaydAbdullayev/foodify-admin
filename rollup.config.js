@@ -22,7 +22,11 @@ export default {
     commonjs(),
     builtins(),
     globals(),
-    terser(),
+    terser({
+      mangle: {
+        properties: true,
+      },
+    }),
     postcss({
       plugins: [
         require("cssnano")({

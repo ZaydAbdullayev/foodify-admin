@@ -259,11 +259,7 @@ export const Home = () => {
                             }
                             aria-label="cancel this order"
                           >
-                            {loading.id === order.id && loading.status === 4 ? (
-                              <LoadingBtn />
-                            ) : (
-                              <RxCross2 />
-                            )}
+                            <RxCross2 />
                           </button>
                           <button
                             className="relative"
@@ -332,7 +328,7 @@ export const Home = () => {
                               <p style={{ textTransform: "capitalize" }}>
                                 {product?.name}
                               </p>
-                              <p>{product?.description}</p>
+                              <small>{product?.description}</small>
                             </pre>
                             <NumericFormat
                               value={product?.quantity * product?.price}
@@ -340,7 +336,7 @@ export const Home = () => {
                               thousandSeparator={true}
                             />
                             <div className="order_stution">
-                              {product?.status === 1 && (
+                              {product?.status === 0 && (
                                 <button
                                   className="relative"
                                   onClick={() =>

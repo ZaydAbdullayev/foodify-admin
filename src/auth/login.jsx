@@ -42,8 +42,8 @@ export const Login = () => {
     localStorage.setItem("user", JSON.stringify(data.innerData.user));
     localStorage.setItem("department", JSON.stringify(role));
     localStorage.setItem("check", JSON.stringify(true));
-    window.location.reload();
     navigate("/check");
+    window.location.reload();
     setErr(false);
   };
 
@@ -66,8 +66,8 @@ export const Login = () => {
     if (data?.innerData?.user?.user?.workers) {
       localStorage.setItem("permission", JSON.stringify(true));
     }
-
     navigate("/");
+    window.location.reload();
     setErr(false);
   };
 

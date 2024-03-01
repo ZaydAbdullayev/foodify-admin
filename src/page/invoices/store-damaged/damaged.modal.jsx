@@ -35,7 +35,7 @@ export const InvoicesModal = ({
   const [activePart, setActivePart] = useState(1);
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.find((old) => old.id === newItem?.id) || {};
+    const oldData = data?.data?.find((old) => old.id === newItem?.id) || {};
 
     if (oldData) {
       return {
@@ -126,7 +126,7 @@ export const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data)}
+              onClick={() => setCheckedData(data?.data)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -137,7 +137,7 @@ export const InvoicesModal = ({
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
-          {data?.map((item) => {
+          {data?.data?.map((item) => {
             const checked = [...checkedData, ...acIngredients]?.find(
               (i) => i.id === item?.id
             );
