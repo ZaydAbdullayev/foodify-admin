@@ -271,20 +271,17 @@ export const UniversalControlModal = ({
       <form
         className={open ? "u-control-container open" : "u-control-container"}
         onSubmit={getValues}
-        id="u-control-form"
-      >
+        id="u-control-form">
         {children}
         <div
           className={
             open ? "u-control_action__box active" : "u-control_action__box"
-          }
-        >
+          }>
           {image.img !== "" && (
             <figure
               onClick={() =>
                 dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))
-              }
-            >
+              }>
               <img src={image?.img} alt="peoduct images" />
             </figure>
           )}
@@ -292,34 +289,26 @@ export const UniversalControlModal = ({
             <button
               type="button"
               onClick={() => dispatch(acGetUrl({ st: true, img: "" }))}
-              aria-label="modal of add image"
-            >
+              aria-label="modal of add image">
               <RiImageAddFill />
             </button>
           )}
-          {!fetchdata?.ingredients?.length !== 0 ? (
-            <button
-              type="submit"
-              aria-label="calculate values of the all input's value"
-            >
-              <FaCalculator />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="relative"
-              onClick={() => fetchValues(fetchdata)}
-              aria-label="add values of the all input's value"
-            >
-              {loading ? <LoadingBtn /> : <FaCheck />}
-            </button>
-          )}
-
+          <button
+            type="submit"
+            aria-label="calculate values of the all input's value">
+            <FaCalculator />
+          </button>
+          <button
+            type="button"
+            className="relative"
+            onClick={() => fetchValues(fetchdata)}
+            aria-label="add values of the all input's value">
+            {loading ? <LoadingBtn /> : <FaCheck />}
+          </button>
           <button
             type="button"
             onClick={() => closeModal()}
-            aria-label="close modal"
-          >
+            aria-label="close modal">
             <TbArrowBarLeft />
           </button>
         </div>
@@ -369,15 +358,13 @@ export const UniversalProductControl = ({
                 <span
                   className={activePart === 1 ? "active" : "passive"}
                   onClick={() => setActivePart(1)}
-                  aria-label="target ingredient section"
-                >
+                  aria-label="target ingredient section">
                   ingredientlar
                 </span>
                 <span
                   className={activePart === 2 ? "active" : "passive"}
                   onClick={() => setActivePart(2)}
-                  aria-label=" target product section"
-                >
+                  aria-label=" target product section">
                   taomlar
                 </span>
               </>
@@ -460,8 +447,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
                     ? "center"
                     : "end"
                   : "start",
-              }}
-            >
+              }}>
               {item[name]}
             </p>
           ))}
@@ -470,8 +456,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
               style={{
                 "--data-line-size": "18%",
                 justifyContent: "end",
-              }}
-            >
+              }}>
               {item.price * item.amount}
             </p>
           )}

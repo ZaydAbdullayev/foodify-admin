@@ -18,7 +18,7 @@ import { Payment } from "./page/payment/payment";
 import { AddPayment } from "./page/payment/addPayment/addPayment.jsx";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
-import { PaymentCheck, Test } from "./components/payment-check/check";
+import { PaymentCheck } from "./components/payment-check/check";
 import { useSelector, useDispatch } from "react-redux";
 import { Storage, Blog } from "./page/storage/storage";
 import { StorageDep } from "./page/storage/store-department/department";
@@ -62,6 +62,7 @@ import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
+import { MobileInvoice } from "./page/mobile/mobile.transaction.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -212,10 +213,10 @@ export const Router = () => {
             {/* ============== pages of the modal ================= */}
             <Route path="add/product" element={<Addproduct />} />
             <Route path="workers/add" element={<AddWorker />} />
-            <Route path="test" element={<Test />} />
 
             {/* ============== pages of the other ================= */}
             <Route path="sidebar" element={<Sidebar />} />
+            <Route path="mobile-invoice" element={<MobileInvoice />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

@@ -4,6 +4,12 @@ import { DatePicker, Input, InputNumber, Select, Checkbox, Table } from "antd";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { acActiveSt_id } from "../redux/active";
+import "./hook.css";
+
+function genrateId() {
+  const roomNumber = Math.floor(100000 + Math.random() * 900000);
+  return roomNumber;
+}
 
 export const GenerateField = (fieldData, index) => {
   const dispatch = useDispatch();
@@ -35,7 +41,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Select
-            key={index + 3490043}
+            key={genrateId()}
             aria-label="place for choose option"
             defaultValue={df_value}
             onChange={getSelectValue}
@@ -46,7 +52,7 @@ export const GenerateField = (fieldData, index) => {
           />
           <input
             name={name}
-            key={index + 349343}
+            key={genrateId()}
             type="hidden"
             value={datas?.select}
           />
@@ -57,7 +63,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Input
-            key={index + 87590043}
+            key={genrateId()}
             name={name}
             placeholder={plc_hr}
             defaultValue={df_value}
@@ -70,7 +76,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <DatePicker
-            key={index + 976543}
+            key={genrateId()}
             name={name}
             defaultValue={dayjs(df_value)}
             aria-label="place for select date"
@@ -82,7 +88,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Checkbox
-            key={index + 123443}
+            key={genrateId()}
             name={name}
             defaultChecked={df_value}
             aria-label="place for check this element"
@@ -93,7 +99,7 @@ export const GenerateField = (fieldData, index) => {
     case "inputN":
       return (
         <InputNumber
-          key={index + 65343}
+          key={genrateId()}
           name={name}
           placeholder={plc_hr}
           defaultValue={df_value}
@@ -107,7 +113,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <input
           type="hidden"
-          key={index + 87653}
+          key={genrateId()}
           name={name}
           defaultValue={df_value}
           aria-label="place for secret value"
@@ -118,7 +124,7 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Select
-            key={index + 85443}
+            key={genrateId()}
             aria-label="place for choose option"
             defaultValue={df_value}
             onChange={getExtraValue}
@@ -128,7 +134,7 @@ export const GenerateField = (fieldData, index) => {
             }))}
           />
           <input
-            key={index + 12443}
+            key={genrateId()}
             type="hidden"
             name={name}
             value={datas?.name}
@@ -137,7 +143,7 @@ export const GenerateField = (fieldData, index) => {
           <input
             type="hidden"
             name={extra}
-            key={index + 93853}
+            key={genrateId()}
             value={datas?.id}
             aria-label={`place for secret value ${datas?.id}`}
           />
@@ -155,5 +161,17 @@ export const DynamicTable = ({ data, index }) => {
     dataIndex: key,
     key: key,
   }));
-  return <Table dataSource={data} columns={columns} key={index + 3490043} />;
+  return <Table dataSource={data} columns={columns} key={genrateId()} />;
+};
+
+export const CheckBox = ({ name, label, description = "", value }) => {
+  return (
+    <label className="universal-checkbox" key={genrateId()}>
+      <input type="radio" name={name} required value={value} />
+      <span className="checkmark">
+        <span>{label}</span>
+        <span style={{ color: "#eee6" }}>{description}</span>
+      </span>
+    </label>
+  );
 };

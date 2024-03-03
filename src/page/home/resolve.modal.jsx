@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { acResolve } from "../../redux/resolve";
 import socket from "../../socket.config";
 
-export const ResolveModal = () => {
+const ResolveModal = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const [option, setOption] = useState("");
   const [storage, setStorage] = useState(true);
@@ -57,8 +57,7 @@ export const ResolveModal = () => {
     <div
       className={
         resolve?.order_id ? "u_modal_container open" : "u_modal_container"
-      }
-    >
+      }>
       <div className="u_modal_box">
         <form className="resolve_item" onSubmit={orderSituation}>
           <p>{resolve?.product?.name} ni bekor qilish sababi ?</p>
@@ -69,8 +68,7 @@ export const ResolveModal = () => {
               className={
                 option === 1 ? "resolve_option active" : "resolve_option"
               }
-              aria-label="canceled user"
-            >
+              aria-label="canceled user">
               <input type="radio" name="description" value="cancel" />
               <span>Mijoz bekor qildi</span>
             </label>
@@ -79,8 +77,7 @@ export const ResolveModal = () => {
               className={
                 option === 2 ? "resolve_option active" : "resolve_option"
               }
-              aria-label="waiter bad"
-            >
+              aria-label="waiter bad">
               <input type="radio" name="description" value="waiter_bad" />
               <span>Offitsant hatosi</span>
             </label>
@@ -89,8 +86,7 @@ export const ResolveModal = () => {
               className={
                 option === 3 ? "resolve_option active" : "resolve_option"
               }
-              aria-label="write other cancel reason"
-            >
+              aria-label="write other cancel reason">
               <input type="radio" name="description" value="other" />
               <span>Boshqa...</span>
             </label>
@@ -108,8 +104,7 @@ export const ResolveModal = () => {
               className={
                 dailyLimit ? "resolve_option2 active" : "resolve_option2"
               }
-              aria-label="back to stop list"
-            >
+              aria-label="back to stop list">
               <span>
                 StopListga qaytarilsinmi?: {dailyLimit ? " Ha" : " Yo'q"}
               </span>
@@ -117,8 +112,7 @@ export const ResolveModal = () => {
             <label
               onClick={() => setStorage(!storage)}
               className={storage ? "resolve_option2 active" : "resolve_option2"}
-              aria-label="back to storage"
-            >
+              aria-label="back to storage">
               <span>Omborga qaytarilsinmi?: {storage ? " Ha" : " Yo'q"}</span>
             </label>
           </div>
@@ -126,8 +120,7 @@ export const ResolveModal = () => {
             <button
               type="button"
               onClick={() => dispatch(acResolve({}))}
-              aria-label="close modal"
-            >
+              aria-label="close modal">
               Bekor qilish
             </button>
             <button>OK</button>
@@ -138,3 +131,5 @@ export const ResolveModal = () => {
     </div>
   );
 };
+
+export default ResolveModal;

@@ -45,7 +45,7 @@ export const UniversalFilterBox = () => {
   });
   const { data: storage = [] } = useFetchDataQuery({
     url: `get/storage/${res_id}`,
-    tags: ["storage"],
+    tags: ["store"],
   });
   const { data: ingredientData = [] } = useFetchDataQuery({
     url: `get/ingredients/${res_id}`,

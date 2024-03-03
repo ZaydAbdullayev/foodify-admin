@@ -9,12 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 
-export const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  getProduct,
-  NUM,
-}) => {
+const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const s_id = useSelector((state) => state.activeSt_id);
@@ -81,8 +76,7 @@ export const InvoicesModal = ({
       Pdata={[...checkedData, ...acIngredients]}
       Udata={updatedData}
       id={s_id}
-      setCheckedData={setCheckedData}
-    >
+      setCheckedData={setCheckedData}>
       <UniversalForm
         formData={[
           {
@@ -133,8 +127,7 @@ export const InvoicesModal = ({
       />
       <UniversalProductControl
         setActivePart={setActivePart}
-        activePart={activePart}
-      >
+        activePart={activePart}>
         <div className="product_box_item">
           <label aria-label="checked this elements">
             <input
@@ -158,8 +151,7 @@ export const InvoicesModal = ({
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item?.id}
-              >
+                key={item?.id}>
                 <label>
                   <input
                     type="checkbox"
@@ -174,24 +166,21 @@ export const InvoicesModal = ({
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {item?.unit}
                 </p>
                 <p
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {item?.group}
                 </p>
                 <p
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "flex-end",
-                  }}
-                >
+                  }}>
                   {checked ? (
                     <input
                       type="number"
@@ -211,8 +200,7 @@ export const InvoicesModal = ({
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {checked && (
                     <input
                       type="number"
@@ -228,8 +216,7 @@ export const InvoicesModal = ({
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {checked && (
                     <input
                       type="number"
@@ -266,3 +253,5 @@ export const InvoicesModal = ({
     </UniversalControlModal>
   );
 };
+
+export default InvoicesModal;

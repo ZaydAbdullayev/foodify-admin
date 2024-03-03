@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
-import { UniversalForm } from "../../../components/modal-calc/modal-calc";
-import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
-import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
-import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
-import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { data } from "../../../components/modal-calc/components";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
+import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
+import { UniversalForm } from "../../../components/modal-calc/modal-calc";
+import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
+import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
+import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
+import { CalcResult } from "../../../components/modal-calc/modal-calc";
+import { CalculateTotalP } from "../../../service/calc.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -24,7 +25,7 @@ export const StorageProducts = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const [activePart, setActivePart] = useState(1);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
@@ -48,6 +49,7 @@ export const StorageProducts = () => {
     url: `get/${res_id}/categories`,
     tags: ["category"],
   });
+
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
   }, [dispatch]);
@@ -149,8 +151,7 @@ export const StorageProducts = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size }}
                 key={index}
-                aria-label="sort data down of top or top of down"
-              >
+                aria-label="sort data down of top or top of down">
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
@@ -169,18 +170,17 @@ export const StorageProducts = () => {
           ) : (
             sortData?.map((item, index) => {
               const ingredients = item?.ingredients
-                ? JSON.parse(item.ingredients)
+                ? JSON?.parse(item?.ingredients)
                 : [];
               const check = ckddt?.products?.some((i) => i.id === item.id);
               return (
                 <div
                   className={
-                    showMore === item.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item.id}
-                >
+                  key={item.id}>
                   <div
                     className={
                       acItem === item.id
@@ -194,8 +194,7 @@ export const StorageProducts = () => {
                       );
                       dispatch(setDocuments("products", item));
                       navigate(`?page-code=products`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -204,8 +203,7 @@ export const StorageProducts = () => {
                         dispatch(setDocuments("products", item));
                         navigate(`?page-code=products`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
@@ -219,8 +217,7 @@ export const StorageProducts = () => {
                               ? "center"
                               : "flex-end"
                             : "flex-start",
-                        }}
-                      >
+                        }}>
                         {item[name]}
                       </p>
                     ))}
@@ -230,12 +227,18 @@ export const StorageProducts = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id)
+                            ? showMore?.filter((i) => i !== item?.id)
+                            : [...showMore, item.id]
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tafsilot
                       </u>
                     </p>
@@ -245,71 +248,96 @@ export const StorageProducts = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id)
+                            ? showMore?.filter((i) => i !== item?.id)
+                            : [...showMore, item.id]
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tarix
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      {innerHeaderData?.map((item, index) => {
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div
+                        className="storage_body_item"
+                        style={{ background: "#454545" }}>
+                        {innerHeaderData?.map((item, index) => {
+                          return (
+                            <p
+                              style={{
+                                "--data-line-size": item.size,
+                                borderRight: item.border,
+                              }}
+                              key={index}>
+                              {item.name}
+                            </p>
+                          );
+                        })}
+                      </div>
+                      {ingredients?.map((product, ind) => {
                         return (
-                          <p
-                            style={{
-                              "--data-line-size": item.size,
-                              borderRight: item.border,
-                            }}
-                            key={index}
-                          >
-                            {item.name}
-                          </p>
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc4",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            {innerDisplayKeys?.map(
+                              ({ name, size, position }, innerind) => (
+                                <p
+                                  key={innerind}
+                                  style={{
+                                    "--data-line-size": size,
+                                    justifyContent: position
+                                      ? position === 1
+                                        ? "center"
+                                        : "flex-end"
+                                      : "flex-start",
+                                    borderRight: "1px solid #ccc4",
+                                  }}>
+                                  {product[name]}
+                                </p>
+                              )
+                            )}
+                            <p
+                              style={{
+                                "--data-line-size": "16.5%",
+                              }}>
+                              {product.amount * item.price}
+                            </p>
+                          </div>
                         );
                       })}
+                      <div
+                        className="storage_body_item inner_item"
+                        style={{ background: "#454545" }}>
+                        <p></p>
+                        <p style={{ "--data-line-size": "66%" }}>
+                          {item?.date?.split("T")[0]}{" "}
+                          {item?.date?.split("T")[1]?.split(".")[0]}
+                          -ga ko'ra Jami mablag'
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "30%",
+                            justifyContent: "flex-end",
+                          }}>
+                          {CalculateTotalP(ingredients, "price", "amount")}
+                        </p>
+                      </div>
                     </div>
-                    {ingredients?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc4",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          {innerDisplayKeys?.map(
-                            ({ name, size, position }, innerind) => (
-                              <p
-                                key={innerind}
-                                style={{
-                                  "--data-line-size": size,
-                                  justifyContent: position
-                                    ? position === 1
-                                      ? "center"
-                                      : "flex-end"
-                                    : "flex-start",
-                                  borderRight: "1px solid #ccc4",
-                                }}
-                              >
-                                {product[name]}
-                              </p>
-                            )
-                          )}
-                          <p
-                            style={{
-                              "--data-line-size": "16.5%",
-                            }}
-                          >
-                            {product.amount * item.price}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })
@@ -320,8 +348,7 @@ export const StorageProducts = () => {
         status={acItem?.id ? true : false}
         type="product"
         Pdata={[...checkedData, ...acIngredients]}
-        setCheckedData={setCheckedData}
-      >
+        setCheckedData={setCheckedData}>
         <UniversalForm
           formData={[
             {
@@ -329,12 +356,10 @@ export const StorageProducts = () => {
               name: "name",
               plc_hr: "Nomi*",
               df_value: acItem?.name,
-              size: "15%",
             },
             {
               type: "s_extra",
               name: "category",
-              size: "15%",
               df_value: { value: "default", label: "Kategoriya tanlang*" },
               options: category?.data,
             },
@@ -343,20 +368,17 @@ export const StorageProducts = () => {
               name: "price",
               plc_hr: "Narxi*",
               df_value: acItem?.price,
-              size: "15%",
             },
             {
               type: "inputD",
               name: "date",
               df_value: acItem?.date,
-              size: "15%",
             },
             {
               type: "input",
               name: "description",
               plc_hr: "Tavsif*",
               df_value: acItem?.description,
-              size: "15%",
             },
             {
               type: "inputH",
@@ -367,8 +389,7 @@ export const StorageProducts = () => {
         />
         <UniversalProductControl
           activePart={activePart}
-          setActivePart={setActivePart}
-        >
+          setActivePart={setActivePart}>
           <div className="product_box_item">
             <label>
               <input
@@ -377,7 +398,10 @@ export const StorageProducts = () => {
                 onClick={() => getProduct(data)}
               />
             </label>
-            <p style={{ "--data-line-size": activePart === 1 ? "35%" : "60%" }}>
+            <p
+              style={{
+                "--data-line-size": activePart === 1 ? "35%" : "60%",
+              }}>
               Nomi
             </p>
             {activePart === 1 && (
@@ -397,8 +421,7 @@ export const StorageProducts = () => {
               return (
                 <div
                   className={`product_box_item ${checked ? "active" : ""}`}
-                  key={item.id}
-                >
+                  key={item.id}>
                   <label>
                     <input
                       type="checkbox"
@@ -411,8 +434,7 @@ export const StorageProducts = () => {
                   <p
                     style={{
                       "--data-line-size": activePart === 1 ? "35%" : "60%",
-                    }}
-                  >
+                    }}>
                     {item.name}
                   </p>
                   {activePart === 1 && (
@@ -421,24 +443,21 @@ export const StorageProducts = () => {
                         style={{
                           "--data-line-size": "20%",
                           justifyContent: "center",
-                        }}
-                      >
+                        }}>
                         {item.unit}
                       </p>
                       <p
                         style={{
                           "--data-line-size": "20%",
                           justifyContent: "center",
-                        }}
-                      >
+                        }}>
                         {item.group}
                       </p>
                       <p
                         style={{
                           "--data-line-size": "20%",
                           justifyContent: "flex-end",
-                        }}
-                      >
+                        }}>
                         {item.price}
                       </p>
                     </>
@@ -447,8 +466,7 @@ export const StorageProducts = () => {
                     style={{
                       "--data-line-size": "20%",
                       justifyContent: "center",
-                    }}
-                  >
+                    }}>
                     {checked && (
                       <input
                         type="text"

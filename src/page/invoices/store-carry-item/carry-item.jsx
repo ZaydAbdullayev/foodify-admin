@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./carry-item.modal";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +10,8 @@ import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
+
+const InvoicesModal = lazy(() => import("./carry-item.modal"));
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -128,8 +129,7 @@ export const StorageCarryUp = () => {
                   if (item?.sort) {
                     setSort({ id: index, state: !sort.state });
                   }
-                }}
-              >
+                }}>
                 <p>{item?.name}</p>
                 {sort.id === index ? (
                   sort.state ? (
@@ -159,12 +159,11 @@ export const StorageCarryUp = () => {
               return (
                 <div
                   className={
-                    showMore === item?.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item?.id}
-                >
+                  key={item?.id}>
                   <div
                     className={
                       acItem === item?.id
@@ -178,8 +177,7 @@ export const StorageCarryUp = () => {
                       );
                       dispatch(setDocuments("carry", item));
                       navigate(`?page-code=carry`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -188,8 +186,7 @@ export const StorageCarryUp = () => {
                         dispatch(setDocuments("carry", item));
                         navigate(`?page-code=carry`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
@@ -201,8 +198,7 @@ export const StorageCarryUp = () => {
                             "--data-line-size": key?.size,
                             justifyContent: key?.position,
                           }}
-                          key={index}
-                        >
+                          key={index}>
                           {item[key?.name] || 0}
                         </p>
                       );
@@ -213,84 +209,89 @@ export const StorageCarryUp = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item?.id
+                        )
+                      }>
                       <u
                         style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tafsilot
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div
-                      className="storage_body_item"
-                      style={{ background: "#3339" }}
-                    >
-                      {innerHeaderKeys?.map((item, index) => {
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div
+                        className="storage_body_item"
+                        style={{ background: "#3339" }}>
+                        {innerHeaderKeys?.map((item, index) => {
+                          return (
+                            <p
+                              style={{
+                                "--data-line-size": item?.size,
+                                borderRight: item?.border,
+                              }}
+                              key={index}>
+                              {item?.name}
+                            </p>
+                          );
+                        })}
+                      </div>
+                      {innerData?.map((product, ind) => {
                         return (
-                          <p
-                            style={{
-                              "--data-line-size": item?.size,
-                              borderRight: item?.border,
-                            }}
-                            key={index}
-                          >
-                            {item?.name}
-                          </p>
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            {innerDisplayKeys?.map((key, index) => {
+                              return (
+                                <p
+                                  style={{
+                                    "--data-line-size": key?.size,
+                                    borderRight: key?.border,
+                                  }}
+                                  key={index}>
+                                  {product[key?.name] || 0}
+                                </p>
+                              );
+                            })}
+                          </div>
                         );
                       })}
                     </div>
-                    {innerData?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          {innerDisplayKeys?.map((key, index) => {
-                            return (
-                              <p
-                                style={{
-                                  "--data-line-size": key?.size,
-                                  borderRight: key?.border,
-                                }}
-                                key={index}
-                              >
-                                {product[key?.name] || 0}
-                              </p>
-                            );
-                          })}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })
           )}
         </div>
       </div>
-      <InvoicesModal
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
-        getProduct={getProduct}
-        NUM={
-          !isLoading && {
-            num:
-              JSON.parse(cuttingData?.data ? cuttingData?.data[0]?.order : 0) +
-              1,
+      <Suspense>
+        <InvoicesModal
+          checkedData={checkedData}
+          setCheckedData={setCheckedData}
+          getProduct={getProduct}
+          NUM={
+            !isLoading && {
+              num:
+                JSON.parse(
+                  cuttingData?.data ? cuttingData?.data[0]?.order : 0
+                ) + 1,
+            }
           }
-        }
-        acItem={acItem}
-        acIngredients={acIngredients}
-      />
+          acItem={acItem}
+          acIngredients={acIngredients}
+        />
+      </Suspense>
     </div>
   );
 };

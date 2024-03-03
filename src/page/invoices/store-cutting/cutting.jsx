@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./cutting.modal";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +10,8 @@ import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+
+const InvoicesModal = lazy(() => import("./cutting.modal"));
 
 export const StorageCutting = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -22,7 +23,7 @@ export const StorageCutting = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+
   const { data: dmData = [], isLoading } = useFetchDataQuery({
     url: `get/cutting/${res_id}`,
     tags: ["cutting"],
@@ -111,8 +112,7 @@ export const StorageCutting = () => {
                 }}
                 onClick={() => {
                   setSort({ id: index, state: !sort.state });
-                }}
-              >
+                }}>
                 {item?.name}
                 {sort.id === index &&
                   (sort.state ? <RiArrowUpSLine /> : <RiArrowDownSLine />)}
@@ -137,11 +137,10 @@ export const StorageCutting = () => {
                 <div
                   key={item?.id}
                   className={
-                    showMore === item?.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
-                  }
-                >
+                  }>
                   <div
                     className={
                       acItem === item?.id
@@ -155,8 +154,7 @@ export const StorageCutting = () => {
                       );
                       dispatch(setDocuments("cutting", item));
                       navigate(`?page-code=cutting`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -165,8 +163,7 @@ export const StorageCutting = () => {
                         dispatch(setDocuments("cutting", item));
                         navigate(`?page-code=cutting`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
@@ -178,8 +175,7 @@ export const StorageCutting = () => {
                           style={{
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
-                          }}
-                        >
+                          }}>
                           {item[key?.name]}
                         </p>
                       );
@@ -190,95 +186,98 @@ export const StorageCutting = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item?.id
+                        )
+                      }>
                       <u
                         style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tafsilot
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Nomi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "20%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Narxi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "25%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Tan Narxi
+                        </p>
+                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      </div>
+                      {item?.data?.map((product, ind) => {
+                        return (
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.name}
+                            </p>
+                            <p style={{ "--data-line-size": "20%" }}>
+                              {product.password}
+                            </p>
+                            <p style={{ "--data-line-size": "25%" }}>
+                              {item?.remain}
+                            </p>
+                            <p style={{ "--data-line-size": "15%" }}>
+                              {item?.total}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })
           )}
         </div>
       </div>
-      <InvoicesModal
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
-        getProduct={getProduct}
-        NUM={
-          !isLoading && {
-            num: JSON.parse(dmData?.data ? dmData?.data[0]?.order : 0) + 1,
+      <Suspense>
+        <InvoicesModal
+          checkedData={checkedData}
+          setCheckedData={setCheckedData}
+          getProduct={getProduct}
+          NUM={
+            !isLoading && {
+              num: JSON.parse(dmData?.data ? dmData?.data[0]?.order : 0) + 1,
+            }
           }
-        }
-      />
+        />
+      </Suspense>
     </div>
   );
 };

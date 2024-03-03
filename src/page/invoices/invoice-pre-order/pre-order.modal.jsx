@@ -7,12 +7,7 @@ import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 
-export const InvoicesModal = ({
-  checkedData,
-  getProduct,
-  NUM,
-  setCheckedData,
-}) => {
+const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = React.useState(1);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
@@ -71,8 +66,7 @@ export const InvoicesModal = ({
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}
-        type="preOrder"
-      >
+        type="preOrder">
         <div className="product_box_item">
           <label aria-label="checked this elements">
             <input
@@ -90,8 +84,7 @@ export const InvoicesModal = ({
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}
-              >
+                key={item.id}>
                 <label>
                   <input
                     type="checkbox"
@@ -106,8 +99,7 @@ export const InvoicesModal = ({
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {checked && (
                     <input
                       type="text"
@@ -148,3 +140,5 @@ export const InvoicesModal = ({
     </UniversalControlModal>
   );
 };
+
+export default InvoicesModal;

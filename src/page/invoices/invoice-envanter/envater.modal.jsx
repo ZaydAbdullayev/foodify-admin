@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 // import { CalculateTotalP } from "../../../service/calc.service";
 // import { CalculateTotalQuantity } from "../../../service/calc.service";
 
-export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
+const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const [activePart, setActivePart] = React.useState(1);
   const acItem = useSelector((state) => state?.activeThing);
   const id = useSelector((state) => state?.activeSt_id);
@@ -66,8 +66,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
     <UniversalControlModal
       type="envanter"
       Pdata={checkedData}
-      setCheckedData={setCheckedData}
-    >
+      setCheckedData={setCheckedData}>
       <UniversalForm
         formData={[
           {
@@ -104,8 +103,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
       <UniversalProductControl
         setActivePart={setActivePart}
         activePart={activePart}
-        type="envanter"
-      >
+        type="envanter">
         <div className="product_box_item">
           <label aria-label="checked this elements">
             <input
@@ -126,8 +124,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}
-              >
+                key={item.id}>
                 <label>
                   <input
                     type="checkbox"
@@ -142,8 +139,7 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
                   style={{
                     "--data-line-size": "15%",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   {checked && (
                     <input
                       type="text"
@@ -194,3 +190,5 @@ export const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) 
     </UniversalControlModal>
   );
 };
+
+export default InvoicesModal;

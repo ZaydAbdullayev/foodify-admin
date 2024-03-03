@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { UniversalModal } from "../../../components/modal/modal";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +10,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageIngredients = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -87,8 +87,7 @@ export const StorageIngredients = () => {
               onClick={() => setSort({ id: 1, state: !sort.state })}
               style={{ "--data-line-size": title.size }}
               key={index + 3280}
-              aria-label="sort data down of top or top of down"
-            >
+              aria-label="sort data down of top or top of down">
               <p>{title.name}</p>
               {sort.id === 1 && sort.state ? (
                 <RiArrowUpSLine />
@@ -112,11 +111,10 @@ export const StorageIngredients = () => {
               return (
                 <div
                   className={
-                    showMore === item.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
-                  }
-                >
+                  }>
                   <div
                     className={
                       acItem === item.id
@@ -130,8 +128,7 @@ export const StorageIngredients = () => {
                       );
                       dispatch(setDocuments("ingredient", item));
                       navigate(`?page-code=ingredient`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -140,8 +137,7 @@ export const StorageIngredients = () => {
                         dispatch(setDocuments("ingredient", item));
                         navigate(`?page-code=ingredient`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
@@ -151,8 +147,7 @@ export const StorageIngredients = () => {
                           "--data-line-size": `${key.size}%`,
                           justifyContent: key.position || "flex-start",
                         }}
-                        key={ind + key.size}
-                      >
+                        key={ind + key.size}>
                         {item[key.name]}
                       </p>
                     ))}
@@ -162,134 +157,138 @@ export const StorageIngredients = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item.id
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         ovqatlar
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Nomi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "20%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Narxi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "25%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Tan Narxi
+                        </p>
+                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      </div>
+                      {item?.data?.map((product, ind) => {
+                        return (
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.name}
+                            </p>
+                            <p style={{ "--data-line-size": "20%" }}>
+                              {product.password}
+                            </p>
+                            <p style={{ "--data-line-size": "25%" }}>
+                              {item.remain}
+                            </p>
+                            <p style={{ "--data-line-size": "15%" }}>
+                              {item.total}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item.total}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })
           )}
         </div>
       </div>
-      <UniversalModal
-        type={newIngGr === "new" ? "newIngGr" : "ing"}
-        newGrData={{ name: newGrData, res_id: user?.id }}
-        setChecked={setChecked}
-        title="Ingredient qo'shish"
-        status={acItem.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          defaultValue={acItem.name}
-          placeholder="Ingredient nomi*"
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
-        <select name="unit">
-          {acItem?.unit ? (
-            <option value={acItem.unit}>{acItem.unit}</option>
-          ) : (
-            <option value="default">O'ljov birligi</option>
-          )}
-          <option value="kg">kg</option>
-          <option value="l">litr</option>
-          <option value="ta">ta</option>
-        </select>
-        <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
-          {acItem?.group ? (
-            <option value={acItem.group}>{acItem.group}</option>
-          ) : (
-            <option value="default">Guruh tanlang*</option>
-          )}
-          {groupData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-          <option value="new">Yangi guruh</option>
-        </select>
-        {newIngGr === "new" && (
+      <Suspense fallback={<LoadingBtn />}>
+        <UniversalModal
+          type={newIngGr === "new" ? "newIngGr" : "ing"}
+          newGrData={{ name: newGrData, res_id: user?.id }}
+          setChecked={setChecked}
+          title="Ingredient qo'shish"
+          status={acItem.id ? false : true}>
           <input
             type="text"
-            name="group"
-            placeholder="Yangi guruh nomi*"
+            name="name"
+            defaultValue={acItem.name}
+            placeholder="Ingredient nomi*"
             required
-            onChange={(e) => setNewGrData(e.target.value)}
           />
-        )}
-      </UniversalModal>
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          <select name="unit">
+            {acItem?.unit ? (
+              <option value={acItem.unit}>{acItem.unit}</option>
+            ) : (
+              <option value="default">O'ljov birligi</option>
+            )}
+            <option value="kg">kg</option>
+            <option value="l">litr</option>
+            <option value="ta">ta</option>
+          </select>
+          <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
+            {acItem?.group ? (
+              <option value={acItem.group}>{acItem.group}</option>
+            ) : (
+              <option value="default">Guruh tanlang*</option>
+            )}
+            {groupData?.data?.map((item, index) => {
+              return (
+                <option value={item.name} key={index}>
+                  {item.name}
+                </option>
+              );
+            })}
+            <option value="new">Yangi guruh</option>
+          </select>
+          {newIngGr === "new" && (
+            <input
+              type="text"
+              name="group"
+              placeholder="Yangi guruh nomi*"
+              required
+              onChange={(e) => setNewGrData(e.target.value)}
+            />
+          )}
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

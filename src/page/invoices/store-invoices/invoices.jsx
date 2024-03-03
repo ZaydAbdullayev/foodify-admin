@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./invoices.modal";
 import { CalculateTotalP } from "../../../service/calc.service";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +11,8 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+
+const InvoicesModal = lazy(() => import("./invoices.modal"));
 
 export const StorageInvoices = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -24,7 +25,7 @@ export const StorageInvoices = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
     url: `get/receivedGoods/${res_id}`,
     tags: ["invoices"],
@@ -124,8 +125,7 @@ export const StorageInvoices = () => {
                 key={ind}
                 style={{
                   "--data-line-size": item?.size,
-                }}
-              >
+                }}>
                 {item?.name}
                 {sort.id === item?.name ? (
                   sort.state ? (
@@ -163,12 +163,11 @@ export const StorageInvoices = () => {
               return (
                 <div
                   className={
-                    showMore === item?.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item?.id}
-                >
+                  key={item?.id}>
                   <div
                     className={
                       acItem === item?.id
@@ -182,8 +181,7 @@ export const StorageInvoices = () => {
                       );
                       dispatch(setDocuments("invoice", item));
                       navigate(`?page-code=invoice`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -192,8 +190,7 @@ export const StorageInvoices = () => {
                         dispatch(setDocuments("invoice", item));
                         navigate(`?page-code=invoice`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
@@ -205,8 +202,7 @@ export const StorageInvoices = () => {
                           style={{
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
-                          }}
-                        >
+                          }}>
                           {item[key?.name]}
                         </p>
                       );
@@ -215,17 +211,19 @@ export const StorageInvoices = () => {
                       style={{
                         "--data-line-size": "10%",
                         justifyContent: "center",
-                      }}
-                    >
+                      }}>
                       <pre>
                         <u
                           style={
-                            showMore === item?.id ? { color: "#787aff" } : {}
+                            showMore?.includes(item?.id)
+                              ? { color: "#787aff" }
+                              : {}
                           }
                           onClick={() =>
-                            setShowMore(showMore === item?.id ? null : item?.id)
-                          }
-                        >
+                            setShowMore(
+                              showMore?.includes(item?.id) ? null : item?.id
+                            )
+                          }>
                           hisoblash
                         </u>
                         <br />
@@ -238,109 +236,114 @@ export const StorageInvoices = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item?.id
+                        )
+                      }>
                       <u
                         style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tarix
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      {innerHeaderKeys?.map((item, ind) => {
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        {innerHeaderKeys?.map((item, ind) => {
+                          return (
+                            <p
+                              key={ind}
+                              style={{
+                                "--data-line-size": item?.size,
+                                borderRight: item.border,
+                              }}>
+                              {item?.name}
+                            </p>
+                          );
+                        })}
+                      </div>
+                      {ingredient?.map((product, ind) => {
                         return (
-                          <p
-                            key={ind}
-                            style={{
-                              "--data-line-size": item?.size,
-                              borderRight: item.border,
-                            }}
-                          >
-                            {item?.name}
-                          </p>
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            {innerDisplayKeys?.map((key, ind) => {
+                              return (
+                                <p
+                                  key={ind}
+                                  style={{
+                                    "--data-line-size": key?.size,
+                                    justifyContent:
+                                      key?.position || "flex-start",
+                                  }}>
+                                  {product[key?.name]}
+                                </p>
+                              );
+                            })}
+                            <p
+                              style={{
+                                "--data-line-size": "19%",
+                                justifyContent: "flex-end",
+                              }}>
+                              {product?.price * product?.amount}
+                            </p>
+                          </div>
                         );
                       })}
+                      <div
+                        className="storage_body_item inner_item"
+                        style={{ background: "#3339" }}>
+                        <p></p>
+                        <p style={{ "--data-line-size": "66%" }}>
+                          Jami mablag'
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "30%",
+                            justifyContent: "flex-end",
+                          }}>
+                          {CalculateTotalP(ingredient, "price", "amount")}
+                        </p>
+                      </div>
                     </div>
-                    {ingredient?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          {innerDisplayKeys?.map((key, ind) => {
-                            return (
-                              <p
-                                key={ind}
-                                style={{
-                                  "--data-line-size": key?.size,
-                                  justifyContent: key?.position || "flex-start",
-                                }}
-                              >
-                                {product[key?.name]}
-                              </p>
-                            );
-                          })}
-                          <p
-                            style={{
-                              "--data-line-size": "19%",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            {product?.price * product?.amount}
-                          </p>
-                        </div>
-                      );
-                    })}
-                    <div
-                      className="storage_body_item inner_item"
-                      style={{ background: "#3339" }}
-                    >
-                      <p></p>
-                      <p style={{ "--data-line-size": "66%" }}>Jami mablag'</p>
-                      <p
-                        style={{
-                          "--data-line-size": "30%",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {CalculateTotalP(ingredient, "price", "amount")}
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               );
             })
           )}
         </div>
       </div>
-      <InvoicesModal
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
-        getProduct={getProduct}
-        NUM={
-          !isLoading && {
-            num:
-              JSON.parse(invoiceData?.data ? invoiceData?.data[0]?.order : 0) +
-              1,
+      <Suspense>
+        <InvoicesModal
+          checkedData={checkedData}
+          setCheckedData={setCheckedData}
+          getProduct={getProduct}
+          NUM={
+            !isLoading && {
+              num:
+                JSON.parse(
+                  invoiceData?.data ? invoiceData?.data[0]?.order : 0
+                ) + 1,
+            }
           }
-        }
-      />
+        />
+      </Suspense>
     </div>
   );
 };

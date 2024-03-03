@@ -129,12 +129,11 @@ export const StorageGroups = () => {
               return (
                 <div
                   className={
-                    showMore === item.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item.id}
-                >
+                  key={item.id}>
                   <div
                     className={
                       acItem === item.id
@@ -148,8 +147,7 @@ export const StorageGroups = () => {
                       );
                       dispatch(setDocuments("ingGroup", item));
                       navigate(`?page-code=ingGroup`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -158,14 +156,15 @@ export const StorageGroups = () => {
                         dispatch(setDocuments("ingGroup", item));
                         navigate(`?page-code=ingGroup`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{index + 1}</p>
                     <p
-                      style={{ "--data-line-size": "60%", textAlign: "center" }}
-                    >
+                      style={{
+                        "--data-line-size": "60%",
+                        textAlign: "center",
+                      }}>
                       {item.name}
                     </p>
                     <p
@@ -174,72 +173,75 @@ export const StorageGroups = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item.id
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         ingredientlar
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Mahsulot turi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                        }}
-                      >
-                        O'lchov birligi
-                      </p>
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "25%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Mahsulot turi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Nomi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                          }}>
+                          O'lchov birligi
+                        </p>
+                      </div>
+                      {item?.data?.map((product, ind) => {
+                        return (
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            <p style={{ "--data-line-size": "25%" }}>
+                              {product.name}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.password}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.code}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.code}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })

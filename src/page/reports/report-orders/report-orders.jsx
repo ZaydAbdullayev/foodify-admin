@@ -166,12 +166,11 @@ export const ReportOrders = () => {
               return (
                 <div
                   className={
-                    showMore === item?.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item?.id}
-                >
+                  key={item?.id}>
                   <div
                     className={
                       acItem === item?.id
@@ -184,8 +183,7 @@ export const ReportOrders = () => {
                       );
                       dispatch(setDocuments("orderReport", item));
                       navigate(`?page-code=orderReport`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -194,8 +192,7 @@ export const ReportOrders = () => {
                         dispatch(setDocuments("orderReport", item));
                         navigate(`?page-code=orderReport`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={chek} />
                     </label>
                     <p>{index + 1}</p>
@@ -211,8 +208,7 @@ export const ReportOrders = () => {
                                 : "flex-end"
                               : "flex-start",
                             gap: extra ? "5px" : "0",
-                          }}
-                        >
+                          }}>
                           <sub>{item?.[extra]} </sub>{" "}
                           {date
                             ? item[name] !== "0000-00-00"
@@ -230,79 +226,78 @@ export const ReportOrders = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item?.id
+                        )
+                      }>
                       <u
                         style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         <IoInformationCircleOutline />
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Nomi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "20%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Narxi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "25%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Tan Narxi
+                        </p>
+                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      </div>
+                      {item?.data?.map((product, ind) => {
+                        return (
+                          <div className="storage_body_item inner_item">
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.name}
+                            </p>
+                            <p style={{ "--data-line-size": "20%" }}>
+                              {product.password}
+                            </p>
+                            <p style={{ "--data-line-size": "25%" }}>
+                              {item?.remain}
+                            </p>
+                            <p style={{ "--data-line-size": "15%" }}>
+                              {item?.total}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item">
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item?.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item?.total}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })

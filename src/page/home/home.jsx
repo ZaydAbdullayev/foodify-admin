@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./home.css";
 import { ApiGetService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,6 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { acNavStatus } from "../../redux/navbar.status";
 import { NumericFormat } from "react-number-format";
-import { ResolveModal } from "./resolve.modal";
 import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,6 +23,7 @@ import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
 import { acResolve } from "../../redux/resolve";
 
+const ResolveModal = lazy(() => import("./resolve.modal"));
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const department = JSON.parse(localStorage.getItem("department")) || null;
@@ -176,8 +176,7 @@ export const Home = () => {
     <div
       className={
         full ? "container_box home_page active" : "container_box home_page"
-      }
-    >
+      }>
       <div className="_orders">
         <h1>
           <i></i>
@@ -186,30 +185,26 @@ export const Home = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
-              aria-label='"target thi link "/orders"'
-            >
+              aria-label='"target thi link "/orders"'>
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active after before" : ""}
               onClick={() => navigate("/orders/cooking/food")}
-              aria-label='"target thi link "/orders/cooking/food"'
-            >
+              aria-label='"target thi link "/orders/cooking/food"'>
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
-              aria-label='target thi link "/orders/prepared/food"'
-            >
+              aria-label='target thi link "/orders/prepared/food"'>
               <MdFastfood />
             </span>
           </span>
           <i></i>
           <span
             onClick={() => setFull(!full)}
-            aria-label="enter fullscrenn or exit fullscreen"
-          >
+            aria-label="enter fullscrenn or exit fullscreen">
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
@@ -238,8 +233,7 @@ export const Home = () => {
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
                     display: order?.status === 4 ? "none" : "flex",
-                  }}
-                >
+                  }}>
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
@@ -257,8 +251,7 @@ export const Home = () => {
                             onClick={() =>
                               orderAccept({ ...order, status: 4 }, received_at)
                             }
-                            aria-label="cancel this order"
-                          >
+                            aria-label="cancel this order">
                             <RxCross2 />
                           </button>
                           <button
@@ -281,8 +274,7 @@ export const Home = () => {
                                 received_at
                               );
                             }}
-                            aria-label="to accept or to prepare"
-                          >
+                            aria-label="to accept or to prepare">
                             {loading.id === order.id && loading.status === 1 ? (
                               <LoadingBtn />
                             ) : (
@@ -320,8 +312,7 @@ export const Home = () => {
                                     department: department,
                                   });
                                 }
-                              }}
-                            ></i>
+                              }}></i>
                             {product?.status === 3 && <i></i>}
                             <p className="qty">{product?.quantity}</p>
                             <pre>
@@ -349,8 +340,7 @@ export const Home = () => {
                                       })
                                     )
                                   }
-                                  aria-label="cancel this product"
-                                >
+                                  aria-label="cancel this product">
                                   {loading.id === product.id &&
                                   loading.status === 3 ? (
                                     <LoadingBtn />
@@ -386,8 +376,7 @@ export const Home = () => {
                                     });
                                   }
                                 }}
-                                aria-label="to accept or to prepare this product"
-                              >
+                                aria-label="to accept or to prepare this product">
                                 {product?.status === 1 ? (
                                   <HiCheck />
                                 ) : (
@@ -414,7 +403,9 @@ export const Home = () => {
           </figure>
         )}
       </div>
-      <ResolveModal />
+      <Suspense>
+        <ResolveModal />
+      </Suspense>
     </div>
   );
 };

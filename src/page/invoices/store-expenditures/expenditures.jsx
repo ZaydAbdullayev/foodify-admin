@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { InvoicesModal } from "./expenditures.modal";
 import { useNavigate } from "react-router-dom";
 import { CalculateTotalP } from "../../../service/calc.service";
 
@@ -12,6 +11,8 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+
+const InvoicesModal = lazy(() => import("./expenditures.modal"));
 
 export const StorageExpenditures = () => {
   const [sort, setSort] = useState({ id: null, state: false });
@@ -131,8 +132,7 @@ export const StorageExpenditures = () => {
                     id: index,
                     state: !sort.state,
                   })
-                }
-              >
+                }>
                 {item.name}
                 {sort.id === index && sort.state ? (
                   <RiArrowUpSLine className="sort_icon" />
@@ -160,12 +160,11 @@ export const StorageExpenditures = () => {
               return (
                 <div
                   className={
-                    showMore === item?.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={index + 29820093483949}
-                >
+                  key={index + 29820093483949}>
                   <div
                     className={
                       acItem === item?.id
@@ -178,8 +177,7 @@ export const StorageExpenditures = () => {
                       );
                       dispatch(setDocuments("invoice", item));
                       navigate(`?page-code=invoice`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -188,8 +186,7 @@ export const StorageExpenditures = () => {
                         dispatch(setDocuments("invoice", item));
                         navigate(`?page-code=invoice`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
                     <p>{item?.order}</p>
@@ -207,110 +204,113 @@ export const StorageExpenditures = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item?.id ? null : item?.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item?.id
+                        )
+                      }>
                       <u
                         style={
-                          showMore === item?.id ? { color: "#787aff" } : {}
-                        }
-                      >
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         Tafsilot
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      {innerHEaderKeys.map((item, index) => {
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        {innerHEaderKeys.map((item, index) => {
+                          return (
+                            <p
+                              style={{
+                                "--data-line-size": item.size,
+                                borderRight: item.border,
+                              }}
+                              key={index}>
+                              {item.name}
+                            </p>
+                          );
+                        })}
+                      </div>
+                      {innerDatas?.map((product, ind) => {
                         return (
-                          <p
-                            style={{
-                              "--data-line-size": item.size,
-                              borderRight: item.border,
-                            }}
-                            key={index}
-                          >
-                            {item.name}
-                          </p>
+                          <div
+                            className="storage_body_item inner_item"
+                            key={ind}>
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                                justifyContent: "center",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            {innerData.map((key, index) => {
+                              return (
+                                <p
+                                  style={{
+                                    "--data-line-size": key.size,
+                                    borderRight: key.border,
+                                  }}
+                                  key={index}>
+                                  {key.short
+                                    ? product[key.name]?.slice(0, 1)
+                                    : product[key.name]}
+                                </p>
+                              );
+                            })}
+                            <p
+                              style={{
+                                "--data-line-size": "13.7%",
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {product?.total_quantity - product?.amount}
+                            </p>
+                            <p style={{ "--data-line-size": "13.7%" }}>
+                              {product?.price * product?.amount}
+                            </p>
+                          </div>
                         );
                       })}
+                      <div
+                        className="storage_body_item inner_item"
+                        style={{ background: "#3339" }}>
+                        <p></p>
+                        <p style={{ "--data-line-size": "66%" }}>
+                          {date} ga ko'ra Jami mablag'
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "30%",
+                            justifyContent: "flex-end",
+                          }}>
+                          {CalculateTotalP(innerDatas, "price", "amount")}
+                        </p>
+                      </div>
                     </div>
-                    {innerDatas?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item" key={ind}>
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                              justifyContent: "center",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          {innerData.map((key, index) => {
-                            return (
-                              <p
-                                style={{
-                                  "--data-line-size": key.size,
-                                  borderRight: key.border,
-                                }}
-                                key={index}
-                              >
-                                {key.short
-                                  ? product[key.name]?.slice(0, 1)
-                                  : product[key.name]}
-                              </p>
-                            );
-                          })}
-                          <p
-                            style={{
-                              "--data-line-size": "13.7%",
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {product?.total_quantity - product?.amount}
-                          </p>
-                          <p style={{ "--data-line-size": "13.7%" }}>
-                            {product?.price * product?.amount}
-                          </p>
-                        </div>
-                      );
-                    })}
-                    <div
-                      className="storage_body_item inner_item"
-                      style={{ background: "#3339" }}
-                    >
-                      <p></p>
-                      <p style={{ "--data-line-size": "66%" }}>
-                        {date} ga ko'ra Jami mablag'
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "30%",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {CalculateTotalP(innerDatas, "price", "amount")}
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               );
             })
           )}
         </div>
       </div>
-      <InvoicesModal
-        checkedData={checkedData}
-        setCheckedData={setCheckedData}
-        getProduct={getProduct}
-        NUM={
-          !isLoading && {
-            num:
-              JSON.parse(invoiceData?.data ? invoiceData?.data[0]?.order : 0) +
-              1,
+      <Suspense>
+        <InvoicesModal
+          checkedData={checkedData}
+          setCheckedData={setCheckedData}
+          getProduct={getProduct}
+          NUM={
+            !isLoading && {
+              num:
+                JSON.parse(
+                  invoiceData?.data ? invoiceData?.data[0]?.order : 0
+                ) + 1,
+            }
           }
-        }
-      />
+        />
+      </Suspense>
     </div>
   );
 };

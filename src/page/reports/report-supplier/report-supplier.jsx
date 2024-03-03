@@ -140,19 +140,17 @@ export const ReportSuppliers = () => {
               return (
                 <div
                   className={
-                    showMore === item.id
+                    showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item.id}
-                >
+                  key={item.id}>
                   <div
                     className={
                       acItem === item.id
                         ? "storage_body_item active"
                         : "storage_body_item"
-                    }
-                  >
+                    }>
                     <p style={{ "--data-line-size": "var(--univslH)" }}>
                       {index + 1}
                     </p>
@@ -166,8 +164,7 @@ export const ReportSuppliers = () => {
                               ? "center"
                               : "flex-end"
                             : "flex-start",
-                        }}
-                      >
+                        }}>
                         {displayKey?.name === "items" ? (
                           <>
                             <span className="reports_span">
@@ -191,8 +188,7 @@ export const ReportSuppliers = () => {
                         justifyContent: "center",
                       }}
                       onClick={openUModal}
-                      aria-label="to click to add paymetn this order"
-                    >
+                      aria-label="to click to add paymetn this order">
                       <u>to'lov</u>
                     </p>
                     <p
@@ -201,12 +197,16 @@ export const ReportSuppliers = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item.id
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tranzaksiyalar
                       </u>
                     </p>
@@ -216,77 +216,78 @@ export const ReportSuppliers = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(showMore === item.id ? null : item.id)
-                      }
-                    >
+                        setShowMore(
+                          showMore?.includes(item?.id) ? null : item.id
+                        )
+                      }>
                       <u
-                        style={showMore === item.id ? { color: "#787aff" } : {}}
-                      >
+                        style={
+                          showMore?.includes(item?.id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }>
                         tafsilot
                       </u>
                     </p>
                   </div>
-                  <div className=" storage-body_inner_item">
-                    <div className="storage_body_item">
-                      <p
-                        style={{
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        №
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "35%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Nomi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Narxi
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "25%",
-                          borderRight: "1px solid #ccc5",
-                        }}
-                      >
-                        Tan Narxi
-                      </p>
-                      <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                  {showMore?.includes(item?.id) && (
+                    <div className=" storage-body_inner_item">
+                      <div className="storage_body_item">
+                        <p
+                          style={{
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          №
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "35%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Nomi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "20%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Narxi
+                        </p>
+                        <p
+                          style={{
+                            "--data-line-size": "25%",
+                            borderRight: "1px solid #ccc5",
+                          }}>
+                          Tan Narxi
+                        </p>
+                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
+                      </div>
+                      {item?.data?.map((product, ind) => {
+                        return (
+                          <div className="storage_body_item inner_item">
+                            <p
+                              style={{
+                                borderRight: "1px solid #ccc5",
+                              }}>
+                              {ind + 1}
+                            </p>
+                            <p style={{ "--data-line-size": "35%" }}>
+                              {product.name}
+                            </p>
+                            <p style={{ "--data-line-size": "20%" }}>
+                              {product.password}
+                            </p>
+                            <p style={{ "--data-line-size": "25%" }}>
+                              {item.remain}
+                            </p>
+                            <p style={{ "--data-line-size": "15%" }}>
+                              {item.total}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    {item?.data?.map((product, ind) => {
-                      return (
-                        <div className="storage_body_item inner_item">
-                          <p
-                            style={{
-                              borderRight: "1px solid #ccc5",
-                            }}
-                          >
-                            {ind + 1}
-                          </p>
-                          <p style={{ "--data-line-size": "35%" }}>
-                            {product.name}
-                          </p>
-                          <p style={{ "--data-line-size": "20%" }}>
-                            {product.password}
-                          </p>
-                          <p style={{ "--data-line-size": "25%" }}>
-                            {item.remain}
-                          </p>
-                          <p style={{ "--data-line-size": "15%" }}>
-                            {item.total}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               );
             })

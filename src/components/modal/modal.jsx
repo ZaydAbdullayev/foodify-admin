@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import "./modal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { acCloseUModal } from "../../redux/u-modal";

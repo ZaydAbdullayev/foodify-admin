@@ -13,6 +13,13 @@
   border-bottom: 1px solid #cccccf56;
 }
 
+:where(.css-dev-only-do-not-override-10vxmo6).ant-select
+  .ant-select-arrow
+  .anticon
+  > svg {
+  font-size: var(--fs6);
+}
+
 .short_hands {
   display: flex;
   align-items: center;
