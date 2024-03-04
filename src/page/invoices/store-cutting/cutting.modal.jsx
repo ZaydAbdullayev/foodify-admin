@@ -89,7 +89,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
               value: acItem?.ingredient || "default",
               label: acItem?.ingredient || "Ingredient tanlang*",
             },
-            options: data,
+            options: data?.data,
           },
           {
             type: "inputN",
@@ -102,9 +102,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             name: "storage",
             take_id: true,
             extra: "storage_id",
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
-              : { value: "default", label: "Ombor tanlang*" },
+            df_value: { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
           },
           {

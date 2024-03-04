@@ -93,7 +93,6 @@ export const ShowProduct = memo(() => {
     url: `get/oneFood/${id}`,
     tags: ["product"],
   });
-  console.log(JSON.parse(data?.data?.ingredients));
   const ingredientData = JSON?.parse(data?.data?.ingredients);
   return (
     <div className="product_box open p_info">

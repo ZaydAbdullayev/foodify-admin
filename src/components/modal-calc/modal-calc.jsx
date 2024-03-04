@@ -294,16 +294,16 @@ export const UniversalControlModal = ({
             </button>
           )}
           <button
-            type="submit"
-            aria-label="calculate values of the all input's value">
-            <FaCalculator />
-          </button>
-          <button
             type="button"
             className="relative"
             onClick={() => fetchValues(fetchdata)}
             aria-label="add values of the all input's value">
             {loading ? <LoadingBtn /> : <FaCheck />}
+          </button>
+          <button
+            type="submit"
+            aria-label="calculate values of the all input's value">
+            <FaCalculator />
           </button>
           <button
             type="button"
@@ -320,7 +320,9 @@ export const UniversalControlModal = ({
 export const UniversalForm = ({ formData }) => {
   return (
     <div className="wdfaic u-control_form_box">
-      {formData?.map((field, index) => GenerateField(field, index))}
+      {formData?.map((field, index) => (
+        <GenerateField key={`${index}_${field.name}`} fieldData={field} />
+      ))}
     </div>
   );
 };

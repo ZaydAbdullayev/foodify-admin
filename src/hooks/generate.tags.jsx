@@ -11,7 +11,7 @@ function genrateId() {
   return roomNumber;
 }
 
-export const GenerateField = (fieldData, index) => {
+export const GenerateField = ({ fieldData }) => {
   const dispatch = useDispatch();
   const [datas, setDatas] = useState({ name: "", id: "" });
   const {
@@ -36,12 +36,16 @@ export const GenerateField = (fieldData, index) => {
     setDatas({ ...datas, select: value });
   };
 
+  const onlyNumber = (value) => {
+    const newValue = value.replace(/[^0-9]/g, "");
+    return newValue;
+  };
+
   switch (type) {
     case "select":
       return (
         <>
           <Select
-            key={genrateId()}
             aria-label="place for choose option"
             defaultValue={df_value}
             onChange={getSelectValue}
@@ -50,12 +54,7 @@ export const GenerateField = (fieldData, index) => {
               value: item?.name,
             }))}
           />
-          <input
-            name={name}
-            key={genrateId()}
-            type="hidden"
-            value={datas?.select}
-          />
+          <input name={name} type="hidden" value={datas?.select} />
         </>
       );
 
@@ -63,7 +62,6 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Input
-            key={genrateId()}
             name={name}
             placeholder={plc_hr}
             defaultValue={df_value}
@@ -76,7 +74,6 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <DatePicker
-            key={genrateId()}
             name={name}
             defaultValue={dayjs(df_value)}
             aria-label="place for select date"
@@ -88,7 +85,6 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Checkbox
-            key={genrateId()}
             name={name}
             defaultChecked={df_value}
             aria-label="place for check this element"
@@ -99,12 +95,13 @@ export const GenerateField = (fieldData, index) => {
     case "inputN":
       return (
         <InputNumber
-          key={genrateId()}
           name={name}
+          formatter={(value) => `${onlyNumber(value)}`}
+          parser={(value) => onlyNumber(value)}
           placeholder={plc_hr}
           defaultValue={df_value}
           min={1}
-          max={99999}
+          max={9999999999}
           aria-label="place for write number value"
         />
       );
@@ -113,7 +110,6 @@ export const GenerateField = (fieldData, index) => {
       return (
         <input
           type="hidden"
-          key={genrateId()}
           name={name}
           defaultValue={df_value}
           aria-label="place for secret value"
@@ -124,17 +120,19 @@ export const GenerateField = (fieldData, index) => {
       return (
         <>
           <Select
-            key={genrateId()}
             aria-label="place for choose option"
             defaultValue={df_value}
             onChange={getExtraValue}
-            options={options?.map((item) => ({
-              label: item?.name,
-              value: `${extra}=${item?.name}|${item?.id}`,
-            }))}
+            options={
+              Array.isArray(options)
+                ? options.map((item) => ({
+                    label: item?.name,
+                    value: `${extra}=${item?.name}|${item?.id}`,
+                  }))
+                : []
+            }
           />
           <input
-            key={genrateId()}
             type="hidden"
             name={name}
             value={datas?.name}
@@ -143,7 +141,6 @@ export const GenerateField = (fieldData, index) => {
           <input
             type="hidden"
             name={extra}
-            key={genrateId()}
             value={datas?.id}
             aria-label={`place for secret value ${datas?.id}`}
           />
@@ -156,17 +153,19 @@ export const GenerateField = (fieldData, index) => {
 };
 
 export const DynamicTable = ({ data, index }) => {
+  const key = genrateId();
   const columns = Object.keys(data[0]).map((key) => ({
     title: key,
     dataIndex: key,
     key: key,
   }));
-  return <Table dataSource={data} columns={columns} key={genrateId()} />;
+  return <Table dataSource={data} columns={columns} key={key + index} />;
 };
 
 export const CheckBox = ({ name, label, description = "", value }) => {
+  const key = genrateId();
   return (
-    <label className="universal-checkbox" key={genrateId()}>
+    <label className="universal-checkbox" key={key + 211221879}>
       <input type="radio" name={name} required value={value} />
       <span className="checkmark">
         <span>{label}</span>

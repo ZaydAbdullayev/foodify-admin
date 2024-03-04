@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { acActive } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { data } from "../../../components/modal-calc/components";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
@@ -378,12 +377,12 @@ export const StorageProducts = () => {
               type: "input",
               name: "description",
               plc_hr: "Tavsif*",
-              df_value: acItem?.description,
+              df_value: acItem?.description || "",
             },
             {
               type: "inputH",
               name: "img",
-              df_value: img?.img,
+              df_value: img?.img || "",
             },
           ]}
         />

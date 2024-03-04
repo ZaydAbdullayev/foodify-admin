@@ -164,7 +164,7 @@ export const StorageExpenditures = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={index + 29820093483949}>
+                  key={item.id}>
                   <div
                     className={
                       acItem === item?.id
