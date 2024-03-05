@@ -10,6 +10,13 @@
   font-size: var(--fs5);
 }
 
+.mobile-invoice-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2%;
+  background: #454545;
+}
+
 .activity-type {
   width: 100%;
   padding: 1.5% 2%;
@@ -17,7 +24,7 @@
   align-items: flex-start;
   gap: var(--gap3);
   background: #454545;
-  border-bottom: 1px solid #ccc5;
+  border-bottom: 0.13rem solid #787aff;
 }
 
 .activity-type:last-child {
@@ -39,6 +46,11 @@
   overflow-x: auto;
 }
 
+.activity-types.short {
+  width: calc(70% - 150px - var(--gap3));
+  height: calc((40px + (60 - 40) * (100vw - 320px) / (1440 - 320)) * 2);
+}
+
 .activity-types::-webkit-scrollbar {
   display: none;
 }
@@ -54,14 +66,120 @@
   resize: none;
 }
 
-.activity-types > textarea {
+.activity-types.short > textarea {
   width: 100%;
+  height: 100%;
 }
 
 .activity-types > input {
-  width: 50%;
+  width: calc(75% - calc(var(--gap3) / 2));
 }
 
-.activity-types > :where(textarea, input):focus {
+.activity-types :where(textarea, input):focus {
   border: 1px solid #787aff;
+}
+
+.amount-and-date {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap3);
+  font-size: var(--fs8);
+  text-align: center;
+  padding-left: var(--gap1);
+}
+
+.amount-and-date::after {
+  position: absolute;
+  content: "";
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 94%;
+  background: #787aff;
+  border-radius: 10px;
+}
+
+.amount-and-date .activity-types {
+  width: 100%;
+}
+
+.amount-and-date > label {
+  display: flex;
+  align-items: center;
+  gap: var(--gap3);
+}
+
+.amount-and-date > label > svg {
+  font-size: var(--fs4);
+}
+
+.amount-and-date > label:first-child > svg {
+  font-size: calc(var(--fs4) + 3px);
+}
+
+.date-picker,
+.amount-and-date .activity-types > input {
+  height: calc(35px + (50 - 35) * (100vw - 320px) / (1440 - 320));
+  flex: 1;
+  padding: 0 3%;
+  border: 1px solid #ccc5;
+}
+
+.activity-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap1);
+  gap: calc(var(--gap1) * 1.8);
+  background: #454545;
+  border: none;
+}
+
+.activity-btn > button {
+  position: relative;
+  width: calc(45% / 2.1);
+  height: 50px;
+  background: #ff0000;
+  border: none;
+  border-radius: 7px;
+  font-size: var(--fs6);
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.activity-btn > button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  transform: skew(-50deg, 0deg);
+  border-radius: 6px;
+}
+
+.activity-btn > button:nth-child(2) {
+  background: #00ff00;
+}
+
+.activity-btn > :first-child {
+  border-radius: 6px 0px 30px 6px;
+}
+
+.activity-btn > :first-child::after {
+  background: #ff0000;
+  right: -6.5%;
+}
+
+.activity-btn > :last-child {
+  border-radius: 30px 6px 6px 0px;
+}
+
+.activity-btn > :last-child::after {
+  left: -6.5%;
+  background: #00ff00;
 }
