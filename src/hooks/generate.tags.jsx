@@ -163,9 +163,8 @@ export const DynamicTable = ({ data, index }) => {
 };
 
 export const CheckBox = ({ name, label, description = "", value }) => {
-  const key = genrateId();
   return (
-    <label className="universal-checkbox" key={key + 211221879}>
+    <label className="universal-checkbox">
       <input type="radio" name={name} required value={value} />
       <span className="checkmark">
         <span>{label}</span>

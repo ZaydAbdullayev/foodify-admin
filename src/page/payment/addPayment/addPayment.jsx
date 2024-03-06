@@ -243,35 +243,3 @@ export const AddPayment = memo(({ active, actives }) => {
   );
 });
 
-// const data = {
-//   id: 654351,
-//   type: "ofline",
-//   table: "03",
-//   status: true,
-//   payment_data: [
-//     {
-//       id: 123456,
-//       name: "Pizza pishloqli",
-//       quantity: 2,
-//       price: 100000,
-//     },
-//     {
-//       id: 153446,
-//       name: "Do'ner",
-//       quantity: 2,
-//       price: 204000,
-//     },
-//     {
-//       id: 765432,
-//       name: "Lavash",
-//       quantity: 1,
-//       price: 34000,
-//     },
-//     {
-//       id: 645352,
-//       name: "Kokteyl malinali",
-//       quantity: 1,
-//       price: 14000,
-//     },
-//   ],
-// };

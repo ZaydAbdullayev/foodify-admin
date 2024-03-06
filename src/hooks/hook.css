@@ -30,17 +30,15 @@
   border-radius: 7px;
   line-height: 1.5;
   font-size: var(--fs7);
-  color: #fff;
+  color: #eee9;
   transition: all 0.3s ease;
-}
-
-.checkmark:hover {
-  border: 1px solid #787aff;
+  border: 1px solid #5cdbd380;
 }
 
 .universal-checkbox > input:checked + .checkmark {
-  background: #787aff2d;
-  border: 1px solid #787aff;
+  background: #5cdbd342;
+   color: #fff ;
+  border: 1px solid #36cfc9;
 }
 .universal-checkbox > input:checked + .checkmark::after {
   content: "";
@@ -49,7 +47,7 @@
   inset-inline-end: 2px;
   width: 0;
   height: 0;
-  border: 10px solid #787aff;
+  border: 10px solid #36cfc9;
   border-block-end: 10px solid transparent;
   border-inline-start: 10px solid transparent;
   border-start-end-radius: 7px;

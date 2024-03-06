@@ -15,6 +15,8 @@
   flex-direction: column;
   padding: 0 2%;
   background: #454545;
+  border-left: 4px solid #353535;
+  border-right: 4px solid #353535;
 }
 
 .activity-type {
@@ -24,7 +26,7 @@
   align-items: flex-start;
   gap: var(--gap3);
   background: #454545;
-  border-bottom: 0.13rem solid #787aff;
+  border-bottom: 0.13rem solid #353535;
 }
 
 .activity-type:last-child {
@@ -59,7 +61,7 @@
   height: calc(40px + (60 - 40) * (100vw - 320px) / (1440 - 320));
   padding: 0.5% 1%;
   background: #454545;
-  border: 1px solid #ccc5;
+  border: 1px solid #5cdbd380;
   border-radius: 7px;
   font-size: var(--fs6);
   color: #fff;
@@ -76,7 +78,7 @@
 }
 
 .activity-types :where(textarea, input):focus {
-  border: 1px solid #787aff;
+  border: 1px solid #5cdbd3;
 }
 
 .amount-and-date {
@@ -98,7 +100,7 @@
   transform: translateY(-50%);
   width: 4px;
   height: 94%;
-  background: #787aff;
+  background: #353535;
   border-radius: 10px;
 }
 
@@ -125,31 +127,48 @@
   height: calc(35px + (50 - 35) * (100vw - 320px) / (1440 - 320));
   flex: 1;
   padding: 0 3%;
-  border: 1px solid #ccc5;
+  border: 1px solid #5cdbd380;
 }
 
-.activity-btn {
+._invoice-footer {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: var(--gap1);
-  gap: calc(var(--gap1) * 1.8);
+  padding: var(--gap6);
+  gap: var(--gap2);
   background: #454545;
-  border: none;
+  border-radius: 0 0 10px 10px;
+  border: 4px solid #353535;
+}
+
+.history-screen {
+  width: calc(70% - var(--gap2));
+  height: 100px;
+  padding: 1%;
+  border: 1px solid #5cdbd380;
+  border-radius: 10px;
+}
+
+.activity-btn {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap1);
 }
 
 .activity-btn > button {
   position: relative;
-  width: calc(45% / 2.1);
+  width: calc(100% / 2.15);
   height: 50px;
-  background: #ff0000;
+  background: tomato;
   border: none;
   border-radius: 7px;
   font-size: var(--fs6);
   color: #fff;
   cursor: pointer;
   letter-spacing: 1px;
+  z-index: 99;
 }
 
 .activity-btn > button::after {
@@ -160,10 +179,11 @@
   height: 100%;
   transform: skew(-50deg, 0deg);
   border-radius: 6px;
+  z-index: -99;
 }
 
 .activity-btn > button:nth-child(2) {
-  background: #00ff00;
+  background: #4caf50;
 }
 
 .activity-btn > :first-child {
@@ -171,8 +191,8 @@
 }
 
 .activity-btn > :first-child::after {
-  background: #ff0000;
-  right: -6.5%;
+  background: tomato;
+  right: -7%;
 }
 
 .activity-btn > :last-child {
@@ -180,6 +200,11 @@
 }
 
 .activity-btn > :last-child::after {
-  left: -6.5%;
-  background: #00ff00;
+  left: -7%;
+  background: #4caf50;
+}
+
+.segmented {
+  padding: 6px 4px;
+  border-radius: 6px 6px 0 0;
 }
