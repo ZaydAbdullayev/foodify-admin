@@ -16,6 +16,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   const id = useSelector((state) => state.activeSt_id);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
+  const amount = useSelector((state) => state.cuttingA);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
     url: `get/storageItems/${res_id}/${id}`,
@@ -42,11 +43,24 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     "price",
     "amount"
   );
+
+  const updatedIngData = checkedData?.map((newItem) => {
+    const oldData = data?.data?.find((old) => old.id === newItem?.id) || {};
+
+    if (oldData) {
+      return {
+        ...newItem,
+        total_price: parseInt(newItem?.amount) * newItem?.price,
+      };
+    }
+
+    return newItem;
+  });
   const updatedData = [
     {
-      tittle: "Umumiy",
-      waste: total_quantity || 0,
-      get_amount: total_quantity || 0,
+      name: "Umumiy",
+      waste: amount - total_quantity || 0,
+      amount: total_quantity || 0,
       total_price: total_price || 0,
     },
   ];
@@ -83,6 +97,14 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           },
           {
             type: "s_extra",
+            name: "storage",
+            take_id: true,
+            extra: "storage_id",
+            df_value: { value: "default", label: "Ombor tanlang*" },
+            options: storeData?.data,
+          },
+          {
+            type: "s_search",
             name: "ingredient",
             extra: "ingredient_id",
             df_value: {
@@ -94,26 +116,17 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           {
             type: "inputN",
             name: "amount",
+            shareV: true,
             plc_hr: "Miqdori*",
-            df_value: acItem?.amount || 0,
-          },
-          {
-            type: "s_extra",
-            name: "storage",
-            take_id: true,
-            extra: "storage_id",
-            df_value: { value: "default", label: "Ombor tanlang*" },
-            options: storeData?.data,
+            df_value: acItem?.amount || "",
           },
           {
             type: "select",
             name: "invoice_group",
-            df_value: acItem?.invoice_group
-              ? {
-                  value: acItem?.invoice_group,
-                  label: acItem?.invoice_group,
-                }
-              : { value: "default", label: "Guruh tanlang*" },
+            df_value: {
+              value: acItem?.invoice_group || "default",
+              label: acItem?.invoice_group || "Guruh tanlang*",
+            },
             options: groupsData?.data,
           },
           {
@@ -125,7 +138,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           {
             type: "inputH",
             name: "waste",
-            df_value: total_quantity || 0,
+            df_value: amount - total_quantity || 0,
           },
         ]}
       />
@@ -185,7 +198,17 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     "--data-line-size": "15%",
                     justifyContent: "flex-end",
                   }}>
-                  {item?.price}
+                  {checked ? (
+                    <input
+                      type="number"
+                      defaultValue={item.price}
+                      onChange={(e) =>
+                        getProduct({ ...checked, price: e.target.value }, 1)
+                      }
+                    />
+                  ) : (
+                    item.price
+                  )}
                 </p>
                 <p
                   style={{
@@ -194,20 +217,15 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                   }}>
                   {checked && (
                     <select
-                      name="storage"
                       onChange={(e) =>
                         getProduct(
                           { ...checked, st_receiver: e.target.value },
                           1
                         )
                       }>
-                      {acItem?.storage ? (
-                        <option value={acItem?.storage}>
-                          {acItem?.storage}
-                        </option>
-                      ) : (
-                        <option value="default">Ombor tanlang*</option>
-                      )}
+                      <option value={acItem?.storage || "default"}>
+                        {acItem?.storage || "Ombor tanlang*"}
+                      </option>
                       {storeData?.data?.map((item) => {
                         return (
                           <option key={item?.id} value={item?.id}>
@@ -226,7 +244,6 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                   {checked && (
                     <input
                       type="number"
-                      name="amount"
                       defaultValue={acItem?.amount}
                       onChange={(e) =>
                         getProduct({ ...checked, amount: e.target.value }, 1)
@@ -248,12 +265,12 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           <p style={{ "--data-line-size": "24%" }}>Jami mablag'</p>
         </CalcResultHeader>
         <CalcResultBody
-          data={updatedData}
+          data={[...updatedIngData, ...updatedData]}
           status="inv"
           displayKeys={[
-            { name: "tittle", size: "24%" },
+            { name: "name", size: "24%" },
             { name: "waste", size: "24%", position: 2 },
-            { name: "get_amount", size: "24%", position: 2 },
+            { name: "amount", size: "24%", position: 2 },
             { name: "total_price", size: "24%", position: 2 },
           ]}
         />

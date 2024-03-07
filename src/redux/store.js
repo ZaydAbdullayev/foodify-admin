@@ -7,7 +7,7 @@ import { reGetNewData, reSearch } from "./search";
 import { rePermission, resId } from "./permission";
 import { reGetUrl, reUModal } from "./u-modal";
 import { reActive, reActiveSt_id, reStorageId } from "./active";
-import { reCalc } from "./calc";
+import { reCalc, reCuttingAmount } from "./calc";
 import { reModalType } from "./u-modal";
 import { reActiveThing } from "./active";
 import { reNavStatus } from "./navbar.status";
@@ -41,6 +41,7 @@ export const store = configureStore({
     storageId: reStorageId,
     activeSt_id: reActiveSt_id,
     delRouter: rootDocuments,
+    cuttingA: reCuttingAmount,
     [api.reducerPath]: api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>

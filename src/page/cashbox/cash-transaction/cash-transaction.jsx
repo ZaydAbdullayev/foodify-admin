@@ -6,8 +6,6 @@ import { UniversalModal } from "../../../components/modal/modal";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
-import { DatePicker, ConfigProvider, theme } from "antd";
-import dayjs from "dayjs";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -108,8 +106,7 @@ export const CashboxTransaction = () => {
                 }}
                 onClick={() => {
                   setSort({ id: index, state: !sort.state });
-                }}
-              >
+                }}>
                 {item?.name}{" "}
                 {sort.id === index ? (
                   sort.state ? (
@@ -149,8 +146,7 @@ export const CashboxTransaction = () => {
                       );
                       dispatch(setDocuments("trsn", item));
                       navigate(`?page-code=trsn`);
-                    }}
-                  >
+                    }}>
                     <label
                       onClick={() => {
                         dispatch(
@@ -159,8 +155,7 @@ export const CashboxTransaction = () => {
                         dispatch(setDocuments("trsn", item));
                         navigate(`?page-code=trsn`);
                       }}
-                      aria-label="checked this elements"
-                    >
+                      aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
@@ -176,8 +171,7 @@ export const CashboxTransaction = () => {
                           style={{
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
-                          }}
-                        >
+                          }}>
                           {item[key?.name]}
                         </p>
                       );
@@ -191,19 +185,9 @@ export const CashboxTransaction = () => {
       </div>
       <UniversalModal type="trsn">
         <input type="date" name="date" defaultValue={today} required />
-        <ConfigProvider
-          theme={{
-            DatePicker: {
-              algorithm: false,
-            },
-          }}
-        >
-          <DatePicker name="date" defaultValue={dayjs(today)} />
-        </ConfigProvider>
         <select
           name="transaction_type"
-          onChange={(e) => setModalType(e.target.value)}
-        >
+          onChange={(e) => setModalType(e.target.value)}>
           <option value="default">Tranzaksiya turi</option>
           <option value="income">Kirim qilish</option>
           <option value="expenses">Chiqim qilish</option>

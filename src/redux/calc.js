@@ -7,9 +7,15 @@ export const reCalc = (state = {}, action) => {
   }
 };
 
-export const acCalc = (payload) => {
-  return {
-    type: "ADD",
-    payload,
-  };
+export const reCuttingAmount = (state = 0, action) => {
+  switch (action.type) {
+    case "CUTTING":
+      return action.payload;
+    default:
+      return state;
+  }
 };
+
+export const acCalc = (payload) => ({ type: "ADD", payload });
+export const acCutting = (payload) => ({ type: "CUTTING", payload });
+

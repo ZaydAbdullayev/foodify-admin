@@ -7,7 +7,6 @@ import { enqueueSnackbar as es } from "notistack";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { usePatchDataMutation } from "../../../service/fetch.service";
 import { usePostDataMutation } from "../../../service/fetch.service";
-import { ClearForm } from "../../../service/form.service";
 
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -40,7 +39,7 @@ export const AddPayment = memo(({ active, actives }) => {
 
   useEffect(() => {
     document.querySelector("#price").value = price.df_v;
-  }, [type]);
+  }, [price.df_v, type]);
 
   const addPayment = async () => {
     const trsn = {

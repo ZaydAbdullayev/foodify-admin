@@ -20,6 +20,7 @@
 }
 
 .activity-type {
+  position: relative;
   width: 100%;
   padding: 1.5% 2%;
   display: flex;
@@ -79,6 +80,16 @@
 
 .activity-types :where(textarea, input):focus {
   border: 1px solid #5cdbd3;
+}
+
+.activity-type > svg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: var(--fs4);
+  color: #5cdbd3;
+  cursor: pointer;
 }
 
 .amount-and-date {
@@ -207,4 +218,17 @@
 .segmented {
   padding: 6px 4px;
   border-radius: 6px 6px 0 0;
+}
+
+.add-tr-group {
+  height: calc(40px + (60 - 40) * (100vw - 320px) / (1440 - 320));
+  aspect-ratio: 3/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #36cfc9;
+  border-radius: 7px;
+  font-size: var(--fs3);
+  color: #ddd;
 }

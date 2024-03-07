@@ -4,20 +4,21 @@ import { enqueueSnackbar as es } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
 import { acCloseUModal } from "../../redux/u-modal";
 import { calculateTotal } from "./components";
-import { acCalc } from "../../redux/calc";
+import { acCalc, acCutting } from "../../redux/calc";
 import { LoadingBtn } from "../../components/loading/loading";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { usePostDataMutation } from "../../service/fetch.service";
 import { usePatchDataMutation } from "../../service/fetch.service";
-import { ClearForm } from "../../service/clear-form.service";
+import { ClearForm } from "../../service/form.service";
 import { acPassiveThing } from "../../redux/active";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
 import { notification } from "antd";
 import middlewareService from "../../middleware/form.middleware";
 import { GenerateField } from "../../hooks/generate.tags";
+import { Popover, ConfigProvider } from "antd";
 
-import { FaCalculator, FaCheck } from "react-icons/fa";
+import { FaCalculator, FaCheck, FaInfo } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
 import { RiImageAddFill } from "react-icons/ri";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -53,6 +54,24 @@ export const UniversalControlModal = ({
       placement,
     });
   };
+
+  const content = (
+    <div>
+      <p>
+        <TbArrowBarLeft /> – Oynani yopish uchun
+      </p>
+      <p>
+        <FaCalculator /> – Oynadagi malumotlarni hisoblash uchun
+      </p>
+      <p>
+        <FaCheck /> – Oynadagi malumotlarni saqlash uchun
+      </p>
+      <p>
+        <RiImageAddFill /> – Mahsulot uchun rasm qo'shish uchun <br /> (faqat
+        mahsulot qo'shish sahifasida ko'rinadi)
+      </p>
+    </div>
+  );
 
   const fetchValues = async (value) => {
     setLoading(true);
@@ -199,11 +218,12 @@ export const UniversalControlModal = ({
         es({ message: "Xatolik", variant: "error" });
       } else if (result?.data) {
         es({ message: "Qo'shildi", variant: "success" });
-        ClearForm("u-control-form");
-        dispatch(acCloseUModal());
+        // ClearForm(".u-control-form");
+        // dispatch(acCloseUModal());
         dispatch(acPassiveThing());
+        dispatch(acCutting(0));
         dispatch(acGetUrl({ st: false, img: "" }));
-        setCheckedData([]);
+        // setCheckedData([]);
       }
     } catch (err) {
       console.error(err);
@@ -277,6 +297,24 @@ export const UniversalControlModal = ({
           className={
             open ? "u-control_action__box active" : "u-control_action__box"
           }>
+          <ConfigProvider
+            theme={{
+              components: {
+                Popover: {
+                  fontSize: "var(--fs6)",
+                },
+              },
+            }}>
+            <Popover
+              content={content}
+              title="Harakat tugmalari vazifalari"
+              placement="topRight"
+              trigger="click">
+              <button type="button" aria-label="get info about buttons">
+                <FaInfo />
+              </button>
+            </Popover>
+          </ConfigProvider>
           {image.img !== "" && (
             <figure
               onClick={() =>
@@ -450,7 +488,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
                     : "end"
                   : "start",
               }}>
-              {item[name]}
+              {item?.[name] || 0}
             </p>
           ))}
           {status !== "inv" && (

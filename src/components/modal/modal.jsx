@@ -15,6 +15,7 @@ export const UniversalModal = ({
   setChecked,
   status,
   title,
+  darkMode,
 }) => {
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export const UniversalModal = ({
   // service for update
   const [patchData] = usePatchDataMutation();
   const [loading, setLoading] = useState(false);
+  console.log("model", darkMode);
 
   const fetchValues = async (e) => {
     e.preventDefault();
@@ -253,9 +255,11 @@ export const UniversalModal = ({
   };
 
   return (
-    <div className={open ? "u_modal_container open" : "u_modal_container"}>
+    <div className={open ? `u_modal_container  open` : `u_modal_container `}>
       <div className="u_modal_box">
-        <form className="u_modal" onSubmit={fetchValues}>
+        <form
+          className={`u_modal ${darkMode ? "dark-mode" : ""}`}
+          onSubmit={fetchValues}>
           <p>{status ? title : "Taxrirlash"}</p>
           {children}
           <button className="relative">

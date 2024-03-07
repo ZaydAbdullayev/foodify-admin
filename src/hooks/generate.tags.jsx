@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { acActiveSt_id } from "../redux/active";
 import "./hook.css";
+import { acCutting } from "../redux/calc";
 
 function genrateId() {
   const roomNumber = Math.floor(100000 + Math.random() * 900000);
@@ -22,6 +23,7 @@ export const GenerateField = ({ fieldData }) => {
     name = "",
     extra = "",
     take_id = false,
+    shareV = false,
   } = fieldData;
 
   const getExtraValue = (extra) => {
@@ -100,6 +102,7 @@ export const GenerateField = ({ fieldData }) => {
           parser={(value) => onlyNumber(value)}
           placeholder={plc_hr}
           defaultValue={df_value}
+          onChange={(e) => shareV && dispatch(acCutting(e))}
           min={1}
           max={9999999999}
           aria-label="place for write number value"
@@ -145,6 +148,30 @@ export const GenerateField = ({ fieldData }) => {
             aria-label={`place for secret value ${datas?.id}`}
           />
         </>
+      );
+
+    case "s_search":
+      return (
+        <Select
+          showSearch
+          placeholder={plc_hr}
+          defaultValue={df_value}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.label ?? "").includes(input)
+          }
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? "")
+              .toLowerCase()
+              .localeCompare((optionB?.label ?? "").toLowerCase())
+          }
+          options={
+            options?.map((item) => ({
+              value: item?.id,
+              label: item?.name,
+            })) || []
+          }
+        />
       );
 
     default:

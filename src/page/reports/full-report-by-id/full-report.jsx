@@ -183,10 +183,13 @@ export const FullReportById = memo(() => {
             item.details !== null && (
               <div
                 className="_details-content"
-                style={{ "--grid-row-table-row": item.details.length + 2 }}
-              >
+                style={{ "--grid-row-table-row": item.details.length + 2 }}>
                 <p>{item.type}</p>
-                <DynamicTable data={item?.details} index={index} />
+                <DynamicTable
+                  data={item?.details}
+                  index={index}
+                  key={`${item.type}_${index}`}
+                />
               </div>
             )
           );

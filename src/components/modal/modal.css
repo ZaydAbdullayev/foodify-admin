@@ -58,6 +58,12 @@
   overflow-x: auto;
 }
 
+.u_modal.dark-mode {
+  background: #454545;
+  color: #fff;
+  box-shadow: rgba(54, 207, 202, 0.37) 0px 1px 4px;
+}
+
 .u_modal > p {
   font-size: var(--fs3);
 }
@@ -92,6 +98,13 @@
   letter-spacing: 1px;
 }
 
+.u_modal.dark-mode > :where(select, input, label),
+.u_modal > label > :where(input, select) {
+  background: #454545;
+  color: #fff;
+  border: 1px solid #36cfc9;
+}
+
 .u_modal > select > option {
   line-height: 2;
   font-size: var(--fs6);
@@ -110,6 +123,10 @@
   background: #787aff;
   color: #fff;
   font-size: var(--fs6);
+}
+
+.u_modal.dark-mode > button {
+  background: #36cfc9;
 }
 
 .u_modal > button:active {
