@@ -140,7 +140,7 @@
 }
 
 .payment_type {
-  width: calc(100% / 3 - var(--gap6) + 3px);
+  min-width: calc(100% / 3 - var(--gap6) + 3px);
   aspect-ratio: 2/1.5;
   margin-top: 3%;
   display: flex;
@@ -164,6 +164,24 @@
   border-color: #222;
 }
 
+.payment_type-options {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--gap6);
+  overflow-y: auto;
+}
+
+.payment_type-options::-webkit-scrollbar {
+  height: 3px;
+  background: #dddddd73;
+}
+
+.payment_type-options::-webkit-scrollbar-thumb {
+  background: #111;
+  border-radius: 10px;
+}
+
 .add_payment__button {
   width: 100%;
   margin-top: 3%;
@@ -175,16 +193,17 @@
 
 .add_payment__button input {
   height: var(--bwh);
+  padding: 0 1%;
   flex: 1;
-  padding: 0 3%;
   border: none;
   border-radius: 10px;
   font-size: var(--fs5);
 }
 
 .add_payment__button span {
-  width: var(--bwh);
   height: var(--bwh);
+  width: var(--bwh);
+  aspect-ratio: 1/1;
   border: none;
   display: flex;
   align-items: center;

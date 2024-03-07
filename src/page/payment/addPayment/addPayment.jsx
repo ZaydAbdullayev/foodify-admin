@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import "./addPayment.css";
 import { NumericFormat } from "react-number-format";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { enqueueSnackbar as es } from "notistack";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { usePatchDataMutation } from "../../../service/fetch.service";
 import { usePostDataMutation } from "../../../service/fetch.service";
+import { ClearForm } from "../../../service/form.service";
 
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
@@ -14,6 +15,8 @@ import { BsFillCreditCard2BackFill, BsCheckLg } from "react-icons/bs";
 import { BsJournalCheck } from "react-icons/bs";
 import { GiCardExchange } from "react-icons/gi";
 import { FaMoneyBillAlt } from "react-icons/fa";
+import { FcDebt } from "react-icons/fc";
+import { MdMoneyOff } from "react-icons/md";
 
 export const AddPayment = memo(({ active, actives }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || "";
@@ -21,7 +24,6 @@ export const AddPayment = memo(({ active, actives }) => {
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState({
     id: 1,
-    comment: "Naqd to'lov",
     value: "cash",
   }); // ["ofline", "online"]
   const id = useLocation().search.split("?dt=").pop();
@@ -31,8 +33,14 @@ export const AddPayment = memo(({ active, actives }) => {
   });
   const [patchData] = usePatchDataMutation();
   const [postData] = usePostDataMutation();
-  const [price, setPrice] = useState(null); // ["ofline", "online"]
+  const orderData = order?.innerData ? order?.innerData[0] : [];
+  const [price, setPrice] = useState({ df_v: orderData?.total }); // ["ofline", "online"]
+  console.log("price", price);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.querySelector("#price").value = price.df_v;
+  }, [type]);
 
   const addPayment = async () => {
     const trsn = {
@@ -86,7 +94,6 @@ export const AddPayment = memo(({ active, actives }) => {
     }
   };
 
-  const orderData = order?.innerData ? order?.innerData[0] : [];
   const productdata =
     orderData.product_data && JSON.parse(orderData.product_data);
   const payment_data = productdata
@@ -99,8 +106,7 @@ export const AddPayment = memo(({ active, actives }) => {
         actives
           ? "add_payment__container open_details"
           : "add_payment__container"
-      }
-    >
+      }>
       <div className="add_payment__box">
         <div className="add_payment__header">
           <pre>
@@ -167,56 +173,94 @@ export const AddPayment = memo(({ active, actives }) => {
           </p>
           {orderData?.payment_status === 0 ? (
             <>
-              <div
-                className={
-                  type.id === 3 ? "payment_type active" : "payment_type"
-                }
-                onClick={() =>
-                  setType({ id: 3, comment: "Click/Payme", value: "credit" })
-                }
-              >
-                <GiCardExchange />
-                <span>Click/Payme</span>
-              </div>
-              <div
-                className={
-                  type.id === 2 ? "payment_type active" : "payment_type"
-                }
-                onClick={() =>
-                  setType({
-                    id: 2,
-                    comment: "Pul o'tkazma",
-                    value: "bank_card",
-                  })
-                }
-              >
-                <BsFillCreditCard2BackFill />
-                <span>Karta orqali</span>
-              </div>
-              <div
-                className={
-                  type.id === 1 ? "payment_type active" : "payment_type"
-                }
-                onClick={() =>
-                  setType({ id: 1, comment: "Naqd to'lov", value: "cash" })
-                }
-              >
-                <FaMoneyBillAlt />
-                <span>Naqd to'lov</span>
+              <div className="payment_type-options">
+                <div
+                  className={
+                    type.id === 1 ? "payment_type active" : "payment_type"
+                  }
+                  onClick={() => setType({ id: 1, value: "cash" })}>
+                  <FaMoneyBillAlt />
+                  <span>
+                    {price?.[1] > 0 ? price?.[type?.id] : "Naqd to'lov"}
+                  </span>
+                </div>
+                <div
+                  className={
+                    type.id === 3 ? "payment_type active" : "payment_type"
+                  }
+                  onClick={() => setType({ id: 3, value: "credit" })}>
+                  <GiCardExchange />
+                  <span>
+                    {price?.[3] > 0 ? price?.[type?.id] : "Click/Payme"}
+                  </span>
+                </div>
+                <div
+                  className={
+                    type.id === 2 ? "payment_type active" : "payment_type"
+                  }
+                  onClick={() =>
+                    setType({
+                      id: 2,
+                      comment: "Pul o'tkazma",
+                      value: "bank_card",
+                    })
+                  }>
+                  <BsFillCreditCard2BackFill />
+                  <span>
+                    {price?.[2] > 0 ? price?.[type?.id] : "Karta orqali"}
+                  </span>
+                </div>
+                <div
+                  className={
+                    type.id === 4 ? "payment_type active" : "payment_type"
+                  }
+                  onClick={() => setType({ id: 4, value: "debit" })}>
+                  <FcDebt />
+                  <span>{price?.[4] > 0 ? price?.[type?.id] : "Qarz"}</span>
+                </div>
+                <div
+                  className={
+                    type.id === 5 ? "payment_type active" : "payment_type"
+                  }
+                  onClick={() =>
+                    setType({
+                      id: 5,
+                      value: "not_paid",
+                    })
+                  }>
+                  <MdMoneyOff />
+                  <span>
+                    {price?.[5] > 0 ? price?.[type?.id] : "To'lanmaydi"}
+                  </span>
+                </div>
               </div>
               <div className="add_payment__button">
                 <p>Olindi:</p>
                 <input
                   type="number"
-                  defaultValue={orderData?.total}
-                  onChange={(e) => setPrice(e.target.value)}
+                  value={price.df_v}
+                  id="price"
+                  onChange={(e) =>
+                    setPrice((prev) => {
+                      const value = e.target.value;
+                      return {
+                        ...prev,
+                        [type?.id]: value > prev?.df_v ? prev?.df_v : value,
+                        df_v:
+                          value > prev?.df_v
+                            ? prev?.df_v
+                            : prev?.df_v !== 0
+                            ? prev?.df_v - value
+                            : 0,
+                      };
+                    })
+                  }
                   name="price"
                 />
                 <span
                   className="relative"
                   onClick={() => addPayment()}
-                  aria-label="add payment"
-                >
+                  aria-label="add payment">
                   {loading ? <LoadingBtn /> : <BsCheckLg />}
                 </span>
               </div>
@@ -224,8 +268,7 @@ export const AddPayment = memo(({ active, actives }) => {
           ) : (
             <div
               className="payment_type"
-              onClick={() => navigate(`/get/check/${orderData?.id}`)}
-            >
+              onClick={() => navigate(`/get/check/${orderData?.id}`)}>
               <BsJournalCheck />
               <span aria-label="get check">Check olish</span>
             </div>
@@ -237,9 +280,7 @@ export const AddPayment = memo(({ active, actives }) => {
           navigate("/financial");
           active(false);
         }}
-        aria-label="close this modal"
-      ></i>
+        aria-label="close this modal"></i>
     </div>
   );
 });
-
