@@ -51,6 +51,8 @@ export const MakingFoods = () => {
         );
         if (existingIndex !== -1) {
           updatedOrders[existingIndex] = newData[1];
+        } else {
+          updatedOrders.push(newData[1]);
         }
       } else if (newData[0] === "delete") {
         const deleted = updatedOrders.findIndex(
@@ -121,8 +123,7 @@ export const MakingFoods = () => {
     <div
       className={
         full ? "container_box home_page active" : "container_box home_page"
-      }
-    >
+      }>
       <div className="_orders">
         <h1>
           <i></i>
@@ -131,30 +132,26 @@ export const MakingFoods = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
-              aria-label='target this link "/orders"'
-            >
+              aria-label='target this link "/orders"'>
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active" : ""}
               onClick={() => navigate("/orders/cooking/food")}
-              aria-label='target this link "/orders/cooking/food"'
-            >
+              aria-label='target this link "/orders/cooking/food"'>
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
-              aria-label='target this link "/orders/prepared/food"'
-            >
+              aria-label='target this link "/orders/prepared/food"'>
               <MdFastfood />
             </span>
           </span>
           <i></i>
           <span
             onClick={() => setFull(!full)}
-            aria-label="enter fullscreen and exit fullscreen"
-          >
+            aria-label="enter fullscreen and exit fullscreen">
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
@@ -183,8 +180,7 @@ export const MakingFoods = () => {
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
                     display: order?.status === 4 ? "none" : "flex",
-                  }}
-                >
+                  }}>
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
@@ -195,8 +191,7 @@ export const MakingFoods = () => {
                         <button
                           className="relative"
                           onClick={() => orderAccept({ ...order, status: 4 })}
-                          aria-label="to cancel this order"
-                        >
+                          aria-label="to cancel this order">
                           <RxCross2 />
                         </button>
                         <button
@@ -207,8 +202,7 @@ export const MakingFoods = () => {
                               user_id: order?.user_id,
                             })
                           }
-                          aria-label="to prepare thi r oreder"
-                        >
+                          aria-label="to prepare thi r oreder">
                           <BsCheck2All />
                         </button>
                       </div>
@@ -225,8 +219,7 @@ export const MakingFoods = () => {
                                   status: 4,
                                   department: department,
                                 })
-                              }
-                            ></i>
+                              }></i>
                             {product?.status === 3 && <i></i>}
                             <p className="qty">{product?.quantity}</p>
                             <pre>
@@ -251,9 +244,7 @@ export const MakingFoods = () => {
                                     department: department,
                                   })
                                 }
-                                aria-label="to prepare this product"
-                              >
-
+                                aria-label="to prepare this product">
                                 <IoCheckmarkDoneCircleSharp />
                               </button>
                             </div>

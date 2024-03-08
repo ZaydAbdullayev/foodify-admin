@@ -17,7 +17,7 @@ export const StorageIngredients = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [newIngGr, setNewIngGr] = useState(null);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const [newGrData, setNewGrData] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
@@ -56,6 +56,33 @@ export const StorageIngredients = () => {
     { name: "unit", size: 20, position: "center" },
     { name: "group", size: 30 },
     { name: "price", size: 20, position: "flex-end" },
+  ];
+
+  const item_d_hk = [
+    { name: "Nomi", size: 21, border: "1px solid #ccc5" },
+    { name: "Categoriya", size: 21, border: "1px solid #ccc5" },
+    { name: "Bo'lim", size: 21, border: "1px solid #ccc5" },
+    { name: "Ombor", size: 21, border: "1px solid #ccc5" },
+    { name: "Miqdor", size: 12 },
+  ];
+  const item_d_dk = [
+    { name: "name", size: 21, border: "1px solid #ccc5" },
+    { name: "category", size: 21, border: "1px solid #ccc5" },
+    { name: "department", size: 21, border: "1px solid #ccc5" },
+    { name: "storage", size: 21, border: "1px solid #ccc5" },
+    { name: "quantity", size: 12 },
+  ];
+  const item_p_hk = [
+    { name: "Raqam", size: 16, border: "1px solid #ccc5" },
+    { name: "Sana", size: 26, border: "1px solid #ccc5" },
+    { name: "Harakat", size: 26, border: "1px solid #ccc5" },
+    { name: "1x/narxi", size: 26 },
+  ];
+  const item_p_dk = [
+    { name: "order", size: 16, border: "1px solid #ccc5" },
+    { name: "date", size: 26, border: "1px solid #ccc5", fix: true },
+    { name: "action", size: 26, border: "1px solid #ccc5" },
+    { name: "price", size: 26 },
   ];
 
   return (
@@ -157,8 +184,10 @@ export const StorageIngredients = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((el) => el !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u
@@ -172,64 +201,148 @@ export const StorageIngredients = () => {
                     </p>
                   </div>
                   {showMore?.includes(item?.id) && (
-                    <div className=" storage-body_inner_item">
-                      <div className="storage_body_item">
-                        <p
+                    <>
+                      <div className=" storage-body_inner_item">
+                        <div
+                          className="storage_body_item"
+                          style={{ background: "#454545" }}>
+                          <p
+                            style={{
+                              "--data-line-size": "100%",
+                              justifyContent: "center",
+                            }}>
+                            Ovqatlar{" "}
+                            {!JSON?.parse(item?.details)?.length ? " yo'q" : ""}
+                          </p>
+                        </div>
+                        <div
+                          className="storage_body_item"
                           style={{
-                            borderRight: "1px solid #ccc5",
+                            display: JSON?.parse(item?.details)?.length
+                              ? "flex"
+                              : "none",
+                            background: "#454545",
                           }}>
-                          №
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "35%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Nomi
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "20%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Narxi
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "25%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Tan Narxi
-                        </p>
-                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
-                      </div>
-                      {item?.data?.map((product, ind) => {
-                        return (
-                          <div
-                            className="storage_body_item inner_item"
-                            key={ind}>
+                          <p
+                            style={{
+                              borderRight: "1px solid #ccc5",
+                            }}>
+                            №
+                          </p>
+                          {item_d_hk.map(({ name, size, border }, index) => (
                             <p
                               style={{
-                                borderRight: "1px solid #ccc5",
-                              }}>
-                              {ind + 1}
+                                "--data-line-size": `${size}%`,
+                                justifyContent: "center",
+                                borderRight: border,
+                              }}
+                              key={`${index}_${name}`}>
+                              {name}
                             </p>
-                            <p style={{ "--data-line-size": "35%" }}>
-                              {product.name}
+                          ))}
+                        </div>
+                        {JSON?.parse(item?.details)?.map((product, ind) => {
+                          return (
+                            <div
+                              className="storage_body_item inner_item"
+                              key={ind}>
+                              <p
+                                style={{
+                                  borderRight: "1px solid #ccc5",
+                                }}>
+                                {ind + 1}
+                              </p>
+                              {item_d_dk.map(
+                                ({ name, size, border }, index) => (
+                                  <p
+                                    style={{
+                                      "--data-line-size": `${size}%`,
+                                      justifyContent: "center",
+                                      borderRight: border,
+                                    }}
+                                    key={`${index}_${name}`}>
+                                    {product[name]}
+                                  </p>
+                                )
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className=" storage-body_inner_item">
+                        <div
+                          className="storage_body_item"
+                          style={{ background: "#454545" }}>
+                          <p
+                            style={{
+                              "--data-line-size": "100%",
+                              justifyContent: "center",
+                            }}>
+                            Faktura narxi{" "}
+                            {!JSON?.parse(item?.priceAction)?.length
+                              ? " yo'q"
+                              : ""}
+                          </p>
+                        </div>
+                        <div
+                          className="storage_body_item"
+                          style={{
+                            display: JSON?.parse(item?.priceAction)?.length
+                              ? "flex"
+                              : "none",
+                            background: "#454545",
+                          }}>
+                          <p
+                            style={{
+                              borderRight: "1px solid #ccc5",
+                            }}>
+                            №
+                          </p>
+                          {item_p_hk.map(({ name, size, border }, index) => (
+                            <p
+                              style={{
+                                "--data-line-size": `${size}%`,
+                                justifyContent: "center",
+                                borderRight: border,
+                              }}
+                              key={`${index}_${name}`}>
+                              {name}
                             </p>
-                            <p style={{ "--data-line-size": "20%" }}>
-                              {product.password}
-                            </p>
-                            <p style={{ "--data-line-size": "25%" }}>
-                              {item.remain}
-                            </p>
-                            <p style={{ "--data-line-size": "15%" }}>
-                              {item.total}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          ))}
+                        </div>
+                        {JSON?.parse(item?.priceAction)?.map((product, ind) => {
+                          return (
+                            <div
+                              className="storage_body_item inner_item"
+                              key={ind}>
+                              <p
+                                style={{
+                                  borderRight: "1px solid #ccc5",
+                                }}>
+                                {ind + 1}
+                              </p>
+                              {item_p_dk.map(
+                                ({ name, size, border, fix }, index) => (
+                                  <p
+                                    style={{
+                                      "--data-line-size": `${size}%`,
+                                      justifyContent: "center",
+                                      borderRight: border,
+                                    }}
+                                    key={`${index}_${name}`}>
+                                    {fix
+                                      ? new Date(
+                                          product[name]
+                                        ).toLocaleDateString()
+                                      : product[name]}
+                                  </p>
+                                )
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
                   )}
                 </div>
               );
@@ -237,7 +350,7 @@ export const StorageIngredients = () => {
           )}
         </div>
       </div>
-      <Suspense fallback={<LoadingBtn />}>
+      <Suspense>
         <UniversalModal
           type={newIngGr === "new" ? "newIngGr" : "ing"}
           newGrData={{ name: newGrData, res_id: user?.id }}

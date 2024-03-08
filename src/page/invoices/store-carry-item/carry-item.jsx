@@ -17,7 +17,7 @@ export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
@@ -210,7 +210,9 @@ export const StorageCarryUp = () => {
                       }}
                       onClick={() =>
                         setShowMore(
-                          showMore?.includes(item?.id) ? null : item?.id
+                          showMore?.includes(item?.id)
+                            ? showMore?.filter((el) => el !== item?.id)
+                            : [...showMore, item?.id]
                         )
                       }>
                       <u

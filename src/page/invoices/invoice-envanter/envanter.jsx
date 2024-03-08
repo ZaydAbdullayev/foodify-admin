@@ -182,8 +182,10 @@ export const InvoiceInvantar = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore.includes(item?.id) ? null : item?.id
+                        setShowMore((prev) =>
+                          prev.includes(item?.id)
+                            ? prev.filter((i) => i !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u

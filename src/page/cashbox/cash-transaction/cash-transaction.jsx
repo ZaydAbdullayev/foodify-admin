@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { UniversalModal } from "../../../components/modal/modal";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +10,7 @@ import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const CashboxTransaction = () => {
   const user = JSON?.parse(localStorage.getItem("user"))?.user || [];
@@ -183,136 +183,138 @@ export const CashboxTransaction = () => {
           )}
         </div>
       </div>
-      <UniversalModal type="trsn">
-        <input type="date" name="date" defaultValue={today} required />
-        <select
-          name="transaction_type"
-          onChange={(e) => setModalType(e.target.value)}>
-          <option value="default">Tranzaksiya turi</option>
-          <option value="income">Kirim qilish</option>
-          <option value="expenses">Chiqim qilish</option>
-          <option value="transaction">Transformatsiya</option>
-        </select>
-        {modalType !== "default" && (
-          <>
-            <label>
-              <select name="transaction_category">
-                {modalType === "income" && (
-                  <>
-                    <option value="income">Kirim</option>
-                    <option value="delivery_income">Dastavka kirim</option>
-                    <option value="food_income">Oziq-ovqat kirim</option>
-                    <option value="invoice">Chiqim</option>
-                    <option value="delivery_invoice">Dastavka to'lovi</option>
-                    <option value="food_invoice">Oziq-ovqat to'lovi</option>
-                    <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                    <option value="deposit">Depozit</option>
-                  </>
-                )}
-                {modalType === "expenses" && (
-                  <>
-                    <option value="invoice">Chiqim</option>
-                    <option value="income">Kirim</option>
-                    <option value="delivery_income">Dastavka kirim</option>
-                    <option value="food_income">Oziq-ovqat kirim</option>
-                    <option value="delivery_invoice">Dastavka to'lovi</option>
-                    <option value="food_invoice">Oziq-ovqat to'lovi</option>
-                    <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                    <option value="deposit">Depozit</option>
-                  </>
-                )}
-                {modalType === "transaction" && (
-                  <>
-                    <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                    <option value="send">Kirim</option>
-                    <option value="delivery_send">Dastavka kirim</option>
-                    <option value="food_send">Oziq-ovqat kirim</option>
-                    <option value="expense">Chiqim</option>
-                    <option value="delivery_payment">Dastavka to'lovi</option>
-                    <option value="food_payment">Oziq-ovqat to'lovi</option>
-                    <option value="deposit">Depozit</option>
-                  </>
-                )}
-              </select>
-              <select name="transaction_group">
-                <option value="default">Guruh tanlang*</option>
-                {cashboxGrData?.data?.map((item) => {
-                  return (
-                    <option value={item?.name} key={item.id}>
-                      {item?.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </label>
-            {modalType === "expenses" || modalType === "income" ? (
-              <select name="cashier_receiver">
-                <option value="cashier">Kassir tanlang*</option>
-                {cashboxData?.data?.map((item) => {
-                  return (
-                    <option value={item?.name} key={item.id}>
-                      {item?.name}
-                    </option>
-                  );
-                })}
-              </select>
-            ) : (
-              <>
-                <label>
-                  <select name="cashier_sender">
-                    <option value="cashier">Beruvchi kassir*</option>
-                    {cashboxData?.data?.map((item) => {
-                      return (
-                        <option value={item?.name} key={item.id}>
-                          {item?.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <select name="cashier_receiver">
-                    <option value="cashier">Oluvchi kassir*</option>
-                    {cashboxData?.data?.map((item) => {
-                      return (
-                        <option value={item?.name} key={item.id}>
-                          {item?.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </label>
-              </>
-            )}
-            <label>
-              <select name="payment_type">
-                <option value="Prixod">To'lov turini tanlang*</option>
-                <option value="cash">Naxt</option>
-                <option value="credit">Plastik karta</option>
-                <option value="click">Click</option>
-              </select>
-              <select name="activity_kind">
-                <option value="Prixod">Faoliyat turi tanlang*</option>
-                <option value="Prixod">Prixod</option>
-                <option value="Prixod">Rasxod</option>
-              </select>
-            </label>
-            <input
-              type="text"
-              name="amount"
-              placeholder="Miqdor kiriting*"
-              required
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Tavsif"
-              required
-              autoComplete="off"
-            />
-          </>
-        )}
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal type="trsn">
+          <input type="date" name="date" defaultValue={today} required />
+          <select
+            name="transaction_type"
+            onChange={(e) => setModalType(e.target.value)}>
+            <option value="default">Tranzaksiya turi</option>
+            <option value="income">Kirim qilish</option>
+            <option value="expenses">Chiqim qilish</option>
+            <option value="transaction">Transformatsiya</option>
+          </select>
+          {modalType !== "default" && (
+            <>
+              <label>
+                <select name="transaction_category">
+                  {modalType === "income" && (
+                    <>
+                      <option value="income">Kirim</option>
+                      <option value="delivery_income">Dastavka kirim</option>
+                      <option value="food_income">Oziq-ovqat kirim</option>
+                      <option value="invoice">Chiqim</option>
+                      <option value="delivery_invoice">Dastavka to'lovi</option>
+                      <option value="food_invoice">Oziq-ovqat to'lovi</option>
+                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
+                      <option value="deposit">Depozit</option>
+                    </>
+                  )}
+                  {modalType === "expenses" && (
+                    <>
+                      <option value="invoice">Chiqim</option>
+                      <option value="income">Kirim</option>
+                      <option value="delivery_income">Dastavka kirim</option>
+                      <option value="food_income">Oziq-ovqat kirim</option>
+                      <option value="delivery_invoice">Dastavka to'lovi</option>
+                      <option value="food_invoice">Oziq-ovqat to'lovi</option>
+                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
+                      <option value="deposit">Depozit</option>
+                    </>
+                  )}
+                  {modalType === "transaction" && (
+                    <>
+                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
+                      <option value="send">Kirim</option>
+                      <option value="delivery_send">Dastavka kirim</option>
+                      <option value="food_send">Oziq-ovqat kirim</option>
+                      <option value="expense">Chiqim</option>
+                      <option value="delivery_payment">Dastavka to'lovi</option>
+                      <option value="food_payment">Oziq-ovqat to'lovi</option>
+                      <option value="deposit">Depozit</option>
+                    </>
+                  )}
+                </select>
+                <select name="transaction_group">
+                  <option value="default">Guruh tanlang*</option>
+                  {cashboxGrData?.data?.map((item) => {
+                    return (
+                      <option value={item?.name} key={item.id}>
+                        {item?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </label>
+              {modalType === "expenses" || modalType === "income" ? (
+                <select name="cashier_receiver">
+                  <option value="cashier">Kassir tanlang*</option>
+                  {cashboxData?.data?.map((item) => {
+                    return (
+                      <option value={item?.name} key={item.id}>
+                        {item?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              ) : (
+                <>
+                  <label>
+                    <select name="cashier_sender">
+                      <option value="cashier">Beruvchi kassir*</option>
+                      {cashboxData?.data?.map((item) => {
+                        return (
+                          <option value={item?.name} key={item.id}>
+                            {item?.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <select name="cashier_receiver">
+                      <option value="cashier">Oluvchi kassir*</option>
+                      {cashboxData?.data?.map((item) => {
+                        return (
+                          <option value={item?.name} key={item.id}>
+                            {item?.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </label>
+                </>
+              )}
+              <label>
+                <select name="payment_type">
+                  <option value="Prixod">To'lov turini tanlang*</option>
+                  <option value="cash">Naxt</option>
+                  <option value="credit">Plastik karta</option>
+                  <option value="click">Click</option>
+                </select>
+                <select name="activity_kind">
+                  <option value="Prixod">Faoliyat turi tanlang*</option>
+                  <option value="Prixod">Prixod</option>
+                  <option value="Prixod">Rasxod</option>
+                </select>
+              </label>
+              <input
+                type="text"
+                name="amount"
+                placeholder="Miqdor kiriting*"
+                required
+                autoComplete="off"
+              />
+              <input
+                type="text"
+                name="description"
+                placeholder="Tavsif"
+                required
+                autoComplete="off"
+              />
+            </>
+          )}
+          <input type="hidden" name="res_id" value={user?.id} />
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

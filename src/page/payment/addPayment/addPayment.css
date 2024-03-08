@@ -168,6 +168,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  padding-bottom: 4px;
   gap: var(--gap6);
   overflow-y: auto;
 }

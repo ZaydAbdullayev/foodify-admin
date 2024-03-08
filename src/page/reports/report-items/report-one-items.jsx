@@ -15,7 +15,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 export const ReportOneItems = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const [sort, setSort] = useState({ id: null, state: false });
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const { date } = useSelector((state) => state.uSearch);
   const id = useLocation().pathname.split("/").pop();

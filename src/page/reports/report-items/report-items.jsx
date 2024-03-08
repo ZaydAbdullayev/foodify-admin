@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 export const ReportItems = () => {
   const [sort, setSort] = useState({ id: null, state: false });
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const navigate = useNavigate();
   console.log(showMore);
   const acItem = useSelector((state) => state.activeThing);

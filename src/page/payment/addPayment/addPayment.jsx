@@ -34,11 +34,13 @@ export const AddPayment = memo(({ active, actives }) => {
   const [postData] = usePostDataMutation();
   const orderData = order?.innerData ? order?.innerData[0] : [];
   const [price, setPrice] = useState({ df_v: orderData?.total }); // ["ofline", "online"]
-  console.log("price", price);
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.querySelector("#price").value = price.df_v;
+    const priceElement = document.querySelector("#price");
+    if (priceElement) {
+      priceElement.value = price?.df_v;
+    }
   }, [price.df_v, type]);
 
   const addPayment = async () => {

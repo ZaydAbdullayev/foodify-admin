@@ -13,7 +13,7 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportByDateIngredients = () => {
   const [sort, setSort] = useState({ id: null, state: false });
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
@@ -103,8 +103,7 @@ export const ReportByDateIngredients = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size, border: "none" }}
                 key={index}
-                aria-label="sort data for down of otp or top of down"
-              >
+                aria-label="sort data for down of otp or top of down">
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
@@ -177,8 +176,10 @@ export const ReportByDateIngredients = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((el) => el !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u
@@ -265,8 +266,7 @@ export const ReportByDateIngredients = () => {
                       ? "center"
                       : "flex-end"
                     : "flex-start",
-                }}
-              >
+                }}>
                 {displayKey.tick}
                 {displayKey.flex &&
                   CalculateTotalQuantity(storageD, displayKey?.name)}

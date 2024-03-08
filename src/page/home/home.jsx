@@ -77,7 +77,7 @@ export const Home = () => {
           (order) => order?.id === newData[1]?.id
         );
         if (existingIndex !== -1) {
-          updatedOrders[existingIndex] = newData[1];
+          updatedOrders.splice(existingIndex, 1);
         }
       } else if (newData[0] === "delete") {
         const deleted = updatedOrders.findIndex(

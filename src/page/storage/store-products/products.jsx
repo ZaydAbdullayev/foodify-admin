@@ -358,6 +358,7 @@ export const StorageProducts = () => {
             },
             {
               type: "s_extra",
+              extra: "category_id",
               name: "category",
               df_value: { value: "default", label: "Kategoriya tanlang*" },
               options: category?.data,

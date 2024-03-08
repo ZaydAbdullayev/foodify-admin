@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -10,6 +9,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const Cashboxes = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -62,8 +62,7 @@ export const Cashboxes = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            aria-label="sort data down of top or top of down"
-          >
+            aria-label="sort data down of top or top of down">
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -94,8 +93,7 @@ export const Cashboxes = () => {
                     );
                     dispatch(setDocuments("cashbox", item));
                     navigate(`?page-code=cashbox`);
-                  }}
-                >
+                  }}>
                   <label
                     aria-label="checked this elements"
                     onClick={() => {
@@ -104,8 +102,7 @@ export const Cashboxes = () => {
                       );
                       dispatch(setDocuments("cashbox", item));
                       navigate(`?page-code=cashbox`);
-                    }}
-                  >
+                    }}>
                     <input type="checkbox" name="id" defaultValue={check} />
                   </label>
                   <p>{index + 1}</p>
@@ -116,21 +113,22 @@ export const Cashboxes = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="cashbox"
-        title="Kassa qo'shish"
-        status={acItem?.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          defaultValue={acItem.name}
-          placeholder="Kassa nomi*"
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="cashbox"
+          title="Kassa qo'shish"
+          status={acItem?.id ? false : true}>
+          <input
+            type="text"
+            name="name"
+            defaultValue={acItem.name}
+            placeholder="Kassa nomi*"
+            required
+          />
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+        </UniversalModal>sssss
+      </Suspense>
     </div>
   );
 };

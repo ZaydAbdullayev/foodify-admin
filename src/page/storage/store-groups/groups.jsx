@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useSwipeable } from "react-swipeable";
-import { UniversalModal } from "../../../components/modal/modal";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -13,12 +12,13 @@ import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { GoDotFill } from "react-icons/go";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
@@ -97,8 +97,7 @@ export const StorageGroups = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "60%" }}
-          >
+            style={{ "--data-line-size": "60%" }}>
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -108,8 +107,7 @@ export const StorageGroups = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
+            style={{ "--data-line-size": "30%" }}>
             <p>Ingredientlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -173,8 +171,10 @@ export const StorageGroups = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((el) => el !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u
@@ -248,22 +248,23 @@ export const StorageGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="group"
-        setChecked={setChecked}
-        title="Guruh qo'shish"
-        status={acItem.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Guruh nomi*"
-          defaultValue={acItem?.name}
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="group"
+          setChecked={setChecked}
+          title="Guruh qo'shish"
+          status={acItem.id ? false : true}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Guruh nomi*"
+            defaultValue={acItem?.name}
+            required
+          />
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

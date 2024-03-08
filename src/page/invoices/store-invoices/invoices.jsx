@@ -18,7 +18,7 @@ export const StorageInvoices = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   // const [payment, setPayment] = useState(null);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
@@ -220,8 +220,10 @@ export const StorageInvoices = () => {
                               : {}
                           }
                           onClick={() =>
-                            setShowMore(
-                              showMore?.includes(item?.id) ? null : item?.id
+                            setShowMore((prev) =>
+                              prev?.includes(item?.id)
+                                ? prev?.filter((i) => i !== item?.id)
+                                : [...prev, item?.id]
                             )
                           }>
                           hisoblash

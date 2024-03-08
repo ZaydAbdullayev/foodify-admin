@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { UniversalModal } from "../../../components/modal/modal";
+import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -11,6 +10,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageDep = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -69,8 +69,7 @@ export const StorageDep = () => {
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "40%" }}
-            aria-label="for sort this data down of top or top of down"
-          >
+            aria-label="for sort this data down of top or top of down">
             <p>Bo'limlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -80,8 +79,7 @@ export const StorageDep = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
-          >
+            style={{ "--data-line-size": "40%" }}>
             <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -112,8 +110,7 @@ export const StorageDep = () => {
                     );
                     dispatch(setDocuments("main", item));
                     navigate(`?page-code=main`);
-                  }}
-                >
+                  }}>
                   <label
                     onClick={() => {
                       dispatch(
@@ -122,8 +119,7 @@ export const StorageDep = () => {
                       dispatch(setDocuments("main", item));
                       navigate(`?page-code=main`);
                     }}
-                    aria-label="checked this elements"
-                  >
+                    aria-label="checked this elements">
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
@@ -135,36 +131,37 @@ export const StorageDep = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="dep"
-        setChecked={setChecked}
-        title="Bo'lim qo'shish"
-        status={acItem.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Bo'lim nomi*"
-          defaultValue={acItem.name}
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
-        <select name="storage">
-          {acItem.id ? (
-            <option value={acItem.storage}>{acItem.storage}</option>
-          ) : (
-            <option value="default">Ombor tanlang</option>
-          )}
-          {storeData?.data?.map((item) => {
-            return (
-              <option value={item?.name} key={item.id}>
-                {item?.name}
-              </option>
-            );
-          })}
-        </select>
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="dep"
+          setChecked={setChecked}
+          title="Bo'lim qo'shish"
+          status={acItem.id ? false : true}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Bo'lim nomi*"
+            defaultValue={acItem.name}
+            required
+          />
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          <select name="storage">
+            {acItem.id ? (
+              <option value={acItem.storage}>{acItem.storage}</option>
+            ) : (
+              <option value="default">Ombor tanlang</option>
+            )}
+            {storeData?.data?.map((item) => {
+              return (
+                <option value={item?.name} key={item.id}>
+                  {item?.name}
+                </option>
+              );
+            })}
+          </select>
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

@@ -13,7 +13,7 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 
 export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
@@ -94,8 +94,7 @@ export const ReportRejects = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size, border: "none" }}
                 key={index}
-                aria-label="sort data down of top or top of down"
-              >
+                aria-label="sort data down of top or top of down">
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
@@ -148,8 +147,10 @@ export const ReportRejects = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((id) => id !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u
@@ -236,8 +237,7 @@ export const ReportRejects = () => {
                       ? "center"
                       : "flex-end"
                     : "flex-start",
-                }}
-              >
+                }}>
                 {displayKey.tick}
                 {displayKey.flex &&
                   CalculateTotalQuantity(storageD, displayKey?.name)}
@@ -247,8 +247,7 @@ export const ReportRejects = () => {
               style={{
                 "--data-line-size": "8%",
                 justifyContent: "center",
-              }}
-            ></p>
+              }}></p>
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { UniversalModal } from "../../../components/modal/modal";
+import React, { useState, Suspense, lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -11,12 +10,13 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageCatgegories = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
@@ -68,8 +68,7 @@ export const StorageCatgegories = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}
-          >
+            style={{ "--data-line-size": "40%" }}>
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -79,8 +78,7 @@ export const StorageCatgegories = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
+            style={{ "--data-line-size": "30%" }}>
             <p>Bo'limlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -90,8 +88,7 @@ export const StorageCatgegories = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}
-          >
+            style={{ "--data-line-size": "30%" }}>
             <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -151,8 +148,10 @@ export const StorageCatgegories = () => {
                     <p
                       style={{ "--data-line-size": "10%" }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((el) => el !== item?.id)
+                            : [...prev, item?.id]
                         )
                       }>
                       <u
@@ -229,36 +228,37 @@ export const StorageCatgegories = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="category"
-        setChecked={setChecked}
-        title="Categoriya qo'shish"
-        status={acItem?.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Categoriya nomi*"
-          defaultValue={acItem.name}
-          required
-        />
-        <select name="department">
-          {acItem?.department ? (
-            <option value="default">Bo'lim tanlang*</option>
-          ) : (
-            <option value={acItem.category}>{acItem.category}</option>
-          )}
-          {depData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="category"
+          setChecked={setChecked}
+          title="Categoriya qo'shish"
+          status={acItem?.id ? false : true}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Categoriya nomi*"
+            defaultValue={acItem.name}
+            required
+          />
+          <select name="department">
+            {acItem?.department ? (
+              <option value="default">Bo'lim tanlang*</option>
+            ) : (
+              <option value={acItem.category}>{acItem.category}</option>
+            )}
+            {depData?.data?.map((item, index) => {
+              return (
+                <option value={item.name} key={index}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

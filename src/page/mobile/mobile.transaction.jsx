@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import "./mobile.transaction.css";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,12 +9,12 @@ import { usePostDataMutation } from "../../service/fetch.service";
 import useNotification from "antd/es/notification/useNotification";
 import { ClearForm } from "../../service/form.service";
 import { Segmented } from "antd";
-import { UniversalModal } from "../../components/modal/modal";
 
 import { ImCalendar } from "react-icons/im";
 import { BsCashCoin } from "react-icons/bs";
 import { IoIosArrowForward } from "react-icons/io";
 import { acOpenUModal } from "../../redux/u-modal";
+const UniversalModal = lazy(() => import("../../components/modal/modal"));
 
 export const MobileInvoice = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
@@ -202,21 +202,23 @@ export const MobileInvoice = () => {
           </div>
         </div>
       </form>
-      <UniversalModal
-        type="invGr"
-        title="Guruh qo'shish"
-        status={acItem?.id ? false : true}
-        darkMode={true}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Guruh nomi*"
-          defaultValue={acItem.name}
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="invGr"
+          title="Guruh qo'shish"
+          status={acItem?.id ? false : true}
+          darkMode={true}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Guruh nomi*"
+            defaultValue={acItem.name}
+            required
+          />
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+        </UniversalModal>
+      </Suspense>
     </>
   );
 };

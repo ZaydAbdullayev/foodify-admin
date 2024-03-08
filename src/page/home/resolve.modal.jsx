@@ -53,10 +53,12 @@ const ResolveModal = () => {
     }
   };
 
+  console.log(resolve?.order_id);
+
   return (
     <div
       className={
-        resolve?.order_id ? "u_modal_container open" : "u_modal_container"
+        resolve?.order_id ? "resolve_container open" : "resolve_container"
       }>
       <div className="u_modal_box">
         <form className="resolve_item" onSubmit={orderSituation}>

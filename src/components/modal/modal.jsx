@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import "./modal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { acCloseUModal } from "../../redux/u-modal";
@@ -8,7 +8,7 @@ import { enqueueSnackbar as es } from "notistack";
 import { LoadingBtn } from "../../components/loading/loading";
 import { ClearForm } from "../../service/form.service";
 
-export const UniversalModal = ({
+const UniversalModal = ({
   children,
   type,
   newGrData,
@@ -23,7 +23,6 @@ export const UniversalModal = ({
   // service for update
   const [patchData] = usePatchDataMutation();
   const [loading, setLoading] = useState(false);
-  console.log("model", darkMode);
 
   const fetchValues = async (e) => {
     e.preventDefault();
@@ -271,3 +270,5 @@ export const UniversalModal = ({
     </div>
   );
 };
+
+export default UniversalModal;

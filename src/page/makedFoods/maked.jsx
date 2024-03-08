@@ -4,6 +4,7 @@ import { acNavStatus } from "../../redux/navbar.status";
 import { useSwipeable } from "react-swipeable";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
+import socket from "../../socket.config";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -17,7 +18,6 @@ import { useFetchDataQuery } from "../../service/fetch.service";
 export const MakedFoods = () => {
   const user = JSON?.parse(localStorage?.getItem("user"))?.user || [];
   // const newOrder = useSelector((state) => state.upload);
-  // const [orders, setOrders] = useState([]);
   const [full, setFull] = useState(false);
   const [activeIndex, setActiveIndex] = useState(2);
   const dispatch = useDispatch();
@@ -26,6 +26,7 @@ export const MakedFoods = () => {
     url: `/get/readyFoods/${user?.id}`,
     tags: [""],
   });
+  const [orders, setOrders] = useState(data?.innerData || []);
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
@@ -38,7 +39,7 @@ export const MakedFoods = () => {
 
   const handleSwipe = async (direction) => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
-    await setActiveIndex((newIndex + 3) % 3);
+    setActiveIndex((newIndex + 3) % 3);
     navigate(
       `/orders/${
         newIndex === 0 ? "" : newIndex === 1 ? "cooking/food" : "prepared/food"
@@ -46,18 +47,17 @@ export const MakedFoods = () => {
     );
   };
 
-  // const newOrders = data?.innerData?.sort((a, b) => {
-  //   const dateA = new Date(a.receivedAt);
-  //   const dateB = new Date(b.receivedAt);
-  //   return dateB - dateA;
-  // });
+  socket.on(`/get/ReadyOrders/${user?.id}`, (newData) => {
+    console.log("new readyO socket", newData);
+    setOrders((prevOrders) => [...prevOrders, newData]);
+    socket.off(`/get/ReadyOrders/${user?.id}`);
+  });
 
   return (
     <div
       className={
         full ? "container_box home_page active" : "container_box home_page"
-      }
-    >
+      }>
       <div className="_orders">
         <h1>
           <i></i>
@@ -66,40 +66,34 @@ export const MakedFoods = () => {
             <span
               className={activeIndex === 0 ? "active" : ""}
               onClick={() => navigate("/orders")}
-              aria-label='target this link "/orders"'
-            >
+              aria-label='target this link "/orders"'>
               <RiBoxingFill />
             </span>
             <span
               className={activeIndex === 1 ? "active" : ""}
               onClick={() => navigate("/orders/cooking/food")}
-              aria-label='target this link "/orders/cooking/food"'
-            >
+              aria-label='target this link "/orders/cooking/food"'>
               <GiCook />
             </span>
             <span
               className={activeIndex === 2 ? "active" : ""}
               onClick={() => navigate("/orders/prepared/food")}
-              aria-label='target this link "/orders/prepared/food"'
-            >
+              aria-label='target this link "/orders/prepared/food"'>
               <MdFastfood />
             </span>
           </span>
           <i></i>
           <span
             onClick={() => setFull(!full)}
-            aria-label="enter fullscreen and exit fullscreen"
-          >
+            aria-label="enter fullscreen and exit fullscreen">
             {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
           </span>
         </h1>
-        {data?.innerData?.length ? (
+        {orders?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
-            {data?.innerData?.map((order) => {
+            {orders?.map((order) => {
               const pds = JSON?.parse(order?.product_data);
               const { pd } = Object.values(pds)[0];
-              console.log(pd, "pd");
-              console.log(order?.receivedAt, "received_at");
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -115,8 +109,7 @@ export const MakedFoods = () => {
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
                     display: order?.status === 4 ? "none" : "flex",
-                  }}
-                >
+                  }}>
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
@@ -175,8 +168,7 @@ export const MakedFoods = () => {
                             <div className="order_stution">
                               <button
                                 style={{ color: "#3CE75B" }}
-                                className="relative"
-                              >
+                                className="relative">
                                 <HiCheck />
                               </button>
                             </div>

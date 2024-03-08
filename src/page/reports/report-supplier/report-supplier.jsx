@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import "../../storage/storage.css";
 import "../universal.css";
 import { useSelector } from "react-redux";
 import { storageD } from "../../storage/store-data";
 import { CalculateTotalQuantity } from "../../../service/calc.service";
-import { UniversalModal } from "../../../components/modal/modal";
 import { acOpenUModal } from "../../../redux/u-modal";
 import { useDispatch } from "react-redux";
 
@@ -12,11 +11,12 @@ import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
-  const [showMore, setShowMore] = useState(null);
+  const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
@@ -117,8 +117,7 @@ export const ReportSuppliers = () => {
                     : "flex-start",
                 }}
                 aria-label="sort data down of top or top of down"
-                key={index}
-              >
+                key={index}>
                 <p>{item.name}</p>
                 {item?.items && (
                   <>
@@ -197,8 +196,10 @@ export const ReportSuppliers = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item.id
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((id) => id !== item?.id)
+                            : [...prev, item.id]
                         )
                       }>
                       <u
@@ -304,8 +305,7 @@ export const ReportSuppliers = () => {
                       ? "center"
                       : "flex-end"
                     : "flex-start",
-                }}
-              >
+                }}>
                 {displayKey?.tittle}
                 {displayKey?.name === "items" ? (
                   <>
@@ -326,12 +326,48 @@ export const ReportSuppliers = () => {
           </div>
         </div>
       </div>
-      <UniversalModal type="cash">
-        <p>To'lov qilish</p>
-        <label>
-          <input type="date" name="date" defaultValue={today} required />
+      <Suspense>
+        <UniversalModal
+          type="cash"
+          title="To'lov qilish"
+          status={acItem?.id ? false : true}>
+          <label>
+            <input type="date" name="date" defaultValue={today} required />
+            <select name="department">
+              <option value="default">To'lov guruhi tanlang*</option>
+              {depData?.data?.map((item, index) => {
+                return (
+                  <option value={item.name} key={index}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <label>
+            <select name="department">
+              <option value="default">To'lov category tanlang*</option>
+              {depData?.data?.map((item, index) => {
+                return (
+                  <option value={item.name} key={index}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
+            <select name="department">
+              <option value="default">Kassa tanlang*</option>
+              {depData?.data?.map((item, index) => {
+                return (
+                  <option value={item.name} key={index}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
           <select name="department">
-            <option value="default">To'lov guruhi tanlang*</option>
+            <option value="default">Yetkazuvchi tanlang*</option>
             {depData?.data?.map((item, index) => {
               return (
                 <option value={item.name} key={index}>
@@ -340,10 +376,8 @@ export const ReportSuppliers = () => {
               );
             })}
           </select>
-        </label>
-        <label>
           <select name="department">
-            <option value="default">To'lov category tanlang*</option>
+            <option value="default">To'lov turi tanlang*</option>
             {depData?.data?.map((item, index) => {
               return (
                 <option value={item.name} key={index}>
@@ -352,41 +386,11 @@ export const ReportSuppliers = () => {
               );
             })}
           </select>
-          <select name="department">
-            <option value="default">Kassa tanlang*</option>
-            {depData?.data?.map((item, index) => {
-              return (
-                <option value={item.name} key={index}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-        <select name="department">
-          <option value="default">Yetkazuvchi tanlang*</option>
-          {depData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <select name="department">
-          <option value="default">To'lov turi tanlang*</option>
-          {depData?.data?.map((item, index) => {
-            return (
-              <option value={item.name} key={index}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <input type="text" name="price" placeholder="Miqdor" required />
-        <input type="text" name="price" placeholder="Tavsif" required />
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
+          <input type="text" name="price" placeholder="Miqdor" required />
+          <input type="text" name="price" placeholder="Tavsif" required />
+          <input type="hidden" name="res_id" value={user?.id} />
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

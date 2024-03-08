@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import "./storage.css";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalModal } from "../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../redux/active";
 import { Outlet } from "react-router-dom";
@@ -12,6 +11,7 @@ import { setDocuments, setRelease } from "../../redux/deleteFoods";
 import { setAllDocuments } from "../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
 import { useFetchDataQuery } from "../../service/fetch.service";
+const UniversalModal = lazy(() => import("../../components/modal/modal"));
 
 export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -65,8 +65,7 @@ export const Storage = () => {
           <p>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            aria-label="for sort data and see al info about this product"
-          >
+            aria-label="for sort data and see al info about this product">
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -97,8 +96,7 @@ export const Storage = () => {
                     );
                     dispatch(setDocuments("main", item));
                     navigate(`?page-code=main`);
-                  }}
-                >
+                  }}>
                   <label
                     onClick={() => {
                       dispatch(
@@ -107,8 +105,7 @@ export const Storage = () => {
                       dispatch(setDocuments("main", item));
                       navigate(`?page-code=main`);
                     }}
-                    aria-label="checked this elements"
-                  >
+                    aria-label="checked this elements">
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
@@ -119,22 +116,23 @@ export const Storage = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="main"
-        setChecked={setChecked}
-        title="Ombor qo'shish"
-        status={acItem?.id ? false : true}
-      >
-        <input
-          type="text"
-          name="name"
-          defaultValue={acItem.name}
-          placeholder="Ombor nomi*"
-          required
-        />
-        <input type="hidden" name="res_id" value={user?.id} />
-        {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
-      </UniversalModal>
+      <Suspense>
+        <UniversalModal
+          type="main"
+          setChecked={setChecked}
+          title="Ombor qo'shish"
+          status={acItem?.id ? false : true}>
+          <input
+            type="text"
+            name="name"
+            defaultValue={acItem.name}
+            placeholder="Ombor nomi*"
+            required
+          />
+          <input type="hidden" name="res_id" value={user?.id} />
+          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };

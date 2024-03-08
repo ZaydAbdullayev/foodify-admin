@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { UniversalModal } from "../../../components/modal/modal";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -12,6 +11,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { GoDotFill } from "react-icons/go";
+const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const TransactionGroups = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -113,8 +113,7 @@ export const TransactionGroups = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item.size, border: "none" }}
                 key={index}
-                aria-label=" sort data down of top or top of down"
-              >
+                aria-label=" sort data down of top or top of down">
                 <p>{item.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
@@ -147,8 +146,7 @@ export const TransactionGroups = () => {
                     );
                     dispatch(setDocuments("cashboxGr", item));
                     navigate(`?page-code=cashboxGr`);
-                  }}
-                >
+                  }}>
                   <label
                     onClick={() => {
                       dispatch(
@@ -157,8 +155,7 @@ export const TransactionGroups = () => {
                       dispatch(setDocuments("cashboxGr", item));
                       navigate(`?page-code=cashboxGr`);
                     }}
-                    aria-label="checked this elements"
-                  >
+                    aria-label="checked this elements">
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
                   <p>{index + 1}</p>
@@ -172,8 +169,7 @@ export const TransactionGroups = () => {
                             ? "center"
                             : "flex-end"
                           : "flex-start",
-                      }}
-                    >
+                      }}>
                       {item[name]}
                     </p>
                   ))}
@@ -183,36 +179,37 @@ export const TransactionGroups = () => {
           )}
         </div>
       </div>
-      <UniversalModal
-        type="cashboxGr"
-        title={"To'lov guruhlari"}
-        status={acItem?.id ? false : true}
-      >
-        <input type="text" name="name" placeholder="Kassa nomi*" required />
-        <select name="category" onChange={(e) => setStatus(e.target.value)}>
-          {acItem?.category ? (
-            <option value={acItem?.category}>{acItem?.category}</option>
-          ) : (
-            <option value="default">To'lov turini tanlang*</option>
-          )}
-          <option value="operating">Operativ</option>
-          <option value="finacialy">Moliyaviy</option>
-          <option value="invest">Sarmoya</option>
-        </select>
-        {status === "operating" && (
-          <select name="activity_kind">
-            {acItem?.activity_kind ? (
-              <option value={acItem?.activity_kind}>
-                {acItem?.activity_kind}
-              </option>
+      <Suspense>
+        <UniversalModal
+          type="cashboxGr"
+          title={"To'lov guruhlari"}
+          status={acItem?.id ? false : true}>
+          <input type="text" name="name" placeholder="Kassa nomi*" required />
+          <select name="category" onChange={(e) => setStatus(e.target.value)}>
+            {acItem?.category ? (
+              <option value={acItem?.category}>{acItem?.category}</option>
             ) : (
-              <option value="default">Faoliyat turi tanlang*</option>
+              <option value="default">To'lov turini tanlang*</option>
             )}
-            <option value="permanent">Doimiy</option>
+            <option value="operating">Operativ</option>
+            <option value="finacialy">Moliyaviy</option>
+            <option value="invest">Sarmoya</option>
           </select>
-        )}
-        <input type="hidden" name="res_id" value={user?.id} />
-      </UniversalModal>
+          {status === "operating" && (
+            <select name="activity_kind">
+              {acItem?.activity_kind ? (
+                <option value={acItem?.activity_kind}>
+                  {acItem?.activity_kind}
+                </option>
+              ) : (
+                <option value="default">Faoliyat turi tanlang*</option>
+              )}
+              <option value="permanent">Doimiy</option>
+            </select>
+          )}
+          <input type="hidden" name="res_id" value={user?.id} />
+        </UniversalModal>
+      </Suspense>
     </div>
   );
 };
