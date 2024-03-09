@@ -79,7 +79,7 @@ export const Orders = () => {
       cartItem.quantity++;
       localStorage?.setItem("cart", JSON?.stringify(cart));
     } else {
-      cart?.push({ ...item, quantity: 1, status: 0 });
+      cart?.push({ ...item, quantity: 1, status: 1 });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   };
@@ -98,7 +98,6 @@ export const Orders = () => {
   };
 
   const resieveOrderS = async () => {
-    console.log(paymentData);
     const uData = {
       id: position[4],
       status: 2,
@@ -112,14 +111,16 @@ export const Orders = () => {
     }
     if (position[1] === "update-order") {
       socket.emit("/addProduct/toOrder", updatePaymentData);
+      console.log("update", updatePaymentData);
     } else {
       socket.emit("/order", paymentData);
-      socket.emit("/divide/orders/depart", paymentData);
+      console.log("new", paymentData);
+      // socket.emit("/divide/orders/depart", paymentData);
       socket.emit("/update/table", uData);
     }
     localStorage.removeItem("cart");
-    navigate("/orders/tables");
-    es("Buyurtma yuborildi!", { variant: "success" });
+    // navigate("/orders/tables");
+    // es("Buyurtma yuborildi!", { variant: "success" });
   };
 
   const addExtr = (value) => {
@@ -151,8 +152,7 @@ export const Orders = () => {
                     ? "active"
                     : ""
                 }
-                aria-label="to filter info according to this category"
-              >
+                aria-label="to filter info according to this category">
                 {item?.name}
               </span>
             );
@@ -173,8 +173,7 @@ export const Orders = () => {
                   className="res_menu_item"
                   key={item?.id}
                   onClick={() => addToCart(item)}
-                  aria-label="click this aria for add basket this product"
-                >
+                  aria-label="click this aria for add basket this product">
                   <p style={{ textTransform: "capitalize" }}>{item?.name}</p>
                   <span>{item?.description}</span>
                   {count[0]?.quantity && <i>{count[0]?.quantity}</i>}
@@ -242,8 +241,7 @@ export const Orders = () => {
                     onClick={() =>
                       updateCart({ id: item.id, quantity: item.quantity - 1 })
                     }
-                    aria-label="minus 1x"
-                  >
+                    aria-label="minus 1x">
                     –
                   </button>
                   <input
@@ -261,8 +259,7 @@ export const Orders = () => {
                     onClick={() =>
                       updateCart({ id: item.id, quantity: item.quantity + 1 })
                     }
-                    aria-label="plus 1x"
-                  >
+                    aria-label="plus 1x">
                     +
                   </button>
                 </div>
@@ -282,8 +279,7 @@ export const Orders = () => {
         <label
           className={takeaway ? "takeaway active" : "takeaway"}
           onClick={() => setTakeaway(!takeaway)}
-          aria-label="change status of takeaway"
-        >
+          aria-label="change status of takeaway">
           {takeaway ? <FiCheckCircle /> : <BiCircle />}
           Olib ketish
         </label>

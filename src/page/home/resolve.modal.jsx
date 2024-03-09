@@ -53,8 +53,6 @@ const ResolveModal = () => {
     }
   };
 
-  console.log(resolve?.order_id);
-
   return (
     <div
       className={

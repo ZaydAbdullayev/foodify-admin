@@ -41,32 +41,26 @@ export const MakingFoods = () => {
     dispatch(acNavStatus([100]));
   }, [dispatch, data?.innerData]);
 
-  socket.on(`/get/newOrdersOne/${id}`, (newData) => {
-    console.log("new socket", newData);
+  socket.on(`/get/makingOrderOne/${id}`, (newData) => {
+    console.log("new makingO socket", newData);
     setOrders((prevOrders) => {
-      const updatedOrders = [...prevOrders];
-      if (newData[0] === "update") {
-        const existingIndex = updatedOrders.findIndex(
-          (order) => order?.id === newData[1]?.id
-        );
-        if (existingIndex !== -1) {
-          updatedOrders[existingIndex] = newData[1];
+      const existingOrder = prevOrders?.find(
+        (order) => order?.id === newData?.id
+      );
+      if (existingOrder) {
+        if (newData?.deleted) {
+          return prevOrders?.filter((order) => order.id !== newData.id);
         } else {
-          updatedOrders.push(newData[1]);
-        }
-      } else if (newData[0] === "delete") {
-        const deleted = updatedOrders.findIndex(
-          (order) => order.id === newData[1].id
-        );
-        if (deleted !== -1) {
-          updatedOrders.splice(deleted, 1);
+          const updatedOrders = prevOrders?.map((order) =>
+            order.id === newData.id ? newData : order
+          );
+          return updatedOrders;
         }
       } else {
-        updatedOrders.push(newData);
+        return [...prevOrders, newData];
       }
-      return updatedOrders;
     });
-    socket.off(`/get/newOrdersOne/${id}`);
+    socket.off(`/get/makingOrderOne/${id}`);
   });
 
   const orderAccept = (order) => {
@@ -158,8 +152,8 @@ export const MakingFoods = () => {
         {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
-              const pds = JSON?.parse(order?.product_data);
-              const { pd } = Object.values(pds)[0];
+              const pds = JSON?.parse(order?.product_data) | {};
+              const { pd } = Object?.values(pds)?.[0];
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -216,7 +210,7 @@ export const MakingFoods = () => {
                                 orderSituation({
                                   order_id: order?.id,
                                   product_id: product?.id,
-                                  status: 4,
+                                  status: 5,
                                   department: department,
                                 })
                               }></i>
@@ -240,7 +234,7 @@ export const MakingFoods = () => {
                                   orderSituation({
                                     order_id: order?.id,
                                     product_id: product?.id,
-                                    status: 4,
+                                    status: 5,
                                     department: department,
                                   })
                                 }

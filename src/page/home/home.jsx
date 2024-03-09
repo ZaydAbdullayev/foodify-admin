@@ -68,30 +68,26 @@ export const Home = () => {
     socket.off(sPoint);
   });
 
-  socket.on(`/get/newOrdersOne/${id}`, (newData) => {
-    console.log("new socket", newData);
+  socket.on(`/get/newOrderOne/${id}`, (newData) => {
+    console.log("newData socket", newData);
     setOrders((prevOrders) => {
-      const updatedOrders = [...prevOrders];
-      if (newData[0] === "update") {
-        const existingIndex = updatedOrders.findIndex(
-          (order) => order?.id === newData[1]?.id
-        );
-        if (existingIndex !== -1) {
-          updatedOrders.splice(existingIndex, 1);
-        }
-      } else if (newData[0] === "delete") {
-        const deleted = updatedOrders.findIndex(
-          (order) => order.id === newData[1].id
-        );
-        if (deleted !== -1) {
-          updatedOrders.splice(deleted, 1);
+      const existingOrder = prevOrders?.find(
+        (order) => order?.id === newData.id
+      );
+      if (existingOrder) {
+        if (newData?.deleted) {
+          return prevOrders?.filter((order) => order?.id !== newData.id);
+        } else {
+          const updatedOrders = prevOrders?.map((order) =>
+            order?.id === newData.id ? newData : order
+          );
+          return updatedOrders;
         }
       } else {
-        updatedOrders.push(newData);
+        return [...prevOrders, newData];
       }
-      return updatedOrders;
     });
-    socket.off(`/get/newOrdersOne/${id}`);
+    socket.off(`/get/newOrderOne/${id}`);
   });
 
   // to accept order's product by id
@@ -211,8 +207,8 @@ export const Home = () => {
         {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
-              const pds = JSON?.parse(order?.product_data);
-              const { pd, received_at } = Object.values(pds)[0];
+              const pds = JSON?.parse(order?.product_data) || {};
+              const { pd, received_at } = Object?.values(pds)?.[0];
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -327,7 +323,7 @@ export const Home = () => {
                               thousandSeparator={true}
                             />
                             <div className="order_stution">
-                              {product?.status === 0 && (
+                              {product?.status === 1 && (
                                 <button
                                   className="relative"
                                   onClick={() =>
@@ -377,7 +373,7 @@ export const Home = () => {
                                   }
                                 }}
                                 aria-label="to accept or to prepare this product">
-                                {product?.status === 1 ? (
+                                {product?.status === 1 || !product?.status ? (
                                   <HiCheck />
                                 ) : (
                                   <IoCheckmarkDoneCircleSharp />
