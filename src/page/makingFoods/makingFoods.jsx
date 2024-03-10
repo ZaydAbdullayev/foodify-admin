@@ -42,17 +42,17 @@ export const MakingFoods = () => {
   }, [dispatch, data?.innerData]);
 
   socket.on(`/get/makingOrderOne/${id}`, (newData) => {
-    console.log("new makingO socket", newData);
+    console.log("new makingData socket", newData);
     setOrders((prevOrders) => {
       const existingOrder = prevOrders?.find(
-        (order) => order?.id === newData?.id
+        (order) => order?.id === newData.id
       );
       if (existingOrder) {
         if (newData?.deleted) {
-          return prevOrders?.filter((order) => order.id !== newData.id);
+          return prevOrders?.filter((order) => order?.id !== newData.id);
         } else {
           const updatedOrders = prevOrders?.map((order) =>
-            order.id === newData.id ? newData : order
+            order?.id === newData.id ? newData : order
           );
           return updatedOrders;
         }
@@ -60,10 +60,12 @@ export const MakingFoods = () => {
         return [...prevOrders, newData];
       }
     });
+    console.log("mkingData after socket", orders);
     socket.off(`/get/makingOrderOne/${id}`);
   });
 
   const orderAccept = (order) => {
+    console.log("upP", order);
     socket.emit("/accept/order", {
       status: true,
       variant: 3,
@@ -101,7 +103,7 @@ export const MakingFoods = () => {
 
   const handleSwipe = async (direction) => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
-    await setActiveIndex((newIndex + 3) % 3);
+    setActiveIndex((newIndex + 3) % 3);
     navigate(
       `/orders/${
         newIndex === 0 ? "" : newIndex === 1 ? "cooking/food" : "prepared/food"
@@ -152,8 +154,11 @@ export const MakingFoods = () => {
         {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
-              const pds = JSON?.parse(order?.product_data) | {};
-              const { pd } = Object?.values(pds)?.[0];
+              const pds = order?.product_data
+                ? JSON?.parse(order?.product_data)
+                : {};
+              const pdArray = Object?.values(pds)?.[0];
+              const { pd = [] } = pdArray ?? {};
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -173,7 +178,7 @@ export const MakingFoods = () => {
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
-                    display: order?.status === 4 ? "none" : "flex",
+                    display: order?.deleted ? "none" : "flex",
                   }}>
                   <figure className="order_item">
                     <div className="order_item_header">
@@ -184,16 +189,16 @@ export const MakingFoods = () => {
                       <div className="btn_box">
                         <button
                           className="relative"
-                          onClick={() => orderAccept({ ...order, status: 4 })}
+                          onClick={() =>
+                            orderAccept({ data: { ...order, status: 4 } })
+                          }
                           aria-label="to cancel this order">
                           <RxCross2 />
                         </button>
                         <button
                           onClick={() =>
                             orderAccept({
-                              id: order?.id,
-                              status: 6,
-                              user_id: order?.user_id,
+                              data: { ...order, status: 3 },
                             })
                           }
                           aria-label="to prepare thi r oreder">

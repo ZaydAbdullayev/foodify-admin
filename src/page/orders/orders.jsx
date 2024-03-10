@@ -119,8 +119,8 @@ export const Orders = () => {
       socket.emit("/update/table", uData);
     }
     localStorage.removeItem("cart");
-    // navigate("/orders/tables");
-    // es("Buyurtma yuborildi!", { variant: "success" });
+    navigate("/orders/tables");
+    es("Buyurtma yuborildi!", { variant: "success" });
   };
 
   const addExtr = (value) => {

@@ -87,6 +87,7 @@ export const Home = () => {
         return [...prevOrders, newData];
       }
     });
+    console.log("newData after socket", orders);
     socket.off(`/get/newOrderOne/${id}`);
   });
 
@@ -207,8 +208,11 @@ export const Home = () => {
         {filteredData?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
             {filteredData?.map((order) => {
-              const pds = JSON?.parse(order?.product_data) || {};
-              const { pd, received_at } = Object?.values(pds)?.[0];
+              const pds = order?.product_data
+                ? JSON?.parse(order?.product_data)
+                : {};
+              const pdArray = Object?.values(pds)?.[0];
+              const { pd = [], received_at = "" } = pdArray ?? {};
               const time = new Date(order?.receivedAt)?.toLocaleString(
                 "uz-UZ",
                 {
@@ -228,7 +232,7 @@ export const Home = () => {
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
-                    display: order?.status === 4 ? "none" : "flex",
+                    display: order?.deleted ? "none" : "flex",
                   }}>
                   <figure className="order_item">
                     <div className="order_item_header">
@@ -327,14 +331,12 @@ export const Home = () => {
                                 <button
                                   className="relative"
                                   onClick={() =>
-                                    dispatch(
-                                      acResolve({
-                                        product: product,
-                                        order_id: order?.id,
-                                        status: 3,
-                                        department: department,
-                                      })
-                                    )
+                                    orderSituation({
+                                      order_id: order?.id,
+                                      product_id: product?.id,
+                                      status: 3,
+                                      department: department,
+                                    })
                                   }
                                   aria-label="cancel this product">
                                   {loading.id === product.id &&
