@@ -7,6 +7,7 @@ import socket from "../../socket.config";
 import { useSwipeable } from "react-swipeable";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
+import { ApiGetService } from "../../service/api.service";
 
 import noResult from "../../assets/images/20231109_144621.png";
 import { MdFastfood } from "react-icons/md";
@@ -16,16 +17,10 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { BsCheck2All } from "react-icons/bs";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-import { useFetchDataQuery } from "../../service/fetch.service";
 
 export const MakingFoods = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
   const department = JSON.parse(localStorage.getItem("department")) || null;
-  const { data = [] } = useFetchDataQuery({
-    url: `/get/foodsBeingMade/${user?.id}`,
-    tags: ["add-order"],
-  });
-  // const newOrder = useSelector((state) => state.upload);
   const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(1);
   const [situation, setSituation] = useState({});
@@ -37,9 +32,14 @@ export const MakingFoods = () => {
   const search = useLocation().search?.split("=").pop();
 
   useEffect(() => {
-    setOrders(data?.innerData);
+    ApiGetService.fetching(`get/foodsBeingMade/${user?.id}`)
+      .then((res) => {
+        setOrders(res?.data?.innerData);
+        console.log("normal", res?.data?.innerData);
+      })
+      .catch((err) => console.log(err));
     dispatch(acNavStatus([100]));
-  }, [dispatch, data?.innerData]);
+  }, [dispatch, user?.id]);
 
   socket.on(`/get/makingOrderOne/${id}`, (newData) => {
     console.log("new makingData socket", newData);
@@ -86,9 +86,7 @@ export const MakingFoods = () => {
       });
       socket.emit("/update/ProductSt", order);
       if (
-        data?.innerData.find(
-          ({ id, status }) => id === order?.order_id && status === 3
-        )
+        orders?.find(({ id, status }) => id === order?.order_id && status === 3)
       ) {
         setSituation(order?.order_id);
       }
@@ -158,15 +156,13 @@ export const MakingFoods = () => {
                 ? JSON?.parse(order?.product_data)
                 : {};
               const pdArray = Object?.values(pds)?.[0];
-              const { pd = [] } = pdArray ?? {};
-              const time = new Date(order?.receivedAt)?.toLocaleString(
-                "uz-UZ",
-                {
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: false,
-                }
-              );
+              const orderNum = Object?.keys(pds)?.[0];
+              const { pd = [], received_at } = pdArray ?? {};
+              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: false,
+              });
               return (
                 <div
                   key={order?.id}
@@ -216,6 +212,7 @@ export const MakingFoods = () => {
                                   order_id: order?.id,
                                   product_id: product?.id,
                                   status: 5,
+                                  orderNumber: orderNum,
                                   department: department,
                                 })
                               }></i>
@@ -241,6 +238,7 @@ export const MakingFoods = () => {
                                     product_id: product?.id,
                                     status: 5,
                                     department: department,
+                                    orderNumber: orderNum,
                                   })
                                 }
                                 aria-label="to prepare this product">

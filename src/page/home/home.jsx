@@ -150,7 +150,7 @@ export const Home = () => {
 
   const handleSwipe = async (direction) => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
-    await setActiveIndex((newIndex + 3) % 3);
+    setActiveIndex((newIndex + 3) % 3);
     navigate(
       `/orders/${
         newIndex === 0 ? "" : newIndex === 1 ? "cooking/food" : "prepared/food"
@@ -212,15 +212,13 @@ export const Home = () => {
                 ? JSON?.parse(order?.product_data)
                 : {};
               const pdArray = Object?.values(pds)?.[0];
+              const orderNum = Object?.keys(pds)?.[0];
               const { pd = [], received_at = "" } = pdArray ?? {};
-              const time = new Date(order?.receivedAt)?.toLocaleString(
-                "uz-UZ",
-                {
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: false,
-                }
-              );
+              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: false,
+              });
               return (
                 <div
                   key={order?.id}
@@ -301,6 +299,7 @@ export const Home = () => {
                                   orderSituation({
                                     order_id: order?.id,
                                     product_id: product?.id,
+                                    orderNumber: orderNum,
                                     status: 5,
                                     department: department,
                                   });
@@ -310,6 +309,7 @@ export const Home = () => {
                                     product_id: product?.id,
                                     status: newStatus,
                                     department: department,
+                                    orderNumber: orderNum,
                                   });
                                 }
                               }}></i>
@@ -336,6 +336,7 @@ export const Home = () => {
                                       product_id: product?.id,
                                       status: 3,
                                       department: department,
+                                      orderNumber: orderNum,
                                     })
                                   }
                                   aria-label="cancel this product">
@@ -364,6 +365,7 @@ export const Home = () => {
                                       product_id: product?.id,
                                       status: 5,
                                       department: department,
+                                      orderNumber: orderNum,
                                     });
                                   } else {
                                     orderSituation({
@@ -371,6 +373,7 @@ export const Home = () => {
                                       product_id: product?.id,
                                       status: newStatus,
                                       department: department,
+                                      orderNumber: orderNum,
                                     });
                                   }
                                 }}

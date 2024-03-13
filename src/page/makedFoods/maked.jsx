@@ -26,10 +26,11 @@ export const MakedFoods = () => {
     url: `/get/readyFoods/${user?.id}`,
     tags: [""],
   });
-  const [orders, setOrders] = useState(data?.innerData || []);
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
+    setOrders(data?.innerData);
     dispatch(acNavStatus([100]));
-  }, [dispatch]);
+  }, [dispatch, data?.innerData]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => handleSwipe("LEFT"),
@@ -47,138 +48,135 @@ export const MakedFoods = () => {
     );
   };
 
-    socket.on(`/get/readyOrderOne/${user?.id}`, (newData) => {
-      console.log("readyOrder socket", newData);
-      setOrders((prevOrders) => {
-        const existingOrder = prevOrders?.find(
-          (order) => order?.id === newData.id
-        );
+  socket.on(`/get/readyOrderOne/${user?.id}`, (newData) => {
+    console.log("readyOrder socket", newData);
+    setOrders((prevOrders) => {
+      const existingOrder = prevOrders?.find(
+        (order) => order?.id === newData.id
+      );
 
-        if (existingOrder) {
-          if (newData?.deleted) {
-            return prevOrders?.filter((order) => order?.id !== newData.id);
-          } else {
-            const updatedOrders = prevOrders?.map((order) =>
-              order?.id === newData.id ? newData : order
-            );
-            return updatedOrders;
-          }
+      if (existingOrder) {
+        if (newData?.deleted) {
+          return prevOrders?.filter((order) => order?.id !== newData.id);
         } else {
-          return [...prevOrders, newData];
+          const updatedOrders = prevOrders?.map((order) =>
+            order?.id === newData.id ? newData : order
+          );
+          return updatedOrders;
         }
-      });
-
-      socket.off(`/get/readyOrderOne/${user?.id}`);
+      } else {
+        return [...prevOrders, newData];
+      }
     });
 
-    return (
-      <div
-        className={
-          full ? "container_box home_page active" : "container_box home_page"
-        }>
-        <div className="_orders">
-          <h1>
-            <i></i>
-            <i></i>
-            <span {...handlers} className="swipe-pages">
-              <span
-                className={activeIndex === 0 ? "active" : ""}
-                onClick={() => navigate("/orders")}
-                aria-label='target this link "/orders"'>
-                <RiBoxingFill />
-              </span>
-              <span
-                className={activeIndex === 1 ? "active" : ""}
-                onClick={() => navigate("/orders/cooking/food")}
-                aria-label='target this link "/orders/cooking/food"'>
-                <GiCook />
-              </span>
-              <span
-                className={activeIndex === 2 ? "active" : ""}
-                onClick={() => navigate("/orders/prepared/food")}
-                aria-label='target this link "/orders/prepared/food"'>
-                <MdFastfood />
-              </span>
-            </span>
-            <i></i>
+    socket.off(`/get/readyOrderOne/${user?.id}`);
+  });
+
+  return (
+    <div
+      className={
+        full ? "container_box home_page active" : "container_box home_page"
+      }>
+      <div className="_orders">
+        <h1>
+          <i></i>
+          <i></i>
+          <span {...handlers} className="swipe-pages">
             <span
-              onClick={() => setFull(!full)}
-              aria-label="enter fullscreen and exit fullscreen">
-              {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
+              className={activeIndex === 0 ? "active" : ""}
+              onClick={() => navigate("/orders")}
+              aria-label='target this link "/orders"'>
+              <RiBoxingFill />
             </span>
-          </h1>
-          {orders?.length ? (
-            <div className={full ? "orders_body fullScreen" : "orders_body"}>
-              {orders?.map((order) => {
-                const pds = JSON?.parse(order?.product_data) || {};
-                const { pd } = Object?.values(pds)?.[0];
-                const time = new Date(order?.receivedAt)?.toLocaleString(
-                  "uz-UZ",
-                  {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: false,
-                  }
-                );
-                return (
-                  <div
-                    key={order?.id}
-                    style={{
-                      "--grid-col": full ? 1 : 1.5,
-                      "--grid-row": pd?.length + 1,
-                      display: order?.status === 4 ? "none" : "flex",
-                    }}>
-                    <figure className="order_item">
-                      <div className="order_item_header">
-                        <p>
-                          <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
-                        </p>
-                        <span>{time}</span>
-                        <div className="btn_box">
-                          <sub style={{ background: "none" }}>
-                            Olib ketilishi kutilmoqda
-                          </sub>
-                        </div>
+            <span
+              className={activeIndex === 1 ? "active" : ""}
+              onClick={() => navigate("/orders/cooking/food")}
+              aria-label='target this link "/orders/cooking/food"'>
+              <GiCook />
+            </span>
+            <span
+              className={activeIndex === 2 ? "active" : ""}
+              onClick={() => navigate("/orders/prepared/food")}
+              aria-label='target this link "/orders/prepared/food"'>
+              <MdFastfood />
+            </span>
+          </span>
+          <i></i>
+          <span
+            onClick={() => setFull(!full)}
+            aria-label="enter fullscreen and exit fullscreen">
+            {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
+          </span>
+        </h1>
+        {orders?.length ? (
+          <div className={full ? "orders_body fullScreen" : "orders_body"}>
+            {orders?.map((order) => {
+              const pds = JSON?.parse(order?.product_data) || {};
+              const { pd, received_at } = Object?.values(pds)?.[0];
+              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: false,
+              });
+              return (
+                <div
+                  key={order?.id}
+                  style={{
+                    "--grid-col": full ? 1 : 1.5,
+                    "--grid-row": pd?.length + 1,
+                    display: order?.status === 4 ? "none" : "flex",
+                  }}>
+                  <figure className="order_item">
+                    <div className="order_item_header">
+                      <p>
+                        <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
+                      </p>
+                      <span>{time}</span>
+                      <div className="btn_box">
+                        <sub style={{ background: "none" }}>
+                          Olib ketilishi kutilmoqda
+                        </sub>
                       </div>
-                      <div className="order_item-body">
-                        {pd?.map((product, ind) => {
-                          return (
-                            <figcaption key={product?.id + ind}>
-                              {product?.status === 3 && <i></i>}
-                              <p className="qty">{product?.quantity}</p>
-                              <pre>
-                                <p style={{ textTransform: "capitalize" }}>
-                                  {product?.name}
-                                </p>
-                                <p>{product?.description}</p>
-                              </pre>
-                              <NumericFormat
-                                value={product?.quantity * product?.price}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                              />
-                              <div className="order_stution">
-                                <button
-                                  style={{ color: "#3CE75B" }}
-                                  className="relative">
-                                  <HiCheck />
-                                </button>
-                              </div>
-                            </figcaption>
-                          );
-                        })}
-                      </div>
-                    </figure>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <figure className="no_result">
-              <img src={noResult} alt="foto" />
-            </figure>
-          )}
-        </div>
+                    </div>
+                    <div className="order_item-body">
+                      {pd?.map((product, ind) => {
+                        return (
+                          <figcaption key={product?.id + ind}>
+                            {product?.status === 3 && <i></i>}
+                            <p className="qty">{product?.quantity}</p>
+                            <pre>
+                              <p style={{ textTransform: "capitalize" }}>
+                                {product?.name}
+                              </p>
+                              <p>{product?.description}</p>
+                            </pre>
+                            <NumericFormat
+                              value={product?.quantity * product?.price}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                            />
+                            <div className="order_stution">
+                              <button
+                                style={{ color: "#3CE75B" }}
+                                className="relative">
+                                <HiCheck />
+                              </button>
+                            </div>
+                          </figcaption>
+                        );
+                      })}
+                    </div>
+                  </figure>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <figure className="no_result">
+            <img src={noResult} alt="foto" />
+          </figure>
+        )}
       </div>
-    );
+    </div>
+  );
 };
