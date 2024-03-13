@@ -82,8 +82,6 @@ const api = createApi({
   }),
 });
 
-// Example of combining RTK Query and axios
-
 export const useFetchDataQuery = (props) =>
   api.endpoints.fetchData.useQuery(props);
 export const usePostDataMutation = (props) =>

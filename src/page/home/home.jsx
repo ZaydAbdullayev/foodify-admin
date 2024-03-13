@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import "./home.css";
 import { ApiGetService } from "../../service/api.service";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,9 +21,7 @@ import { GiCook } from "react-icons/gi";
 import { MdFastfood } from "react-icons/md";
 import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
-import { acResolve } from "../../redux/resolve";
 
-const ResolveModal = lazy(() => import("./resolve.modal"));
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
   const department = JSON.parse(localStorage.getItem("department")) || null;
@@ -404,9 +402,6 @@ export const Home = () => {
           </figure>
         )}
       </div>
-      <Suspense>
-        <ResolveModal />
-      </Suspense>
     </div>
   );
 };

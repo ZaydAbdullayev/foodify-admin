@@ -7,6 +7,7 @@ import { usePatchDataMutation } from "../../service/fetch.service";
 import { enqueueSnackbar as es } from "notistack";
 import { LoadingBtn } from "../../components/loading/loading";
 import { ClearForm } from "../../service/form.service";
+import { acClosePayModal } from "../../redux/modal";
 
 const UniversalModal = ({
   children,
@@ -15,9 +16,12 @@ const UniversalModal = ({
   setChecked,
   status,
   title,
+  payment,
   darkMode,
+  color,
 }) => {
   const open = useSelector((state) => state.uModal);
+  const pay = useSelector((state) => state.pay);
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
   // service for update
@@ -250,14 +254,22 @@ const UniversalModal = ({
 
   const setClose = () => {
     dispatch(acCloseUModal());
+    dispatch(acClosePayModal());
     ClearForm(".u_modal");
   };
 
   return (
-    <div className={open ? `u_modal_container  open` : `u_modal_container `}>
+    <div
+      className={
+        payment
+          ? `u_modal_container ${pay && "open"}`
+          : `u_modal_container ${open && "open"}`
+      }>
       <div className="u_modal_box">
         <form
-          className={`u_modal ${darkMode ? "dark-mode" : ""}`}
+          className={`u_modal ${
+            darkMode ? "dark-mode" : color ? "dark-color-mode" : ""
+          }`}
           onSubmit={fetchValues}>
           <p>{status ? title : "Taxrirlash"}</p>
           {children}

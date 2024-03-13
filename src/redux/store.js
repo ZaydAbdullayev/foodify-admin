@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { reAuth } from "./auth";
-import { reModal } from "./modal";
+import { reModal, rePayModal } from "./modal";
 import { reShrink } from "./shrink";
 import { reUpload } from "./upload";
 import { reGetNewData, reSearch } from "./search";
@@ -42,6 +42,7 @@ export const store = configureStore({
     activeSt_id: reActiveSt_id,
     delRouter: rootDocuments,
     cuttingA: reCuttingAmount,
+    pay: rePayModal,
     [api.reducerPath]: api.reducer,
   }),
   middleware: (getDefaultMiddleware) =>

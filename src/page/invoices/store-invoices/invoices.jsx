@@ -11,12 +11,15 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acOpenPayModal } from "../../../redux/modal";
 
 const InvoicesModal = lazy(() => import("./invoices.modal"));
+const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
 
 export const StorageInvoices = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
+  const [pay, setPay] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
   // const [payment, setPayment] = useState(null);
@@ -94,6 +97,11 @@ export const StorageInvoices = () => {
         return b?.name?.localeCompare(a.name);
       }
     });
+
+  const openPaymentModal = (price) => {
+    setPay(true);
+    dispatch(acOpenPayModal(price));
+  };
 
   return (
     <div className="storage_container">
@@ -229,7 +237,9 @@ export const StorageInvoices = () => {
                           hisoblash
                         </u>
                         <br />
-                        <u>to'lov</u>
+                        <u onClick={() => openPaymentModal(item?.leftover)}>
+                          to'lov
+                        </u>
                       </pre>
                     </p>
                     <p
@@ -345,6 +355,7 @@ export const StorageInvoices = () => {
             }
           }
         />
+        {pay && <InvoicesPaymentModal />}
       </Suspense>
     </div>
   );
