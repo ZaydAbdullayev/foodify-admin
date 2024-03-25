@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import "./document.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MdDateRange } from "react-icons/md";
-import { LuArrowLeftRight } from "react-icons/lu";
 import AnimatedNumber from "animated-number-react";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { DocumentByC } from "../documentByC/documentByC";
 import { LoadingBtn } from "../../components/loading/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
-import { LiaCalendarDaySolid } from "react-icons/lia";
-
-import noResult from "../../assets/images/20231109_144621.png";
+import dayjs from "dayjs";
+import { DatePicker, Result, Button } from "antd";
+const { RangePicker } = DatePicker;
 
 export const Document = () => {
   const navigate = useNavigate();
@@ -47,25 +46,18 @@ export const Document = () => {
       <div className="document_header">
         <h1>Barcha hisobotlar</h1>
 
-        <form className="filter_date">
-          <label data-icon={<LiaCalendarDaySolid />}>
-            <input
-              type="date"
-              name="fdate"
-              onChange={(e) => setDate({ ...date, fdate: e.target.value })}
-            />
-            <span>{date.fdate}</span>
-          </label>
-          <LuArrowLeftRight />
-          <label data-icon={<LiaCalendarDaySolid />}>
-            <span>{date.tdate}</span>
-            <input
-              type="date"
-              name="tdate"
-              onChange={(e) => setDate({ ...date, tdate: e.target.value })}
-            />
-          </label>
-        </form>
+        <div className="filter_date">
+          <RangePicker
+            defaultValue={[dayjs(date.start), dayjs(date.end)]}
+            aria-label="select data from to end"
+            onChange={(date, dateString) =>
+              setDate({
+                start: dateString?.[0],
+                end: dateString?.[1],
+              })
+            }
+          />
+        </div>
       </div>
       <div className="document_body">
         {isLoading ? (
@@ -78,8 +70,7 @@ export const Document = () => {
               <div
                 className="document_item"
                 key={index}
-                onClick={() => getCategry(item?.department)}
-              >
+                onClick={() => getCategry(item?.department)}>
                 <p>
                   <MdDateRange />
                   <span>bugun:</span>
@@ -105,7 +96,16 @@ export const Document = () => {
           })
         ) : (
           <figure className="no_result">
-            <img src={noResult} alt="foto" />
+            <Result
+              status="404"
+              title="Hisobotlar yo'q"
+              subTitle="Hisbot ma'lumotlari topilmadi yoki mavjud emas !"
+              extra={
+                <Button onClick={() => window.location.reload()}>
+                  Sahifani yangilash
+                </Button>
+              }
+            />
           </figure>
         )}
       </div>

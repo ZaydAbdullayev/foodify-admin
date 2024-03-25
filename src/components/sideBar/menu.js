@@ -15,6 +15,7 @@ import { TbReport, TbPlaylistX, TbReportAnalytics } from "react-icons/tb";
 import { LiaListAlt, LiaOpencart } from "react-icons/lia";
 import { PiDotsThreeCircleVerticalFill } from "react-icons/pi";
 import { VscUngroupByRefType } from "react-icons/vsc";
+import { HiMiniChatBubbleLeftRight } from "react-icons/hi2";
 
 const width = window.innerWidth <= 600 ? true : false;
 

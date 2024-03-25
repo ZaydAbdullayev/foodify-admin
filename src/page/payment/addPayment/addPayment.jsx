@@ -236,7 +236,7 @@ export const AddPayment = memo(({ active, actives }) => {
                 </div>
               </div>
               <div className="add_payment__button">
-                <p>Olindi:</p>
+                <small>Olindi:</small>
                 <input
                   type="number"
                   value={price.df_v}

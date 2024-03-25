@@ -41,6 +41,7 @@ export const MakingFoods = () => {
     dispatch(acNavStatus([100]));
   }, [dispatch, user?.id]);
 
+useEffect(() => {
   socket.on(`/get/makingOrderOne/${id}`, (newData) => {
     console.log("new makingData socket", newData);
     setOrders((prevOrders) => {
@@ -60,9 +61,11 @@ export const MakingFoods = () => {
         return [...prevOrders, newData];
       }
     });
-    console.log("mkingData after socket", orders);
-    socket.off(`/get/makingOrderOne/${id}`);
   });
+  return () => {
+    socket.off(`/get/makingOrderOne/${id}`);
+  };
+}, [id]);
 
   const orderAccept = (order) => {
     console.log("upP", order);

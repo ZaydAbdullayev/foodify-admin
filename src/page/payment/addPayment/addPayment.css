@@ -195,7 +195,7 @@
 .add_payment__button input {
   height: var(--bwh);
   padding: 0 1%;
-  flex: 1;
+  width: 70%;
   border: none;
   border-radius: 10px;
   font-size: var(--fs5);

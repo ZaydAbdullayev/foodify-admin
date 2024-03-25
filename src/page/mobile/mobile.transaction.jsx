@@ -4,7 +4,7 @@ import { useFetchDataQuery } from "../../service/fetch.service";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckBox } from "../../hooks/generate.tags";
 import { acNavStatus } from "../../redux/navbar.status";
-import { DatePicker } from "antd";
+import { ConfigProvider, DatePicker } from "antd";
 import { usePostDataMutation } from "../../service/fetch.service";
 import useNotification from "antd/es/notification/useNotification";
 import { ClearForm } from "../../service/form.service";
@@ -132,16 +132,25 @@ export const MobileInvoice = () => {
     <>
       <form className="mobile-invoice container_box">
         {contexHolder}
-        <Segmented
-          options={[
-            "To'lovlar",
-            "Yetkazuvchiga to'lov",
-            "Kassa orasida almashinuv",
-          ]}
-          className="segmented"
-          onChange={(e) => setType(e)}
-          block
-        />
+        <ConfigProvider
+          theme={{
+            components: {
+              Segmented: {
+                trackPadding: "4px",
+              },
+            },
+          }}>
+          <Segmented
+            options={[
+              "To'lovlar",
+              "Yetkazuvchiga to'lov",
+              "Kassa orasida almashinuv",
+            ]}
+            className="segmented"
+            onChange={(e) => setType(e)}
+            block
+          />
+        </ConfigProvider>
         <div className="mobile-invoice-content">
           {activityType_data.map((item, ind) => (
             <div className="activity-type" key={ind}>
@@ -192,14 +201,24 @@ export const MobileInvoice = () => {
         </div>
         <div className="_invoice-footer">
           <div className="history-screen"></div>
-          <div className="activity-btn">
-            <button type="button" onClick={() => handleButtonClick("income")}>
-              – CHIQIM
+          {type === "Kassa orasida almashinuv" ? (
+            <button
+              type="button"
+              onClick={() => handleButtonClick("transaction")}>
+              O'tkazish
             </button>
-            <button type="button" onClick={() => handleButtonClick("expense")}>
-              KIRIM +
-            </button>
-          </div>
+          ) : (
+            <div className="activity-btn">
+              <button type="button" onClick={() => handleButtonClick("income")}>
+                – CHIQIM
+              </button>
+              <button
+                type="button"
+                onClick={() => handleButtonClick("expense")}>
+                KIRIM +
+              </button>
+            </div>
+          )}
         </div>
       </form>
       <Suspense>

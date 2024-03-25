@@ -215,6 +215,17 @@
   background: #4caf50;
 }
 
+._invoice-footer > button {
+  width: 30%;
+  height: 50px;
+  background: #36cfc9;
+  border: none;
+  border-radius: 50px 5px 50px 5px;
+  font-size: var(--fs6);
+  color: #fff;
+  letter-spacing: 1px;
+}
+
 .segmented {
   padding: 6px 4px;
   border-radius: 6px 6px 0 0;

@@ -27,7 +27,6 @@ export const themeConfig = {
     Segmented: {
       itemSelectedBg: "#444",
       trackBg: "#333",
-      trackPadding: "4px",
     },
   },
 };

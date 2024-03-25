@@ -69,30 +69,24 @@ export const Router = () => {
   const nothificate = useSelector((state) => state.nothificate);
   const location = useLocation();
   const dispatch = useDispatch();
-  let sound;
 
-  document.addEventListener(
-    "DOMContentLoaded", // "load" yerine "DOMContentLoaded" kullanın
-    () => {
+  useEffect(() => {
+    if (nothificate) {
       var audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
       if (audioContext) {
-        sound = new Howl({
+        let sound = new Howl({
           src: [audio],
           html5: true,
         });
+        sound.play();
+        setTimeout(() => {
+          dispatch(acNothification(false));
+          sound.stop();
+        }, 1000);
       }
-    },
-    { once: true }
-  );
-
-  if (nothificate && sound) {
-    sound.play();
-    setTimeout(() => {
-      dispatch(acNothification(false));
-      if (sound) sound.stop();
-    }, 1000);
-  }
+    }
+  }, [dispatch, nothificate]);
 
   useEffect(() => {
     dispatch(acCloseUModal());
@@ -239,3 +233,5 @@ const NotFound = () => {
     />
   );
 };
+
+

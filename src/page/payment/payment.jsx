@@ -2,25 +2,26 @@ import React, { useState } from "react";
 import "./payment.css";
 import { useNavigate } from "react-router-dom";
 import { AddPayment } from "./addPayment/addPayment";
-import { LuArrowLeftRight } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
-import { LiaCalendarDaySolid } from "react-icons/lia";
-
-import noResult from "../../assets/images/20231109_144621.png";
+import { DatePicker, Segmented, Result, Button } from "antd";
+import dayjs from "dayjs";
 import { useFetchDataQuery } from "../../service/fetch.service";
+import { MdTableBar } from "react-icons/md";
+const { RangePicker } = DatePicker;
 
 export const Payment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [type, setType] = useState("openOrders");
   const res_id = useSelector((state) => state?.res_id);
   // const search = useLocation().search?.split("=").pop();
   const [date, setDate] = useState({
-    start: new Date().toISOString().split("T")[0],
+    start: "2021-01-01",
     end: new Date().toISOString().split("T")[0],
   });
   const { data: ordersData = [] } = useFetchDataQuery({
-    url: `/get/resOrders/${res_id}/${date.start}/${date.end}`,
+    url: `/get/ordersForCashier/${res_id}/${date.start}/${date.end}`,
     tags: ["order"],
   });
   const dispatch = useDispatch();
@@ -33,72 +34,70 @@ export const Payment = () => {
     setOpen(true);
   };
 
-  // const filteredData = ordersData?.innerData?.filter((item) => {
-  //   const adress = item?.address?.split("&")?.pop();
-  //   return (
-  //     item?.id?.toLowerCase().includes(search?.toLowerCase()) ||
-  //     adress.toLowerCase().includes(search?.toLowerCase())
-  //   );
-  // });
-
   return (
     <div className="payment_container">
       <div className="document_header">
-        <h1>
-          To'lov kiritish {/*<span>({ordersData?.innerData?.length})</span> */}
-        </h1>
-        <form className="filter_date">
-          <label>
-            <input
-              data-icon={<LiaCalendarDaySolid />}
-              type="date"
-              name="start"
-              onChange={(e) => setDate({ ...date, start: e.target.value })}
-            />
-            <span>{date.start}</span>
-          </label>
-          <LuArrowLeftRight />
-          <label style={{ "--date-icon": <LiaCalendarDaySolid /> }}>
-            <span>{date.end}</span>
-            <input
-              type="date"
-              name="end"
-              onChange={(e) => setDate({ ...date, end: e.target.value })}
-            />
-          </label>
-        </form>
+        <h1>To'lov kiritish</h1>
+        <div className="filter_date">
+          <Segmented
+            options={[
+              { label: "Ochiq", value: "openOrders" },
+              { label: "Yopiq", value: "closedOrders" },
+              { label: "Qarz", value: "debtOrders" },
+            ]}
+            onChange={(e) => setType(e)}
+          />
+          <RangePicker
+            defaultValue={[dayjs(date.start), dayjs(date.end)]}
+            aria-label="select data from to end"
+            onChange={(date, dateString) =>
+              setDate({
+                start: dateString?.[0],
+                end: dateString?.[1],
+              })
+            }
+          />
+        </div>
       </div>
-      {ordersData?.innerData ? (
-        ordersData?.innerData?.map((item, index) => {
-          const reverseIndex = ordersData?.innerData?.length - index;
+      {ordersData?.innerData?.[type] ? (
+        ordersData?.innerData?.[type]?.map((item, index) => {
+          const reverseIndex = ordersData?.innerData?.[type]?.length - index;
           const p_data = JSON?.parse(item?.product_data);
           const payment_data = Object.values(p_data)[0]?.pd;
+          const closedTime =
+            item?.closed_at !== "0000-00-00"
+              ? item?.closed_at?.split("T")[1]?.split(".")[0].slice(0, 5)
+              : false;
+          console.log("payment_data", item);
           return (
             <div className="payment_item" key={item.id}>
-              <span>{item.order_type}</span>
+              <i
+                className={
+                  item.payment_status === 1
+                    ? `payment_tick`
+                    : `payment_tick not_paid`
+                }></i>
+              <span className="payment_item-header">
+                <small>{item.order_type} </small>{" "}
+                <small>
+                  {item.receivedAt?.split("T")[1]?.split(".")[0].slice(0, 5)}{" "}
+                  {closedTime === false ? "" : ` — ${closedTime}`}
+                </small>
+                <small></small>
+              </span>
               <p>
-                <span>{item.order_type === "online" ? "ID" : "Stoll"}</span>
                 <span className="p_name">
-                  {item.order_type === "ofline" ? (
-                    <span>{item.table_name}</span>
+                  {item.order_type === "offline" ? (
+                    <span>
+                      {item.t_location}{" "}
+                      <MdTableBar style={{ paddingTop: "1px" }} />{" "}
+                      {item.table_name}
+                    </span>
                   ) : (
                     <span>{item.id}</span>
                   )}
                 </span>
                 <span>{`#${reverseIndex}`}</span>
-              </p>
-              <p>
-                <span
-                  className="p_name"
-                  style={{ color: "#eee9", lineHeight: "2.3" }}
-                >
-                  Status
-                </span>
-                {item?.payment_status === 1 ? (
-                  <span style={{ background: "#11b911" }}>To'landi</span>
-                ) : (
-                  <span style={{ background: "#fe0" }}>To'lanmadi</span>
-                )}
               </p>
               <ul className="p_data_box">
                 <p>
@@ -124,14 +123,12 @@ export const Payment = () => {
               <div className="p_btn__box">
                 <button
                   onClick={() => getDetails(item.id)}
-                  aria-label="Edit this product for payment"
-                >
+                  aria-label="Edit this product for payment">
                   Edit
                 </button>
                 <button
                   onClick={() => getDetails(item.id)}
-                  aria-label="Payment this product for payment"
-                >
+                  aria-label="Payment this product for payment">
                   Payment
                 </button>
               </div>
@@ -140,7 +137,16 @@ export const Payment = () => {
         })
       ) : (
         <figure className="no_result">
-          <img src={noResult} alt="foto" />
+          <Result
+            status="403"
+            title={`${type} buyurtma yo'q`}
+            subTitle={`${type} buyurtma topilmadi yoki mavjud emas!`}
+            extra={
+              <Button onClick={() => window.location.reload()}>
+                Sahifani yangilash
+              </Button>
+            }
+          />
         </figure>
       )}
       <AddPayment active={setOpen} actives={open} />

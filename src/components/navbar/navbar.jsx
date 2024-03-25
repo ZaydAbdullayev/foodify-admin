@@ -21,6 +21,8 @@ import { FaBell } from "react-icons/fa";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
+import addOrder from "../../assets/images/add_order.png";
+import { SlArrowLeft } from "react-icons/sl";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -94,10 +96,12 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       {contextHolder}
+      <span className="backword" onClick={() => navigate(-1)}>
+        <SlArrowLeft /> orqaga
+      </span>
       <div
         className="nav_menu"
-        onClick={() => dispatch(acMedia(media ? false : true))}
-      >
+        onClick={() => dispatch(acMedia(media ? false : true))}>
         <img src={logo} alt="" />
       </div>
       {status?.includes(0) && (
@@ -106,8 +110,7 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={openUModal}
-              aria-label="open modal belong's to active page"
-            >
+              aria-label="open modal belong's to active page">
               <BiPlus />
             </button>
           )}
@@ -115,8 +118,7 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={openUModal}
-              aria-label="open modal for add table's modal"
-            >
+              aria-label="open modal for add table's modal">
               <b>+</b>
               <MdTableBar />{" "}
             </button>
@@ -130,8 +132,7 @@ export const Navbar = () => {
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
               onClick={openUModalU}
-              aria-label="open modal for edit belong's active page"
-            >
+              aria-label="open modal for edit belong's active page">
               <BiEdit />
             </button>
           )}
@@ -144,8 +145,7 @@ export const Navbar = () => {
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
               onClick={() => deleteDocuments()}
-              aria-label="open modal for delete belong's active page"
-            >
+              aria-label="open modal for delete belong's active page">
               <MdDelete />
             </button>
           )}
@@ -168,18 +168,19 @@ export const Navbar = () => {
       )}
       {status?.length === 0 && <i></i>}
       <div className="profile">
+        <span>
+          <img src={addOrder} alt="icon" aria-label="icon" />
+        </span>
         {department === "owner" && (
           <span
             onClick={() => navigate("/statistics")}
-            aria-label="target statistics page"
-          >
+            aria-label="target statistics page">
             <ImStatsBars />
           </span>
         )}
         <span
           onClick={() => navigate("/nothifications")}
-          aria-label="target nothification page"
-        >
+          aria-label="target nothification page">
           <FaBell />
         </span>
         <img
@@ -191,16 +192,14 @@ export const Navbar = () => {
       </div>
       <div
         className={modal ? "modal_box" : "modal_box close_modal"}
-        onMouseLeave={closeModal}
-      >
+        onMouseLeave={closeModal}>
         <div className="user">
           <b>{name}</b>
           <figure>
             <img src={user?.user?.img || default_img} alt="user_photo" />
             <button
               onClick={closeModal}
-              aria-label="close user's information modal"
-            >
+              aria-label="close user's information modal">
               x
             </button>
           </figure>

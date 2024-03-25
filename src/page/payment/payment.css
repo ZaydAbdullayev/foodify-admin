@@ -38,6 +38,7 @@
 }
 
 .payment_item {
+  position: relative;
   width: calc(var(--pw) - calc(var(--gap2) - 5px));
   aspect-ratio: 1/1.5;
   padding: 1% 1.5% 1.5%;
@@ -48,27 +49,49 @@
   line-height: 1.4;
 }
 
-.payment_item > span {
-  font-size: var(--fs6);
+.payment_tick {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 0;
+  height: 0;
+  border: 10px solid #11b911;
+  border-block-end: 5px solid transparent;
+  border-inline-start: 25px solid transparent;
+  border-start-end-radius: 7px;
+}
+
+.payment_tick.not_paid {
+  border: 10px solid #fe0;
+  border-block-end: 5px solid transparent;
+  border-inline-start: 25px solid transparent;
+}
+
+.payment_item-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs7);
   text-transform: capitalize;
+  gap: var(--gap1);
+  z-index: 99;
 }
 
 .payment_item > p {
   display: flex;
   align-items: center;
   gap: var(--gap6);
+  z-index: 99;
 }
 
 .payment_item > :nth-child(2) {
-  font-size: var(--fs5);
+  font-size: var(--fs6);
 }
 
 .payment_item > :nth-child(3) > :last-child {
-  font-size: var(--fs6);
-  padding: 1.5% 3%;
-  border-radius: 20px;
-  font-size: var(--fs8);
-  color: #333;
+  font-size: var(--fs7);
+  color: #eee;
   font-weight: 500;
 }
 
