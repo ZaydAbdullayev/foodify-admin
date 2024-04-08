@@ -10,8 +10,6 @@ import { CheackDepartment, Login } from "./auth/login";
 import { Auth } from "./auth/auth";
 import { Addproduct, ShowProduct } from "./components/Addproduct/addproduct";
 import { Products } from "./page/products/products";
-import { MakingFoods } from "./page/makingFoods/makingFoods";
-import { MakedFoods } from "./page/makedFoods/maked";
 import { Statistics } from "./components/statistics/layout.statis";
 import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
@@ -62,7 +60,6 @@ import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
-import { MobileInvoice } from "./page/mobile/mobile.transaction.jsx";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -130,8 +127,6 @@ export const Router = () => {
 
             <Route path="orders" element={<Blog />}>
               <Route path="" element={<Home />} />
-              <Route path="cooking/food" element={<MakingFoods />} />
-              <Route path="prepared/food" element={<MakedFoods />} />
               <Route path="pre-orders" element={<InvoicePreOrders />} />
               <Route path="tables" element={<TableBox />} />
               <Route path="tables/:type/:number/:id" element={<OrderById />} />
@@ -210,7 +205,6 @@ export const Router = () => {
 
             {/* ============== pages of the other ================= */}
             <Route path="sidebar" element={<Sidebar />} />
-            <Route path="mobile-invoice" element={<MobileInvoice />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

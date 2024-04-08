@@ -1,77 +1,106 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./home.css";
-import { ApiGetService } from "../../service/api.service";
-import { useDispatch, useSelector } from "react-redux";
-import { LoadingBtn } from "../../components/loading/loading";
+import { usePostDataMutation } from "../../service/fetch.service";
+import { useDispatch } from "react-redux";
 import { enqueueSnackbar as es } from "notistack";
 import { acNavStatus } from "../../redux/navbar.status";
 import { NumericFormat } from "react-number-format";
 import socket from "../../socket.config";
-import { useSwipeable } from "react-swipeable";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Segmented, Result, Button, Tag, ConfigProvider } from "antd";
+import { getWeekDay } from "../../service/calc-date.service";
+import { GetRealTime } from "../../hooks/generate.tags";
 
 import { BsCheck2All } from "react-icons/bs";
-import { AiOutlineFullscreen } from "react-icons/ai";
-import { AiOutlineFullscreenExit } from "react-icons/ai";
-import { HiCheck } from "react-icons/hi2";
+import { HiCheck } from "react-icons/hi";
+import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { RiBoxingFill } from "react-icons/ri";
 import { GiCook } from "react-icons/gi";
 import { MdFastfood } from "react-icons/md";
-import noResult from "../../assets/images/20231109_144621.png";
 import { acNothification } from "../../redux/nothification";
 
 export const Home = () => {
-  const user = JSON.parse(localStorage.getItem("user")) || [];
-  const department = JSON.parse(localStorage.getItem("department")) || null;
-  const newOrder = useSelector((state) => state.upload);
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const dep = JSON.parse(localStorage.getItem("department")) || null;
+  const id = user.user?.id || null;
+  const permissions = JSON.parse(localStorage.getItem("permissions")) || [
+    "Bar",
+    "Oshxona",
+  ];
+  const [page, setPage] = useState(1);
+  const [params, setParams] = useState({
+    s: `/get/newOrderOne/${id}`,
+    b: `get/orders/${id}`,
+    oa: "reject",
+  });
   const [situation, setSituation] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState({});
-  const [full, setFull] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const search = useLocation().search?.split("=").pop();
-  const id = user?.user?.id;
+  const [full, setFull] = useState(dep === "oshpaz");
+  const [selectedTags, setSelectedTags] = useState(permissions);
+  const [tags, setTags] = useState(["Hammasi"]);
+  const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  React.useEffect(() => {
+  const getData = useCallback(
+    async (deps) => {
+      try {
+        const res = await postData({
+          url: params?.b,
+          data: { departments: deps },
+          tags: [""],
+        });
+        setOrders(res?.data?.innerData);
+        console.log("normal", res?.data?.innerData);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [params, postData]
+  );
+
+  useEffect(() => {
     dispatch(acNavStatus([100]));
-  }, [dispatch]);
+    getData(selectedTags);
+  }, [dispatch, selectedTags, getData, postData]);
 
-  const point =
-    department === "kassir" || department === "owner"
-      ? `get/orders/${id}`
-      : `get/depOrders/${id}/${department}`;
-  const sPoint =
-    department === "kassir" || department === "owner"
-      ? `/get/newOrders/${id}`
-      : `/get/order/${id}/${department}`;
+  const handleChange = (tag, checked) => {
+    const nextSelectedTags = checked
+      ? [...selectedTags, tag]
+      : selectedTags.filter((t) => t !== tag);
+    setSelectedTags(nextSelectedTags);
+    setTags(nextSelectedTags.length === permissions?.length ? ["Hammasi"] : []);
+    getData(nextSelectedTags);
+  };
 
-  useEffect(() => {
-    setTimeout(() => {
-      ApiGetService.fetching(point)
-        .then((res) => {
-          setOrders(res?.data?.innerData);
-          console.log("normal", res?.data?.innerData);
-        })
-        .catch((err) => console.log(err));
-    }, 800);
-  }, [newOrder, point]);
-
-  useEffect(() => {
-    socket.on(sPoint, (data) => {
-      setOrders(data);
-      dispatch(acNothification(true));
-      console.log("socket", data);
-    });
-    return () => {
-      socket.off(sPoint);
-    };
-  }, [dispatch, sPoint]);
+  const handleChangeH = (tag, checked) => {
+    const nextSelectedTags = checked
+      ? [...selectedTags, tag]
+      : selectedTags.filter((t) => t !== tag);
+    setTags(nextSelectedTags);
+    if (checked) {
+      setSelectedTags(permissions);
+    } else {
+      setSelectedTags([]);
+    }
+  };
 
   useEffect(() => {
-    socket.on(`/get/newOrderOne/${id}`, (newData) => {
+    if (page === 1) {
+      socket.on(`/get/newOrders/${id}`, (data) => {
+        setOrders(data);
+        dispatch(acNothification(true));
+        console.log("socket", data);
+      });
+      return () => {
+        socket.off(`/get/newOrders/${id}`);
+      };
+    }
+  }, [dispatch, id, page]);
+
+  useEffect(() => {
+    socket.on(params?.s, (newData) => {
       console.log("newData socket", newData);
       setOrders((prevOrders) => {
         const existingOrder = prevOrders?.find(
@@ -81,10 +110,9 @@ export const Home = () => {
           if (newData?.deleted) {
             return prevOrders?.filter((order) => order?.id !== newData.id);
           } else {
-            const updatedOrders = prevOrders?.map((order) =>
+            return prevOrders?.map((order) =>
               order?.id === newData.id ? newData : order
             );
-            return updatedOrders;
           }
         } else {
           return [...prevOrders, newData];
@@ -92,43 +120,31 @@ export const Home = () => {
       });
     });
     return () => {
-      socket.off(`/get/newOrderOne/${id}`);
+      socket.off(params?.s);
     };
-  }, [id]);
+  }, [params?.s]);
 
-  // to accept order's product by id
-  const orderAccept = (order, time) => {
-    console.log("upO", {
-      data: order,
-      receivedAt: time,
-    });
+  const orderAccept = (order, ac) => {
+    console.log("upO", { data: order, action: ac });
     try {
-      setLoading(order);
       socket.emit("/accept/order", {
         status: true,
         variant: order?.status,
         user_id: order?.user_id,
       });
-      socket.emit("/update/order/status", {
-        data: order,
-        receivedAt: time,
-      });
-      if (department === "kassir" || department === "owner") {
+      socket.emit("/update/order/status", { data: order, action: ac });
+      if ((dep === "kassir" || dep === "owner") && page === 1) {
         socket.emit("/divide/orders/depart", order);
       }
       setSituation({ status: order?.status, id: order?.id });
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
-    } finally {
-      setLoading({});
     }
   };
 
-  // to find order situation
   const orderSituation = (order) => {
     console.log("upP", order);
     try {
-      setLoading(order);
       socket.emit("/accept/order", {
         status: true,
         variant: order?.status,
@@ -142,88 +158,82 @@ export const Home = () => {
       }
     } catch (err) {
       es("Xatolik yuz berdi!", { variant: "warning" });
-    } finally {
-      setLoading({});
     }
   };
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () => handleSwipe("LEFT"),
-    onSwipedRight: () => handleSwipe("RIGHT"),
-    trackMouse: true,
-  });
-
-  const handleSwipe = async (direction) => {
-    const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
-    setActiveIndex((newIndex + 3) % 3);
-    navigate(
-      `/orders/${
-        newIndex === 0 ? "" : newIndex === 1 ? "cooking/food" : "prepared/food"
-      }`
-    );
-  };
-
-  const filteredData = orders?.filter((item) => {
-    return (
-      item?.id?.toLowerCase().includes(search?.toLowerCase()) ||
-      item?.address
-        ?.split("&")
-        ?.pop()
-        .toLowerCase()
-        .includes(search?.toLowerCase())
-    );
-  });
-
   return (
-    <div
-      className={
-        full ? "container_box home_page active" : "container_box home_page"
-      }>
+    <div className={"container_box home_page" + (full ? " active" : "")}>
       <div className="_orders">
-        <h1>
-          <i></i>
-          <i></i>
-          <span {...handlers} className="swipe-pages">
-            <span
-              className={activeIndex === 0 ? "active" : ""}
-              onClick={() => navigate("/orders")}
-              aria-label='"target thi link "/orders"'>
-              <RiBoxingFill />
-            </span>
-            <span
-              className={activeIndex === 1 ? "active after before" : ""}
-              onClick={() => navigate("/orders/cooking/food")}
-              aria-label='"target thi link "/orders/cooking/food"'>
-              <GiCook />
-            </span>
-            <span
-              className={activeIndex === 2 ? "active" : ""}
-              onClick={() => navigate("/orders/prepared/food")}
-              aria-label='target thi link "/orders/prepared/food"'>
-              <MdFastfood />
-            </span>
+        <div className="orders-header">
+          <span>
+            <label>
+              <small>
+                {`${new Date().toLocaleDateString("us-US", {
+                  day: "numeric",
+                  month: "long",
+                })}`}
+                ,
+              </small>
+              <small>{`${getWeekDay(new Date().getDay())}`}</small>
+            </label>
+            {"  "}
+            <GetRealTime />
           </span>
+          <Segmented
+            options={[
+              { label: <RiBoxingFill />, value: 1 },
+              { label: <GiCook />, value: 2 },
+              { label: <MdFastfood />, value: 3 },
+            ]}
+            onChange={(p) => {
+              setPage(p);
+              setOrders([]);
+              if (p === 1) {
+                setParams({
+                  s: `/get/newOrderOne/${id}`,
+                  b: `get/orders/${id}`,
+                  oa: "reject",
+                });
+              } else if (p === 2) {
+                setParams({
+                  s: `/get/makingOrderOne/${id}`,
+                  b: `get/foodsBeingMade/${id}`,
+                  oa: "back",
+                });
+              } else {
+                setParams({
+                  s: `/get/readyOrderOne/${user?.id}`,
+                  b: `get/readyFoods/${id}`,
+                  oa: "backToKitchen",
+                });
+              }
+            }}
+          />
           <i></i>
-          <span
-            onClick={() => setFull(!full)}
-            aria-label="enter fullscrenn or exit fullscreen">
-            {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
-          </span>
-        </h1>
-        {filteredData?.length ? (
+          <Button onClick={() => navigate("/restaurant-all-items")}>
+            Stop-list
+          </Button>
+          {dep !== "oshpaz" && (
+            <b
+              onClick={() => setFull(!full)}
+              aria-label={full ? "Exit full screen" : "Full screen"}>
+              {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
+            </b>
+          )}
+        </div>
+
+        {orders?.length ? (
           <div className={full ? "orders_body fullScreen" : "orders_body"}>
-            {filteredData?.map((order) => {
+            {orders?.map((order) => {
               const pds = order?.product_data
                 ? JSON?.parse(order?.product_data)
                 : {};
               const pdArray = Object?.values(pds)?.[0];
               const orderNum = Object?.keys(pds)?.[0];
               const { pd = [], received_at = "" } = pdArray ?? {};
-              const time = new Date(received_at)?.toLocaleString("uz-UZ", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-              });
+              const del = pd?.filter((p) =>
+                selectedTags.includes(p?.department)
+              );
               return (
                 <div
                   key={order?.id}
@@ -235,28 +245,34 @@ export const Home = () => {
                   style={{
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
-                    display: order?.deleted ? "none" : "flex",
+                    display: order?.deleted || !del.length ? "none" : "flex",
                   }}>
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
-                        {(department === "kassir" ||
-                          department === "owner") && (
+                        {page !== 4 && (
                           <span>{order?.address?.split("&")?.pop()}</span>
                         )}
                         <span>ID № : {order?.id?.split("_")[0]}</span>{" "}
                       </p>
-                      <span>{time}</span>
-                      {(department === "kassir" || department === "owner") && (
-                        <div className="btn_box">
-                          <button
-                            className="relative"
-                            onClick={() =>
-                              orderAccept({ ...order, status: 4 }, received_at)
-                            }
-                            aria-label="cancel this order">
-                            <RxCross2 />
-                          </button>
+                      <span>
+                        {new Date(received_at).getHours()}:
+                        {new Date(received_at).getMinutes()}
+                      </span>
+                      <div className="btn_box">
+                        <button
+                          className="relative"
+                          onClick={() =>
+                            orderAccept({ ...order, status: 4 }, params?.oa)
+                          }
+                          aria-label="cancel this order">
+                          {page === 1 ? <RxCross2 /> : "↶"}
+                        </button>
+                        {page === 3 ? (
+                          <sub style={{ background: "none" }}>
+                            Dastavka kutilmoqda
+                          </sub>
+                        ) : (
                           <button
                             className="relative"
                             onClick={() => {
@@ -271,126 +287,101 @@ export const Home = () => {
                               } else {
                                 newStatus = 3;
                               }
-
                               orderAccept(
                                 { ...order, status: newStatus },
-                                received_at
+                                "do"
                               );
                             }}
                             aria-label="to accept or to prepare">
-                            {loading.id === order.id && loading.status === 1 ? (
-                              <LoadingBtn />
-                            ) : (
-                              <BsCheck2All />
-                            )}
+                            <BsCheck2All />
                           </button>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                     <div className="order_item-body">
                       {pd?.map((product, ind) => {
                         return (
-                          <figcaption key={product?.id + ind}>
-                            <i
-                              onClick={() => {
-                                let newStatus;
-                                if (order?.type === "online") {
-                                  newStatus = 2;
-                                } else {
-                                  newStatus = 4;
-                                }
-
-                                if (product?.status === 4) {
+                          selectedTags.includes(product?.department) && (
+                            <figcaption key={product?.id + ind}>
+                              <i
+                                onClick={() => {
+                                  let newS;
+                                  if (order?.type === "online") {
+                                    newS = 2;
+                                  } else {
+                                    newS = 4;
+                                  }
                                   orderSituation({
                                     order_id: order?.id,
                                     product_id: product?.id,
+                                    status: product?.status === 4 ? 5 : newS,
+                                    department: dep,
                                     orderNumber: orderNum,
-                                    status: 5,
-                                    department: department,
+                                    data: order,
                                   });
-                                } else {
-                                  orderSituation({
-                                    order_id: order?.id,
-                                    product_id: product?.id,
-                                    status: newStatus,
-                                    department: department,
-                                    orderNumber: orderNum,
-                                  });
-                                }
-                              }}></i>
-                            {product?.status === 3 && <i></i>}
-                            <p className="qty">{product?.quantity}</p>
-                            <pre>
-                              <p style={{ textTransform: "capitalize" }}>
-                                {product?.name}
-                              </p>
-                              <small>{product?.description}</small>
-                            </pre>
-                            <NumericFormat
-                              value={product?.quantity * product?.price}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                            />
-                            <div className="order_stution">
-                              {product?.status === 1 && (
+                                }}></i>
+                              {product?.status === 3 && <i></i>}
+                              <p className="qty">{product?.quantity}</p>
+                              <pre>
+                                <p style={{ textTransform: "capitalize" }}>
+                                  {product?.name}
+                                </p>
+                                <small>{product?.description}</small>
+                              </pre>
+                              <NumericFormat
+                                value={product?.quantity * product?.price}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                              />
+                              <div className="order_stution">
+                                {product?.status === 1 && (
+                                  <button
+                                    className="relative"
+                                    onClick={() =>
+                                      orderSituation({
+                                        order_id: order?.id,
+                                        product_id: product?.id,
+                                        status: 3,
+                                        department: dep,
+                                        orderNumber: orderNum,
+                                        data: order,
+                                      })
+                                    }
+                                    aria-label="cancel this product">
+                                    <RxCross2 />
+                                  </button>
+                                )}
                                 <button
+                                  style={{ color: "#3CE75B" }}
                                   className="relative"
-                                  onClick={() =>
+                                  onClick={() => {
+                                    let newS;
+                                    if (order?.type === "online") {
+                                      newS = 2;
+                                    } else {
+                                      newS = 4;
+                                    }
                                     orderSituation({
                                       order_id: order?.id,
                                       product_id: product?.id,
-                                      status: 3,
-                                      department: department,
+                                      status: product?.status === 4 ? 5 : newS,
+                                      department: dep,
                                       orderNumber: orderNum,
-                                    })
-                                  }
-                                  aria-label="cancel this product">
-                                  {loading.id === product.id &&
-                                  loading.status === 3 ? (
-                                    <LoadingBtn />
+                                      data: order,
+                                    });
+                                  }}
+                                  aria-label="to accept or to prepare this product">
+                                  {product?.status === 1 || !product?.status ? (
+                                    <HiCheck />
+                                  ) : product?.status === 5 ? (
+                                    <HiCheck />
                                   ) : (
-                                    <RxCross2 />
+                                    <IoCheckmarkDoneCircleSharp />
                                   )}
                                 </button>
-                              )}
-                              <button
-                                style={{ color: "#3CE75B" }}
-                                className="relative"
-                                onClick={() => {
-                                  let newStatus;
-                                  if (order?.type === "online") {
-                                    newStatus = 2;
-                                  } else {
-                                    newStatus = 4;
-                                  }
-
-                                  if (product?.status === 4) {
-                                    orderSituation({
-                                      order_id: order?.id,
-                                      product_id: product?.id,
-                                      status: 5,
-                                      department: department,
-                                      orderNumber: orderNum,
-                                    });
-                                  } else {
-                                    orderSituation({
-                                      order_id: order?.id,
-                                      product_id: product?.id,
-                                      status: newStatus,
-                                      department: department,
-                                      orderNumber: orderNum,
-                                    });
-                                  }
-                                }}
-                                aria-label="to accept or to prepare this product">
-                                {product?.status === 1 || !product?.status ? (
-                                  <HiCheck />
-                                ) : (
-                                  <IoCheckmarkDoneCircleSharp />
-                                )}
-                              </button>
-                            </div>
-                          </figcaption>
+                              </div>
+                            </figcaption>
+                          )
                         );
                       })}
                     </div>
@@ -401,13 +392,49 @@ export const Home = () => {
           </div>
         ) : (
           <figure className="no_result">
-            <img
-              src={noResult}
-              alt="foto"
-              aria-label="image for there is no data"
+            <Result
+              status="403"
+              title={`Yangi buyurtma yo'q`}
+              subTitle={`Yangi buyurtma topilmadi yoki mavjud emas!`}
+              extra={
+                <Button onClick={() => window.location.reload()}>
+                  Sahifani yangilash
+                </Button>
+              }
             />
           </figure>
         )}
+      </div>
+      <div className="orders-footer">
+        <div className="department-box">
+          <ConfigProvider
+            theme={{
+              components: {
+                Tag: {
+                  defaultColor: "red",
+                  defaultBg: "#454545",
+                },
+              },
+            }}>
+            {["Hammasi"]?.map((tag, i) => (
+              <Tag.CheckableTag
+                key={`${tag}_${i}`}
+                checked={tags.includes(tag)}
+                onChange={(checked) => handleChangeH(tag, checked)}>
+                {tag}
+              </Tag.CheckableTag>
+            ))}
+            {permissions?.map((tag, i) => (
+              <Tag.CheckableTag
+                key={`${tag}_${i}`}
+                checked={selectedTags.includes(tag)}
+                onChange={(checked) => handleChange(tag, checked)}>
+                {tag}
+              </Tag.CheckableTag>
+            ))}
+          </ConfigProvider>
+        </div>
+        <Button onClick={() => navigate(-1)}>Orqaga</Button>
       </div>
     </div>
   );
