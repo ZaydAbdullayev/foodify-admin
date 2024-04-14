@@ -23,7 +23,7 @@ export const TransactionGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.user?.id}/transactionGroups`,
+    url: `get/${user?.id}/transactionGroups`,
     tags: ["tr-group"],
   });
   React.useEffect(() => {
@@ -68,7 +68,7 @@ export const TransactionGroups = () => {
 
   const displayKeys = [
     { name: "name", size: "60%" },
-    { name: "category", size: "34%", position: 1 },
+    { name: "activity_kind", size: "34%", position: 1 },
   ];
 
   return (
@@ -183,11 +183,16 @@ export const TransactionGroups = () => {
         <UniversalModal
           type="cashboxGr"
           title={"To'lov guruhlari"}
+          setChecked={setChecked}
           status={acItem?.id ? false : true}>
-          <input type="text" name="name" placeholder="Kassa nomi*" required />
-          <select name="category" onChange={(e) => setStatus(e.target.value)}>
-            {acItem?.category ? (
-              <option value={acItem?.category}>{acItem?.category}</option>
+          <input type="text" name="name" placeholder="Nomi *" required />
+          <select
+            name="activity_kind"
+            onChange={(e) => setStatus(e.target.value)}>
+            {acItem?.activity_king ? (
+              <option value={acItem?.activity_king}>
+                {acItem?.activity_king}
+              </option>
             ) : (
               <option value="default">To'lov turini tanlang*</option>
             )}
@@ -196,13 +201,11 @@ export const TransactionGroups = () => {
             <option value="invest">Sarmoya</option>
           </select>
           {status === "operating" && (
-            <select name="activity_kind">
-              {acItem?.activity_kind ? (
-                <option value={acItem?.activity_kind}>
-                  {acItem?.activity_kind}
-                </option>
+            <select name="category">
+              {acItem?.category ? (
+                <option value={acItem?.category}>{acItem?.category}</option>
               ) : (
-                <option value="default">Faoliyat turi tanlang*</option>
+                <option value="default">Categoriya tanlang*</option>
               )}
               <option value="permanent">Doimiy</option>
             </select>

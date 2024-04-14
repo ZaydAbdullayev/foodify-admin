@@ -60,6 +60,7 @@ import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
+import { acPassiveThing } from "./redux/active.js";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -87,6 +88,7 @@ export const Router = () => {
 
   useEffect(() => {
     dispatch(acCloseUModal());
+    dispatch(acPassiveThing());
   }, [dispatch, location]);
 
   if (window.innerWidth < 600) {
@@ -227,5 +229,3 @@ const NotFound = () => {
     />
   );
 };
-
-

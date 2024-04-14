@@ -184,7 +184,11 @@ export const CashboxTransaction = () => {
         </div>
       </div>
       <Suspense>
-        <UniversalModal type="trsn">
+        <UniversalModal
+          title={"Tranzaksiya qo'shish"}
+          status={acItem?.id ? false : true}
+          type="trsn"
+          color={true}>
           <input type="date" name="date" defaultValue={today} required />
           <select
             name="transaction_type"
