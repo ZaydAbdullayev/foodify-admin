@@ -11,8 +11,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--gap3);
-  color: #484d53;
-  /* text-shadow: 1px 1px 3px #444; */
+  color: var(--cl57);
+  /* text-shadow: 1px 1px 3px var(--cl24); */
   font-weight: bold;
   letter-spacing: 1px;
 }
@@ -28,7 +28,7 @@
 }
 
 .nothification-item.success {
-  background: rgb(228, 255, 209);
+  background: var(--cl62);
   background: linear-gradient(
     to right,
     rgba(228, 255, 209, 1) 0%,
@@ -37,7 +37,7 @@
 }
 
 .nothification-item.error {
-  background: rgb(249, 228, 188);
+  background: var(--cl63);
   background: linear-gradient(
     to right,
     rgb(230, 168, 168) 0%,
@@ -46,7 +46,7 @@
 }
 
 .nothification-item.warning {
-  background: rgb(254, 246, 158);
+  background: var(--cl64);
   background: linear-gradient(
     to right,
     rgba(254, 246, 158, 1) 0%,
@@ -64,7 +64,7 @@
   top: 2%;
   right: 0;
   font-size: var(--fs7);
-  color: #111;
+  color: var(--cl53);
 }
 
 .nathification-table {
@@ -83,12 +83,12 @@
 .y-line {
   height: 100%;
   width: 4px;
-  background: #484d53;
+  background: var(--cl57);
   border-radius: 30px;
 }
 /* 
 .seen .y-line {
-  background: #eee;
+  background: var(--cl5);
 } */
 
 .nothification-item-info {
@@ -108,7 +108,7 @@
 
 .nothification-item-info > :first-child {
   width: 100%;
-  border-bottom: 1px solid #3335;
+  border-bottom: 1px solid var(--cl65);
 }
 
 .nothification-item-info > :last-child {

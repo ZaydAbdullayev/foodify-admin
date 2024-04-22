@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #cccccf56;
+  border-bottom: 1px solid var(--cl28);
 }
 
 :where(.css-dev-only-do-not-override-10vxmo6).ant-select
@@ -37,13 +37,13 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background: #333;
-  color: #fff;
+  background: var(--cl3);
+  color: var(--cl1);
   font-size: var(--fs4);
 }
 
 .short_hands button:active {
-  background: #222;
+  background: var(--cl34);
 }
 
 .short-hands_sort__box {
@@ -55,9 +55,9 @@
 
 .short-hands_sort__box :where(select, option, input) {
   padding: 5px 10px;
-  background: #333;
+  background: var(--cl3);
   border: none;
-  color: #fff !important;
+  color: var(--cl1) !important;
   font-size: var(--fs6);
   border-radius: 6px;
 }
@@ -65,7 +65,7 @@
   width: 50%;
   height: 60px;
   padding: 0 2%;
-  background: #17b2ea18;
+  background: var(--cl29);
   border-radius: 20px;
 }
 
@@ -76,16 +76,16 @@
   padding: 0 2% 1%;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--cl1);
 }
 
 .search > input::placeholder {
-  color: #fff;
+  color: var(--cl1);
 }
 
 .navbar svg {
   font-size: var(--fs5);
-  color: #fff;
+  color: var(--cl1);
   cursor: pointer;
 }
 
@@ -93,7 +93,7 @@
   display: flex;
   align-items: center;
   font-size: var(--fs7);
-  color: #eee;
+  color: var(--cl5);
   cursor: pointer;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .backword:hover {
-  color: #787aff;
+  color: var(--cl26);
 }
 
 .search,
@@ -144,7 +144,7 @@
   top: 50%;
   transform: translate(0, -50%);
   font-size: var(--fs5);
-  color: #fff;
+  color: var(--cl1);
 }
 
 .short_hands button > :nth-child(2) {
@@ -153,7 +153,7 @@
   top: 50%;
   transform: translate(0, -50%);
   font-size: var(--fs4);
-  color: #fff;
+  color: var(--cl1);
 }
 
 /* ===================== Style of modal ===================== */
@@ -167,8 +167,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 25px;
-  background: #444;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  background: var(--cl24);
+  box-shadow: #00000059 0px 5px 15px;
   gap: 10px;
   transition: all 0.5s ease;
   z-index: 9999;
@@ -189,7 +189,7 @@
   max-width: 300px;
   text-overflow: ellipsis;
   font-size: var(--fs4);
-  color: #fff;
+  color: var(--cl1);
   letter-spacing: 1px;
   overflow: hidden;
 }
@@ -210,8 +210,8 @@
   width: 20px;
   height: 20px;
   padding-bottom: 30%;
-  background: tomato;
-  color: #fff;
+  background: var(--cl31);
+  color: var(--cl1);
   border-radius: 50%;
   border: none;
 }
@@ -229,7 +229,7 @@
   inline-size: 100%;
   padding: 0 4%;
   line-height: 2.5;
-  color: #fff;
+  color: var(--cl1);
   font-size: var(--fs5);
   cursor: pointer;
   border-radius: 20px;
@@ -238,7 +238,7 @@
 
 .modal_box > ul > a:hover,
 .modal_box > ul > li:hover {
-  background: #17b1ee80;
+  background: var(--cl29);
 }
 
 .nav_menu {
@@ -280,7 +280,7 @@
     margin-left: 0px;
     justify-content: flex-start;
     padding-bottom: 1%;
-    border-bottom: 1px solid #cccccf56;
+    border-bottom: 1px solid var(--cl28);
   }
 }
 
@@ -296,6 +296,6 @@
   .profile > img {
     width: 45px;
     height: 45px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--cl42);
   }
 }

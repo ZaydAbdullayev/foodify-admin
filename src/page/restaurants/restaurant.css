@@ -24,10 +24,10 @@
   border-radius: 30px;
   background: linear-gradient(
     to right bottom,
-    #17b1ed,
+    var(--cl4),
     #9511ec,
     #ec11da,
-    #17b1ed
+    var(--cl4)
   );
   cursor: pointer;
   overflow: hidden;
@@ -40,7 +40,7 @@
   position: absolute;
   width: 99.5%;
   height: 98.5%;
-  background: #555;
+  background: var(--cl18);
   z-index: -99;
   border-radius: 28px;
 }
@@ -51,7 +51,7 @@
 
 .add_img > svg {
   font-size: 200px;
-  color: #eee7;
+  color: var(--cl5) 7;
 }
 
 .add_reastaurant > input,
@@ -62,8 +62,8 @@
   padding: 0 2%;
   border-radius: 10px;
   background: none;
-  border: 1px solid #17b1ed;
-  color: #eee;
+  border: 1px solid var(--cl4);
+  color: var(--cl5);
   font-size: var(--fs5);
 }
 
@@ -77,7 +77,7 @@
   flex: 1;
   background: none;
   border: none;
-  color: #eee;
+  color: var(--cl5);
   font-size: var(--fs5);
 }
 
@@ -96,12 +96,12 @@
   height: 50px;
   background: linear-gradient(
     to right bottom,
-    #17b1ed,
+    var(--cl4),
     #9511ec,
     #ec11da,
-    #17b1ed
+    var(--cl4)
   );
-  color: #eee;
+  color: var(--cl5);
   font-size: var(--fs5);
   border: none;
   border-radius: 10px;
@@ -115,22 +115,22 @@
   left: 1%;
   width: 98%;
   height: 90%;
-  background: #555;
+  background: var(--cl18);
   border-radius: 9px;
   z-index: -9;
 }
 
 .add_reastaurant > button:active::after {
-  background: #444;
+  background: var(--cl24);
 }
 
 .add_reastaurant > input[type="submit"]:active {
-  background: #eee3;
+  background: var(--cl5) 3;
 }
 
 .add_reastaurant > input::placeholder,
 .label > input::placeholder {
-  color: #eee3;
+  color: var(--cl5) 3;
 }
 
 .selected_image {
@@ -149,7 +149,7 @@
 .delivery_time > p {
   margin-top: -25px;
   font-size: var(--fs6);
-  color: #eee;
+  color: var(--cl5);
   line-height: 1.5;
 }
 
@@ -161,20 +161,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #17b1ed;
+  border: 1px solid var(--cl4);
   border-radius: 10px;
   font-size: var(--fs6);
-  color: #eee;
+  color: var(--cl5);
 }
 
 .delivery_time > label > input {
   width: 65px;
   height: 35px;
-  border: 1px solid #04b4fa5d;
+  border: 1px solid var(--cl48);
   background: none;
   border-radius: 10px;
   text-align: center;
-  color: #eee;
+  color: var(--cl5);
   padding: 0 2%;
 }
 
@@ -183,7 +183,7 @@
 }
 
 .delivery_time > div > :first-child {
-  border-right: 1px solid #17b1ed;
+  border-right: 1px solid var(--cl4);
 }
 
 .delivery_time > div > label {

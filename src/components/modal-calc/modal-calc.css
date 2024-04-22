@@ -21,7 +21,7 @@
   align-items: flex-start;
   gap: var(--gap1);
   overflow: hidden;
-  background: #555;
+  background: var(--cl18);
   transition: all 0.3s ease-in-out;
   z-index: 999;
 }
@@ -33,7 +33,7 @@
 .u-control_form_box {
   flex-wrap: wrap;
   gap: var(--gap6);
-  color: #fff;
+  color: var(--cl1);
   z-index: 99;
 }
 
@@ -49,7 +49,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--gap3);
-  color: #fff;
+  color: var(--cl1);
 }
 
 .section_u {
@@ -68,14 +68,14 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap6);
-  color: #fff;
+  color: var(--cl1);
 }
 
 ._header_parts {
   width: 100%;
   display: flex;
   align-items: center;
-  border: 1px solid #ccc4;
+  border: 1px solid var(--cl14);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -85,19 +85,19 @@
   text-align: center;
   padding: 1.5% 2%;
   font-size: var(--fs6);
-  background: #3333;
-  color: #ccc;
+  background: var(--cl52);
+  color: var(--cl42);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 ._header_parts .active {
-  color: #fff;
-  background: #333;
+  color: var(--cl1);
+  background: var(--cl3);
 }
 
 ._header_parts .passive:hover {
-  background: #444;
+  background: var(--cl24);
 }
 
 .add_box__header input {
@@ -109,10 +109,10 @@
   height: var(--univh);
   border: none;
   border-radius: 5px;
-  background: #ddd;
+  background: var(--cl36);
   font-size: var(--fs6);
   letter-spacing: 1px;
-  color: #333;
+  color: var(--cl3);
 }
 
 .add_box__header select {
@@ -125,7 +125,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd8;
+  border: 1px solid var(--cl38);
   overflow-y: auto;
 }
 
@@ -160,9 +160,9 @@
   display: flex;
   align-items: center;
   font-size: var(--fs7);
-  background: #333;
-  color: #fff;
-  border-bottom: 1px solid #ccc6;
+  background: var(--cl3);
+  color: var(--cl1);
+  border-bottom: 1px solid var(--cl38);
 }
 
 .product_box_item > :first-child {
@@ -180,7 +180,7 @@
   align-items: center;
   gap: var(--gap6);
   text-align: center;
-  border-right: 1px solid #ccc6;
+  border-right: 1px solid var(--cl38);
 }
 
 .product_box_item > :last-child {
@@ -197,7 +197,7 @@
 
 .product_box_item.active,
 .product_box_body .product_box_item:hover {
-  background: #444;
+  background: var(--cl24);
 }
 
 .section_u {
@@ -216,8 +216,8 @@
   padding: 1% 2%;
   border: none;
   border-radius: 5px;
-  background: #787aff;
-  color: #fff;
+  background: var(--cl26);
+  color: var(--cl1);
   font-size: var(--fs8);
 }
 
@@ -243,7 +243,7 @@
 .u-control_calc_box > p {
   inline-size: 100%;
   font-size: var(--fs5);
-  color: #fff;
+  color: var(--cl1);
 }
 
 .u-control_calc_body {
@@ -252,7 +252,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap6);
-  border: 1px solid #ddd8;
+  border: 1px solid var(--cl38);
   overflow-y: auto;
 }
 /* 
@@ -298,15 +298,15 @@
   justify-content: center;
   border: 1px solid transparent;
   border-radius: 25px;
-  background: #333;
-  color: #fff;
+  background: var(--cl3);
+  color: var(--cl1);
   font-size: var(--fs6);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .u-control_action__box > button:hover {
-  border: 1px solid #ccc9;
+  border: 1px solid var(--cl47);
 }
 
 .u-control_action__box > figure {
@@ -336,9 +336,9 @@
   align-items: center;
   justify-content: space-between;
   font-size: var(--fs6);
-  color: #fff;
-  border-top: 1px solid #ccc6;
-  background: #333;
+  color: var(--cl1);
+  border-top: 1px solid var(--cl38);
+  background: var(--cl3);
 }
 
 @media (max-width: 1200px) {

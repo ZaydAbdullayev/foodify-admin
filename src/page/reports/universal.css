@@ -5,7 +5,7 @@
 }
 
 .storage_body_item > p {
-  border-right: 1px solid #eee2;
+  border-right: 1px solid var(--cl37);
 }
 
 .storage_body_item > p:last-child {
@@ -13,7 +13,7 @@
 }
 
 .storage_body_item {
-  border-bottom: 1px solid #eee2;
+  border-bottom: 1px solid var(--cl37);
 }
 
 .storage_body_item:last-child {
@@ -31,11 +31,11 @@
 
 .reports_item > :where(p, label) > span {
   width: 50%;
-  border-top: 1px solid #eee2;
+  border-top: 1px solid var(--cl37);
 }
 
 .reports_item > :where(p, label) > :nth-child(2) {
-  border-right: 1px solid #eee2;
+  border-right: 1px solid var(--cl37);
 }
 .reports_span {
   width: 50%;
@@ -46,7 +46,7 @@
 }
 
 .reports_span:first-child {
-  border-right: 1px solid #eee2;
+  border-right: 1px solid var(--cl37);
   padding-right: 5%;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .reports_item > label {
-  border-right: 1px solid #eee2;
+  border-right: 1px solid var(--cl37);
 }
 
 .reports_item > label:last-child {

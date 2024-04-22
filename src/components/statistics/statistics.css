@@ -17,7 +17,7 @@
 .statistic_box > h1 {
   inline-size: 100%;
   font-size: var(--fs2);
-  color: #eee;
+  color: var(--cl5);
   font-weight: 300;
 }
 
@@ -57,7 +57,7 @@
       margin-left: -15px;
       font-size: 110px;
       line-height: 110px;
-      color: #fff;
+      color: var(--cl1);
       opacity: 0.1;
     }
   }
@@ -66,7 +66,7 @@
     position: absolute;
     right: 15px;
     padding-right: 15px;
-    color: #fff;
+    color: var(--cl1);
 
     .number {
       padding-top: 25px;
@@ -111,14 +111,14 @@
 }
 
 .statistic_product * {
-  color: #eee;
+  color: var(--cl5);
   font-size: 18px;
 }
 
 .full_analystic {
   width: 100%;
   padding: 2%;
-  background: #333333a1;
+  background: var(--cl10);
   border-radius: 30px;
 }
 

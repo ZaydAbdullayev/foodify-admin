@@ -22,7 +22,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  color: #eee;
+  color: var(--cl5);
 }
 
 .storage_body > i {
@@ -43,7 +43,7 @@
 
 .storage_body > i > svg.active {
   transform: scale(1.4);
-  color: #787aff;
+  color: var(--cl26);
 }
 
 .storage_body > p {
@@ -54,8 +54,8 @@
   justify-content: center;
   font-size: var(--fs4);
   border-bottom: 1px solid #2227;
-  background: #787aff !important;
-  color: #fff;
+  background: var(--cl26) !important;
+  color: var(--cl1);
   border-radius: 10px 10px 0 0;
 }
 
@@ -70,7 +70,7 @@
 }
 
 ._item-header > :where(label, p):hover {
-  background: linear-gradient(to bottom, #333, #ccc5);
+  background: linear-gradient(to bottom, #333, var(--cl42) 5);
 }
 
 ._item-header > label {
@@ -86,7 +86,7 @@
   gap: var(--gap6);
   overflow: hidden;
   transition: all 1s ease-in-out;
-  border-bottom: 1px solid #eee2;
+  border-bottom: 1px solid var(--cl37);
 }
 
 .storage_body__box.active {
@@ -97,7 +97,7 @@
 .storage_body_item {
   width: 100%;
   display: flex;
-  border-bottom: 1px solid #ccc5;
+  border-bottom: 1px solid var(--cl38);
   transition: all 0.1s ease-in-out;
   cursor: pointer;
 }
@@ -108,12 +108,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid #ccc5;
+  border-right: 1px solid var(--cl38);
 }
 
 ._item-header {
-  background: #3335;
-  border-bottom: 1px solid #eee2;
+  background: var(--cl65);
+  border-bottom: 1px solid var(--cl37);
 }
 
 .storage_body_item > :where(p, label) {
@@ -135,18 +135,18 @@
 
 .storage_body_box > .storage_body_item:hover,
 .storage_body_item.active {
-  background: #333;
-  color: #fff;
+  background: var(--cl3);
+  color: var(--cl1);
 }
 
 .storage_body_item > :where(p, label) u:hover {
-  color: #787aff;
+  color: var(--cl26);
 }
 
 .storage_body__box .storage-body_inner_item {
   height: 0px;
   width: 50%;
-  border: 1px solid #ccc5;
+  border: 1px solid var(--cl38);
   transition: all 0.3s ease-in-out;
 }
 

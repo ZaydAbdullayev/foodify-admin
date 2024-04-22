@@ -2,7 +2,7 @@
   --option-h: 90px;
 }
 
-.resolve_container{
+.resolve_container {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   z-index: 99;
 }
 
-.resolve_container.open{
+.resolve_container.open {
   top: 0;
   left: 0;
   width: 100%;
@@ -34,9 +34,9 @@
   justify-content: center;
   padding: var(--pd3);
   gap: var(--gap3);
-  background: #424242;
+  background: var(--cl59);
   border-radius: 20px;
-  color: #eee;
+  color: var(--cl5);
 }
 
 .resolve_item > p {
@@ -67,7 +67,7 @@
   font-size: var(--fs6);
   font-weight: 600;
   text-align: center;
-  border: 2px solid #eee2;
+  border: 2px solid var(--cl37);
   transition: all 0.1s ease-in-out;
   cursor: pointer;
 }
@@ -78,16 +78,16 @@
 
 .resolve_option:hover,
 .resolve_option.active {
-  box-shadow: 0 0 5px #eee9;
+  box-shadow: 0 0 5px var(--cl15);
 }
 
 .resolve_item :where(input, button) {
   width: 100%;
   height: 45px;
   border-radius: 10px;
-  border: 1px solid #eee2;
+  border: 1px solid var(--cl37);
   background: inherit;
-  color: #eee;
+  color: var(--cl5);
   padding: 0 5%;
   font-size: var(--fs6);
 }
@@ -99,7 +99,7 @@
 .resolve_btn_box > button {
   position: relative;
   width: calc(100% / 2.1 - var(--gap3) / 2);
-  background: #787aff;
+  background: var(--cl26);
   font-weight: 600;
   border: none;
 }
@@ -112,7 +112,7 @@
   height: 100%;
   transform: skew(-50deg, 0deg);
   border-radius: 6px;
-  background: #787aff;
+  background: var(--cl26);
 }
 
 .resolve_btn_box > :first-child {
@@ -133,9 +133,9 @@
 
 .resolve_option2 {
   width: calc(100% / 2 - calc(var(--gap3) * 2 / 3));
-  border-color: #ff0000;
+  border-color: var(--cl41);
 }
 
 .resolve_option2.active {
-  border-color: limegreen;
+  border-color: var(--cl20);
 }

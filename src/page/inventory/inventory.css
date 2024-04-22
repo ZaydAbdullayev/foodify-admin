@@ -7,7 +7,7 @@
   height: 100%;
   padding: 1% 2%;
   display: flex;
-  background: #3339;
+  background: var(--cl60);
 }
 
 .changed_tool > input {
@@ -16,7 +16,7 @@
   border: none;
   background: transparent;
   border-radius: 0;
-  color: #eee;
+  color: var(--cl5);
   font-size: var(--fs6);
 }
 
@@ -54,7 +54,7 @@
 }
 
 .inventory-item > p > span > del {
-  color: #ff0000;
+  color: var(--cl41);
 }
 
 .inventory_btn-box {
@@ -71,8 +71,8 @@
   align-items: center;
   justify-content: center;
   font-size: var(--fs5);
-  color: #fff;
-  background: #787aff;
+  color: var(--cl1);
+  background: var(--cl26);
   border: none;
   border-radius: 50%;
 }
@@ -92,7 +92,7 @@
   left: 50%;
   width: 15px;
   height: 15px;
-  background: #787aff;
+  background: var(--cl26);
   opacity: 0;
   transform: rotate(45deg) translate(-50%, 0%);
   transition: opacity 0.7s ease-in;
@@ -116,7 +116,7 @@
   /* display: none; */ /* Remove this line */
   flex-direction: column;
   border-radius: 5px;
-  background: #787aff;
+  background: var(--cl26);
   z-index: 9999;
   overflow: hidden;
   box-shadow: 0px 9px 30px rgba(19, 18, 18, 0.658);
@@ -138,11 +138,11 @@
 .inventory-history.active ._history-body::-webkit-scrollbar {
   width: 3px;
   border-radius: 3px;
-  background: #333;
+  background: var(--cl3);
 }
 
 .inventory-history.active ._history-body::-webkit-scrollbar-thumb {
-  background: #eee;
+  background: var(--cl5);
   border-radius: 3px;
 }
 
@@ -156,8 +156,8 @@
   font-size: var(--fs6);
   transition: all 0.3s ease;
   cursor: pointer;
-  border-bottom: 1px solid #eee9;
-  color: #ccc;
+  border-bottom: 1px solid var(--cl15);
+  color: var(--cl42);
 }
 
 ._history-body > p::after {
@@ -177,11 +177,11 @@
 }
 
 ._history-body > p:hover {
-  color: #fff;
+  color: var(--cl1);
 }
 
 ._history-body > p:hover::after {
-  background: #fff;
+  background: var(--cl1);
 }
 
 .inventory_body .worker > :first-child {

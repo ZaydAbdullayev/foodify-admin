@@ -41,12 +41,12 @@
 }
 
 .typing-text::after {
-  content: '|';
+  content: "|";
   position: absolute;
   left: 0;
   bottom: 0;
   animation: blink-caret 0.75s step-end infinite;
-  color: #ff0000;
+  color: var(--cl41);
 }
 
 @keyframes blink-caret {
@@ -58,4 +58,3 @@
     opacity: 1;
   }
 }
-

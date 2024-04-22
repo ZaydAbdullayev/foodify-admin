@@ -8,7 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  color: #fff;
+  color: var(--cl1);
 }
 
 .row-table > p {
@@ -22,7 +22,7 @@
   );
   padding: 0.5%;
   text-align: center;
-  background-color: #787aff;
+  background-color: var(--cl26);
   border-radius: 10px 10px 0 0;
 }
 
@@ -40,8 +40,8 @@
   padding: 0 2%;
   display: flex;
   align-items: center;
-  border-right: 1px solid #eee4;
-  border-bottom: 1px solid #eee4;
+  border-right: 1px solid var(--cl61);
+  border-bottom: 1px solid var(--cl61);
 }
 
 /*.row-table-box > .row-table-item > :where(p, label) {

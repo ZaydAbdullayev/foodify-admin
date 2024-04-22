@@ -20,12 +20,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
+  border: 1px solid var(--cl42);
   border-radius: 12px;
   font-size: var(--fs4);
   font-weight: 500;
-  color: #333;
-  background: #eee;
+  color: var(--cl3);
+  background: var(--cl5);
   z-index: 99;
 }
 
@@ -35,41 +35,41 @@
   left: 3%;
   display: flex;
   align-items: center;
-  color: #333;
+  color: var(--cl3);
   font-size: var(--fs7);
 }
 
 .chair {
   width: calc(100% / var(--chair-w) - var(--gap6));
   aspect-ratio: 1/1;
-  border: 1px solid #ccc;
+  border: 1px solid var(--cl42);
   border-radius: 100%;
   margin: 7% 2%;
-  background: #eee;
+  background: var(--cl5);
 }
 
 .busy_chair {
   margin: -10% 2%;
-  background: #555;
-  border: 2px solid #787aff;
+  background: var(--cl18);
+  border: 2px solid var(--cl26);
 }
 
 .busy_table {
-  background: #555;
-  border: 2px solid #787aff;
-  color: #787aff;
+  background: var(--cl18);
+  border: 2px solid var(--cl26);
+  color: var(--cl26);
 }
 
 .served_table {
-  background: #787aff;
-  border: 1px solid #787aff;
-  color: #eee;
+  background: var(--cl26);
+  border: 1px solid var(--cl26);
+  color: var(--cl5);
 }
 
 .served_chair {
   margin: -10% 2%;
-  background: #787aff;
-  border: 1px solid #787aff;
+  background: var(--cl26);
+  border: 1px solid var(--cl26);
 }
 
 @media (max-width: 500px) {

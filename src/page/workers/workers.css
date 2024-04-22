@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc6;
+  border-bottom: 1px solid var(--cl38);
   line-height: 1.5;
 }
 
@@ -35,8 +35,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--gap5);
-  background: #787aff;
-  color: #fff;
+  background: var(--cl26);
+  color: var(--cl1);
   font-size: var(--fs6);
   border-radius: 10px;
 }
@@ -76,8 +76,8 @@
   height: var(--bwh);
   padding: 0 10px;
   border: none;
-  background: #eee;
-  color: #222;
+  background: var(--cl5);
+  color: var(--cl34);
   font-size: var(--fs6);
   border-radius: 10px;
 }
@@ -89,7 +89,7 @@
 }
 
 .workers_body > :nth-child(odd) {
-  background: #eee2;
+  background: var(--cl5) 2;
 }
 
 .w_pin {
@@ -125,8 +125,8 @@
 .w_btns > button,
 .universal_key {
   border: none;
-  background: #787aff !important;
-  color: #fff;
+  background: var(--cl26) !important;
+  color: var(--cl1);
 }
 
 .universal_key {
