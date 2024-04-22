@@ -17,6 +17,7 @@ export const CashboxTransaction = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [modalType, setModalType] = useState("default");
+  const [cashId, setCashId] = useState("none");
   const today = new Date().toISOString().split("T")[0];
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delTouter);
@@ -62,7 +63,7 @@ export const CashboxTransaction = () => {
   ];
 
   const displayKeys = [
-    { name: "cashier_receiver", size: "10%" },
+    { name: "cashbox", size: "10%" },
     { name: "payment_type", size: "10%" },
     { name: "cashier_sender", size: "10%" },
     { name: "cashier_receiver", size: "10%" },
@@ -251,16 +252,22 @@ export const CashboxTransaction = () => {
                 </select>
               </label>
               {modalType === "expenses" || modalType === "income" ? (
-                <select name="cashier_receiver">
-                  <option value="cashier">Kassir tanlang*</option>
-                  {cashboxData?.data?.map((item) => {
-                    return (
-                      <option value={item?.name} key={item.id}>
-                        {item?.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                <>
+                  <select name="cashbox">
+                    <option value="cashier">Kassir tanlang*</option>
+                    {cashboxData?.data?.map((item) => {
+                      return (
+                        <option
+                          value={item?.name}
+                          key={item.id}
+                          onClick={() => setCashId(item?.id)}>
+                          {item?.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <input type="hidden" name="cashbox_id" value={cashId} />
+                </>
               ) : (
                 <>
                   <label>
@@ -317,6 +324,16 @@ export const CashboxTransaction = () => {
             </>
           )}
           <input type="hidden" name="res_id" value={user?.id} />
+          <input
+            type="hidden"
+            name="worker"
+            value={user?.worker_name || "owner"}
+          />
+          <input
+            type="hidden"
+            name="worker_id"
+            value={user?.user_id || user?.id}
+          />
         </UniversalModal>
       </Suspense>
     </div>

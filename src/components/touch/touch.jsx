@@ -14,10 +14,6 @@ const SoundButton = () => {
     sound.play();
   };
 
-  setTimeout(() => {
-    sound.play();
-  }, 2000);
-
   return (
     <div>
       <button onClick={oynatSes}>Ses Çal</button>

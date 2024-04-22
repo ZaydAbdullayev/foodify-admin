@@ -75,8 +75,7 @@ export const AddWorker = ({ open, setOpen, state }) => {
 
             <select
               name="department"
-              onChange={(e) => setNewDep(e.target.value)}
-            >
+              onChange={(e) => setNewDep(e.target.value)}>
               <option value="">Bo'lim tanlang</option>
               {depData?.innerData?.map((item) => (
                 <option key={item} value={item}>
@@ -105,7 +104,9 @@ export const AddWorker = ({ open, setOpen, state }) => {
             <button className="relative">
               {loading ? <LoadingBtn /> : "Qo'shish"}
             </button>
-            <span className="close_btn">×</span>
+            <span className="close_btn" onClick={() => setOpen(false)}>
+              ×
+            </span>
           </form>
         ) : (
           <form className="add_worker relative" onSubmit={create_login}>
@@ -126,14 +127,15 @@ export const AddWorker = ({ open, setOpen, state }) => {
             <button className="relative">
               {loading ? <LoadingBtn /> : "Qo'shish"}
             </button>
-            <span className="close_btn"></span>
+            <span className="close_btn" onClick={() => setOpen(false)}>
+              ×
+            </span>
           </form>
         )}
 
         <i
           onClick={() => setOpen(false)}
-          aria-label="close add new worker modal"
-        ></i>
+          aria-label="close add new worker modal"></i>
       </div>
     </div>
   );
