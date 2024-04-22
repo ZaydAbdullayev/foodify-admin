@@ -237,9 +237,7 @@ export const StorageInvoices = () => {
                           hisoblash
                         </u>
                         <br />
-                        <u onClick={() => openPaymentModal(item?.leftover)}>
-                          to'lov
-                        </u>
+                        <u onClick={() => openPaymentModal(item)}>to'lov</u>
                       </pre>
                     </p>
                     <p

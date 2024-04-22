@@ -9,12 +9,12 @@ export const reModal = (state = false, action) => {
   }
 };
 
-export const rePayModal = (state = { status: false, price: 0 }, action) => {
+export const rePayModal = (state = null, action) => {
   switch (action.type) {
     case "OPEN_PAY":
-      return { status: true, price: action.payload };
+      return action.payload;
     case "CLOSE_PAY":
-      return { status: false, price: 0 };
+      return null;
     default:
       return state;
   }

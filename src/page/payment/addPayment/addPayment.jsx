@@ -24,7 +24,7 @@ export const AddPayment = memo(({ active, actives }) => {
   const [orderData, setOrderData] = useState([]);
   const [pD, setPD] = useState([]);
   const [type, setType] = useState({ id: 1, value: "cash" });
-  const id = useLocation().search?.split("order-id=").pop();
+  const id = useLocation().search?.split("dt=").pop();
   const { data: order = [], isLoading } = useFetchDataQuery({
     url: `/get/oneOrder/${id}`,
     tags: ["order"],
@@ -109,12 +109,7 @@ export const AddPayment = memo(({ active, actives }) => {
   };
 
   return (
-    <div
-      className={
-        actives
-          ? "add_payment__container open_details"
-          : "add_payment__container"
-      }>
+    <div className={`add_payment__container ${actives && "open_details"}`}>
       <div className="add_payment__box">
         <div className="add_payment__header">
           <pre>
@@ -221,18 +216,20 @@ export const AddPayment = memo(({ active, actives }) => {
                   <div
                     key={option.id}
                     className={
-                      price.includes(option.id)
+                      option.id === type.id
                         ? "payment_type active"
                         : "payment_type"
                     }
                     onClick={() => {
-                      const i = document.getElementById("price");
+                      const i = document?.getElementById("price");
                       i.value = price.df_v >= 0 ? price.df_v : 0;
                       setType(option);
                     }}>
                     {option.icon}
                     <span>
-                      {price[option.id] > 0 ? price[option.id] : option.label}
+                      {price?.[option.id] > 0
+                        ? price?.[option.id]
+                        : option.label}
                     </span>
                   </div>
                 ))}

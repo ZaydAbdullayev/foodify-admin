@@ -125,6 +125,13 @@ const UniversalModal = ({
               tags: ["cashbox-transaction"],
             });
             break;
+          case "payment":
+            result = await postData({
+              url: `add/transaction`,
+              data: value,
+              tags: ["cashbox-transaction"],
+            });
+            break;
           case "table":
             result = await postData({
               url: `add/table`,
@@ -242,6 +249,7 @@ const UniversalModal = ({
         es({ message: "Xatolik", variant: "error" });
       } else if (result?.data) {
         dispatch(acCloseUModal());
+        dispatch(acClosePayModal());
         setChecked(false);
         ClearForm(".u_modal");
       }

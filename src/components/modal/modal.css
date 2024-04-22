@@ -43,7 +43,7 @@
   width: 100%;
   max-height: 500px;
   padding: 2% 2% 3%;
-  gap: var(--gap6);
+  gap: var(--gap5);
   background: var(--cl1);
   border-radius: 20px;
   color: var(--cl34);
@@ -63,7 +63,7 @@
 }
 
 .u_modal > p {
-  font-size: var(--fs3);
+  font-size: var(--fs4);
 }
 
 .u_modal > :where(select, input, label) {
