@@ -65,14 +65,23 @@ export const CashboxTransaction = () => {
   const displayKeys = [
     { name: "cashbox", size: "10%" },
     { name: "payment_type", size: "10%" },
-    { name: "cashier_sender", size: "10%" },
-    { name: "cashier_receiver", size: "10%" },
+    { name: "cashbox_sender", size: "10%" },
+    { name: "cashbox_receiver", size: "10%" },
     { name: "transaction_group", size: "10%" },
-    { name: "activity_kind", size: "10%" },
+    { name: "transaction_category", size: "10%" },
     { name: "transaction_type", size: "9%" },
     { name: "amount", size: "9%", position: "center" },
     { name: "description", size: "8%" },
   ];
+
+  const TCD = {
+    income: "Kirim",
+    expense: "Chiqim",
+    payment_to_the_supp: "Yetkazuvchiga to'lov",
+    payment_from_the_supp: "Yetkazuvchidan to'lov",
+    transfer: "Kassalar orasida o'tkazish",
+    depozit: "Depozit",
+  };
 
   return (
     <div className="storage_container">
@@ -173,7 +182,9 @@ export const CashboxTransaction = () => {
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
                           }}>
-                          {item[key?.name]}
+                          {key?.name === "transaction_category"
+                            ? TCD?.[item[key?.name]]
+                            : item[key?.name]}
                         </p>
                       );
                     })}
@@ -254,7 +265,7 @@ export const CashboxTransaction = () => {
               {modalType === "expenses" || modalType === "income" ? (
                 <>
                   <select name="cashbox">
-                    <option value="cashier">Kassir tanlang*</option>
+                    <option value="default">Kassir tanlang*</option>
                     {cashboxData?.data?.map((item) => {
                       return (
                         <option
@@ -271,8 +282,8 @@ export const CashboxTransaction = () => {
               ) : (
                 <>
                   <label>
-                    <select name="cashier_sender">
-                      <option value="cashier">Beruvchi kassir*</option>
+                    <select name="cashbox_sender">
+                      <option value="default">Beruvchi kassir*</option>
                       {cashboxData?.data?.map((item) => {
                         return (
                           <option value={item?.name} key={item.id}>
@@ -281,8 +292,8 @@ export const CashboxTransaction = () => {
                         );
                       })}
                     </select>
-                    <select name="cashier_receiver">
-                      <option value="cashier">Oluvchi kassir*</option>
+                    <select name="cashbox_receiver">
+                      <option value="default">Oluvchi kassir*</option>
                       {cashboxData?.data?.map((item) => {
                         return (
                           <option value={item?.name} key={item.id}>

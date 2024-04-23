@@ -29,7 +29,7 @@ const InvoicesPaymentModal = () => {
         <select name="cashbox">
           <option value="default">Kassa tanlang*</option>
           {cashs?.data?.map((i) => (
-            <option key={i.id} value={i.id}>
+            <option key={i.id} value={i.name}>
               {i.name}
             </option>
           ))}
