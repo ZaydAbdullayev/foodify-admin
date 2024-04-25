@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/plots": "^1.2.5",
-    "@antv/util": "^3.3.4",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -17,6 +15,7 @@
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
+    "foodifyadmin": "github:ZaydAbdullayev/foodify-admin",
     "howler": "^2.2.4",
     "https-browserify": "^1.0.0",
     "notistack": "^3.0.1",
@@ -26,12 +25,12 @@
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "react-swipeable": "^7.0.1",
+    "recharts": "^2.12.6",
     "socket.io-client": "^4.7.4",
     "stream-browserify": "^3.0.0",
     "url": "^0.11.3",
     "util": "^0.12.5",
-    "web-vitals": "^2.1.4",
-    "yandexadmin": "github:ZaydAbdullayev/yandex-admin"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

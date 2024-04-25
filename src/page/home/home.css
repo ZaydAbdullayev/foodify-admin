@@ -58,7 +58,7 @@
 
 .orders-header,
 .orders-footer {
-  background: var(--cl3);
+  background: var(--cl4);
   display: flex;
   align-items: center;
   /* justify-content: space-between; */

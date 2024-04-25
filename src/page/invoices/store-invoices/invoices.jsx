@@ -224,7 +224,7 @@ export const StorageInvoices = () => {
                         <u
                           style={
                             showMore?.includes(item?.id)
-                              ? { color: "#787aff" }
+                              ? { color: "var(--cl26)" }
                               : {}
                           }
                           onClick={() =>
@@ -253,7 +253,7 @@ export const StorageInvoices = () => {
                       <u
                         style={
                           showMore?.includes(item?.id)
-                            ? { color: "#787aff" }
+                            ? { color: "var(--cl26)" }
                             : {}
                         }>
                         tarix
@@ -318,7 +318,7 @@ export const StorageInvoices = () => {
                       })}
                       <div
                         className="storage_body_item inner_item"
-                        style={{ background: "#3339" }}>
+                        style={{ background: "var(--cl11)" }}>
                         <p></p>
                         <p style={{ "--data-line-size": "66%" }}>
                           Jami mablag'

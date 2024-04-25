@@ -352,7 +352,7 @@ export const Home = () => {
                                   </button>
                                 )}
                                 <button
-                                  style={{ color: "#3CE75B" }}
+                                  style={{ color: "var(--cl10)" }}
                                   className="relative"
                                   onClick={() => {
                                     let newS;
@@ -411,8 +411,8 @@ export const Home = () => {
             theme={{
               components: {
                 Tag: {
-                  defaultColor: "red",
-                  defaultBg: "#454545",
+                  defaultColor: "var(--cl41)",
+                  defaultBg: "var(--cl49)",
                 },
               },
             }}>
