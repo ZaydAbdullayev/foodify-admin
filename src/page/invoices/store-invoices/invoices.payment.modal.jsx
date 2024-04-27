@@ -46,6 +46,20 @@ const InvoicesPaymentModal = () => {
     },
   ];
 
+  const addData = async (e) => {
+    e.preventDefault();
+    const v = e.target;
+    const formData = new FormData(v);
+    const { data = {} } = await postData({
+      url: "add/transaction",
+      data: formData,
+      tags: [""],
+    });
+    console.log(data);
+    e.target.reset();
+    setOpen(false);
+  };
+
   const today = new Date().toISOString().split("T")[0];
   return (
     <div className={`w100 df py-container ${open && "active"}`}>
@@ -55,7 +69,9 @@ const InvoicesPaymentModal = () => {
           <RxCross2 />
         </button>
       </div>
-      <form className="df flc aic u_modal dark-color-mode py">
+      <form
+        className="df flc aic u_modal dark-color-mode py"
+        onSubmit={addData}>
         <input type="date" name="date" defaultValue={today} />
         <select name="activity_kind">
           <option value="default">Faoliyat turi tanlang*</option>

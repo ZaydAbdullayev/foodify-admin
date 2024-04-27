@@ -19,7 +19,7 @@ const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
 export const StorageInvoices = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [pay, setPay] = useState(true);
+  const [pay, setPay] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
   // const [payment, setPayment] = useState(null);
