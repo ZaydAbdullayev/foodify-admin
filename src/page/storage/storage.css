@@ -166,6 +166,65 @@
   justify-content: flex-start;
 }
 
+.py-container {
+  position: fixed;
+  top: 100%;
+  left: 0;
+  height: 100vh;
+  background: var(--cl60);
+  flex-wrap: wrap;
+  gap: 0 var(--gap1);
+  z-index: 999999;
+  transition: all 0.5s ease;
+}
+
+.py-container.active {
+  top: 0;
+}
+
+.py-title {
+  font-size: var(--fs4);
+  color: var(--cl1);
+}
+
+.py-title > p {
+  padding: 1% 2%;
+}
+
+.py-title > button {
+  padding: 0 1%;
+  background: transparent;
+  color: var(--cl1);
+  font-size: var(--fs4);
+  border: none;
+  cursor: pointer;
+}
+
+.py-title > button:hover {
+  color: var(--cl26);
+}
+
+.py {
+  box-shadow: none !important;
+  background: var(--cl4) !important;
+  max-height: 100% !important;
+  border-radius: 0 15px 0 0 !important;
+  gap: var(--gap6) !important;
+}
+
+.py > button {
+  background: var(--cl26) !important;
+}
+
+.py-money-info {
+  flex: 1;
+  height: 100%;
+  padding: 1.8% 2%;
+  background: var(--cl4);
+  color: var(--cl1);
+  border-radius: 15px 0 0 0;
+}
+
 @media (max-width: 2000px) {
   .storage_container .short-hands_sort__box {
     display: none;

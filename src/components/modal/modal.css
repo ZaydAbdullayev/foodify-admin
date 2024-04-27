@@ -107,7 +107,7 @@
 
 .u_modal.u_modal.dark-color-mode > :where(input, select),
 .u_modal.u_modal.dark-color-mode > label > :where(input, select) {
-  border: 1px solid var(--cl51);
+  border: 1px solid var(--cl16);
 }
 
 .u_modal > select > option {
