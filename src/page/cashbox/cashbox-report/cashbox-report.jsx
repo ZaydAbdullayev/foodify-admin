@@ -97,7 +97,7 @@ export const TransactionRapor = () => {
           <span>Tranzaksiyalar hisoboti</span>
         </p>
         <div className="storage_body_item _item-header">
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <p
@@ -109,8 +109,7 @@ export const TransactionRapor = () => {
                 onClick={() => {
                   setSort({ id: index, state: !sort.state });
                 }}
-                aria-label="sort data down of top or top of down"
-              >
+                aria-label="sort data down of top or top of down">
                 {item?.name}{" "}
                 {sort.id === index ? (
                   sort.state ? (
@@ -138,9 +137,8 @@ export const TransactionRapor = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item?.id}
-                  >
-                    <p>{index + 1}</p>
+                    key={item?.id}>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map((key, index) => {
                       return (
                         <p
@@ -148,8 +146,7 @@ export const TransactionRapor = () => {
                           style={{
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
-                          }}
-                        >
+                          }}>
                           {item[key?.name] || 0}
                         </p>
                       );
@@ -158,8 +155,7 @@ export const TransactionRapor = () => {
                       style={{
                         "--data-line-size": "10.7%",
                         justifyContent: "flex-end",
-                      }}
-                    >
+                      }}>
                       {CalculateTotalByLine(trData?.data, "type")}
                     </p>
                   </div>
@@ -175,8 +171,7 @@ export const TransactionRapor = () => {
                 style={{
                   "--data-line-size": displayKey.size,
                   justifyContent: displayKey.position || "flex-start",
-                }}
-              >
+                }}>
                 {displayKey.tick}
                 {displayKey.flex &&
                   CalculateTotalQuantity(trData?.data, displayKey?.name)}
@@ -186,8 +181,7 @@ export const TransactionRapor = () => {
               style={{
                 "--data-line-size": "10.7%",
                 justifyContent: "flex-end",
-              }}
-            >
+              }}>
               {(total += CalculateTotalByLine(trData?.data, "type"))}
             </p>
           </div>
@@ -197,8 +191,7 @@ export const TransactionRapor = () => {
               style={{
                 "--data-line-size": "90%",
                 justifyContent: "flex-start",
-              }}
-            >
+              }}>
               Oxirgi yangilanish - {trData?.time}
             </p>
           </div>
@@ -239,8 +232,7 @@ export const TransactionRapor = () => {
                             }}
                             onClick={() =>
                               setDetails({ ind: ind, title: tr?.payment_type })
-                            }
-                          >
+                            }>
                             <u>tafsilot</u>
                           </p>
                         </div>
@@ -292,8 +284,7 @@ export const TransactionRapor = () => {
                             style={{
                               "--data-line-size": "15%",
                               justifyContent: "center",
-                            }}
-                          >
+                            }}>
                             <u>tafsilot</u>
                           </p>
                         </div>

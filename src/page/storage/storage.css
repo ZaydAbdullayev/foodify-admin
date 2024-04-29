@@ -107,15 +107,21 @@
 }
 
 .storage_body_item > :where(:first-child, :nth-child(2)) {
-  height: var(--univslH);
-  aspect-ratio: 1/1;
+  inline-size: var(--univslH);
+  /* aspect-ratio: 1/1; */
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-right: 1px solid var(--cl38);
 }
 
+.storage_body_item > :first-child{
+  inline-size: var(--univslH) !important;
+}
+
 ._item-header {
+  min-height: var(--univslH);
   background: var(--cl11);
   border-bottom: 1px solid var(--cl38);
 }

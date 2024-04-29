@@ -199,7 +199,7 @@ const InvoicesModal = ({
       </UniversalProductControl>
       <CalcResult>
         <CalcResultHeader>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <p style={{ "--data-line-size": "15%" }}>Nomi</p>
           <p style={{ "--data-line-size": "13.33%" }}>Tur</p>
           <p style={{ "--data-line-size": "13.33%" }}>Eski miqdor</p>

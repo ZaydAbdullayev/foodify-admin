@@ -143,7 +143,7 @@ export const StorageProducts = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <label
@@ -205,7 +205,7 @@ export const StorageProducts = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
-                    <p>{index + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }, ind) => (
                       <p
                         key={ind}
@@ -485,7 +485,7 @@ export const StorageProducts = () => {
         </UniversalProductControl>
         <CalcResult data={[...checkedData, ...acIngredients]} status="cr">
           <CalcResultHeader>
-            <p>№</p>
+            <p style={{ inlineSize: "var(--univslH)" }}>№</p>
             <p style={{ "--data-line-size": "30%" }}>Nomi</p>
             <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
             <p style={{ "--data-line-size": "20%" }}>Tan narxi</p>

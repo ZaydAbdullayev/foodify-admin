@@ -59,7 +59,7 @@ export const Cashboxes = () => {
               }}
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             aria-label="sort data down of top or top of down">
@@ -105,7 +105,7 @@ export const Cashboxes = () => {
                     }}>
                     <input type="checkbox" name="id" defaultValue={check} />
                   </label>
-                  <p>{index + 1}</p>
+                  <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>
                 </div>
               );
@@ -127,7 +127,8 @@ export const Cashboxes = () => {
           />
           <input type="hidden" name="res_id" value={user?.id} />
           {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
-        </UniversalModal>sssss
+        </UniversalModal>
+        sssss
       </Suspense>
     </div>
   );

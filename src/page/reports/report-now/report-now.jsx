@@ -96,7 +96,7 @@ export const ReportByDateIngredients = () => {
           <span>Mahsulotlar uchun hisobot</span>
         </p>
         <div className="storage_body_item _item-header">
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <label
@@ -136,7 +136,7 @@ export const ReportByDateIngredients = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }>
-                    <p>{index + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }, ind) => (
                       <p
                         key={ind}

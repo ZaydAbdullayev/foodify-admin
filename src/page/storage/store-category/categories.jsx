@@ -65,7 +65,7 @@ export const StorageCatgegories = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "40%" }}>
@@ -139,7 +139,7 @@ export const StorageCatgegories = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
-                    <p>{index + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p style={{ "--data-line-size": "40%" }}>{item.name}</p>
                     <p style={{ "--data-line-size": "30%" }}>
                       {item.department}

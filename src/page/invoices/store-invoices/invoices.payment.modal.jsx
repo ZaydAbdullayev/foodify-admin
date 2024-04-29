@@ -17,6 +17,9 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const [postData] = usePostDataMutation();
   const [patchData] = usePatchDataMutation();
   const [amount, setAmount] = useState(0);
+  const [moneyOnSupp, setMoneyOnSupp] = useState(null);
+  const id = user?.user_id || user?.id;
+  const name = user?.name || user?.username;
   const { data: cashs = [] } = useFetchDataQuery({
     url: `get/cashbox/${user?.id}`,
     tags: ["cashbox"],
@@ -25,13 +28,18 @@ const InvoicesPaymentModal = ({ s, setS }) => {
     url: `get/invoiceGroups/${user?.id}`,
     tags: ["cashbox"],
   });
+  const { data: sp = [] } = useFetchDataQuery({
+    url: `get/supplierPayments/${user?.id}/${pay?.supplier_id}`,
+    tags: ["cashbox"],
+  });
 
   const [api, contextHolder] = notification.useNotification();
-  const openWarning = (placement) => {
+  const openWarning = (placement, s) => {
     api.warning({
-      message: "Yaroqsiz ma'lumot",
-      description:
-        "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
+      message: s ? "Yetarsiz summa" : "Yaroqsiz ma'lumot",
+      description: s
+        ? "Kiritilgan summa tanlangan summadan ko'p!"
+        : "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
       placement,
     });
   };
@@ -66,27 +74,22 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const addData = async (type) => {
     try {
       const e = document.getElementById("py-modal");
-      if (!e) {
-        console.error("Element with id 'py-modal' not found.");
-        return;
-      }
-
+      if (!e) return;
       const formData = new FormData(e);
       const sd = Object.fromEntries(formData.entries());
       const value = middlewareService(sd, openWarning);
       if (!value) return;
-
+      if (moneyOnSupp && moneyOnSupp < value.amount) {
+        return openWarning("topRight", true);
+      }
       const res1 = await postData({
         url: "add/transaction",
         data: value,
         tags: [""],
       });
-
-      console.log(res1);
-
       if (res1?.data?.message === "Transaction has been added") {
         if (type === "double") {
-          const res2 = await postData({
+          await postData({
             url: "add/transaction",
             data: {
               ...value,
@@ -95,10 +98,8 @@ const InvoicesPaymentModal = ({ s, setS }) => {
             },
             tags: [""],
           });
-          console.log(res2);
         }
-
-        const res3 = await patchData({
+        await patchData({
           url: `update/receivedGoods/${pay.id}`,
           data: {
             paid: value.amount,
@@ -106,7 +107,6 @@ const InvoicesPaymentModal = ({ s, setS }) => {
           },
           tags: ["invoices"],
         });
-        console.log(res3);
         // e.target.reset();
         // setS(false);
       }
@@ -128,8 +128,8 @@ const InvoicesPaymentModal = ({ s, setS }) => {
         </div>
         <form className="df flc aic u_modal dark-color-mode py" id="py-modal">
           <input type="date" name="date" defaultValue={today} />
-          <select name="transaction_category">
-            <option value={"invoicePayment"}>Mahsulot uchun to'lov</option>
+          <select>
+            <option>Mahsulot uchun to'lov</option>
           </select>
           <select name="transaction_group">
             <option value="default">Harakat guruhi tanlang*</option>
@@ -169,18 +169,34 @@ const InvoicesPaymentModal = ({ s, setS }) => {
           />
           <input
             type="text"
-            value={`${pay?.order} - ${new Date(
+            value={`${pay?.order || 0} - ${new Date(
               pay?.date
             ).toLocaleDateString()} to'lov miqdori: ${new Intl.NumberFormat(
               "en-US"
-            ).format(pay?.cost)}`}
+            ).format(pay?.cost || 0)}`}
             disabled
           />
-          <select>
-            <option value={0}>Yetkazuvchidagi puldan olmaslik</option>
-            <option value={pay?.moneyOnSup || 0}>
-              Yetkazuvchidagi pul <b>{pay?.moneyOnSup || 0}</b>
+          <select
+            name="transaction_category"
+            onChange={(e) => {
+              const selectedKey =
+                e.target.options[e.target.selectedIndex].getAttribute(
+                  "money-on-supp"
+                );
+              setMoneyOnSupp(parseInt(selectedKey));
+            }}>
+            <option value={"invoicePayment"}>
+              Yetkazuvchidagi puldan olmaslik
             </option>
+            {sp?.data?.length &&
+              sp?.data?.map((i) => (
+                <option
+                  key={i.date}
+                  value={"invoicePaymnetFromSupplier"}
+                  money-on-supp={i.available}>
+                  {i.date} dan: {i.available} so'm mavjud
+                </option>
+              ))}
           </select>
           <input
             type="number"
@@ -192,17 +208,10 @@ const InvoicesPaymentModal = ({ s, setS }) => {
           <input type="text" name="description" placeholder="Tavsif" />
           <input type="hidden" name="res_id" value={user?.id} />
           <input type="hidden" name="transaction_type" value="expense" />
-          <input
-            type="hidden"
-            name="worker"
-            value={user?.name || user?.username}
-          />
-          <input
-            type="hidden"
-            name="worker_id"
-            value={user?.user_id || user?.id}
-          />
+          <input type="hidden" name="worker" value={name} />
+          <input type="hidden" name="worker_id" value={id} />
           <input type="hidden" name="cashbox_id" value={cashId} />
+          <input type="hidden" name="invoice_id" value={pay?.id} />
           <Popconfirm
             title="Ortiqcha to'lov miqdori mavjud!"
             description={`Qolgan ${(amount - pay?.leftover)

@@ -100,7 +100,7 @@ export const StorageCutting = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <p
@@ -165,7 +165,9 @@ export const StorageCutting = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
-                    <p>{item?.order}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>
+                      {item?.order}
+                    </p>
                     <p style={{ "--data-line-size": "12%" }}>{date}</p>
                     {displayKeys?.map((key, index) => {
                       return (

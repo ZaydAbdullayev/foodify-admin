@@ -115,7 +115,7 @@ export const StorageDamaged = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerKeys.map((item, index) => {
             return (
               <label
@@ -188,7 +188,9 @@ export const StorageDamaged = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
-                    <p>{item?.order}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>
+                      {item?.order}
+                    </p>
                     <p style={{ "--data-line-size": "16.5%" }}>{date}</p>
                     {displayKeys.map((key, ind) => (
                       <p style={{ "--data-line-size": key?.size }} key={ind}>

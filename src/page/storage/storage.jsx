@@ -62,7 +62,7 @@ export const Storage = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             aria-label="for sort data and see al info about this product">
@@ -108,7 +108,7 @@ export const Storage = () => {
                     aria-label="checked this elements">
                     <input type="checkbox" name="id" defaultChecked={check} />
                   </label>
-                  <p>{index + 1}</p>
+                  <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>
                 </div>
               );

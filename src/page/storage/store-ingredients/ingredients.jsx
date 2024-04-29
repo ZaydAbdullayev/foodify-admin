@@ -108,7 +108,7 @@ export const StorageIngredients = () => {
               aria-label="checked this elements"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerKeys.map((title, index) => (
             <label
               onClick={() => setSort({ id: 1, state: !sort.state })}
@@ -167,7 +167,7 @@ export const StorageIngredients = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={check} />
                     </label>
-                    <p>{index + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys.map((key, ind) => (
                       <p
                         style={{

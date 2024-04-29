@@ -107,7 +107,7 @@ export const CashboxTransaction = () => {
               }}
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <p

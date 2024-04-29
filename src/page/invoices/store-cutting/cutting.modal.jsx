@@ -258,7 +258,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
       </UniversalProductControl>
       <CalcResult>
         <CalcResultHeader>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <p style={{ "--data-line-size": "24%" }}>Umumiy</p>
           <p style={{ "--data-line-size": "24%" }}>Qoldiq</p>
           <p style={{ "--data-line-size": "24%" }}>Olingan miqdor</p>

@@ -89,7 +89,7 @@
 }
 
 .workers_body > :nth-child(odd) {
-  background: var(--cl5) 2;
+  background: #eee2;
 }
 
 .w_pin {

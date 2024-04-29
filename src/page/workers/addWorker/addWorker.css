@@ -70,7 +70,7 @@
 
 .add_worker > select > option {
   line-height: 2;
-  font-size: var(--fs6);
+  font-size: var(--fs7);
   background: var(--cl3);
   color: var(--cl1);
   border: none;

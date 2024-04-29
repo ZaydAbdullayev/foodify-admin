@@ -88,7 +88,7 @@ export const ReportOrders = () => {
               aria-label="for chacked this product"
             />
           </label>
-          <p>№</p>
+          <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerData?.map((item, index) => {
             return (
               <label
@@ -148,7 +148,7 @@ export const ReportOrders = () => {
                       aria-label="checked this elements">
                       <input type="checkbox" name="id" defaultChecked={chek} />
                     </label>
-                    <p>{index + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(
                       ({ name, size, position, extra, date, short }, ind) => (
                         <p

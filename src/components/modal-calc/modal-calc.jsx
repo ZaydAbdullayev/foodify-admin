@@ -218,12 +218,12 @@ export const UniversalControlModal = ({
         es({ message: "Xatolik", variant: "error" });
       } else {
         es({ message: "Qo'shildi", variant: "success" });
-        ClearForm(".u-control-form");
+        ClearForm("#u-control-form");
         dispatch(acCloseUModal());
         dispatch(acPassiveThing());
+        setCheckedData([]);
         dispatch(acCutting(0));
         dispatch(acGetUrl({ st: false, img: "" }));
-        setCheckedData([]);
       }
     } catch (err) {
       console.error(err);
