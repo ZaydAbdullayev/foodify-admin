@@ -216,14 +216,14 @@ export const UniversalControlModal = ({
 
       if (result?.error) {
         es({ message: "Xatolik", variant: "error" });
-      } else if (result?.data) {
+      } else {
         es({ message: "Qo'shildi", variant: "success" });
-        // ClearForm(".u-control-form");
-        // dispatch(acCloseUModal());
+        ClearForm(".u-control-form");
+        dispatch(acCloseUModal());
         dispatch(acPassiveThing());
         dispatch(acCutting(0));
         dispatch(acGetUrl({ st: false, img: "" }));
-        // setCheckedData([]);
+        setCheckedData([]);
       }
     } catch (err) {
       console.error(err);
@@ -237,6 +237,7 @@ export const UniversalControlModal = ({
     const formdata = new FormData(e.target);
     const ds = Object.fromEntries(formdata.entries());
     const value = middlewareService(ds, openWarning);
+    if (!value) return;
     const data = { ...value, ingredients: Pdata };
     data.res_id = user.id;
     if (type !== "cutting") {

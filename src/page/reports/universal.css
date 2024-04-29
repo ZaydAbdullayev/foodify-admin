@@ -5,6 +5,10 @@
 }
 
 .storage_body_item > p {
+  border-right: 1px solid var(--cl38);
+}
+
+.storage_body_item._item-header > p {
   border-right: 1px solid var(--cl37);
 }
 
@@ -13,7 +17,7 @@
 }
 
 .storage_body_item {
-  border-bottom: 1px solid var(--cl37);
+  border-bottom: 1px solid var(--cl38);
 }
 
 .storage_body_item:last-child {
@@ -35,7 +39,7 @@
 }
 
 .reports_item > :where(p, label) > :nth-child(2) {
-  border-right: 1px solid var(--cl37);
+  border-right: 1px solid var(--cl38);
 }
 .reports_span {
   width: 50%;
@@ -46,7 +50,7 @@
 }
 
 .reports_span:first-child {
-  border-right: 1px solid var(--cl37);
+  border-right: 1px solid var(--cl38);
   padding-right: 5%;
 }
 
@@ -58,7 +62,7 @@
 }
 
 .reports_item > label {
-  border-right: 1px solid var(--cl37);
+  border-right: 1px solid var(--cl38);
 }
 
 .reports_item > label:last-child {

@@ -11,6 +11,10 @@ import { Auth } from "./auth/auth";
 import { Addproduct, ShowProduct } from "./components/Addproduct/addproduct";
 import { Products } from "./page/products/products";
 import { Statistics } from "./components/statistics/layout.statis";
+import { StatisticsIncome } from "./components/statistics/bill.jsx";
+import { StatisticDetails } from "./components/statistics/bill.jsx";
+import { StatisticsExpenses } from "./components/statistics/bill.jsx";
+import { BillReportById, BillsReport } from "./components/statistics/bill.jsx";
 import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
 import { AddPayment } from "./page/payment/addPayment/addPayment.jsx";
@@ -195,6 +199,11 @@ export const Router = () => {
             />
             <Route path="view/fullreport/:id" element={<FullReportById />} />
             <Route path="view/food-report/:id" element={<ReportOneItems />} />
+            <Route path="statistic/:name" element={<StatisticsExpenses />} />
+            <Route path="statistic/incomes" element={<StatisticsIncome />} />
+            <Route path="statistic-details" element={<StatisticDetails />} />
+            <Route path="bills-report" element={<BillsReport />} />
+            <Route path="one-bill-report/:id" element={<BillReportById />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"

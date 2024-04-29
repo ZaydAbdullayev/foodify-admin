@@ -73,20 +73,24 @@
   background: linear-gradient(to bottom, #333, var(--cl42) 5);
 }
 
+._item-header > :where(label, p) {
+  border-right: 1px solid var(--cl37);
+}
+
 ._item-header > label {
   transition: all 0.5s ease-in-out;
 }
 
 .storage_body__box {
   width: 100%;
-  height: var(--univslH);
+  /* height: var(--univslH); */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: var(--gap6);
   overflow: hidden;
   transition: all 1s ease-in-out;
-  border-bottom: 1px solid var(--cl37);
+  border-bottom: 1px solid var(--cl38);
 }
 
 .storage_body__box.active {
@@ -112,14 +116,13 @@
 }
 
 ._item-header {
-  background: var(--cl65);
-  border-bottom: 1px solid var(--cl37);
+  background: var(--cl11);
+  border-bottom: 1px solid var(--cl38);
 }
 
 .storage_body_item > :where(p, label) {
   inline-size: var(--data-line-size);
-  height: var(--univslH);
-  padding: 0 calc(var(--univslH) / 3);
+  padding: 0.2% calc(var(--univslH) / 3);
   display: flex;
   align-items: center;
   gap: var(--gap6);

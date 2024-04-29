@@ -77,9 +77,11 @@ export const CashboxTransaction = () => {
   const TCD = {
     income: "Kirim",
     expense: "Chiqim",
-    payment_to_the_supp: "Yetkazuvchiga to'lov",
-    payment_from_the_supp: "Yetkazuvchidan to'lov",
-    transfer: "Kassalar orasida o'tkazish",
+    paymentToSupplier: "Yetkazuvchiga to'lov",
+    paymentFromSupplier: "Yetkazuvchidan to'lov",
+    invoicePaymentFromSupplier: "Yetkazuvchidagi puldan to'lov",
+    invoicePayment: "Mahsulot uchun to'lov",
+    transfer: "Kassalar aro o'tkazma ",
     depozit: "Depozit",
   };
 
@@ -207,8 +209,8 @@ export const CashboxTransaction = () => {
             onChange={(e) => setModalType(e.target.value)}>
             <option value="default">Tranzaksiya turi</option>
             <option value="income">Kirim qilish</option>
-            <option value="expenses">Chiqim qilish</option>
-            <option value="transaction">Transformatsiya</option>
+            <option value="expense">Chiqim qilish</option>
+            <option value="transfer">Kassalar aro o'tkazma</option>
           </select>
           {modalType !== "default" && (
             <>
@@ -217,36 +219,42 @@ export const CashboxTransaction = () => {
                   {modalType === "income" && (
                     <>
                       <option value="income">Kirim</option>
-                      <option value="delivery_income">Dastavka kirim</option>
-                      <option value="food_income">Oziq-ovqat kirim</option>
-                      <option value="invoice">Chiqim</option>
-                      <option value="delivery_invoice">Dastavka to'lovi</option>
-                      <option value="food_invoice">Oziq-ovqat to'lovi</option>
-                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                      <option value="deposit">Depozit</option>
-                    </>
-                  )}
-                  {modalType === "expenses" && (
-                    <>
-                      <option value="invoice">Chiqim</option>
-                      <option value="income">Kirim</option>
-                      <option value="delivery_income">Dastavka kirim</option>
-                      <option value="food_income">Oziq-ovqat kirim</option>
-                      <option value="delivery_invoice">Dastavka to'lovi</option>
-                      <option value="food_invoice">Oziq-ovqat to'lovi</option>
-                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                      <option value="deposit">Depozit</option>
-                    </>
-                  )}
-                  {modalType === "transaction" && (
-                    <>
-                      <option value="cash_withdrawal">Kassaga o'tkazish</option>
-                      <option value="send">Kirim</option>
-                      <option value="delivery_send">Dastavka kirim</option>
-                      <option value="food_send">Oziq-ovqat kirim</option>
                       <option value="expense">Chiqim</option>
-                      <option value="delivery_payment">Dastavka to'lovi</option>
-                      <option value="food_payment">Oziq-ovqat to'lovi</option>
+                      <option value="invoicePayment">
+                        Mahsulot uchun to'lov
+                      </option>
+                      <option value="paymnetToSupplier">
+                        Yetkazuvchiga to'lov
+                      </option>
+                      <option value="transfer">Kassalar aro o'tkazma </option>
+                      <option value="deposit">Depozit</option>
+                    </>
+                  )}
+                  {modalType === "expense" && (
+                    <>
+                      <option value="expense">Chiqim</option>
+                      <option value="income">Kirim</option>
+                      <option value="invoicePayment">
+                        Mahsulot uchun to'lov
+                      </option>
+                      <option value="paymnetToSupplier">
+                        Yetkazuvchiga to'lov
+                      </option>
+                      <option value="transfer">Kassalar aro o'tkazma </option>
+                      <option value="deposit">Depozit</option>
+                    </>
+                  )}
+                  {modalType === "transfer" && (
+                    <>
+                      <option value="transfer">Kassalar aro o'tkazma </option>
+                      <option value="income">Kirim</option>
+                      <option value="expense">Chiqim</option>
+                      <option value="invoicePayment">
+                        Mahsulot uchun to'lov
+                      </option>
+                      <option value="paymnetToSupplier">
+                        Yetkazuvchiga to'lov
+                      </option>
                       <option value="deposit">Depozit</option>
                     </>
                   )}
@@ -311,11 +319,6 @@ export const CashboxTransaction = () => {
                   <option value="cash">Naxt</option>
                   <option value="credit">Plastik karta</option>
                   <option value="click">Click</option>
-                </select>
-                <select name="activity_kind">
-                  <option value="Prixod">Faoliyat turi tanlang*</option>
-                  <option value="Prixod">Prixod</option>
-                  <option value="Prixod">Rasxod</option>
                 </select>
               </label>
               <input

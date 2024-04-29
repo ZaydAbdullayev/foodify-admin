@@ -21,7 +21,7 @@
   align-items: flex-start;
   gap: var(--gap1);
   overflow: hidden;
-  background: var(--cl18);
+  background: var(--cl57);
   transition: all 0.3s ease-in-out;
   z-index: 999;
 }
@@ -75,9 +75,11 @@
   width: 100%;
   display: flex;
   align-items: center;
-  border: 1px solid var(--cl14);
+  border: 1px solid var(--cl35);
   border-radius: 10px;
   overflow: hidden;
+  background: var(--cl35);
+  gap: 1px;
 }
 
 ._header_parts > span {
@@ -85,7 +87,7 @@
   text-align: center;
   padding: 1.5% 2%;
   font-size: var(--fs6);
-  background: var(--cl52);
+  background: var(--c24);
   color: var(--cl42);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -93,11 +95,15 @@
 
 ._header_parts .active {
   color: var(--cl1);
-  background: var(--cl3);
+  background: var(--cl4);
+}
+
+._header_parts .passive {
+  background: var(--cl49);
 }
 
 ._header_parts .passive:hover {
-  background: var(--cl24);
+  background: var(--cl4);
 }
 
 .add_box__header input {
@@ -109,7 +115,7 @@
   height: var(--univh);
   border: none;
   border-radius: 5px;
-  background: var(--cl36);
+  background: var(--cl4);
   font-size: var(--fs6);
   letter-spacing: 1px;
   color: var(--cl3);
@@ -160,7 +166,7 @@
   display: flex;
   align-items: center;
   font-size: var(--fs7);
-  background: var(--cl3);
+  background: var(--cl4);
   color: var(--cl1);
   border-bottom: 1px solid var(--cl38);
 }
@@ -298,7 +304,7 @@
   justify-content: center;
   border: 1px solid transparent;
   border-radius: 25px;
-  background: var(--cl3);
+  background: var(--cl4);
   color: var(--cl1);
   font-size: var(--fs6);
   overflow: hidden;
@@ -306,7 +312,7 @@
 }
 
 .u-control_action__box > button:hover {
-  border: 1px solid var(--cl47);
+  border: 1px solid var(--cl35);
 }
 
 .u-control_action__box > figure {
@@ -338,7 +344,7 @@
   font-size: var(--fs6);
   color: var(--cl1);
   border-top: 1px solid var(--cl38);
-  background: var(--cl3);
+  background: var(--cl4);
 }
 
 @media (max-width: 1200px) {

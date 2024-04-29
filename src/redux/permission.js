@@ -1,6 +1,6 @@
 const dep = JSON.parse(localStorage.getItem("department")) || null;
 const user = JSON.parse(localStorage.getItem("user"))?.user || {};
-const res_id = user?.id || null;
+const res_id = user?.id || user?.res_id;
 
 export const rePermission = (state = dep, action) => {
   switch (action.type) {

@@ -10,6 +10,7 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 
 const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+  const user = JSON.parse(localStorage.getItem("user"))?.user || [];
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const s_id = useSelector((state) => state.activeSt_id);
@@ -91,8 +92,9 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             df_value: acItem?.date,
           },
           {
-            type: "select",
+            type: "s_extra",
             name: "supplier",
+            extra: "supplier_id",
             df_value: acItem?.supplier
               ? {
                   value: acItem?.supplier,

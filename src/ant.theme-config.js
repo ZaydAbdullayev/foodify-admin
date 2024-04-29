@@ -22,7 +22,10 @@ export const themeConfig = {
       zIndexPopup: 9999,
     },
     Notification: {
-      zIndexPopup: 9999,
+      zIndexPopup: 9999999,
+    },
+    Popconfirm: {
+      zIndexPopup: 9999999,
     },
     Segmented: {
       itemSelectedBg: "#444",

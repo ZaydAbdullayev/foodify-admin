@@ -138,7 +138,7 @@
   gap: var(--gap5);
   line-height: 1.5;
   counter-increment: item-counter;
-  border-bottom: 1px solid var(--cl37);
+  border-bottom: 1px solid var(--cl38);
 }
 
 .product_item > div > ol > li::before {

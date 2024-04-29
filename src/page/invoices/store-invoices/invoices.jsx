@@ -175,6 +175,9 @@ export const StorageInvoices = () => {
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
+                  style={{
+                    background: item?.leftover < 0 ? "#a0aed950" : "",
+                  }}
                   key={item?.id}>
                   <div
                     className={
@@ -220,7 +223,7 @@ export const StorageInvoices = () => {
                         "--data-line-size": "10%",
                         justifyContent: "center",
                       }}>
-                      <pre>
+                      <span>
                         <u
                           style={
                             showMore?.includes(item?.id)
@@ -237,8 +240,10 @@ export const StorageInvoices = () => {
                           hisoblash
                         </u>
                         <br />
-                        <u onClick={() => openPaymentModal(item)}>to'lov</u>
-                      </pre>
+                        {!(item?.leftover <= 0) && (
+                          <u onClick={() => openPaymentModal(item)}>to'lov</u>
+                        )}
+                      </span>
                     </p>
                     <p
                       style={{
@@ -262,7 +267,7 @@ export const StorageInvoices = () => {
                   </div>
                   {showMore?.includes(item?.id) && (
                     <div className=" storage-body_inner_item">
-                      <div className="storage_body_item">
+                      <div className="storage_body_item _item-header">
                         <p
                           style={{
                             borderRight: "1px solid #ccc5",
@@ -353,7 +358,7 @@ export const StorageInvoices = () => {
             }
           }
         />
-        {pay && <InvoicesPaymentModal />}
+        {pay && <InvoicesPaymentModal setS={setPay} s={pay} />}
       </Suspense>
     </div>
   );
