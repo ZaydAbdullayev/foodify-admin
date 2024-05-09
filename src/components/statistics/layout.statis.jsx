@@ -57,7 +57,7 @@ export const Statistics = memo(() => {
               className={`dashboard-stat ${item?.bg}`}
               onClick={() =>
                 navigate(
-                  `statistic/${item?.path}?title=${item?.label}&&point=${item?.point}`
+                  `/statistic/${item?.path}?title=${item?.label}&&point=${item?.point}`
                 )
               }>
               <div className="df flc aic visual">
@@ -142,7 +142,7 @@ const statsData = [
     icon: <FcDebt />,
     bg: "purple",
     path: "debts",
-    point: "/get/debts/supplires",
+    point: "/get/totalPaid/suppliers",
   },
   {
     id: 5,

@@ -8,10 +8,10 @@ import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { Select } from "antd";
 
-import { AiOutlineFileSync } from "react-icons/ai";
-import { MdOutlineHistory, MdCloudDone } from "react-icons/md";
+import { MdOutlineHistory, MdCheck } from "react-icons/md";
 import { TbArrowBarLeft } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
+import { BsPencilSquare } from "react-icons/bs";
 
 export const Inventory = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
@@ -130,7 +130,7 @@ export const Inventory = () => {
     <div className="container_box worker_container">
       <div className="workers_header">
         <div className="inventory_header">
-          <p>Invantarizatsiya</p>{" "}
+          <p>Inventarizatsiya</p>{" "}
           {seeOne ? (
             <span>
               {" "}
@@ -157,8 +157,7 @@ export const Inventory = () => {
           {seeOne ? (
             <button
               onClick={() => setSeeOne(false)}
-              aria-label="backword all inventory informstion"
-            >
+              aria-label="backword all inventory informstion">
               <TbArrowBarLeft />
             </button>
           ) : (
@@ -167,8 +166,7 @@ export const Inventory = () => {
                 className={
                   syncs ? "inventory-history active" : "inventory-history"
                 }
-                onClick={() => setTimeout(() => setSyncs(!syncs), 100)}
-              >
+                onClick={() => setTimeout(() => setSyncs(!syncs), 100)}>
                 <MdOutlineHistory />
                 <span className="ticket"></span>
                 <div className="_history-body">
@@ -182,32 +180,32 @@ export const Inventory = () => {
                   })}
                 </div>
               </div>
-              <button
-                onClick={() => syncData(!snc)}
-                className="relative"
-                aria-label="to async and upload new info"
-              >
-                {loading ? (
-                  <LoadingBtn />
-                ) : snc ? (
-                  <MdCloudDone />
-                ) : (
-                  <AiOutlineFileSync />
-                )}
-              </button>
               {snc && (
                 <button onClick={() => setSnc(false)} aria-label="cancel async">
                   <RxCross2 />
                 </button>
               )}
+              <button
+                onClick={() => syncData(!snc)}
+                className="relative"
+                aria-label="to async and upload new info">
+                {loading ? (
+                  <LoadingBtn />
+                ) : snc ? (
+                  <MdCheck />
+                ) : (
+                  <BsPencilSquare
+                    style={{ fontSize: "calc(var(--fs4) - 5px)" }}
+                  />
+                )}
+              </button>
             </>
           )}
         </div>
       </div>
       <div
         className="worker"
-        style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}
-      >
+        style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}>
         {headerKeys.map((key) => (
           <p key={key.key} style={{ "--worker-t-w": key.size }}>
             {key.key}
@@ -221,7 +219,11 @@ export const Inventory = () => {
               return (
                 <div className="worker inventory-item" key={ingredient?.id}>
                   <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-                  <p style={{ "--worker-t-w": "20%", textAlign: "start" }}>
+                  <p
+                    style={{
+                      "--worker-t-w": "20%",
+                      justifyContent: "flex-start",
+                    }}>
                     <span>{ingredient?.name}sync</span>
                   </p>
                   <p style={{ "--worker-t-w": "20%" }}>
@@ -237,8 +239,7 @@ export const Inventory = () => {
                     {snc ? (
                       <form
                         onSubmit={(e) => changeQuantity(e, ingredient?.id)}
-                        className="changed_tool"
-                      >
+                        className="changed_tool">
                         <input
                           type="number"
                           name="quantity"
@@ -247,8 +248,7 @@ export const Inventory = () => {
                         />
                         <button
                           type="submit"
-                          style={{ display: "none" }}
-                        ></button>
+                          style={{ display: "none" }}></button>
                       </form>
                     ) : (
                       <span>
@@ -265,7 +265,11 @@ export const Inventory = () => {
           : newData?.map((ingredient, ind) => (
               <div className="worker inventory-item" key={ingredient?.id}>
                 <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-                <p style={{ "--worker-t-w": "20%", textAlign: "start" }}>
+                <p
+                  style={{
+                    "--worker-t-w": "20%",
+                    justifyContent: "flex-start",
+                  }}>
                   <span>{ingredient?.name}</span>
                 </p>
                 <p style={{ "--worker-t-w": "20%" }}>
@@ -281,8 +285,7 @@ export const Inventory = () => {
                   {snc ? (
                     <form
                       onSubmit={(e) => changeQuantity(e, ingredient?.id)}
-                      className="changed_tool"
-                    >
+                      className="changed_tool">
                       <input
                         type="number"
                         name="quantity"
@@ -291,8 +294,7 @@ export const Inventory = () => {
                       />
                       <button
                         type="submit"
-                        style={{ display: "none" }}
-                      ></button>
+                        style={{ display: "none" }}></button>
                     </form>
                   ) : (
                     <span>

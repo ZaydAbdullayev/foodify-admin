@@ -118,7 +118,6 @@ export const BillReportById = () => {
   const parsedD = bills?.product_data ? JSON?.parse(bills?.product_data) : [];
   const ingD = Object.values(parsedD)?.[0]?.pd;
 
-  console.log("pd", parsedD, ingD);
   return (
     <div className="w100 df aic flc single-bill-report">
       <div className="w100 df aic _bill-info">
@@ -210,7 +209,6 @@ export const StatisticsExpenses = () => {
     url: `${point}/${user?.id}/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
-  console.log("e", e?.data);
   const initialBillsData = (e?.data || []).flatMap(
     (item) => item?.details || []
   );
@@ -229,7 +227,6 @@ export const StatisticsExpenses = () => {
       amount: "credit",
     },
   };
-  console.log("initialBillsData", initialBillsData);
   const billsData = [...initialBillsData]; // Create a copy of initialBillsData
   console.log("billsData", billsData);
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 :root {
-  --icon-w-h: 35px;
+  --icon-w-h: 38px;
 }
 
 .changed_tool {
@@ -75,6 +75,10 @@
   background: var(--cl26);
   border: none;
   border-radius: 50%;
+}
+
+.inventory_btn-box > :where(button, div)>svg{
+  font-size: var(--fs4);
 }
 
 .inventory-history {

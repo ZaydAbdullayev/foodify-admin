@@ -114,7 +114,7 @@ export const ReportOneItems = () => {
       <UniversalFilterBox />
       <div className="storage_body small-font">
         <p>
-          <span>Taomlar uchun hisobot</span>
+          <span>Taom uchun hisobot</span>
         </p>
         <div className="storage_body_item reports_item _item-header">
           {headerData?.map((item, index) => {
@@ -130,8 +130,7 @@ export const ReportOneItems = () => {
                     : "flex-start",
                 }}
                 key={index}
-                aria-label="for sort data and see al info about this product"
-              >
+                aria-label="for sort data and see al info about this product">
                 <p>{item.name}</p>
                 {item?.items && (
                   <>
@@ -168,8 +167,7 @@ export const ReportOneItems = () => {
                 <div
                   className={"storage_body__box"}
                   key={item.id}
-                  style={{ color: item.profit < 0 ? "#f07167" : "" }}
-                >
+                  style={{ color: item.profit < 0 ? "#f07167" : "" }}>
                   <div className={"storage_body_item"}>
                     <p style={{ "--data-line-size": "4%" }}>{index + 1}</p>
                     {displayKeys?.map(
@@ -183,8 +181,7 @@ export const ReportOneItems = () => {
                                 ? "center"
                                 : "flex-end"
                               : "flex-start",
-                          }}
-                        >
+                          }}>
                           {child ? (
                             <>
                               <span className="reports_span">
@@ -230,8 +227,7 @@ export const ReportOneItems = () => {
                         ? "center"
                         : "flex-end"
                       : "flex-start",
-                  }}
-                >
+                  }}>
                   {tittle}
                   {child ? (
                     <>

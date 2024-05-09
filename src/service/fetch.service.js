@@ -53,7 +53,7 @@ const api = createApi({
     fetchData: builder.query({
       query: ({ url }) => url,
       refetchOnMount: false,
-      providesTags: (result, error, { tags }) => [...tags],
+      providesTags: (result, error, { tags = [] }) => [...tags],
     }),
     postData: builder.mutation({
       query: ({ url, data }) => ({
@@ -61,7 +61,7 @@ const api = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: (result, error, { tags }) => [...tags],
+      invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
     patchData: builder.mutation({
       query: ({ url, data }) => ({
@@ -69,7 +69,7 @@ const api = createApi({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, { tags }) => [...tags],
+      invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
     delData: builder.mutation({
       query: ({ url, data }) => ({
@@ -77,7 +77,7 @@ const api = createApi({
         method: "DELETE",
         body: data || [],
       }),
-      invalidatesTags: (result, error, { tags }) => [...tags],
+      invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
   }),
 });

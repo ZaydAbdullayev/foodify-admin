@@ -170,7 +170,7 @@
 
 .order_item {
   /* padding: var(--pd5); */
-  background: var(--cl53);
+  background: var(--cl4);
   border-radius: 15px;
 }
 
@@ -226,8 +226,8 @@
   padding: 1% 2%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: var(--cl53);
+  justify-content: space-between; 
+  background: var(--cl4);
   border: none;
   border-radius: 15px 15px 0 0;
 }

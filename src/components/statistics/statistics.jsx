@@ -4,6 +4,8 @@ import { Tooltip as Tt } from "antd";
 import { useNavigate } from "react-router-dom";
 import AnimatedNumber from "animated-number-react";
 import { CalculateTotalQuantity } from "../../service/calc.service";
+// import { create, LineSeries, XYChart } from "@amcharts/amcharts5-react";
+
 import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { ResponsiveContainer, CartesianGrid } from "recharts";
 
@@ -18,7 +20,6 @@ export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
 
   const total = CalculateTotalQuantity(data, "amount") || 1;
   const totalp = CalculateTotalQuantity(df_Pie, hint) || data?.[0]?.amount;
-  console.log("totalp", hint, totalp);
   const formatValue = (value) => {
     return value
       .toFixed(0)
@@ -162,3 +163,35 @@ export const LineChartC = ({ data }) => {
     </ResponsiveContainer>
   );
 };
+
+// const LineChart = () => {
+//   useEffect(() => {
+//     // Chart'u oluştur
+//     const chart = create("chartDiv", XYChart);
+
+//     // Veri seti oluştur
+//     const data = [
+//       { date: new Date(2024, 0, 1), value: 100 },
+//       { date: new Date(2024, 0, 2), value: 120 },
+//       { date: new Date(2024, 0, 3), value: 130 },
+//       // Diğer verileri buraya ekle
+//     ];
+
+//     // Seriyi oluştur
+//     const series = chart.addSeries(LineSeries);
+//     series.data.setAll(data);
+
+//     // Eksenleri yapılandır
+//     const xAxis = chart.xAxes.push({ type: "DateAxis" });
+//     const yAxis = chart.yAxes.push({ type: "ValueAxis" });
+
+//     // Sayfa kaldırıldığında temizleme
+//     return () => {
+//       chart.dispose();
+//     };
+//   }, []);
+
+//   return <div id="chartDiv" style={{ width: "100%", height: "500px" }} />;
+// };
+
+// export default LineChart;
