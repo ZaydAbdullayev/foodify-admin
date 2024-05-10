@@ -39,10 +39,11 @@
   color: var(--cl1);
   font-size: var(--fs6);
   border-radius: 10px;
+  white-space: nowrap;
 }
 
 .workers_header > button svg {
-  font-size: var(--fs3);
+  font-size: var(--fs4);
 }
 
 .worker {

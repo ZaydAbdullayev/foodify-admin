@@ -162,24 +162,26 @@ export const Inventory = () => {
             </button>
           ) : (
             <>
-              <div
-                className={
-                  syncs ? "inventory-history active" : "inventory-history"
-                }
-                onClick={() => setTimeout(() => setSyncs(!syncs), 100)}>
-                <MdOutlineHistory />
-                <span className="ticket"></span>
-                <div className="_history-body">
-                  {syncsData?.data?.map((item, index) => {
-                    const day = new Date(item.sync_time).toLocaleDateString();
-                    return (
-                      <p key={index} onClick={() => getOneSyncData(item.id)}>
-                        {item.st_name} <span>{day}</span>
-                      </p>
-                    );
-                  })}
+              {!snc && (
+                <div
+                  className={
+                    syncs ? "inventory-history active" : "inventory-history"
+                  }
+                  onClick={() => setTimeout(() => setSyncs(!syncs), 100)}>
+                  <MdOutlineHistory />
+                  <span className="ticket"></span>
+                  <div className="_history-body">
+                    {syncsData?.data?.map((item, index) => {
+                      const day = new Date(item.sync_time).toLocaleDateString();
+                      return (
+                        <p key={index} onClick={() => getOneSyncData(item.id)}>
+                          {item.st_name} <span>{day}</span>
+                        </p>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
               {snc && (
                 <button onClick={() => setSnc(false)} aria-label="cancel async">
                   <RxCross2 />
@@ -213,97 +215,60 @@ export const Inventory = () => {
         ))}
       </div>
       <div className="workers_body inventory_body">
-        {seeOne
-          ? oneNew?.map((ingredient, ind) => {
-              const old = oneold?.[ind];
-              return (
-                <div className="worker inventory-item" key={ingredient?.id}>
-                  <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-                  <p
-                    style={{
-                      "--worker-t-w": "20%",
-                      justifyContent: "flex-start",
-                    }}>
-                    <span>{ingredient?.name}sync</span>
-                  </p>
-                  <p style={{ "--worker-t-w": "20%" }}>
-                    <span>{ingredient?.group}</span>
-                  </p>
-                  <p style={{ "--worker-t-w": "20%" }}>
-                    <span>{ingredient?.type}</span>
-                  </p>
-                  <p style={{ "--worker-t-w": "20%" }}>
-                    <span>{ingredient?.price}</span>
-                  </p>
-                  <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
-                    {snc ? (
-                      <form
-                        onSubmit={(e) => changeQuantity(e, ingredient?.id)}
-                        className="changed_tool">
-                        <input
-                          type="number"
-                          name="quantity"
-                          autoFocus
-                          defaultValue={ingredient?.total_quantity}
-                        />
-                        <button
-                          type="submit"
-                          style={{ display: "none" }}></button>
-                      </form>
-                    ) : (
-                      <span>
-                        {ingredient?.total_quantity} {ingredient?.unit}
-                        <del>
-                          {old?.total_quantity} {old?.unit}
-                        </del>
-                      </span>
+        {(seeOne ? oneNew : newData)?.map((ingredient, ind) => {
+          let old = {};
+          if (seeOne) {
+            old = oneold?.[ind];
+          }
+          return (
+            <div className="worker inventory-item" key={ingredient?.id}>
+              <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
+              <p
+                style={{
+                  "--worker-t-w": "20%",
+                  justifyContent: "flex-start",
+                }}>
+                <span>
+                  {ingredient?.name}
+                  {seeOne && "sync"}
+                </span>
+              </p>
+              <p style={{ "--worker-t-w": "20%" }}>
+                <span>{ingredient?.group}</span>
+              </p>
+              <p style={{ "--worker-t-w": "20%" }}>
+                <span>{ingredient?.type}</span>
+              </p>
+              <p style={{ "--worker-t-w": "20%" }}>
+                <span>{ingredient?.price}</span>
+              </p>
+              <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
+                {snc ? (
+                  <form
+                    onSubmit={(e) => changeQuantity(e, ingredient?.id)}
+                    className="changed_tool">
+                    <input
+                      type="number"
+                      name="quantity"
+                      autoFocus
+                      defaultValue={ingredient?.total_quantity}
+                    />
+                    <button type="submit" style={{ display: "none" }}></button>
+                  </form>
+                ) : (
+                  <span>
+                    {ingredient?.total_quantity} {ingredient?.unit}
+                    {seeOne && (
+                      <del>
+                        {old?.total_quantity || 0} {old?.unit || ""}
+                      </del>
                     )}
-                  </p>
-                </div>
-              );
-            })
-          : newData?.map((ingredient, ind) => (
-              <div className="worker inventory-item" key={ingredient?.id}>
-                <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-                <p
-                  style={{
-                    "--worker-t-w": "20%",
-                    justifyContent: "flex-start",
-                  }}>
-                  <span>{ingredient?.name}</span>
-                </p>
-                <p style={{ "--worker-t-w": "20%" }}>
-                  <span>{ingredient?.group}</span>
-                </p>
-                <p style={{ "--worker-t-w": "20%" }}>
-                  <span>{ingredient?.type}</span>
-                </p>
-                <p style={{ "--worker-t-w": "20%" }}>
-                  <span>{ingredient?.price}</span>
-                </p>
-                <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
-                  {snc ? (
-                    <form
-                      onSubmit={(e) => changeQuantity(e, ingredient?.id)}
-                      className="changed_tool">
-                      <input
-                        type="number"
-                        name="quantity"
-                        autoFocus
-                        defaultValue={ingredient?.total_quantity}
-                      />
-                      <button
-                        type="submit"
-                        style={{ display: "none" }}></button>
-                    </form>
-                  ) : (
-                    <span>
-                      {ingredient?.total_quantity} {ingredient?.unit}
-                    </span>
-                  )}
-                </p>
-              </div>
-            ))}
+                  </span>
+                )}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

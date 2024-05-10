@@ -16,34 +16,25 @@ export const ReportRejects = () => {
   const [showMore, setShowMore] = useState([]);
   const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
+  const { start, end } = useSelector((state) => state.uSearch)?.date;
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(acNavStatus([0, 3, 6, 7, 15]));
   }, [dispatch]);
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/${res_id}/categories`,
-    tags: ["category"],
-  });
-  console.log(storeData);
-  const isLoading = false;
-
-  const sortData = storageD.sort((a, b) => {
-    if (sort.state) {
-      return a.name.localeCompare(b.name);
-    } else {
-      return b.name.localeCompare(a.name);
-    }
+  const { data: rejectFood = [], isLoading } = useFetchDataQuery({
+    url: `/get/rejectedFoodsFull/${res_id}/${start}/${end}`,
+    tags: ["report"],
   });
 
-  //   const sortData =
-  //     storeData?.data &&
-  //     [...storeData?.data]?.sort((a, b) => {
-  //       if (sort.state) {
-  //         return a.name.localeCompare(b.name);
-  //       } else {
-  //         return b.name.localeCompare(a.name);
-  //       }
-  //     });
+  const sortData =
+    rejectFood?.data &&
+    [...rejectFood?.data]?.sort((a, b) => {
+      if (sort.state) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
 
   const headerData = [
     { name: "Nomi", size: "18%" },
@@ -58,25 +49,25 @@ export const ReportRejects = () => {
   ];
 
   const displayKeys = [
-    { name: "dep", size: "18%", border: "none" },
-    { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 1, tick: "%" },
-    { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 2 },
+    { name: "name", size: "18%", border: "none" },
+    { name: "quantity", size: "10.2%", position: 2 },
+    { name: "price", size: "10.2%", position: 2 },
+    { name: "cost", size: "10.2%", position: 2 },
+    { name: "profit", size: "10.2%", position: 2 },
+    { name: "totalPrice", size: "10.2%", position: 2, tick: "%" },
+    { name: "totalCost", size: "10.2%", position: 2 },
+    { name: "totalProfit", size: "10.2%", position: 2 },
   ];
 
   const displayTotalKeys = [
-    { name: "Umumiy", size: "18%", position: 1, tick: "Umumiy" },
-    { name: "remain", size: "10.2%", position: 2, flex: 1 },
+    { name: "Umumiy", size: "18%", position: 0, tick: "Umumiy" },
+    { name: "quantity", size: "10.2%", position: 2, flex: 1 },
     { name: "remain", size: "10.2%", position: 2 },
     { name: "remain", size: "10.2%", position: 2 },
     { name: "remain", size: "10.2%", position: 2 },
-    { name: "remain", size: "10.2%", position: 2, flex: 1 },
-    { name: "remain", size: "10.2%", position: 2, flex: 1 },
-    { name: "profit", size: "10.2%", position: 2, flex: 1 },
+    { name: "totalPrice", size: "10.2%", position: 2, flex: 1 },
+    { name: "totalCost", size: "10.2%", position: 2, flex: 1 },
+    { name: "totalProfit", size: "10.2%", position: 2, flex: 1 },
   ];
 
   return (
@@ -84,7 +75,7 @@ export const ReportRejects = () => {
       <UniversalFilterBox />
       <div className="storage_body">
         <p>
-          <span>Bekor qilingan buyurtmalar</span>
+          <span>Bekor qilingan taomlar</span>
         </p>
         <div className="storage_body_item _item-header">
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
@@ -163,92 +154,36 @@ export const ReportRejects = () => {
                       </u>
                     </p>
                   </div>
-                  {showMore?.includes(item?.id) && (
-                    <div className=" storage-body_inner_item">
-                      <div className="storage_body_item">
-                        <p
-                          style={{
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          №
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "35%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Nomi
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "20%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Narxi
-                        </p>
-                        <p
-                          style={{
-                            "--data-line-size": "25%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
-                          Tan Narxi
-                        </p>
-                        <p style={{ "--data-line-size": "15%" }}>Foyda</p>
-                      </div>
-                      {item?.data?.map((product, ind) => {
-                        return (
-                          <div className="storage_body_item inner_item">
-                            <p
-                              style={{
-                                borderRight: "1px solid #ccc5",
-                              }}>
-                              {ind + 1}
-                            </p>
-                            <p style={{ "--data-line-size": "35%" }}>
-                              {product.name}
-                            </p>
-                            <p style={{ "--data-line-size": "20%" }}>
-                              {product.password}
-                            </p>
-                            <p style={{ "--data-line-size": "25%" }}>
-                              {item.remain}
-                            </p>
-                            <p style={{ "--data-line-size": "15%" }}>
-                              {item.total}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               );
             })
           )}
-          <div className={"storage_body_item"} style={{ background: "#3339" }}>
-            <p></p>
-            {displayTotalKeys?.map((displayKey, index) => (
+          {sortData?.length > 0 && (
+            <div className="storage_body_item" style={{ background: "#3339" }}>
+              <p style={{ border: "none" }}></p>
+              {displayTotalKeys?.map((displayKey, index) => (
+                <p
+                  key={index}
+                  style={{
+                    "--data-line-size": displayKey.size,
+                    justifyContent: displayKey.position
+                      ? displayKey.position === 1
+                        ? "center"
+                        : "flex-end"
+                      : "flex-start",
+                  }}>
+                  {displayKey.tick}
+                  {displayKey.flex &&
+                    CalculateTotalQuantity(sortData, displayKey?.name)}
+                </p>
+              ))}
               <p
-                key={index}
                 style={{
-                  "--data-line-size": displayKey.size,
-                  justifyContent: displayKey.position
-                    ? displayKey.position === 1
-                      ? "center"
-                      : "flex-end"
-                    : "flex-start",
-                }}>
-                {displayKey.tick}
-                {displayKey.flex &&
-                  CalculateTotalQuantity(storageD, displayKey?.name)}
-              </p>
-            ))}
-            <p
-              style={{
-                "--data-line-size": "8%",
-                justifyContent: "center",
-              }}></p>
-          </div>
+                  "--data-line-size": "8%",
+                  justifyContent: "center",
+                }}></p>
+            </div>
+          )}
         </div>
       </div>
     </div>
