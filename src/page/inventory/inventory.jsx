@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./inventory.css";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { usePostDataMutation } from "../../service/fetch.service";
@@ -27,34 +27,28 @@ export const Inventory = () => {
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState([]);
+  const [oldData, setOldData] = useState([]);
   const [oneold, setOneOld] = useState([]);
   const [oneNew, setOneNew] = useState([]);
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
-  const syncRef = useRef();
-  console.log("ref", syncRef);
   const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
 
-  const storageItemsQuery = useFetchDataQuery({
+  const { data = {} } = useFetchDataQuery({
     url: `get/storageItems/${user?.id}/${storageId}`,
-    tags: ["invoices"],
+    tags: ["invoices", "storeItems"],
   });
-  const storageItems = storageItemsQuery.data || [];
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
       setStorageId(stores?.data[0].id);
     }
   }, [stores?.data]);
-
-  useEffect(() => {
-    setNewData(storageItems?.data || []);
-  }, [storageItems?.data]);
 
   const headerKeys = [
     { key: "№", size: "5%" },
@@ -65,19 +59,44 @@ export const Inventory = () => {
     { key: "Soni", size: "15%" },
   ];
 
-  const changeQuantity = (e, ingredientId) => {
-    e.preventDefault();
-    const formdata = new FormData(e.target);
-    const value = Object.fromEntries(formdata.entries());
+  const changeQuantity = (value, ingredientId) => {
+    const parsedValue = parseInt(value);
 
-    const updatedData = newData.map((item) => {
-      if (item.id === ingredientId) {
-        return { ...item, total_quantity: Number(value.quantity) };
-      }
-      return item;
-    });
+    const item = data?.data?.find((item) => item.id === ingredientId);
+    if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
 
-    setNewData(updatedData);
+    const newDataIndex = newData.findIndex((item) => item.id === ingredientId);
+    const oldDataIndex = oldData.findIndex((item) => item.id === ingredientId);
+
+    if (
+      newDataIndex !== -1 &&
+      parsedValue === newData[newDataIndex].total_quantity &&
+      oldDataIndex !== -1 &&
+      parsedValue === oldData[oldDataIndex].total_quantity
+    ) {
+      return; // Yeni ve eski verilerde değişiklik yoksa işlemi sonlandır
+    }
+
+    const updatedNewData = [...newData];
+    const updatedOldData = [...oldData];
+
+    if (newDataIndex !== -1) {
+      updatedNewData[newDataIndex] = {
+        ...updatedNewData[newDataIndex],
+        total_quantity: parsedValue,
+      };
+    } else if (parsedValue !== item.total_quantity) {
+      updatedNewData.push({ ...item, total_quantity: parsedValue });
+    }
+
+    if (oldDataIndex !== -1) {
+      updatedOldData[oldDataIndex] = { ...updatedOldData[oldDataIndex] };
+    } else if (parsedValue !== item.total_quantity) {
+      updatedOldData.push({ ...item });
+    }
+
+    setNewData(updatedNewData);
+    setOldData(updatedOldData);
   };
 
   const getStorageName = (id) => {
@@ -89,7 +108,7 @@ export const Inventory = () => {
       setLoading(true);
       if (!status) {
         const uData = {
-          old_data: JSON.stringify(storageItems.data),
+          old_data: JSON.stringify(oldData),
           new_data: JSON.stringify(newData),
           storage_id: storageId,
           st_name: getStorageName(storageId),
@@ -98,7 +117,7 @@ export const Inventory = () => {
         const { data = null } = await postData({
           url: `/sync/storage`,
           data: uData,
-          tags: ["inventory"],
+          tags: ["inventory", "storeItems"],
         });
         if (data.message === "syncStorage has been added") {
           setSnc(status);
@@ -147,8 +166,8 @@ export const Inventory = () => {
               }}
               onChange={setStorageId}
               options={stores?.data?.map((item) => ({
-                value: item.id,
-                label: item.name,
+                value: item?.id || null,
+                label: item?.name || "",
               }))}
             />
           )}
@@ -215,19 +234,13 @@ export const Inventory = () => {
         ))}
       </div>
       <div className="workers_body inventory_body">
-        {(seeOne ? oneNew : newData)?.map((ingredient, ind) => {
-          let old = {};
-          if (seeOne) {
-            old = oneold?.[ind];
-          }
+        {(seeOne ? oneNew : data?.data || []).map((ingredient, ind) => {
+          const old = seeOne ? oneold?.[ind] : {};
           return (
             <div className="worker inventory-item" key={ingredient?.id}>
               <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
               <p
-                style={{
-                  "--worker-t-w": "20%",
-                  justifyContent: "flex-start",
-                }}>
+                style={{ "--worker-t-w": "20%", justifyContent: "flex-start" }}>
                 <span>
                   {ingredient?.name}
                   {seeOne && "sync"}
@@ -244,17 +257,15 @@ export const Inventory = () => {
               </p>
               <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
                 {snc ? (
-                  <form
-                    onSubmit={(e) => changeQuantity(e, ingredient?.id)}
-                    className="changed_tool">
+                  <label className="changed_tool">
                     <input
                       type="number"
-                      name="quantity"
-                      autoFocus
                       defaultValue={ingredient?.total_quantity}
+                      onBlur={(e) =>
+                        changeQuantity(e.target.value, ingredient?.id)
+                      }
                     />
-                    <button type="submit" style={{ display: "none" }}></button>
-                  </form>
+                  </label>
                 ) : (
                   <span>
                     {ingredient?.total_quantity} {ingredient?.unit}
