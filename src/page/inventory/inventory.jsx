@@ -72,7 +72,7 @@ export const Inventory = () => {
       newDataIndex !== -1 &&
       parsedValue === newData[newDataIndex].total_quantity &&
       oldDataIndex !== -1 &&
-      parsedValue === oldData[oldDataIndex].total_quantity
+      parsedValue === oldData[oldDataIndex].old_quantity
     ) {
       return; // Yeni ve eski verilerde değişiklik yoksa işlemi sonlandır
     }
@@ -90,9 +90,12 @@ export const Inventory = () => {
     }
 
     if (oldDataIndex !== -1) {
-      updatedOldData[oldDataIndex] = { ...updatedOldData[oldDataIndex] };
+      updatedOldData[oldDataIndex] = {
+        ...updatedOldData[oldDataIndex],
+        old_quantity: parsedValue,
+      };
     } else if (parsedValue !== item.total_quantity) {
-      updatedOldData.push({ ...item });
+      updatedOldData.push({ ...item, old_quantity: parsedValue });
     }
 
     setNewData(updatedNewData);
@@ -114,6 +117,7 @@ export const Inventory = () => {
           st_name: getStorageName(storageId),
           res_id: user?.id,
         };
+        console.log(oldData, newData);
         const { data = null } = await postData({
           url: `/sync/storage`,
           data: uData,
