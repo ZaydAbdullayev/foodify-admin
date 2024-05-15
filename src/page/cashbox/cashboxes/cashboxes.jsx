@@ -128,7 +128,6 @@ export const Cashboxes = () => {
           <input type="hidden" name="res_id" value={user?.id} />
           {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
         </UniversalModal>
-        sssss
       </Suspense>
     </div>
   );

@@ -74,7 +74,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             df_value: acItem?.food_id
               ? { value: "default", label: "Mahsulot tanlang*" }
               : { value: acItem?.food_id, label: acItem?.food_id },
-            options: data,
+            options: data?.data,
           },
           {
             type: "s_extra",

@@ -89,3 +89,7 @@
 .jcsb {
   justify-content: space-between;
 }
+
+.gap5 {
+  gap: var(--gap5);
+}

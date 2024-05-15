@@ -29,7 +29,7 @@ export const BillsReport = () => {
         <div className="df flc item-info">
           {data?.every((item) => item?.amount === 0) ? (
             <p>
-              <GoDotFill style={{ color: "var(--cl59)" }} />
+              <GoDotFill style={{ color: "var(--cl22)" }} />
               <span>Ma'lumot yo'q</span>
             </p>
           ) : (
@@ -118,6 +118,7 @@ export const BillReportById = () => {
   const parsedD = bills?.product_data ? JSON?.parse(bills?.product_data) : [];
   const ingD = Object.values(parsedD)?.[0]?.pd;
 
+  console.log("pd", parsedD, ingD);
   return (
     <div className="w100 df aic flc single-bill-report">
       <div className="w100 df aic _bill-info">
@@ -209,24 +210,26 @@ export const StatisticsExpenses = () => {
     url: `${point}/${user?.id}/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
+  console.log("e", e?.data);
   const initialBillsData = (e?.data || []).flatMap(
     (item) => item?.details || []
   );
 
   const keys = {
     expenses: {
-      name: "name",
-      amount: "amount",
+      name: "group",
+      amount: "total",
     },
     debts: {
       name: "supplier",
-      amount: "debt",
+      amount: "paid",
     },
     credits: {
       name: "supplier",
-      amount: "credit",
+      amount: "total",
     },
   };
+  console.log("initialBillsData", initialBillsData);
   const billsData = [...initialBillsData]; // Create a copy of initialBillsData
   console.log("billsData", billsData);
   const dispatch = useDispatch();
@@ -248,7 +251,7 @@ export const StatisticsExpenses = () => {
         <div className="df flc item-info">
           {e?.data?.every((item) => item?.[keys?.[name]?.amount] === 0) ? (
             <p>
-              <GoDotFill style={{ color: "var(--cl59)" }} />
+              <GoDotFill style={{ color: "var(--cl22)" }} />
               <span>Ma'lumot yo'q</span>
             </p>
           ) : (
@@ -269,6 +272,7 @@ export const StatisticsExpenses = () => {
       </div>
       <div className="w100 df aic bills-report-box">
         {e?.data?.map((expense, ind) => {
+          console.log("expense", expense, keys?.[name]?.name);
           return (
             <div
               className="df aic jcsb bills-item"
@@ -362,7 +366,7 @@ export const StatisticsIncome = () => {
         <div className="w100 df flc full_analystic-header">
           <div className="w100 df aic jcsb">
             <span className="df flc">
-              <small style={{ color: "var(--cl7)" }}>Umumiy summa</small>
+              <small style={{ color: "#a1a1a1" }}>Umumiy summa</small>
               <NumericFormat
                 value={CalculateTotalCH(
                   e?.data,
@@ -377,11 +381,11 @@ export const StatisticsIncome = () => {
           </div>
           <label className="w100 df aic" style={{ gap: "var(--gap3)" }}>
             <p className="df aic" style={{ gap: "5px" }}>
-              <GoDotFill style={{ color: "var(--cl8)" }} />
+              <GoDotFill style={{ color: "#80ed99" }} />
               <span>Chiqimlar</span>
             </p>
             <p className="df aic" style={{ gap: "5px" }}>
-              <GoDotFill style={{ color: "var(--cl21)" }} />
+              <GoDotFill style={{ color: "#c1121f" }} />
               <span>Kirimlar</span>
             </p>
           </label>
@@ -395,13 +399,9 @@ export const StatisticsIncome = () => {
           {
             label: "Satuvdan kelgan pul",
             type: "incomeFromSales",
-            cl: "var(--cl8)",
+            cl: "#80ed99",
           },
-          {
-            label: "Boshqa kelgan pul",
-            type: "other_income",
-            cl: "var(--cl21)",
-          },
+          { label: "Boshqa kelgan pul", type: "other_income", cl: "#c1121f" },
         ]?.map((label, ind) => {
           return (
             <div
@@ -455,7 +455,7 @@ export const StatisticDetails = () => {
         <span className=" df aic jcsb dropdown-label">
           <span className="df flc">
             Ecommerce{" "}
-            <small style={{ color: "var(--cl16)" }}>04.04.2024, 15:05</small>
+            <small style={{ color: "#aaa8" }}>04.04.2024, 15:05</small>
           </span>
           <NumericFormat
             value={23455554}
@@ -491,7 +491,7 @@ export const StatisticDetails = () => {
         <span className=" df aic jcsb dropdown-label">
           <span className="df flc">
             Ecommerce{" "}
-            <small style={{ color: "var(--cl16)" }}>04.04.2024, 15:05</small>
+            <small style={{ color: "#aaa8" }}>04.04.2024, 15:05</small>
           </span>
           <NumericFormat
             value={23455554}
@@ -527,7 +527,7 @@ export const StatisticDetails = () => {
         <span className=" df aic jcsb dropdown-label">
           <span className="df flc">
             Ecommerce{" "}
-            <small style={{ color: "var(--cl16)" }}>04.04.2024, 15:05</small>
+            <small style={{ color: "#aaa8" }}>04.04.2024, 15:05</small>
           </span>
           <NumericFormat
             value={23455554}
@@ -561,7 +561,7 @@ export const StatisticDetails = () => {
   const { token } = theme.useToken();
   const panelStyle = {
     marginBottom: 8,
-    background: "var(--cl9)",
+    background: "#252525",
     borderRadius: token.borderRadiusLG,
     border: "none",
   };
@@ -573,7 +573,7 @@ export const StatisticDetails = () => {
           <IoMdArrowDropright rotate={isActive ? 90 : 0} />
         )}
         style={{
-          background: "var(--cl57)",
+          background: "#494949",
           padding: "3%",
         }}
         items={getItems(panelStyle)}

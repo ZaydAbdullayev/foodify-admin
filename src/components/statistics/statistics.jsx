@@ -12,14 +12,14 @@ import { ResponsiveContainer, CartesianGrid } from "recharts";
 export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
   const [activeI, setActiveI] = React.useState(null);
   const navigate = useNavigate();
-  const df_Pie = data?.every((p) => p.amount === 0)
+  const df_Pie = data?.every((p) => p?.[hint] === 0)
     ? [{ type: "Malumot yo'q", cl: "#333", amount: 0 }]
-    : data?.filter((p) => p.amount > 0);
+    : data?.filter((p) => p?.[hint] > 0);
 
   console.log("donut-data", df_Pie);
 
-  const total = CalculateTotalQuantity(data, "amount") || 1;
-  const totalp = CalculateTotalQuantity(df_Pie, hint) || data?.[0]?.amount;
+  const total = CalculateTotalQuantity(data, hint) || 1;
+  const totalp = CalculateTotalQuantity(df_Pie, hint) || data?.[0]?.[hint];
   const formatValue = (value) => {
     return value
       .toFixed(0)
@@ -52,9 +52,9 @@ export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
               ? 0
               : df_Pie
                   .slice(0, index)
-                  .reduce((acc, curr) => acc + (curr.amount / total) * 360, 0);
+                  .reduce((acc, curr) => acc + (curr?.[hint] / total) * 360, 0);
           const endAngle =
-            startAngle + ((slice.amount || 0) / (total || 1)) * 360;
+            startAngle + ((slice?.[hint] || 0) / (total || 1)) * 360;
 
           const formatValue = (value) => {
             if (typeof value === "number") {
@@ -65,7 +65,7 @@ export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
 
           return (
             <Tt
-              title={`${slice?.[ty]} - ${formatValue(slice?.amount)}`}
+              title={`${slice?.[ty]} - ${formatValue(slice?.[hint])}`}
               color={slice?.cl}
               key={`${slice?.cl}_${index}`}
               placement={drs?.[index]}>
@@ -81,7 +81,7 @@ export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
                     },${
                     200 + Math.sin(((startAngle - 90) * Math.PI) / 180) * 150
                   }
-                    A 150,150 0 ${slice.amount / total > 0.5 ? 1 : 0},1 ${
+                    A 150,150 0 ${slice?.[hint] / total > 0.5 ? 1 : 0},1 ${
                     200 + Math.cos(((endAngle - 90) * Math.PI) / 180) * 150
                   },${200 + Math.sin(((endAngle - 90) * Math.PI) / 180) * 150}
                     Z

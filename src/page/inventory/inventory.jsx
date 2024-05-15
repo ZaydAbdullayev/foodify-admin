@@ -6,7 +6,8 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
-import { Select } from "antd";
+import { DatePicker, Popconfirm, Select } from "antd";
+import dayjs from "dayjs";
 
 import { MdOutlineHistory, MdCheck } from "react-icons/md";
 import { TbArrowBarLeft } from "react-icons/tb";
@@ -33,6 +34,7 @@ export const Inventory = () => {
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -161,19 +163,26 @@ export const Inventory = () => {
               {new Date(active.sync_time).toLocaleDateString()}
             </span>
           ) : (
-            <Select
-              name="storage"
-              style={{ fontSize: "10px" }}
-              defaultValue={{
-                value: stores?.data?.[0]?.id,
-                label: "Ombor tanlang",
-              }}
-              onChange={setStorageId}
-              options={stores?.data?.map((item) => ({
-                value: item?.id || null,
-                label: item?.name || "",
-              }))}
-            />
+            <div className="df aic gap5">
+              <Select
+                name="storage"
+                style={{ fontSize: "10px" }}
+                defaultValue={{
+                  value: stores?.data?.[0]?.id,
+                  label: "Ombor tanlang",
+                }}
+                onChange={setStorageId}
+                options={stores?.data?.map((item) => ({
+                  value: item?.id || null,
+                  label: item?.name || "",
+                }))}
+              />
+              <DatePicker
+                style={{ fontSize: "10px" }}
+                defaultValue={dayjs(new Date())}
+                onChange={(date) => setDate(date)}
+              />
+            </div>
           )}
         </div>
         <div className="inventory_btn-box">
@@ -211,17 +220,27 @@ export const Inventory = () => {
                 </button>
               )}
               <button
-                onClick={() => syncData(!snc)}
                 className="relative"
                 aria-label="to async and upload new info">
                 {loading ? (
                   <LoadingBtn />
                 ) : snc ? (
-                  <MdCheck />
+                  <MdCheck onClick={() => syncData(!snc)} />
                 ) : (
-                  <BsPencilSquare
-                    style={{ fontSize: "calc(var(--fs4) - 5px)" }}
-                  />
+                  <Popconfirm
+                    placement="topRight"
+                    title={"Sinxronlashtirishni tasdiqlash"}
+                    description={`Sinxronlashtirishni ${dayjs(date)?.format(
+                      "YYYY-MM-DD"
+                    )} uchun tasdiqlash`}
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => syncData(!snc)}
+                    onCancel={() => syncData(snc)}>
+                    <BsPencilSquare
+                      style={{ fontSize: "calc(var(--fs4) - 5px)" }}
+                    />
+                  </Popconfirm>
                 )}
               </button>
             </>

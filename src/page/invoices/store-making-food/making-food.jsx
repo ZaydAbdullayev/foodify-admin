@@ -47,8 +47,8 @@ export const InvoicesMakingFood = () => {
   };
 
   const sortData =
-    makedFood?.message &&
-    [...makedFood?.message].sort((a, b) => {
+    makedFood?.data &&
+    [...makedFood?.data].sort((a, b) => {
       if (sort?.state) {
         return a?.name?.localeCompare(b?.name);
       } else {
@@ -281,10 +281,7 @@ export const InvoicesMakingFood = () => {
           getProduct={getProduct}
           NUM={
             !isLoading && {
-              num:
-                JSON.parse(
-                  makedFood?.message ? makedFood?.message[0]?.order : 0
-                ) + 1,
+              num: 1,
             }
           }
         />

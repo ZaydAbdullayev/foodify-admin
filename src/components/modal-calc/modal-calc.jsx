@@ -46,11 +46,14 @@ export const UniversalControlModal = ({
   }, [Pdata, Udata]);
 
   const [api, contextHolder] = notification.useNotification();
-  const openWarning = (placement) => {
+  const openWarning = (placement, c) => {
     api.warning({
       message: "Yaroqsiz ma'lumot",
-      description:
-        "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
+      description: `Iltimos, ${
+        c
+          ? `Hisoblashni 📇 bosganingizdan amin bo'ling`
+          : "barcha maydonlarni to'ldiring"
+      } yoki to'g'ri ma'lumot kiritganingizni tekshiring!`,
       placement,
     });
   };
@@ -75,6 +78,12 @@ export const UniversalControlModal = ({
 
   const fetchValues = async (value) => {
     setLoading(true);
+    console.log("fetchdata", fetchdata?.length);
+    if (!fetchdata?.length) {
+      openWarning("topRight", true);
+      setLoading(false);
+      return;
+    }
     if (value.ingredients && Array.isArray(value.ingredients)) {
       value.ingredients = JSON.stringify(value.ingredients);
     }
@@ -498,7 +507,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
                 "--data-line-size": "18%",
                 justifyContent: "end",
               }}>
-              {item.price * item.amount}
+              {(item.price * item.amount)?.toFixed(1)}
             </p>
           )}
         </div>
