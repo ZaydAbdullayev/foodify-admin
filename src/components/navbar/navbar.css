@@ -55,7 +55,7 @@
 
 .short-hands_sort__box :where(select, option, input) {
   padding: 5px 10px;
-  background: var(--cl3);
+  background: var(--cl4);
   border: none;
   color: var(--cl1) !important;
   font-size: var(--fs6);

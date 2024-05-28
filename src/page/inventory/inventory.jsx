@@ -6,7 +6,8 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
-import { DatePicker, Popconfirm, Select } from "antd";
+import { DatePicker, InputNumber, Modal, Popconfirm, Select } from "antd";
+import { Input } from "antd";
 import dayjs from "dayjs";
 
 import { MdOutlineHistory, MdCheck } from "react-icons/md";
@@ -27,14 +28,15 @@ export const Inventory = () => {
   const [storageId, setStorageId] = useState(stores.data?.[0]?.id);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [newData, setNewData] = useState([]);
-  const [oldData, setOldData] = useState([]);
+  const [syncsValue, setSyncsValue] = useState([]);
+  const [storageV, setStorageV] = useState({});
   const [oneold, setOneOld] = useState([]);
   const [oneNew, setOneNew] = useState([]);
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [postData] = usePostDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -61,68 +63,85 @@ export const Inventory = () => {
     { key: "Soni", size: "15%" },
   ];
 
-  const changeQuantity = (value, ingredientId) => {
-    const parsedValue = parseInt(value);
-
-    const item = data?.data?.find((item) => item.id === ingredientId);
-    if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
-
-    const newDataIndex = newData.findIndex((item) => item.id === ingredientId);
-    const oldDataIndex = oldData.findIndex((item) => item.id === ingredientId);
-
-    if (
-      newDataIndex !== -1 &&
-      parsedValue === newData[newDataIndex].total_quantity &&
-      oldDataIndex !== -1 &&
-      parsedValue === oldData[oldDataIndex].old_quantity
-    ) {
-      return; // Yeni ve eski verilerde değişiklik yoksa işlemi sonlandır
-    }
-
-    const updatedNewData = [...newData];
-    const updatedOldData = [...oldData];
-
-    if (newDataIndex !== -1) {
-      updatedNewData[newDataIndex] = {
-        ...updatedNewData[newDataIndex],
-        total_quantity: parsedValue,
-      };
-    } else if (parsedValue !== item.total_quantity) {
-      updatedNewData.push({ ...item, total_quantity: parsedValue });
-    }
-
-    if (oldDataIndex !== -1) {
-      updatedOldData[oldDataIndex] = {
-        ...updatedOldData[oldDataIndex],
-        old_quantity: parsedValue,
-      };
-    } else if (parsedValue !== item.total_quantity) {
-      updatedOldData.push({ ...item, old_quantity: parsedValue });
-    }
-
-    setNewData(updatedNewData);
-    setOldData(updatedOldData);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+    setSnc(true);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setSnc(false);
   };
 
   const getStorageName = (id) => {
     return stores.data?.find((store) => store.id === id)?.name;
   };
 
+  //   [
+  //   {
+  //     "id": "1001",
+  //     "food_id": "1001",
+  //     "name": "Potatoes",
+  //     "unit": "kg",
+  //     "group": "Vegetables",
+  //     "res_id": "12345",
+  //     "price": 1.5,
+  //     "type": "Storage",
+  //     "storage_id": "S1",
+  //     "amount": 180,
+  //     "total_quantity": 180,
+  //     "sync_time": "2024-05-10 08:00:00",
+  //     "st_name": "Main Storage",
+  //     "description": "Synced from frontend",
+  //     "number": 1,
+  //     "old_quantity": 0
+  //   },
+
+  const changeQuantity = (value, ingredientId) => {
+    const parsedValue = parseInt(value);
+
+    const item = data?.data?.find((item) => item.id === ingredientId);
+    if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
+
+    const ind = syncsValue.findIndex((item) => item.id === ingredientId);
+
+    if (parsedValue === item?.total_quantity) {
+      return; // Eğer yeni değer eski değerle aynıysa işlemi sonlandır
+    }
+
+    const updatedNewData = [...syncsValue];
+
+    if (ind !== -1) {
+      updatedNewData[ind] = {
+        ...updatedNewData[ind],
+        amount: updatedNewData[ind].total_quantity - parsedValue,
+        old_quantity: updatedNewData[ind].total_quantity,
+        total_quantity: parsedValue,
+      };
+    } else if (parsedValue !== item.total_quantity) {
+      updatedNewData.push({
+        ...item,
+        ...storageV,
+        amount: item.total_quantity - parsedValue,
+        old_quantity: item.total_quantity,
+        total_quantity: parsedValue,
+        st_name: getStorageName(storageId),
+        storageId: storageId,
+      });
+    }
+
+    setSyncsValue(updatedNewData);
+  };
+
   const syncData = async (status) => {
     try {
       setLoading(true);
       if (!status) {
-        const uData = {
-          old_data: JSON.stringify(oldData),
-          new_data: JSON.stringify(newData),
-          storage_id: storageId,
-          st_name: getStorageName(storageId),
-          res_id: user?.id,
-        };
-        console.log(oldData, newData);
         const { data = null } = await postData({
           url: `/sync/storage`,
-          data: uData,
+          data: [...(syncsValue || [])],
           tags: ["inventory", "storeItems"],
         });
         if (data.message === "syncStorage has been added") {
@@ -166,7 +185,7 @@ export const Inventory = () => {
             <div className="df aic gap5">
               <Select
                 name="storage"
-                style={{ fontSize: "10px" }}
+                style={{ fontSize: "4px" }}
                 defaultValue={{
                   value: stores?.data?.[0]?.id,
                   label: "Ombor tanlang",
@@ -180,7 +199,7 @@ export const Inventory = () => {
               <DatePicker
                 style={{ fontSize: "10px" }}
                 defaultValue={dayjs(new Date())}
-                onChange={(date) => setDate(date)}
+                onChange={(date) => setStorageV({ ...storageV, date })}
               />
             </div>
           )}
@@ -227,20 +246,10 @@ export const Inventory = () => {
                 ) : snc ? (
                   <MdCheck onClick={() => syncData(!snc)} />
                 ) : (
-                  <Popconfirm
-                    placement="topRight"
-                    title={"Sinxronlashtirishni tasdiqlash"}
-                    description={`Sinxronlashtirishni ${dayjs(date)?.format(
-                      "YYYY-MM-DD"
-                    )} uchun tasdiqlash`}
-                    okText="Yes"
-                    cancelText="No"
-                    onConfirm={() => syncData(!snc)}
-                    onCancel={() => syncData(snc)}>
-                    <BsPencilSquare
-                      style={{ fontSize: "calc(var(--fs4) - 5px)" }}
-                    />
-                  </Popconfirm>
+                  <BsPencilSquare
+                    onClick={showModal}
+                    style={{ fontSize: "calc(var(--fs4) - 5px)" }}
+                  />
                 )}
               </button>
             </>
@@ -304,6 +313,46 @@ export const Inventory = () => {
           );
         })}
       </div>
+      <Modal
+        title="Ushbu ma'lumotlar asosida sinxronlashtirish"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Tasdiqlash"
+        cancelText="Bekor qilish">
+        <div className="w100 df flc" style={{ gap: "10px" }}>
+          <Select
+            name="storage"
+            style={{ width: "100%", fontSize: "10px" }}
+            defaultValue={{
+              value: stores?.data?.[0]?.id,
+              label: "Ombor tanlang",
+            }}
+            onChange={setStorageId}
+            options={stores?.data?.map((item) => ({
+              value: item?.id || null,
+              label: item?.name || "",
+            }))}
+          />
+          <DatePicker
+            style={{ width: "100%", fontSize: "10px" }}
+            defaultValue={dayjs(new Date())}
+            onChange={(date) => setStorageV({ ...storageV, sync_time: date })}
+          />
+          <InputNumber
+            style={{ width: "100%" }}
+            defaultValue={1}
+            onChange={(value) => setStorageV({ ...storageV, number: value })}
+          />
+          <Input
+            style={{ width: "100%" }}
+            placeholder="Tafsilot"
+            onChange={(e) =>
+              setStorageV({ ...storageV, description: e.target.value })
+            }
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

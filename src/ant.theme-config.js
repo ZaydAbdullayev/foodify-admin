@@ -31,5 +31,8 @@ export const themeConfig = {
       itemSelectedBg: "#444",
       trackBg: "#333",
     },
+    Modal: {
+      zIndexPopup: 99999999,
+    },
   },
 };

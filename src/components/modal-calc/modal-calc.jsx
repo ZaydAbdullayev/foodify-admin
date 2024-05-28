@@ -78,8 +78,8 @@ export const UniversalControlModal = ({
 
   const fetchValues = async (value) => {
     setLoading(true);
-    console.log("fetchdata", fetchdata?.length);
-    if (!fetchdata?.length) {
+    console.log("fetchdata", fetchdata?.length, fetchdata);
+    if (!Object.keys(fetchdata).length) {
       openWarning("topRight", true);
       setLoading(false);
       return;
@@ -252,11 +252,12 @@ export const UniversalControlModal = ({
     if (type !== "cutting") {
       delete data.amount;
     }
-
+    console.log(type);
     const result = calculateTotal(data);
     dispatch(acCalc(result));
     if (type === "product") {
       setFetchdata({ ...data, ...result });
+      console.log("product");
     }
     if (type === "invoice") {
       setFetchdata({
@@ -264,29 +265,36 @@ export const UniversalControlModal = ({
         cost: result.prime_cost,
         leftover: result.prime_cost,
       });
+      console.log("invoice");
     }
     if (type === "edr") {
       setFetchdata({
         ...data,
         cost: result.prime_cost,
       });
+      console.log("edr");
     }
     if (type === "cutting") {
       setFetchdata({ ...data });
+      console.log("cutting");
     }
     if (type === "carryUp") {
       setFetchdata({ ...data, amount: result?.prime_cost });
+      console.log("carryUp");
     }
     if (type === "damaged") {
       setFetchdata({ ...data, cost: result?.prime_cost });
+      console.log("damaged");
     }
     if (type === "making") {
       setFetchdata({ ...data, total_price: result?.prime_cost });
+      console.log("making");
     }
     if (type === "preOrder") {
       setFetchdata({ ...data, cost: result?.prime_cost });
+      console.log("preOrder");
     }
-    console.log("data", data, "result", result);
+    console.log("data", data, "result", result, "fetchdata", fetchdata);
   };
 
   const closeModal = () => {

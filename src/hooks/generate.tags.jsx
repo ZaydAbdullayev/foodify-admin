@@ -152,26 +152,42 @@ export const GenerateField = ({ fieldData }) => {
 
     case "s_search":
       return (
-        <Select
-          showSearch
-          placeholder={plc_hr}
-          defaultValue={df_value}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? "").includes(input)
-          }
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? "")
-              .toLowerCase()
-              .localeCompare((optionB?.label ?? "").toLowerCase())
-          }
-          options={
-            options?.map((item) => ({
-              value: item?.id,
-              label: item?.name,
-            })) || []
-          }
-        />
+        <>
+          <Select
+            showSearch
+            placeholder={plc_hr}
+            defaultValue={df_value}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").includes(input)
+            }
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
+            options={
+              options?.map((item) => ({
+                value: `${extra}=${item?.name}|${item?.id}`,
+                label: item?.name,
+              })) || []
+            }
+            aria-label="place for search option"
+            onChange={getExtraValue}
+          />
+          <input
+            type="hidden"
+            name={name}
+            value={datas?.name}
+            aria-label={`place for secret value ${datas?.name}`}
+          />
+          <input
+            type="hidden"
+            name={extra}
+            value={datas?.id}
+            aria-label={`place for secret value ${datas?.id}`}
+          />
+        </>
       );
 
     default:

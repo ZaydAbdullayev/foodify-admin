@@ -73,7 +73,7 @@ export const StorageCutting = () => {
     { name: "ingredient", size: "12%" },
     { name: "amount", size: "12%", position: "flex-end" },
     { name: "waste", size: "12%", position: "flex-end" },
-    { name: "ingredient_group", size: "12%" },
+    { name: "invoice_group", size: "12%" },
     { name: "description", size: "12%" },
   ];
 

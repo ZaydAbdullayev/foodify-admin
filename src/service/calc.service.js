@@ -7,8 +7,8 @@ export const CalculateTotalPrice = (cart = [], percentage = 10) => {
   const parsedS = parseFloat(service.toFixed(2));
 
   return {
-    totalPrice,
-    service: parsedS,
+    totalPrice: totalPrice?.toFixed(2),
+    service: parsedS?.toFixed(2),
     total: parseInt(totalPrice) + parseInt(parsedS),
   };
 };
@@ -20,7 +20,7 @@ export const CalculateTotalQuantity = (cart, key, qty = null) => {
       return accumulator + parseInt(item[key], 10) * quantityMultiplier;
     }, 0) || 0;
 
-  return totalPrice;
+  return totalPrice?.toFixed(2);
 };
 
 export const CalculateTotalP = (cart, first, second) => {
@@ -28,7 +28,7 @@ export const CalculateTotalP = (cart, first, second) => {
     (accumulator, item) => accumulator + item[first] * item[second],
     0
   );
-  return totalPrice;
+  return totalPrice?.toFixed(2);
 };
 
 export const CalculateTotalByLine = (cart, keyToExclude) => {
@@ -50,7 +50,7 @@ export const CalculateTotal = (data, key) => {
       total += CalculateTotalQuantity(tr?.details, "amount");
     });
   });
-  return total;
+  return total?.toFixed(2);
 };
 
 export const CalculateTotalCH = (data, key, vl) => {
@@ -60,7 +60,6 @@ export const CalculateTotalCH = (data, key, vl) => {
       const value = item[key]?.[vl];
       total += value ? value : 0;
     });
-  } 
-  return total;
+  }
+  return total?.toFixed(2);
 };
-
