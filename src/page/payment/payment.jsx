@@ -17,7 +17,7 @@ export const Payment = () => {
   const res_id = useSelector((state) => state?.res_id);
   // const search = useLocation().search?.split("=").pop();
   const [date, setDate] = useState({
-    start: "2021-01-01",
+    start: new Date().toISOString().split("T")[0],
     end: new Date().toISOString().split("T")[0],
   });
   const { data: ordersData = [] } = useFetchDataQuery({
@@ -32,6 +32,12 @@ export const Payment = () => {
   const getDetails = (id) => {
     navigate(`/financial?dt=${id}`);
     setOpen(true);
+  };
+
+  const types = {
+    openOrders: "Ochiq",
+    closedOrders: "Yopiq",
+    debtOrders: "Qarz",
   };
 
   return (
@@ -139,8 +145,8 @@ export const Payment = () => {
         <figure className="no_result">
           <Result
             status="403"
-            title={`${type} buyurtma yo'q`}
-            subTitle={`${type} buyurtma topilmadi yoki mavjud emas!`}
+            title={`${types?.[type]} buyurtma yo'q`}
+            subTitle={`${types?.[type]} buyurtma topilmadi yoki mavjud emas!`}
             extra={
               <Button onClick={() => window.location.reload()}>
                 Sahifani yangilash

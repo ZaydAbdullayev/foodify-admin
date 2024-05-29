@@ -32,7 +32,6 @@ export const filterData = (filters) => {
   // Örneğin, veriler üzerinde filter işlemleri yapabilirsiniz
 };
 
-
 export const UniversalFilterBox = () => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
@@ -237,7 +236,7 @@ export const UniversalFilterBox = () => {
           placeholder="Mahsulot tanlang*"
           optionFilterProp="children"
           filterOption={(input, option) =>
-            (option?.label ?? "").includes(input)
+            (option?.label ?? "").includes(input?.toLowerCase())
           }
           filterSort={(optionA, optionB) =>
             (optionA?.label ?? "")
@@ -258,8 +257,7 @@ export const UniversalFilterBox = () => {
           style={
             search.length ? {} : { opacity: "0.4", border: "1px solid #ccc6" }
           }
-          aria-label="to click for search"
-        >
+          aria-label="to click for search">
           <BsSearch />
         </button>
       )}
