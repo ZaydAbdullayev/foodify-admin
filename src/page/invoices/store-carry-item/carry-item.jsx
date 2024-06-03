@@ -187,7 +187,7 @@ export const StorageCarryUp = () => {
                         navigate(`?page-code=carry`);
                       }}
                       aria-label="checked this elements">
-                      <input type="checkbox" name="id" defaultChecked={check} />
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}

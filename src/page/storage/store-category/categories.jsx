@@ -137,7 +137,7 @@ export const StorageCatgegories = () => {
                         navigate(`?page-code=category`);
                       }}
                       aria-label="checked this elements">
-                      <input type="checkbox" name="id" defaultChecked={check} />
+                      <input type="checkbox" name="id" checked={check} />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p style={{ "--data-line-size": "40%" }}>{item.name}</p>

@@ -168,11 +168,7 @@ export const CashboxTransaction = () => {
                         navigate(`?page-code=trsn`);
                       }}
                       aria-label="checked this elements">
-                      <input
-                        type="checkbox"
-                        name="id"
-                        defaultChecked={isChecked}
-                      />
+                      <input type="checkbox" name="id" checked={isChecked} />
                     </label>
                     <p>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>

@@ -6,6 +6,7 @@ import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { addAllIng } from "../../../service/unique.service";
 
 const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const today = new Date().toISOString().split("T")[0];
@@ -72,7 +73,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data?.data)}
+              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "60%" }}>Nomi</p>
@@ -88,7 +89,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
                 <label>
                   <input
                     type="checkbox"
-                    defaultChecked={checked}
+                    checked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

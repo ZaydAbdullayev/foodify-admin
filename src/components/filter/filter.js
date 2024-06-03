@@ -104,7 +104,6 @@ export const UniversalFilterBox = () => {
           />
         </label>
       )}
-
       {status?.includes(6) && (
         <Select
           defaultValue={{
@@ -226,7 +225,6 @@ export const UniversalFilterBox = () => {
           )}
         </label>
       )}
-
       {status?.includes(13) && (
         <Select
           showSearch
@@ -251,7 +249,6 @@ export const UniversalFilterBox = () => {
           }
         />
       )}
-
       {status?.includes(15) && (
         <button
           style={

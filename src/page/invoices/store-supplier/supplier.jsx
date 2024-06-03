@@ -137,7 +137,7 @@ export const StorageSupplier = () => {
                         navigate(`?page-code=supplier`);
                       }}
                       aria-label="checked this elements">
-                      <input type="checkbox" defaultChecked={check} />
+                      <input type="checkbox" checked={check} />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p

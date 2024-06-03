@@ -146,7 +146,7 @@ export const ReportOrders = () => {
                         navigate(`?page-code=orderReport`);
                       }}
                       aria-label="checked this elements">
-                      <input type="checkbox" name="id" defaultChecked={chek} />
+                      <input type="checkbox" name="id" checked={chek} />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(

@@ -8,6 +8,7 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
+import { addAllIng } from "../../../service/unique.service";
 
 const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   // const today = new Date().toISOString().split("T")[0];
@@ -114,7 +115,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data?.data)}
+              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -136,7 +137,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                 <label>
                   <input
                     type="checkbox"
-                    defaultChecked={checked || false}
+                    checked={checked || false}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

@@ -13,6 +13,7 @@ import { BsReceiptCutoff } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
+import { addAllIng } from "../../../service/unique.service";
 
 const InvoicesModal = ({
   checkedData,
@@ -160,7 +161,7 @@ const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data?.data)}
+              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": activePart === 1 ? "20%" : "60%" }}>
@@ -189,7 +190,7 @@ const InvoicesModal = ({
                 <label>
                   <input
                     type="checkbox"
-                    defaultChecked={checked}
+                    checked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

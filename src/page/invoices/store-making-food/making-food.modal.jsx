@@ -8,6 +8,7 @@ import { CalcResult } from "../../../components/modal-calc/modal-calc";
 
 import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { addAllIng } from "../../../service/unique.service";
 
 const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   const res_id = useSelector((state) => state?.res_id);
@@ -115,7 +116,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => setCheckedData(data?.data)}
+              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "27%" }}>Nomi</p>
@@ -134,7 +135,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                 <label>
                   <input
                     type="checkbox"
-                    defaultChecked={checked}
+                    checked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }
