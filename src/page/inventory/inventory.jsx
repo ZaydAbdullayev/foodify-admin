@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./inventory.css";
-import { useFetchDataQuery } from "../../service/fetch.service";
-import { usePostDataMutation } from "../../service/fetch.service";
+import {
+  useFetchDataQuery,
+  usePostDataMutation,
+  usePatchDataMutation,
+} from "../../service/fetch.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
-import { DatePicker, InputNumber, Modal, Popconfirm, Select } from "antd";
-import { Input } from "antd";
+import { DatePicker, InputNumber, Modal, Select, Input } from "antd";
 import dayjs from "dayjs";
 
 import { MdOutlineHistory, MdCheck } from "react-icons/md";
@@ -16,41 +18,44 @@ import { RxCross2 } from "react-icons/rx";
 import { BsPencilSquare } from "react-icons/bs";
 
 export const Inventory = () => {
-  const user = JSON.parse(localStorage.getItem("user"))?.user || [];
+  const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const { data: stores = [] } = useFetchDataQuery({
-    url: `get/storage/${user?.id}`,
+    url: user ? `get/storage/${user?.id}` : "",
     tags: ["store"],
   });
   const { data: syncsData = [] } = useFetchDataQuery({
-    url: `get/syncStorage/${user?.id}`,
+    url: user ? `get/syncStorage/${user?.id}` : "",
     tags: ["inventory"],
   });
-  const [storageId, setStorageId] = useState(stores.data?.[0]?.id);
+  const [storageId, setStorageId] = useState(null);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncsValue, setSyncsValue] = useState([]);
-  const [storageV, setStorageV] = useState({});
-  const [oneold, setOneOld] = useState([]);
-  const [oneNew, setOneNew] = useState([]);
+  const [storageV, setStorageV] = useState({
+    number: 1,
+    sync_time: new Date().toLocaleDateString(),
+    description: "",
+  });
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [postData] = usePostDataMutation();
+  const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(acNavStatus([100]));
   }, [dispatch]);
 
   const { data = {} } = useFetchDataQuery({
-    url: `get/storageItems/${user?.id}/${storageId}`,
+    url: user && storageId ? `get/storageItems/${user.id}/${storageId}` : "",
     tags: ["invoices", "storeItems"],
   });
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
-      setStorageId(stores?.data[0].id);
+      setStorageId(stores.data[0].id);
     }
   }, [stores?.data]);
 
@@ -79,30 +84,12 @@ export const Inventory = () => {
     return stores.data?.find((store) => store.id === id)?.name;
   };
 
-  //   [
-  //   {
-  //     "id": "1001",
-  //     "food_id": "1001",
-  //     "name": "Potatoes",
-  //     "unit": "kg",
-  //     "group": "Vegetables",
-  //     "res_id": "12345",
-  //     "price": 1.5,
-  //     "type": "Storage",
-  //     "storage_id": "S1",
-  //     "amount": 180,
-  //     "total_quantity": 180,
-  //     "sync_time": "2024-05-10 08:00:00",
-  //     "st_name": "Main Storage",
-  //     "description": "Synced from frontend",
-  //     "number": 1,
-  //     "old_quantity": 0
-  //   },
-
   const changeQuantity = (value, ingredientId) => {
     const parsedValue = parseInt(value);
 
-    const item = data?.data?.find((item) => item.id === ingredientId);
+    const item = (seeOne ? active?.details : data?.data)?.find(
+      (item) => item.id === ingredientId
+    );
     if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
 
     const ind = syncsValue.findIndex((item) => item.id === ingredientId);
@@ -128,7 +115,7 @@ export const Inventory = () => {
         old_quantity: item.total_quantity,
         total_quantity: parsedValue,
         st_name: getStorageName(storageId),
-        storageId: storageId,
+        storage_id: storageId,
       });
     }
 
@@ -138,18 +125,26 @@ export const Inventory = () => {
   const syncData = async (status) => {
     try {
       setLoading(true);
-      if (!status) {
-        const { data = null } = await postData({
-          url: `/sync/storage`,
-          data: [...(syncsValue || [])],
-          tags: ["inventory", "storeItems"],
-        });
-        if (data.message === "syncStorage has been added") {
-          setSnc(status);
-          es("Sinxronlashtirish yakunlandi", { variant: "success" });
-        }
+      let response;
+      const values = {
+        url: seeOne ? `/update/syncStorage/${active?.id}` : `/sync/storage`,
+        data: [...syncsValue],
+        tags: ["inventory", "storeItems"],
+      };
+      if (seeOne) {
+        response = await patchData(values);
       } else {
+        response = await postData(values);
+      }
+
+      if (
+        response?.message === "syncStorage has been added" ||
+        response?.message === "syncStorage is updated"
+      ) {
         setSnc(status);
+        setSyncsValue([]);
+        setActive(null);
+        es("Sinxronlashtirish yakunlandi", { variant: "success" });
       }
     } catch (error) {
       console.log(error);
@@ -159,13 +154,8 @@ export const Inventory = () => {
     }
   };
 
-  const getOneSyncData = (id) => {
-    const oneData = syncsData?.data?.find((sync) => sync.id === id);
-    const oldData = JSON.parse(oneData.old_data);
-    const newData = JSON.parse(oneData.new_data);
-    setOneOld(oldData);
-    setOneNew(newData);
-    setActive(oneData);
+  const getOneSyncData = (item) => {
+    setActive(item);
     setSeeOne(true);
     setSyncs(false);
   };
@@ -207,7 +197,10 @@ export const Inventory = () => {
         <div className="inventory_btn-box">
           {seeOne ? (
             <button
-              onClick={() => setSeeOne(false)}
+              onClick={() => {
+                setSeeOne(false);
+                setActive(null);
+              }}
               aria-label="backword all inventory informstion">
               <TbArrowBarLeft />
             </button>
@@ -216,7 +209,9 @@ export const Inventory = () => {
               {!snc && (
                 <div
                   className={
-                    syncs ? "inventory-history active" : "inventory-history"
+                    syncs && syncsData?.data?.length > 0
+                      ? "inventory-history active"
+                      : "inventory-history"
                   }
                   onClick={() => setTimeout(() => setSyncs(!syncs), 100)}>
                   <MdOutlineHistory />
@@ -225,7 +220,7 @@ export const Inventory = () => {
                     {syncsData?.data?.map((item, index) => {
                       const day = new Date(item.sync_time).toLocaleDateString();
                       return (
-                        <p key={index} onClick={() => getOneSyncData(item.id)}>
+                        <p key={index} onClick={() => getOneSyncData(item)}>
                           {item.st_name} <span>{day}</span>
                         </p>
                       );
@@ -233,85 +228,102 @@ export const Inventory = () => {
                   </div>
                 </div>
               )}
-              {snc && (
-                <button onClick={() => setSnc(false)} aria-label="cancel async">
-                  <RxCross2 />
-                </button>
-              )}
-              <button
-                className="relative"
-                aria-label="to async and upload new info">
-                {loading ? (
-                  <LoadingBtn />
-                ) : snc ? (
-                  <MdCheck onClick={() => syncData(!snc)} />
-                ) : (
-                  <BsPencilSquare
-                    onClick={showModal}
-                    style={{ fontSize: "calc(var(--fs4) - 5px)" }}
-                  />
-                )}
-              </button>
             </>
           )}
+          {snc && (
+            <button onClick={() => setSnc(false)} aria-label="cancel async">
+              <RxCross2 />
+            </button>
+          )}
+          <button
+            className="relative"
+            aria-label="to async and upload new info">
+            {loading ? (
+              <LoadingBtn />
+            ) : snc ? (
+              <MdCheck onClick={() => syncData(!snc)} />
+            ) : (
+              <BsPencilSquare
+                onClick={() => {
+                  if (seeOne) {
+                    setSnc(true);
+                    setStorageV({
+                      number: active?.number,
+                      sync_time: active?.sync_time,
+                      description: active?.description,
+                    });
+                    setStorageId(active?.storage_id);
+                  } else {
+                    showModal();
+                  }
+                }}
+                style={{ fontSize: "calc(var(--fs4) - 5px)" }}
+              />
+            )}
+          </button>
         </div>
       </div>
       <div
         className="worker"
         style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}>
-        {headerKeys.map((key) => (
-          <p key={key.key} style={{ "--worker-t-w": key.size }}>
+        {headerKeys.map((key, ind) => (
+          <p key={`${key.key}_${ind}`} style={{ "--worker-t-w": key.size }}>
             {key.key}
           </p>
         ))}
       </div>
       <div className="workers_body inventory_body">
-        {(seeOne ? oneNew : data?.data || []).map((ingredient, ind) => {
-          const old = seeOne ? oneold?.[ind] : {};
-          return (
-            <div className="worker inventory-item" key={ingredient?.id}>
-              <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-              <p
-                style={{ "--worker-t-w": "20%", justifyContent: "flex-start" }}>
-                <span>
-                  {ingredient?.name}
-                  {seeOne && "sync"}
-                </span>
-              </p>
-              <p style={{ "--worker-t-w": "20%" }}>
-                <span>{ingredient?.group}</span>
-              </p>
-              <p style={{ "--worker-t-w": "20%" }}>
-                <span>{ingredient?.type}</span>
-              </p>
-              <p style={{ "--worker-t-w": "20%" }}>
-                <span>{ingredient?.price}</span>
-              </p>
-              <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
-                {snc ? (
-                  <label className="changed_tool">
-                    <input
-                      type="number"
-                      defaultValue={ingredient?.total_quantity}
-                      onBlur={(e) =>
-                        changeQuantity(e.target.value, ingredient?.id)
-                      }
-                    />
-                  </label>
-                ) : (
+        {(seeOne ? active?.details : data?.data || [])?.map(
+          (ingredient, ind) => {
+            return (
+              <div className="worker inventory-item" key={ingredient?.id}>
+                <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
+                <p
+                  style={{
+                    "--worker-t-w": "20%",
+                    justifyContent: "flex-start",
+                  }}>
                   <span>
-                    {ingredient?.total_quantity} {ingredient?.unit}
-                    {seeOne && (
-                      <del>
-                        {old?.total_quantity || 0} {old?.unit || ""}
-                      </del>
-                    )}
+                    {ingredient?.name}
+                    {seeOne && "sync"}
                   </span>
-                )}
-              </p>
-            </div>
-          );
-        })}
+                </p>
+                <p style={{ "--worker-t-w": "20%" }}>
+                  <span>{ingredient?.group}</span>
+                </p>
+                <p style={{ "--worker-t-w": "20%" }}>
+                  <span>{ingredient?.type}</span>
+                </p>
+                <p style={{ "--worker-t-w": "20%" }}>
+                  <span>{ingredient?.price}</span>
+                </p>
+                <p style={{ "--worker-t-w": "15%", cursor: "pointer" }}>
+                  {snc ? (
+                    <label className="changed_tool">
+                      <input
+                        type="number"
+                        defaultValue={ingredient?.total_quantity}
+                        onBlur={(e) =>
+                          changeQuantity(e.target.value, ingredient?.id)
+                        }
+                      />
+                    </label>
+                  ) : (
+                    <span>
+                      {ingredient?.total_quantity} {ingredient?.unit}
+                      {seeOne && (
+                        <del>
+                          {ingredient?.old_quantity || 0}{" "}
+                          {ingredient?.unit || ""}
+                        </del>
+                      )}
+                    </span>
+                  )}
+                </p>
+              </div>
+            );
+          }
+        )}
       </div>
       <Modal
         title="Ushbu ma'lumotlar asosida sinxronlashtirish"
