@@ -27,13 +27,13 @@ export const Inventory = () => {
     url: user ? `get/syncStorage/${user?.id}` : "",
     tags: ["inventory"],
   });
-  const [storageId, setStorageId] = useState(null);
+  const [storage, setStorage] = useState(null);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncsValue, setSyncsValue] = useState([]);
   const [storageV, setStorageV] = useState({
     number: 1,
-    sync_time: new Date().toLocaleDateString(),
+    sync_time: new Date().toISOString().split("T")[0],
     description: "",
   });
   const [active, setActive] = useState(null);
@@ -49,13 +49,18 @@ export const Inventory = () => {
   }, [dispatch]);
 
   const { data = {} } = useFetchDataQuery({
-    url: user && storageId ? `get/storageItems/${user.id}/${storageId}` : "",
+    url: storage?.id ? `get/storageItems/${user.id}/${storage?.id}` : "",
+    tags: ["invoices", "storeItems"],
+  });
+
+  const { data: lastN = {} } = useFetchDataQuery({
+    url: `get/lastSync/${user.id}`,
     tags: ["invoices", "storeItems"],
   });
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
-      setStorageId(stores.data[0].id);
+      setStorage({ id: stores?.data[0]?.id, name: stores?.data[0]?.name });
     }
   }, [stores?.data]);
 
@@ -72,16 +77,19 @@ export const Inventory = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
+    const form = document.getElementById("sync-form");
+    const formData = new FormData(form);
+    const values = {};
+    formData.forEach((value, key) => {
+      values[key] = value;
+    });
+    setStorageV(values);
     setIsModalOpen(false);
     setSnc(true);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
     setSnc(false);
-  };
-
-  const getStorageName = (id) => {
-    return stores.data?.find((store) => store.id === id)?.name;
   };
 
   const changeQuantity = (value, ingredientId) => {
@@ -103,7 +111,7 @@ export const Inventory = () => {
     if (ind !== -1) {
       updatedNewData[ind] = {
         ...updatedNewData[ind],
-        amount: updatedNewData[ind].total_quantity - parsedValue,
+        amount: parsedValue - updatedNewData[ind].total_quantity,
         old_quantity: updatedNewData[ind].total_quantity,
         total_quantity: parsedValue,
       };
@@ -111,11 +119,11 @@ export const Inventory = () => {
       updatedNewData.push({
         ...item,
         ...storageV,
-        amount: item.total_quantity - parsedValue,
+        amount: parsedValue - item.total_quantity,
         old_quantity: item.total_quantity,
         total_quantity: parsedValue,
-        st_name: getStorageName(storageId),
-        storage_id: storageId,
+        st_name: storage?.name,
+        storage_id: storage?.id,
       });
     }
 
@@ -125,22 +133,19 @@ export const Inventory = () => {
   const syncData = async (status) => {
     try {
       setLoading(true);
-      let response;
+      let res;
       const values = {
         url: seeOne ? `/update/syncStorage/${active?.id}` : `/sync/storage`,
         data: [...syncsValue],
         tags: ["inventory", "storeItems"],
       };
       if (seeOne) {
-        response = await patchData(values);
+        res = await patchData(values);
       } else {
-        response = await postData(values);
+        res = await postData(values);
       }
 
-      if (
-        response?.message === "syncStorage has been added" ||
-        response?.message === "syncStorage is updated"
-      ) {
+      if (res?.status === 200) {
         setSnc(status);
         setSyncsValue([]);
         setActive(null);
@@ -177,12 +182,15 @@ export const Inventory = () => {
                 name="storage"
                 style={{ fontSize: "4px" }}
                 defaultValue={{
-                  value: stores?.data?.[0]?.id,
-                  label: "Ombor tanlang",
+                  value: `${storage?.id}|${storage?.name}` || null,
+                  label: storage?.name || "Ombor tanlang",
                 }}
-                onChange={setStorageId}
+                onChange={(v) => {
+                  const i_n = v?.split("|");
+                  setStorage({ id: i_n[0], name: i_n[1] });
+                }}
                 options={stores?.data?.map((item) => ({
-                  value: item?.id || null,
+                  value: `${item?.id}|${item?.name}`,
                   label: item?.name || "",
                 }))}
               />
@@ -252,7 +260,7 @@ export const Inventory = () => {
                       sync_time: active?.sync_time,
                       description: active?.description,
                     });
-                    setStorageId(active?.storage_id);
+                    setStorage(active?.storage_id);
                   } else {
                     showModal();
                   }
@@ -332,38 +340,41 @@ export const Inventory = () => {
         onCancel={handleCancel}
         okText="Tasdiqlash"
         cancelText="Bekor qilish">
-        <div className="w100 df flc" style={{ gap: "10px" }}>
+        <form className="w100 df flc" style={{ gap: "10px" }} id="sync-form">
           <Select
             name="storage"
-            style={{ width: "100%", fontSize: "10px" }}
+            style={{ fontSize: "4px" }}
             defaultValue={{
-              value: stores?.data?.[0]?.id,
-              label: "Ombor tanlang",
+              value: `${storage?.id}|${storage?.name}` || null,
+              label: storage?.name || "Ombor tanlang",
             }}
-            onChange={setStorageId}
+            onChange={(v) => {
+              const i_n = v?.split("|");
+              setStorage({ id: i_n[0], name: i_n[1] });
+            }}
             options={stores?.data?.map((item) => ({
-              value: item?.id || null,
+              value: `${item?.id}|${item?.name}`,
               label: item?.name || "",
             }))}
           />
           <DatePicker
             style={{ width: "100%", fontSize: "10px" }}
             defaultValue={dayjs(new Date())}
-            onChange={(date) => setStorageV({ ...storageV, sync_time: date })}
+            name="sync_time"
           />
           <InputNumber
             style={{ width: "100%" }}
-            defaultValue={1}
-            onChange={(value) => setStorageV({ ...storageV, number: value })}
+            defaultValue={lastN?.data?.number + 1 || 1}
+            name="number"
           />
           <Input
             style={{ width: "100%" }}
             placeholder="Tafsilot"
-            onChange={(e) =>
-              setStorageV({ ...storageV, description: e.target.value })
-            }
+            name="description"
           />
-        </div>
+          <input type="hidden" name="storage_id" value={storage?.id} />
+          <input type="hidden" name="st_name" value={storage?.name} />
+        </form>
       </Modal>
     </div>
   );

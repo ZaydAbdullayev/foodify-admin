@@ -51,7 +51,12 @@ const api = createApi({
   ],
   endpoints: (builder) => ({
     fetchData: builder.query({
-      query: ({ url }) => url,
+      query: ({ url }) => {
+        if (url === "") {
+          return null; // Return null or undefined to prevent the request
+        }
+        return url;
+      },
       refetchOnMount: false,
       providesTags: (result, error, { tags = [] }) => [...tags],
     }),
