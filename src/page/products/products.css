@@ -42,7 +42,7 @@
   border: none;
   outline: none;
   font-size: var(--fs5);
-  color: var(--cl3);
+  color: var(--cl4);
 }
 
 .search_box > input::placeholder {
@@ -63,7 +63,7 @@
   top: 0;
   right: 0;
   padding: 0% 1%;
-  background: var(--cl43);
+  background: var(--cl26);
   border-radius: 5px;
   cursor: pointer;
   display: flex;
@@ -116,7 +116,7 @@
 .search_src > a:hover,
 .search_src > a:focus {
   background: var(--cl36);
-  color: var(--cl3);
+  color: var(--cl4);
 }
 
 /* =================== All products =================== */
@@ -133,7 +133,7 @@
   display: flex;
   align-items: center;
   gap: var(--gap2);
-  background: var(--cl22) 5;
+  background: var(--cl23);
   border-radius: 15px;
   color: var(--cl1);
   font-size: var(--fs5);
@@ -219,7 +219,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--cl39);
+  background: var(--cl12);
   color: var(--cl1);
 }
 

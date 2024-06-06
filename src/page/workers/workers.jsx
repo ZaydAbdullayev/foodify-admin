@@ -93,16 +93,14 @@ export const Workers = () => {
         {permission && (
           <button
             onClick={() => openModal(1)}
-            aria-label="open modal for add worker"
-          >
+            aria-label="open modal for add worker">
             Ishchi qo'shish <HiUserPlus />
           </button>
         )}
       </div>
       <div
         className="worker"
-        style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}
-      >
+        style={{ borderBottom: "1px solid #ccc", padding: "0.5% 2%" }}>
         {headerKeys.map((key) => (
           <p key={key.key} style={{ "--worker-t-w": key.size }}>
             {key.key}
@@ -114,17 +112,16 @@ export const Workers = () => {
           filteredWorkers?.map((worker) => {
             return (
               <div className="worker" key={worker.id}>
-                <p>
+                <p
+                  style={{
+                    color: worker?.status === 1 ? "lime" : "red",
+                    "--worker-t-w": "5%",
+                  }}>
                   <span
-                    style={{
-                      color: worker?.status === 1 ? "lime" : "red",
-                      "--worker-t-w": "5%",
-                    }}
                     onClick={() =>
                       handleEdit({ id: worker.id, status: !worker.status })
                     }
-                    aria-label="to change this worker status active/passsive"
-                  >
+                    aria-label="to change this worker status active/passsive">
                     <GoDotFill />
                   </span>
                 </p>
@@ -167,8 +164,7 @@ export const Workers = () => {
                             : worker.department === "offitsant"
                             ? "#43aa8b"
                             : "#f25c54",
-                      }}
-                    >
+                      }}>
                       {worker.department}
                     </span>
                   )}
@@ -187,8 +183,7 @@ export const Workers = () => {
                       <span
                         onClick={() => setShow(show === "" ? worker.id : "")}
                         style={show !== worker.id ? {} : { color: "orange" }}
-                        aria-label="see password of the this worker"
-                      >
+                        aria-label="see password of the this worker">
                         {show !== worker.id ? <BsEyeSlash /> : <BsEye />}
                       </span>
                     </>
@@ -199,8 +194,7 @@ export const Workers = () => {
                     <button
                       style={{ background: "red" }}
                       onClick={() => setUpdate(null)}
-                      aria-label=" cancel changes"
-                    >
+                      aria-label=" cancel changes">
                       <ImCancelCircle />
                     </button>
                   )}
@@ -208,23 +202,20 @@ export const Workers = () => {
                     <button
                       style={{ background: "#76c893" }}
                       onClick={() => handleEdit({ ...info, id: worker.id })}
-                      aria-label="confirm changes"
-                    >
+                      aria-label="confirm changes">
                       <FaCheck />
                     </button>
                   ) : (
                     <button
                       style={{ background: "#76c893" }}
                       onClick={() => setUpdate(worker.id)}
-                      aria-label="open change mode this worker's info"
-                    >
+                      aria-label="open change mode this worker's info">
                       <MdModeEditOutline />
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(worker.id)}
-                    aria-label="delete this worker"
-                  >
+                    aria-label="delete this worker">
                     <MdDelete />
                   </button>
                 </div>
@@ -235,8 +226,7 @@ export const Workers = () => {
           <button
             className="universal_key"
             onClick={() => openModal(2)}
-            aria-label="open modal for add new worker"
-          >
+            aria-label="open modal for add new worker">
             <span>+</span>
             <FaUserLock />
           </button>

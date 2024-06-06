@@ -173,8 +173,7 @@ export const Inventory = () => {
           {seeOne ? (
             <span>
               {" "}
-              {active.st_name} —{" "}
-              {new Date(active.sync_time).toLocaleDateString()}
+              {active.st_name} — {active.sync_time}
             </span>
           ) : (
             <div className="df aic gap5">
@@ -226,10 +225,9 @@ export const Inventory = () => {
                   <span className="ticket"></span>
                   <div className="_history-body">
                     {syncsData?.data?.map((item, index) => {
-                      const day = new Date(item.sync_time).toLocaleDateString();
                       return (
                         <p key={index} onClick={() => getOneSyncData(item)}>
-                          {item.st_name} <span>{day}</span>
+                          {item.st_name} <span>{item.sync_time}</span>
                         </p>
                       );
                     })}
@@ -286,11 +284,7 @@ export const Inventory = () => {
             return (
               <div className="worker inventory-item" key={ingredient?.id}>
                 <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
-                <p
-                  style={{
-                    "--worker-t-w": "20%",
-                    justifyContent: "flex-start",
-                  }}>
+                <p style={{ "--worker-t-w": "20%" }}>
                   <span>
                     {ingredient?.name}
                     {seeOne && "sync"}
