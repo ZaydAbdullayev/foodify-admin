@@ -134,16 +134,19 @@ export const InvoicesGroups = () => {
                       dispatch(setDocuments("invGr", item));
                       navigate(`?page-code=invGr`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("invGr", item));
-                        navigate(`?page-code=invGr`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("invGr", item));
+                          navigate(`?page-code=invGr`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p style={{ "--data-line-size": "94%" }}>{item.name}</p>

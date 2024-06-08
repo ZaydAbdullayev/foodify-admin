@@ -128,16 +128,18 @@ export const StorageSupplier = () => {
                       dispatch(setDocuments("supplier", item));
                       navigate(`?page-code=supplier`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("supplier", item));
-                        navigate(`?page-code=supplier`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("supplier", item));
+                          navigate(`?page-code=supplier`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p

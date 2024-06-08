@@ -145,16 +145,19 @@ export const InvoiceInvantar = () => {
                       dispatch(setDocuments("envanter", item));
                       navigate(`?page-code=envanter`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("envanter", item));
-                        navigate(`?page-code=envanter`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("envanter", item));
+                          navigate(`?page-code=envanter`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}

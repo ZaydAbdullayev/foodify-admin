@@ -178,16 +178,19 @@ export const StorageCarryUp = () => {
                       dispatch(setDocuments("carry", item));
                       navigate(`?page-code=carry`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("carry", item));
-                        navigate(`?page-code=carry`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("carry", item));
+                          navigate(`?page-code=carry`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}

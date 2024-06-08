@@ -137,16 +137,19 @@ export const ReportOrders = () => {
                       dispatch(setDocuments("orderReport", item));
                       navigate(`?page-code=orderReport`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("orderReport", item));
-                        navigate(`?page-code=orderReport`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={chek} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={chek}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("orderReport", item));
+                          navigate(`?page-code=orderReport`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(

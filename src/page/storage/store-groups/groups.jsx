@@ -146,16 +146,19 @@ export const StorageGroups = () => {
                       dispatch(setDocuments("ingGroup", item));
                       navigate(`?page-code=ingGroup`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("ingGroup", item));
-                        navigate(`?page-code=ingGroup`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("ingGroup", item));
+                          navigate(`?page-code=ingGroup`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     <p

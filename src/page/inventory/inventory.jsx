@@ -145,10 +145,11 @@ export const Inventory = () => {
         res = await postData(values);
       }
 
-      if (res?.status === 200) {
+      if (res?.data?.status === 200) {
         setSnc(status);
         setSyncsValue([]);
         setActive(null);
+        setSeeOne(false);
         es("Sinxronlashtirish yakunlandi", { variant: "success" });
       }
     } catch (error) {
@@ -243,28 +244,31 @@ export const Inventory = () => {
           )}
           <button
             className="relative"
-            aria-label="to async and upload new info">
+            aria-label="to async and upload new info"
+            onClick={() => {
+              setSyncs(false);
+              if (snc) {
+                syncData(!snc);
+              } else {
+                if (seeOne) {
+                  setSnc(true);
+                  setStorageV({
+                    number: active?.number,
+                    sync_time: active?.sync_time,
+                    description: active?.description,
+                  });
+                  setStorage(active?.storage_id);
+                } else {
+                  showModal();
+                }
+              }
+            }}>
             {loading ? (
               <LoadingBtn />
             ) : snc ? (
-              <MdCheck onClick={() => syncData(!snc)} />
+              <MdCheck />
             ) : (
-              <BsPencilSquare
-                onClick={() => {
-                  if (seeOne) {
-                    setSnc(true);
-                    setStorageV({
-                      number: active?.number,
-                      sync_time: active?.sync_time,
-                      description: active?.description,
-                    });
-                    setStorage(active?.storage_id);
-                  } else {
-                    showModal();
-                  }
-                }}
-                style={{ fontSize: "calc(var(--fs4) - 5px)" }}
-              />
+              <BsPencilSquare style={{ fontSize: "calc(var(--fs4) - 5px)" }} />
             )}
           </button>
         </div>
@@ -278,11 +282,15 @@ export const Inventory = () => {
           </p>
         ))}
       </div>
-      <div className="workers_body inventory_body">
+      <div
+        className="workers_body inventory_body"
+        onClick={() => setSyncs(false)}>
         {(seeOne ? active?.details : data?.data || [])?.map(
           (ingredient, ind) => {
             return (
-              <div className="worker inventory-item" key={ingredient?.id}>
+              <div
+                className="worker inventory-item"
+                key={`${ingredient?.id}_${ind}`}>
                 <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
                 <p style={{ "--worker-t-w": "20%" }}>
                   <span>

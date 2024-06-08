@@ -76,12 +76,13 @@
   border-radius: 50%;
 }
 
-.inventory_btn-box > :where(button, div)>svg{
+.inventory_btn-box > :where(button, div) > svg {
   font-size: var(--fs4);
 }
 
 .inventory-history {
   transition: all 0.5s ease-in-out;
+  cursor: pointer;
 }
 
 .history-box {

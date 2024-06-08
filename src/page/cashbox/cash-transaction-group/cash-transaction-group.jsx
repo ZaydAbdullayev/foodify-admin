@@ -147,16 +147,19 @@ export const TransactionGroups = () => {
                     dispatch(setDocuments("cashboxGr", item));
                     navigate(`?page-code=cashboxGr`);
                   }}>
-                  <label
-                    onClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("cashboxGr", item));
-                      navigate(`?page-code=cashboxGr`);
-                    }}
-                    aria-label="checked this elements">
-                    <input type="checkbox" name="id" checked={check} />
+                  <label aria-label="checked this elements">
+                    <input
+                      type="checkbox"
+                      name="id"
+                      checked={check}
+                      onChange={() => {
+                        dispatch(
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("cashboxGr", item));
+                        navigate(`?page-code=cashboxGr`);
+                      }}
+                    />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                   {displayKeys?.map(({ name, size, position }, ind) => (

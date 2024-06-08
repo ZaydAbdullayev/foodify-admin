@@ -94,16 +94,19 @@ export const Cashboxes = () => {
                     dispatch(setDocuments("cashbox", item));
                     navigate(`?page-code=cashbox`);
                   }}>
-                  <label
-                    aria-label="checked this elements"
-                    onClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("cashbox", item));
-                      navigate(`?page-code=cashbox`);
-                    }}>
-                    <input type="checkbox" name="id" defaultValue={check} />
+                  <label aria-label="checked this elements">
+                    <input
+                      type="checkbox"
+                      name="id"
+                      defaultValue={check}
+                      onChange={() => {
+                        dispatch(
+                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                        );
+                        dispatch(setDocuments("cashbox", item));
+                        navigate(`?page-code=cashbox`);
+                      }}
+                    />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                   <p style={{ "--data-line-size": "21%" }}>{item.name}</p>

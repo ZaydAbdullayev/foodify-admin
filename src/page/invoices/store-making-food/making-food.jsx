@@ -159,16 +159,19 @@ export const InvoicesMakingFood = () => {
                       dispatch(setDocuments("making", item));
                       navigate(`?page-code=making`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("making", item));
-                        navigate(`?page-code=making`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("making", item));
+                          navigate(`?page-code=making`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}

@@ -159,16 +159,19 @@ export const CashboxTransaction = () => {
                       dispatch(setDocuments("trsn", item));
                       navigate(`?page-code=trsn`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("trsn", item));
-                        navigate(`?page-code=trsn`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={isChecked} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={isChecked}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("trsn", item));
+                          navigate(`?page-code=trsn`);
+                        }}
+                      />
                     </label>
                     <p>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>

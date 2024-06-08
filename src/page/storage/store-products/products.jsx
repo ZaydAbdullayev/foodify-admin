@@ -194,16 +194,19 @@ export const StorageProducts = () => {
                       dispatch(setDocuments("products", item));
                       navigate(`?page-code=products`);
                     }}>
-                    <label
-                      onClick={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("products", item));
-                        navigate(`?page-code=products`);
-                      }}
-                      aria-label="checked this elements">
-                      <input type="checkbox" name="id" checked={check} />
+                    <label aria-label="checked this elements">
+                      <input
+                        type="checkbox"
+                        name="id"
+                        checked={check}
+                        onChange={() => {
+                          dispatch(
+                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
+                          );
+                          dispatch(setDocuments("products", item));
+                          navigate(`?page-code=products`);
+                        }}
+                      />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position }, ind) => (

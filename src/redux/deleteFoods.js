@@ -6,7 +6,7 @@ const initialState = {
   edr: [],
   cutting: [],
   damaged: [],
-  curry: [],
+  carry: [],
   making: [],
   preOrder: [],
   main: [],
@@ -47,7 +47,7 @@ export const rootDocuments = (state = initialState, action) => {
 
       return {
         ...state,
-        [action.payload.roomId]: [...existingDocuments, newDocument],
+        [action.payload.roomId]: [...(existingDocuments || []), newDocument],
       };
     case "SET_RELEASE":
       return {
@@ -87,5 +87,3 @@ export const setAllDocuments = (roomId, documents) => ({
     documents,
   },
 });
-
-
