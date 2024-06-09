@@ -24,6 +24,8 @@ export const GenerateField = ({ fieldData }) => {
     extra = "",
     take_id = false,
     shareV = false,
+    visible = true,
+    u_option = [],
   } = fieldData;
 
   const getExtraValue = (extra) => {
@@ -56,7 +58,11 @@ export const GenerateField = ({ fieldData }) => {
               value: item?.name,
             }))}
           />
-          <input name={name} type="hidden" value={datas?.select} />
+          <input
+            name={name}
+            type="hidden"
+            value={u_option?.[0] || datas?.select}
+          />
         </>
       );
 
@@ -113,7 +119,7 @@ export const GenerateField = ({ fieldData }) => {
       return (
         <input
           type="hidden"
-          name={name}
+          name={visible ? name : ""}
           defaultValue={df_value}
           aria-label="place for secret value"
         />
@@ -138,13 +144,13 @@ export const GenerateField = ({ fieldData }) => {
           <input
             type="hidden"
             name={name}
-            value={datas?.name}
+            value={u_option?.[0] || datas?.name}
             aria-label={`place for secret value ${datas?.name}`}
           />
           <input
             type="hidden"
             name={extra}
-            value={datas?.id}
+            value={u_option?.[1] || datas?.id}
             aria-label={`place for secret value ${datas?.id}`}
           />
         </>
@@ -178,13 +184,13 @@ export const GenerateField = ({ fieldData }) => {
           <input
             type="hidden"
             name={name}
-            value={datas?.name}
+            value={u_option?.[0] || datas?.name}
             aria-label={`place for secret value ${datas?.name}`}
           />
           <input
             type="hidden"
             name={extra}
-            value={datas?.id}
+            value={u_option?.[1] || datas?.id}
             aria-label={`place for secret value ${datas?.id}`}
           />
         </>

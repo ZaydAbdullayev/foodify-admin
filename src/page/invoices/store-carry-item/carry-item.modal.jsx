@@ -47,23 +47,28 @@ const InvoicesModal = ({
     tags: ["s-products", "product"],
   });
 
-  const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
+  const updatedData = [...(checkedData || []), ...(acIngredients || [])]?.map(
+    (newItem) => {
+      const oldData =
+        (acIngredients?.length ? acIngredients : data?.data)?.find(
+          (old) => old.id === newItem.id
+        ) || {};
 
-    if (oldData) {
-      const after = oldData?.total_quantity
-        ? oldData?.total_quantity - parseInt(newItem?.amount)
-        : parseInt(newItem?.amount);
-      return {
-        ...newItem,
-        total_quantity: oldData?.total_quantity || 0,
-        total_after: oldData?.total_after ? oldData?.total_after : after,
-        total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
-      };
+      if (oldData) {
+        const after = oldData?.total_quantity
+          ? oldData?.total_quantity - parseInt(newItem?.amount)
+          : parseInt(newItem?.amount);
+        return {
+          ...newItem,
+          total_quantity: oldData?.total_quantity || 0,
+          total_after: oldData?.total_after ? oldData?.total_after : after,
+          total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
+        };
+      }
+
+      return newItem;
     }
-
-    return newItem;
-  });
+  );
 
   useEffect(() => {
     if (acItem?.storage) {
@@ -102,7 +107,12 @@ const InvoicesModal = ({
     });
   };
 
-  const activeData = activePart === 1 ? data?.data : productData?.data;
+  const activeData =
+    activePart === 1
+      ? acIngredients?.length
+        ? acIngredients
+        : data?.data
+      : productData?.data;
   const num = acItem?.order ? acItem?.order : NUM?.num;
 
   return (
@@ -129,27 +139,45 @@ const InvoicesModal = ({
             name: "storage_sender",
             extra: "s_storage",
             take_id: true,
-            df_value: { value: "default", label: "Beruvchi ombor*" },
+            df_value: acItem?.storage_sender
+              ? { value: acItem?.storage_sender, label: acItem?.storage_sender }
+              : { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
+            u_option: [acItem?.storage_sender, acItem?.s_storage],
           },
           {
             type: "s_extra",
             name: "storage_receiver",
             extra: "r_storage",
-            df_value: { value: "default", label: "Oluvchi ombor*" },
+            df_value: acItem?.storage_receiver
+              ? {
+                  value: acItem?.storage_receiver,
+                  label: acItem?.storage_receiver,
+                }
+              : { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
+            u_option: [acItem?.storage_sender, acItem?.r_storage],
           },
           {
             type: "select",
             name: "invoice_group",
-            df_value: { value: "default", label: "Guruh tanlang*" },
+            df_value: acItem?.invoice_group
+              ? { value: acItem?.invoice_group, label: acItem?.invoice_group }
+              : { value: "default", label: "Guruh tanlang*" },
             options: groupsData?.data,
+            u_option: [acItem?.invoice_group],
           },
           {
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
             df_value: acItem?.description,
+          },
+          {
+            type: "inputH",
+            name: "id",
+            df_value: acItem?.id,
+            visible: acItem?.id ? true : false,
           },
         ]}
       />
@@ -243,7 +271,7 @@ const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      defaultValue={acItem?.amount}
+                      defaultValue={checked?.amount}
                       onChange={(e) =>
                         activePart === 2
                           ? setCalcData({
@@ -252,7 +280,14 @@ const InvoicesModal = ({
                               food_id: item.id,
                               storage_sender: id,
                             })
-                          : getProduct({ ...item, amount: e.target.value }, 1)
+                          : getProduct(
+                              {
+                                ...item,
+                                amount: e.target.value,
+                                old_amount: item?.total_quantity,
+                              },
+                              1
+                            )
                       }
                     />
                   )}

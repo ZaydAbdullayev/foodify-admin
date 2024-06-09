@@ -93,7 +93,7 @@ export const Router = () => {
   useEffect(() => {
     dispatch(acCloseUModal());
     dispatch(acPassiveThing());
-  }, [dispatch, location]);
+  }, [dispatch, location?.search]);
 
   if (window.innerWidth < 600) {
     dispatch(acDeviceWidth(true));

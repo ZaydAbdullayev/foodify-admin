@@ -116,7 +116,7 @@
   border-right: 1px solid var(--cl38);
 }
 
-.storage_body_item > :first-child{
+.storage_body_item > :first-child {
   inline-size: var(--univslH) !important;
 }
 
@@ -142,9 +142,9 @@
   word-break: break-all;
 }
 
-.storage_body_box > .storage_body_item:hover,
+.storage_body_box .storage_body_item:hover,
 .storage_body_item.active {
-  background: var(--cl3);
+  background: var(--cl11) !important;
   color: var(--cl1);
 }
 

@@ -73,8 +73,6 @@ export const StorageExpenditures = () => {
     { name: "description", size: "15.6%" },
   ];
 
-  // ingredients: '[{"id":"0af650","name":"Olma sharbati","unit":"l","group":"Gazli-suv va sharbatlar","res_id":"2899b5","price":8000,"type":"Ingredient","storage_id":null,"amount":"50","old_quantity":0,"total_quantity":100}]';
-
   const innerHEaderKeys = [
     { name: "№", border: "1px solid #ccc5" },
     { name: "Nomi", size: "18.7%", border: "1px solid #ccc5" },

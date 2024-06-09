@@ -53,7 +53,7 @@ const api = createApi({
     fetchData: builder.query({
       query: ({ url }) => {
         if (url === "") {
-          return null; // Return null or undefined to prevent the request
+          return console.log("url not found");
         }
         return url;
       },

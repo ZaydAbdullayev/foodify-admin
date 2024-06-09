@@ -129,7 +129,7 @@ export const UniversalControlModal = ({
             break;
           case "carryUp":
             result = await patchData({
-              url: `update/carry-up/${value.id}`,
+              url: `update/movedGoods/${value.id}`,
               data: value,
               tags: ["carry-up"],
             });
@@ -245,6 +245,7 @@ export const UniversalControlModal = ({
     e.preventDefault();
     const formdata = new FormData(e.target);
     const ds = Object.fromEntries(formdata.entries());
+    console.log("ds", ds);
     const value = middlewareService(ds, openWarning);
     if (!value) return;
     const data = { ...value, ingredients: Pdata };
@@ -377,7 +378,7 @@ export const UniversalForm = ({ formData }) => {
   return (
     <div className="wdfaic u-control_form_box">
       {formData?.map((field, index) => (
-        <GenerateField key={`${index}_${field.name}`} fieldData={field} />
+        <GenerateField key={`${index}_${field?.name}`} fieldData={field} />
       ))}
     </div>
   );

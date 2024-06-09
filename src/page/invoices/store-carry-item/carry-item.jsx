@@ -35,6 +35,8 @@ export const StorageCarryUp = () => {
     ? JSON.parse(acItem?.ingredients)
     : [];
 
+  console.log("acI", acItem, "i", acIngredients);
+
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {
@@ -82,15 +84,15 @@ export const StorageCarryUp = () => {
     { name: "№", border: "1px solid #ccc5" },
     { name: "Nomi", size: "35%", border: "1px solid #ccc5" },
     { name: "Narxi", size: "20%", border: "1px solid #ccc5" },
-    { name: "Tan Narxi", size: "25%", border: "1px solid #ccc5" },
-    { name: "Foyda", size: "15%" },
+    { name: "Miqdori", size: "15%", border: "1px solid #ccc5" },
+    { name: "Jami", size: "25%" },
   ];
 
   const innerDisplayKeys = [
     { name: "name", size: "35%" },
-    { name: "password", size: "20%" },
-    { name: "remain", size: "25%" },
-    { name: "total", size: "15%" },
+    { name: "price", size: "20%" },
+    { name: "amount", size: "15%" },
+    { name: "total", size: "25%" },
   ];
 
   return (
@@ -166,7 +168,7 @@ export const StorageCarryUp = () => {
                   key={item?.id}>
                   <div
                     className={
-                      acItem === item?.id
+                      acItem === item?.id || check
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
@@ -267,7 +269,9 @@ export const StorageCarryUp = () => {
                                     borderRight: key?.border,
                                   }}
                                   key={index}>
-                                  {product[key?.name] || 0}
+                                  {key?.name === "total"
+                                    ? product?.price * product?.amount
+                                    : product[key?.name] || 0}
                                 </p>
                               );
                             })}
