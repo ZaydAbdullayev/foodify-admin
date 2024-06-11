@@ -35,6 +35,13 @@ const DeleteSelectedElements = async (type, data) => {
     case "product":
       result = await delData(data);
       break;
+    case "damaged":
+      result = await delData({
+        data,
+        url: "/delete/movedGoods",
+        tags: ["damaged"],
+      });
+      break;
     default:
       break;
   }

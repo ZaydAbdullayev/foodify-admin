@@ -18,9 +18,10 @@ export const StorageDamaged = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: demagedData = [], isLoading } = useFetchDataQuery({
@@ -30,9 +31,6 @@ export const StorageDamaged = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
-  const acIngredients = acItem?.ingredients
-    ? JSON.parse(acItem?.ingredients)
-    : [];
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -49,10 +47,19 @@ export const StorageDamaged = () => {
     }
   };
 
+  const itemAction = (item) => {
+    const ings = JSON.parse(item?.ingredients) || [];
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("movedGoods", item));
+    navigate(`?page-code=movedGoods`);
+    setAcItem(item);
+    setCheckedData(acItem?.id ? [] : ings);
+  };
+
   const headerKeys = [
     { name: "Kun", size: "16.5%", sort: true },
     { name: "Ombor", size: "16.5%", sort: true },
-    { name: "Miqdor", size: "16.5%", sort: true },
+    { name: "Miqdor", size: "16.5%", sort: true, p: "center" },
     { name: "Guruh", size: "16.5%", sort: true },
     { name: "Tavsif", size: "16.5%", sort: true },
     { name: "Tafsilot", size: "11%", sort: false },
@@ -60,7 +67,7 @@ export const StorageDamaged = () => {
 
   const displayKeys = [
     { name: "storage", size: "16.5%" },
-    { name: "cost", size: "16.5%" },
+    { name: "cost", size: "16.5%", p: "center" },
     { name: "ingredient_group", size: "16.5%" },
     { name: "description", size: "16.5%" },
   ];
@@ -108,8 +115,8 @@ export const StorageDamaged = () => {
                 setChecked(!checked);
                 dispatch(
                   checked
-                    ? setRelease("damaged")
-                    : setAllDocuments("damaged", demagedData?.data)
+                    ? setRelease("movedGoods")
+                    : setAllDocuments("movedGoods", demagedData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -122,6 +129,7 @@ export const StorageDamaged = () => {
                 style={{
                   "--data-line-size": item?.size,
                   cursor: item?.sort ? "pointer" : "default",
+                  justifyContent: item?.p,
                 }}
                 onClick={() => {
                   if (item?.sort) {
@@ -170,25 +178,13 @@ export const StorageDamaged = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("damaged", item));
-                      navigate(`?page-code=damaged`);
-                    }}>
+                    onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("damaged", item));
-                          navigate(`?page-code=damaged`);
-                        }}
+                        onChange={() => itemAction(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -196,7 +192,12 @@ export const StorageDamaged = () => {
                     </p>
                     <p style={{ "--data-line-size": "16.5%" }}>{date}</p>
                     {displayKeys.map((key, ind) => (
-                      <p style={{ "--data-line-size": key?.size }} key={ind}>
+                      <p
+                        style={{
+                          "--data-line-size": key?.size,
+                          justifyContent: key.p,
+                        }}
+                        key={ind}>
                         {item[key?.name]}
                       </p>
                     ))}
@@ -294,23 +295,26 @@ export const StorageDamaged = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num:
-                JSON.parse(
-                  demagedData?.data ? demagedData?.data[0]?.order : 0
-                ) + 1,
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={
+              !isLoading && {
+                num:
+                  JSON.parse(
+                    demagedData?.data
+                      ? parseInt(demagedData?.data[0]?.order)
+                      : 0
+                  ) + 1,
+              }
             }
-          }
-          acIngredients={acIngredients}
-          acItem={acItem}
-        />
-      </Suspense>
+            acItem={acItem}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

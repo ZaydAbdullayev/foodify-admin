@@ -6,7 +6,7 @@ const initialState = {
   edr: [],
   cutting: [],
   damaged: [],
-  carry: [],
+  movedGoods: [],
   making: [],
   preOrder: [],
   main: [],

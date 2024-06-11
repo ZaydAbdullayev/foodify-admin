@@ -12,6 +12,7 @@ import DeleteSelectedElementss from "../../service/delete-elements.service";
 import { enqueueSnackbar as es } from "notistack";
 import { setRelease } from "../../redux/deleteFoods";
 import { notification } from "antd";
+import { useDelDataMutation } from "../../service/fetch.service";
 
 import { BiEdit, BiPlus } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -30,18 +31,27 @@ export const Navbar = () => {
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [delData] = useDelDataMutation();
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
   const delDocuments = useSelector((state) => state.delRouter);
-  const page_code = useLocation().search.split("=")[1];
-  const delData = delDocuments?.[page_code];
+  const search = useLocation().search;
+  const searchParams = new URLSearchParams(search);
+  const page_code = searchParams.get("page-code");
+  const delDatas = delDocuments?.[page_code];
+  console.log(delDatas);
 
   const [api, contextHolder] = notification.useNotification();
 
   const deleteDocuments = async () => {
     if (delDocuments?.[page_code]?.length > 0) {
-      const result = await DeleteSelectedElementss(page_code, delData);
+      const result = await delData({
+        url: `delete/${page_code}`,
+        data: delDatas,
+        tags: [page_code],
+      });
+      console.log(result);
       if (result.status === "success") {
         es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
         dispatch(setRelease(page_code));
@@ -144,7 +154,7 @@ export const Navbar = () => {
                   ? {}
                   : { opacity: "0.4", border: "1px solid #ccc6" }
               }
-              onClick={() => deleteDocuments()}
+              onClick={deleteDocuments}
               aria-label="open modal for delete belong's active page">
               <MdDelete />
             </button>

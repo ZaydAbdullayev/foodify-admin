@@ -21,7 +21,6 @@ const InvoicesModal = ({
   getProduct,
   NUM,
   acItem,
-  acIngredients,
 }) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1);
@@ -31,7 +30,7 @@ const InvoicesModal = ({
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
+    url: `get/storageItems/${res_id}/${id || acItem?.s_storage}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -47,28 +46,27 @@ const InvoicesModal = ({
     tags: ["s-products", "product"],
   });
 
-  const updatedData = [...(checkedData || []), ...(acIngredients || [])]?.map(
-    (newItem) => {
-      const oldData =
-        (acIngredients?.length ? acIngredients : data?.data)?.find(
-          (old) => old.id === newItem.id
-        ) || {};
+  console.log("check", checkedData);
 
-      if (oldData) {
-        const after = oldData?.total_quantity
-          ? oldData?.total_quantity - parseInt(newItem?.amount)
-          : parseInt(newItem?.amount);
-        return {
-          ...newItem,
-          total_quantity: oldData?.total_quantity || 0,
-          total_after: oldData?.total_after ? oldData?.total_after : after,
-          total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
-        };
-      }
+  const updatedData = checkedData?.map((newItem) => {
+    const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
 
-      return newItem;
+    if (oldData) {
+      const after = oldData?.total_quantity
+        ? oldData?.total_quantity - parseInt(newItem?.amount)
+        : parseInt(newItem?.amount);
+      return {
+        ...newItem,
+        total_quantity: acItem?.id
+          ? oldData?.total_quantity + parseInt(newItem?.amount)
+          : oldData?.total_quantity || 0,
+        total_after: oldData?.total_after ? oldData?.total_after : after,
+        total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
+      };
     }
-  );
+
+    return newItem;
+  });
 
   useEffect(() => {
     if (acItem?.storage) {
@@ -107,20 +105,16 @@ const InvoicesModal = ({
     });
   };
 
-  const activeData =
-    activePart === 1
-      ? acIngredients?.length
-        ? acIngredients
-        : data?.data
-      : productData?.data;
+  const activeData = activePart === 1 ? data?.data : productData?.data;
   const num = acItem?.order ? acItem?.order : NUM?.num;
 
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
       type="carryUp"
-      Pdata={[...checkedData, ...acIngredients]}
-      setCheckedData={setCheckedData}>
+      Pdata={checkedData}
+      setCheckedData={setCheckedData}
+      Udata={acItem}>
       <UniversalForm
         formData={[
           {
@@ -208,9 +202,7 @@ const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {activeData?.map((item) => {
-            const checked = [...checkedData, ...acIngredients]?.find(
-              (i) => i.id === item.id
-            );
+            const checked = checkedData?.find((i) => i.id === item.id);
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -282,7 +274,7 @@ const InvoicesModal = ({
                             })
                           : getProduct(
                               {
-                                ...item,
+                                ...checked,
                                 amount: e.target.value,
                                 old_amount: item?.total_quantity,
                               },

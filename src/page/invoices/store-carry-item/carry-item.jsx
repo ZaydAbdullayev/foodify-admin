@@ -18,9 +18,10 @@ export const StorageCarryUp = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   React.useEffect(() => {
@@ -31,11 +32,8 @@ export const StorageCarryUp = () => {
     url: `/get/movedGoods/${res_id}`,
     tags: ["carry-up"],
   });
-  const acIngredients = acItem?.ingredients
-    ? JSON.parse(acItem?.ingredients)
-    : [];
 
-  console.log("acI", acItem, "i", acIngredients);
+  console.log("acI", acItem, "ch", checkedData);
 
   const getProduct = (item, status) => {
     const isChecked = checkedData.some((i) => i.id === item?.id);
@@ -50,6 +48,19 @@ export const StorageCarryUp = () => {
     } else {
       setCheckedData((prevData) => [...prevData, item]);
     }
+  };
+
+  const itemAction = (item) => {
+    const ings = JSON.parse(item?.ingredients) || [];
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("movedGoods", item));
+    navigate(`?page-code=movedGoods`);
+    setCheckedData(acItem?.id ? [] : ings);
+    setAcItem(
+      acItem?.id && ckddt?.movedGoods?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   const sortData =
@@ -111,8 +122,8 @@ export const StorageCarryUp = () => {
                 setChecked(!checked);
                 dispatch(
                   checked
-                    ? setRelease("carry")
-                    : setAllDocuments("carry", cuttingData?.data)
+                    ? setRelease("movedGoods")
+                    : setAllDocuments("movedGoods", cuttingData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -157,7 +168,9 @@ export const StorageCarryUp = () => {
                 year: "numeric",
               });
               const innerData = JSON.parse(item?.ingredients);
-              const check = ckddt?.carry?.some((el) => el?.id === item?.id);
+              const check = ckddt?.movedGoods?.some(
+                (el) => el?.id === item?.id
+              );
               return (
                 <div
                   className={
@@ -173,25 +186,13 @@ export const StorageCarryUp = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("carry", item));
-                      navigate(`?page-code=carry`);
-                    }}>
+                    onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("carry", item));
-                          navigate(`?page-code=carry`);
-                        }}
+                        onChange={() => itemAction(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -286,23 +287,24 @@ export const StorageCarryUp = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num:
-                JSON.parse(
-                  cuttingData?.data ? cuttingData?.data[0]?.order : 0
-                ) + 1,
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={
+              !isLoading && {
+                num:
+                  JSON.parse(
+                    cuttingData?.data ? cuttingData?.data[0]?.order : 0
+                  ) + 1,
+              }
             }
-          }
-          acItem={acItem}
-          acIngredients={acIngredients}
-        />
-      </Suspense>
+            acItem={acItem}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

@@ -133,6 +133,11 @@ export const UniversalControlModal = ({
               data: value,
               tags: ["carry-up"],
             });
+            result = await postData({
+              url: "reverse/items",
+              data: value,
+              tags: ["carry-up"],
+            });
             break;
           case "making":
             result = await patchData({
