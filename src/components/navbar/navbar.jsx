@@ -8,7 +8,6 @@ import { acSearch } from "../../redux/search";
 import { acMedia } from "../../redux/media";
 import { UniversalFilterBox } from "../filter/filter";
 import { acOpenUModal } from "../../redux/u-modal";
-import DeleteSelectedElementss from "../../service/delete-elements.service";
 import { enqueueSnackbar as es } from "notistack";
 import { setRelease } from "../../redux/deleteFoods";
 import { notification } from "antd";
@@ -22,7 +21,6 @@ import { FaBell } from "react-icons/fa";
 import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
-import addOrder from "../../assets/images/add_order.png";
 import { SlArrowLeft } from "react-icons/sl";
 
 export const Navbar = () => {
@@ -40,8 +38,6 @@ export const Navbar = () => {
   const searchParams = new URLSearchParams(search);
   const page_code = searchParams.get("page-code");
   const delDatas = delDocuments?.[page_code];
-  console.log(delDatas);
-
   const [api, contextHolder] = notification.useNotification();
 
   const deleteDocuments = async () => {
@@ -59,7 +55,7 @@ export const Navbar = () => {
         es({ message: "Xatolik yuz berdi", variant: "error" });
       }
     } else {
-      const placement = "topRight"; 
+      const placement = "topRight";
       api.warning({
         message: "Xatolik",
         description: "O'chirish uchun mavjud malumot yo'q!",
@@ -178,9 +174,6 @@ export const Navbar = () => {
       )}
       {status?.length === 0 && <i></i>}
       <div className="profile">
-        <span>
-          <img src={addOrder} alt="icon" aria-label="icon" />
-        </span>
         {department === "owner" && (
           <span
             onClick={() => navigate("/statistics")}

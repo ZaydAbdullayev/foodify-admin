@@ -10,9 +10,14 @@ import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+  acItem,
+}) => {
   const res_id = useSelector((state) => state?.res_id);
-  const acItem = useSelector((state) => state?.activeThing);
   const id = useSelector((state) => state?.activeSt_id);
   const [activePart, setActivePart] = useState(1);
   const { data = [] } = useFetchDataQuery({
@@ -24,7 +29,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
+    url: `get/storageItems/${res_id}/${acItem.st1_id || id}`,
     tags: ["invoices"],
   });
   // const { data: productData = [] } = useFetchDataQuery({
@@ -67,7 +72,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           {
             type: "inputD",
             name: "time",
-            df_value: acItem?.date,
+            df_value: acItem?.time,
           },
           {
             type: "s_extra",

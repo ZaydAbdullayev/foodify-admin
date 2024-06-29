@@ -18,15 +18,15 @@ export const InvoicesMakingFood = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
-  const fromV = useSelector((state) => state.values);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
     url: `get/actions/${res_id}/making_foods`,
-    tags: ["makingFood"],
+    tags: ["action"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 15]));
@@ -45,7 +45,10 @@ export const InvoicesMakingFood = () => {
         prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        { ...item, ...formV?.vl, action_type: "making_goods" },
+      ]);
     }
   };
 
@@ -80,6 +83,13 @@ export const InvoicesMakingFood = () => {
     { name: "total_amount", size: "10%", position: "flex-end" },
     { name: "description", size: "9%" },
   ];
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("making", item));
+    navigate(`?page-code=making`);
+    setAcItem(item);
+  };
 
   return (
     <div className="storage_container">
@@ -135,11 +145,6 @@ export const InvoicesMakingFood = () => {
             </span>
           ) : (
             sortData?.map((item) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
               const check = ckddt?.making?.some((el) => el?.id === item?.id);
               return (
                 <div
@@ -155,31 +160,19 @@ export const InvoicesMakingFood = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("making", item));
-                      navigate(`?page-code=making`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("making", item));
-                          navigate(`?page-code=making`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "12%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "12%" }}>{item?.time}</p>
                     {displayKeys?.map((key, index) => {
                       return (
                         <p
@@ -286,6 +279,7 @@ export const InvoicesMakingFood = () => {
           setCheckedData={setCheckedData}
           getProduct={getProduct}
           NUM={!isLoading && { num: 1 }}
+          acItem={acItem}
         />
       </Suspense>
     </div>

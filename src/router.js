@@ -65,6 +65,7 @@ import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
 import { acPassiveThing } from "./redux/active.js";
+import { getBrowserInfo } from "./service/unique.service";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -88,6 +89,11 @@ export const Router = () => {
         }, 1000);
       }
     }
+
+    const browserInfo = getBrowserInfo();
+    console.log(
+      `Browser: ${browserInfo.browserName}, Version: ${browserInfo.browserVersion}`
+    );
   }, [dispatch, nothificate]);
 
   useEffect(() => {

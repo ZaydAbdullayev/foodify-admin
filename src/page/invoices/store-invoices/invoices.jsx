@@ -343,6 +343,7 @@ export const StorageInvoices = () => {
               num: 1,
             }
           }
+          acItem={acItem}
         />
         {pay && <InvoicesPaymentModal setS={setPay} s={pay} />}
       </Suspense>

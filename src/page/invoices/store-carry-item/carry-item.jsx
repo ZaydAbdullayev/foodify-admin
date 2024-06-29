@@ -31,7 +31,7 @@ export const StorageCarryUp = () => {
 
   const { data: cuttingData = [], isLoading } = useFetchDataQuery({
     url: `/get/actions/${res_id}/moved_goods`,
-    tags: ["carry-up"],
+    tags: ["action"],
   });
 
   const getProduct = (item, status) => {
@@ -90,7 +90,7 @@ export const StorageCarryUp = () => {
   const displayKeys = [
     { name: "st1_name", size: "14%" },
     { name: "st2_name", size: "14%" },
-    { name: "amount", size: "14%", position: "flex-end" },
+    { name: "total_amount", size: "14%", position: "flex-end" },
     { name: "invoice_group", size: "14%" },
     { name: "description", size: "14%" },
   ];
@@ -166,11 +166,6 @@ export const StorageCarryUp = () => {
             </span>
           ) : (
             sortData?.map((item) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
               const innerData = item?.ingredients || [];
               const check = ckddt?.movedGoods?.some(
                 (el) => el?.id === item?.id
@@ -202,7 +197,7 @@ export const StorageCarryUp = () => {
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "14%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "14%" }}>{item?.time}</p>
                     {displayKeys?.map((key, index) => {
                       return (
                         <p

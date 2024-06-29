@@ -10,15 +10,20 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+  acItem,
+}) => {
   // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
-  const acItem = useSelector((state) => state.activeThing);
   const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${acS}`,
+    url: `get/storageItems/${res_id}/${acItem?.st1_id || acS}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -29,11 +34,10 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     url: `get/InvoiceGroups/${res_id}`,
     tags: ["invoice-group"],
   });
-  const acIngredients = acItem?.ingredients
-    ? JSON?.parse(acItem?.ingredients)
-    : [];
+  const acIngredients = acItem?.ingredients;
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.data?.find((old) => old.id === newItem?.id) || {};
+    const oldData =
+      data?.data?.find((old) => old.item_id === newItem?.item_id) || {};
 
     if (oldData) {
       return {
@@ -49,15 +53,15 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     return newItem;
   });
   useEffect(() => {
-    if (acItem?.storage) {
+    if (acItem?.st1_name) {
       const selectedItem = storeData?.data?.find(
-        (item) => item.name === acItem?.storage
+        (item) => item.name === acItem?.st1_name
       );
       const selectedId = selectedItem?.id;
 
       dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, dispatch, storeData?.data]);
+  }, [acItem?.st1_name, dispatch, storeData?.data]);
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
@@ -128,7 +132,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
         <div className="product_box_body">
           {data?.data?.map((item, index) => {
             const checked = [...checkedData, ...acIngredients]?.find(
-              (i) => i.id === item?.id
+              (i) => i.id === item?.item_id
             );
             return (
               <div
@@ -143,7 +147,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
@@ -170,7 +174,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     "--data-line-size": "15%",
                     justifyContent: "center",
                   }}>
-                  {item?.type}
+                  {item?.item_type}
                 </p>
                 <p
                   style={{
@@ -208,8 +212,8 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "15%" },
-            { name: "type", size: "13.33%", position: 1 },
+            { name: "item_name", size: "15%" },
+            { name: "item_type", size: "13.33%", position: 1 },
             { name: "old_quantity", size: "13.33%", position: 2 },
             { name: "amount", size: "13.33%", position: 2 },
             { name: "total_quantity", size: "13.33%", position: 2 },

@@ -21,7 +21,7 @@ const InvoicesModal = ({
   const id = useSelector((state) => state?.activeSt_id);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id || acItem?.st1_id}`,
+    url: `get/storageItems/${res_id}/${acItem?.st1_id || id}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -35,12 +35,13 @@ const InvoicesModal = ({
   const [activePart, setActivePart] = useState(1);
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.data?.find((old) => old?.id === newItem?.id) || {};
+    const oldData =
+      data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
 
     if (oldData) {
       return {
         ...newItem,
-        old_quantity: acItem?.id
+        old_quantity: acItem?.item_id
           ? oldData?.total_quantity + parseInt(newItem?.amount)
           : oldData?.total_quantity,
         total_quantity:

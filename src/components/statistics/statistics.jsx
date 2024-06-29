@@ -16,8 +16,6 @@ export const DonutChart = ({ data, billsData, short, hint, tl = null, ty }) => {
     ? [{ type: "Malumot yo'q", cl: "#333", amount: 0 }]
     : data?.filter((p) => p?.[hint] > 0);
 
-  console.log("donut-data", df_Pie);
-
   const total = CalculateTotalQuantity(data, hint) || 1;
   const totalp = CalculateTotalQuantity(df_Pie, hint) || data?.[0]?.[hint];
   const formatValue = (value) => {

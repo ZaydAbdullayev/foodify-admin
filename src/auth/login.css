@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--cl3);
+  background: var(--cl4);
 }
 
 .login > form {
@@ -56,7 +56,7 @@
 .login > form > h1 {
   font-size: var(--fs4);
   cursor: pointer;
-  color: var(--cl31);
+  color: var(--cl3);
 }
 
 .login > form > h1 > span {
@@ -101,6 +101,7 @@
   background: var(--cl36);
   font-weight: 700;
   font-size: 18px;
+  color: var(--cl4);
 }
 
 .log_btn:active {

@@ -96,11 +96,11 @@ export const Inventory = () => {
     const parsedValue = parseInt(value);
 
     const item = (seeOne ? active?.details : data?.data)?.find(
-      (item) => item.id === ingredientId
+      (item) => item.item_id === ingredientId
     );
     if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
 
-    const ind = syncsValue.findIndex((item) => item.id === ingredientId);
+    const ind = syncsValue.findIndex((item) => item.item_id === ingredientId);
 
     if (parsedValue === item?.total_quantity) {
       return; // Eğer yeni değer eski değerle aynıysa işlemi sonlandır
@@ -122,8 +122,8 @@ export const Inventory = () => {
         amount: parsedValue - item.total_quantity,
         old_quantity: item.total_quantity,
         total_quantity: parsedValue,
-        st_name: storage?.name,
-        storage_id: storage?.id,
+        st1_name: storage?.name,
+        st1_id: storage?.id,
       });
     }
 
@@ -174,7 +174,7 @@ export const Inventory = () => {
           {seeOne ? (
             <span>
               {" "}
-              {active.st_name} — {active.sync_time}
+              {active.st1_name} — {active.sync_time}
             </span>
           ) : (
             <div className="df aic gap5">
@@ -228,7 +228,7 @@ export const Inventory = () => {
                     {syncsData?.data?.map((item, index) => {
                       return (
                         <p key={index} onClick={() => getOneSyncData(item)}>
-                          {item.st_name} <span>{item.sync_time}</span>
+                          {item.st1_name} <span>{item.sync_time}</span>
                         </p>
                       );
                     })}
@@ -290,11 +290,11 @@ export const Inventory = () => {
             return (
               <div
                 className="worker inventory-item"
-                key={`${ingredient?.id}_${ind}`}>
+                key={`${ingredient?.item_id}_${ind}`}>
                 <p style={{ "--worker-t-w": "5%" }}>{ind + 1}</p>
                 <p style={{ "--worker-t-w": "20%" }}>
                   <span>
-                    {ingredient?.name}
+                    {ingredient?.item_name}
                     {seeOne && "sync"}
                   </span>
                 </p>
@@ -302,7 +302,7 @@ export const Inventory = () => {
                   <span>{ingredient?.group}</span>
                 </p>
                 <p style={{ "--worker-t-w": "20%" }}>
-                  <span>{ingredient?.type}</span>
+                  <span>{ingredient?.item_type}</span>
                 </p>
                 <p style={{ "--worker-t-w": "20%" }}>
                   <span>{ingredient?.price}</span>
@@ -314,7 +314,7 @@ export const Inventory = () => {
                         type="number"
                         defaultValue={ingredient?.total_quantity}
                         onBlur={(e) =>
-                          changeQuantity(e.target.value, ingredient?.id)
+                          changeQuantity(e.target.value, ingredient?.item_id)
                         }
                       />
                     </label>

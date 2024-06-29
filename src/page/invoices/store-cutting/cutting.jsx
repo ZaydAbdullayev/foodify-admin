@@ -27,7 +27,7 @@ export const StorageCutting = () => {
 
   const { data: dmData = [], isLoading } = useFetchDataQuery({
     url: `get/cutting/${res_id}`,
-    tags: ["cutting"],
+    tags: ["action"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
@@ -46,7 +46,10 @@ export const StorageCutting = () => {
         prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        { ...item, ...formV?.vl, action_type: "cutting_increase" },
+      ]);
     }
   };
 
@@ -136,11 +139,6 @@ export const StorageCutting = () => {
             </span>
           ) : (
             sortData?.map((item) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
               const check = ckddt?.cutting?.some((el) => el?.id === item?.id);
               return (
                 <div
@@ -169,7 +167,7 @@ export const StorageCutting = () => {
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "12%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "12%" }}>{item?.time}</p>
                     {displayKeys?.map((key, index) => {
                       return (
                         <p
@@ -276,6 +274,7 @@ export const StorageCutting = () => {
           setCheckedData={setCheckedData}
           getProduct={getProduct}
           NUM={!isLoading && { num: 1 }}
+          acItem={acItem}
         />
       </Suspense>
     </div>

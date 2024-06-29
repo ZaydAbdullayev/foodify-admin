@@ -166,7 +166,7 @@ export const UniversalControlModal = ({
             result = await postData({
               url: "add/action",
               data: Pdata,
-              tags: ["invoices"],
+              tags: ["action"],
             });
             break;
           case "cutting":

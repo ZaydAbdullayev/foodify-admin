@@ -59,12 +59,11 @@ export const StorageDamaged = () => {
   };
 
   const itemAction = (item) => {
-    const ings = JSON.parse(item?.ingredients) || [];
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("movedGoods", item));
     navigate(`?page-code=movedGoods`);
     setAcItem(item);
-    setCheckedData(acItem?.id ? [] : ings);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
   };
 
   const headerKeys = [

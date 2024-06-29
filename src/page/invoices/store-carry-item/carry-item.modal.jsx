@@ -47,7 +47,8 @@ const InvoicesModal = ({
   });
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
+    const oldData =
+      data?.data?.find((old) => old.item_id === newItem.item_id) || {};
 
     if (oldData) {
       const after = oldData?.total_quantity
@@ -55,10 +56,10 @@ const InvoicesModal = ({
         : parseInt(newItem?.amount);
       return {
         ...newItem,
-        total_quantity: acItem?.id
+        total_quantity: acItem?.item_id
           ? oldData?.total_quantity + parseInt(newItem?.amount)
           : oldData?.total_quantity || 0,
-        total_after: oldData?.total_after ? oldData?.total_after : after,
+        total_after: after,
         total_price: parseInt(newItem?.amount) * parseInt(newItem?.price),
       };
     }
@@ -67,15 +68,15 @@ const InvoicesModal = ({
   });
 
   useEffect(() => {
-    if (acItem?.storage) {
+    if (acItem?.st1_name) {
       const selectedItem = storeData?.data?.find(
-        (item) => item.name === acItem?.storage
+        (item) => item.name === acItem?.st1_name
       );
       const selectedId = selectedItem?.id;
 
       dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, dispatch, storeData?.data]);
+  }, [acItem?.st1_name, dispatch, storeData?.data]);
 
   const revordCalcData = async (data) => {
     if (id === null) return alert("Ombor tanlanmagan");
@@ -89,7 +90,7 @@ const InvoicesModal = ({
 
       value?.data?.message.forEach((item) => {
         const existingItemIndex = updatedFoodsData.findIndex(
-          (existItem) => existItem.id === item.id
+          (existItem) => existItem.item_id === item.item_id
         );
 
         if (existingItemIndex !== -1) {
@@ -308,8 +309,8 @@ const InvoicesModal = ({
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "15%" },
-            { name: "type", size: "13.33%", position: 1 },
+            { name: "item_name", size: "15%" },
+            { name: "item_type", size: "13.33%", position: 1 },
             { name: "total_quantity", size: "13.33%", position: 2 },
             { name: "amount", size: "13.33%", position: 2 },
             { name: "total_after", size: "13.33%", position: 2 },

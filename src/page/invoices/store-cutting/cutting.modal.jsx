@@ -12,15 +12,20 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+  acItem,
+}) => {
   const [activePart, setActivePart] = useState(1);
   const id = useSelector((state) => state.activeSt_id);
-  const acItem = useSelector((state) => state.activeThing);
   const res_id = useSelector((state) => state.res_id);
   const amount = useSelector((state) => state.cuttingA);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id}`,
+    url: `get/storageItems/${res_id}/${acItem.st1_id || id}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -31,9 +36,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     url: `get/ingredientGroups/${res_id}`,
     tags: ["groups"],
   });
-  const acIngredients = acItem?.ingredients
-    ? JSON?.parse(acItem?.ingredients)
-    : [];
+  const acIngredients = acItem?.ingredients;
 
   const total_quantity = CalculateTotalQuantity(
     [...checkedData, ...acIngredients],
@@ -46,7 +49,8 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   );
 
   const updatedIngData = checkedData?.map((newItem) => {
-    const oldData = data?.data?.find((old) => old.id === newItem?.id) || {};
+    const oldData =
+      data?.data?.find((old) => old.item_id === newItem?.item_id) || {};
 
     if (oldData) {
       return {
@@ -67,14 +71,14 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   ];
 
   useEffect(() => {
-    if (acItem?.storage) {
+    if (acItem?.st1_name) {
       const selectedItem = storeData?.data?.find(
-        (item) => item?.name === acItem?.storage
+        (item) => item?.name === acItem?.st1_name
       );
       const selectedId = selectedItem?.id;
       dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, dispatch, storeData?.data]);
+  }, [acItem?.st1_name, dispatch, storeData?.data]);
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (

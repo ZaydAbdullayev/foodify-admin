@@ -19,31 +19,37 @@ export const StorageExpenditures = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
-    url: `get/usedGoods/${res_id}`,
-    tags: ["expenditure"],
+    url: `get/action/${res_id}/used_goods`,
+    tags: ["action"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        { ...item, ...formV?.vl, action_type: "used_goods" },
+      ]);
     }
   };
 
@@ -67,9 +73,9 @@ export const StorageExpenditures = () => {
   ];
 
   const displayKeys = [
-    { name: "storage", size: "15.6%" },
-    { name: "cost", size: "15.6%" },
-    { name: "group", size: "15.6%" },
+    { name: "st1_name", size: "15.6%" },
+    { name: "amount", size: "15.6%" },
+    { name: "invoice_group", size: "15.6%" },
     { name: "description", size: "15.6%" },
   ];
 
@@ -85,12 +91,19 @@ export const StorageExpenditures = () => {
   ];
 
   const innerData = [
-    { name: "name", size: "18.7%", border: "1px solid #ccc5" },
-    { name: "type", size: "8.7%", border: "1px solid #ccc5", short: true },
+    { name: "item_name", size: "18.7%", border: "1px solid #ccc5" },
+    { name: "item_type", size: "8.7%", border: "1px solid #ccc5", short: true },
     { name: "price", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "total_quantity", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "total_amount", size: "13.7%", border: "1px solid #ccc5" },
     { name: "amount", size: "13.7%", border: "1px solid #ccc5" },
   ];
+
+  const actionItem = (item) => {
+    dispatch(acActiveThing(item));
+    dispatch(setDocuments("invoice", item));
+    navigate(`?page-code=invoice`);
+    setAcItem(item);
+  };
 
   return (
     <div className="storage_container">
@@ -148,11 +161,6 @@ export const StorageExpenditures = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
               const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
               const innerDatas = JSON.parse(item?.ingredients);
               return (
@@ -169,31 +177,19 @@ export const StorageExpenditures = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("invoice", item));
-                      navigate(`?page-code=invoice`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("invoice", item));
-                          navigate(`?page-code=invoice`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "15.6%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "15.6%" }}>{item?.time}</p>
                     {displayKeys.map((key) => {
                       return (
                         <p style={{ "--data-line-size": key.size }}>
@@ -283,7 +279,7 @@ export const StorageExpenditures = () => {
                         style={{ background: "#3339" }}>
                         <p></p>
                         <p style={{ "--data-line-size": "66%" }}>
-                          {date} ga ko'ra Jami mablag'
+                          {item?.time} ga ko'ra Jami mablag'
                         </p>
                         <p
                           style={{
@@ -314,6 +310,7 @@ export const StorageExpenditures = () => {
                 ) + 1,
             }
           }
+          acItem={acItem}
         />
       </Suspense>
     </div>

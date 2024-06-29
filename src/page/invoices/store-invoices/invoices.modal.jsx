@@ -10,9 +10,14 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
+const InvoicesModal = ({
+  checkedData,
+  setCheckedData,
+  getProduct,
+  NUM,
+  acItem,
+}) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
-  const acItem = useSelector((state) => state.activeThing);
   const s_id = useSelector((state) => state.activeSt_id);
   const dispatch = useDispatch();
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
@@ -25,19 +30,19 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${user?.id}/${s_id || acItem?.st1_id}`,
+    url: `get/storageItems/${user?.id}/${acItem?.st1_id || s_id}`,
     tags: ["invoices"],
   });
   const { data: suplierData = [] } = useFetchDataQuery({
     url: `get/suppliers/${user?.id}`,
     tags: ["suplier"],
   });
-  const acIngredients = acItem?.ingredients
-    ? JSON?.parse(acItem?.ingredients)
-    : [];
+  const acIngredients = acItem?.ingredients;
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData = storageItems?.data?.find((old) => old.id === newItem?.id);
+    const oldData = storageItems?.data?.find(
+      (old) => old.item_id === newItem?.item_id
+    );
     const ototal = oldData ? oldData?.total_quantity : 0;
 
     if (oldData) {
@@ -58,61 +63,16 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   });
 
   useEffect(() => {
-    if (acItem?.storage) {
+    if (acItem?.st1_id) {
       const selectedItem = storeData?.data?.find(
-        (item) => item?.name === acItem?.storage
+        (item) => item?.name === acItem?.st1_id
       );
       const selectedId = selectedItem?.id;
       dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, dispatch, storeData?.data]);
+  }, [acItem?.st1_id, dispatch, storeData?.data]);
 
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
-  const ds = [
-    {
-      action_type: "received_goods",
-      order: 4,
-      time: "2021-03-07",
-      res_id: "2899b5",
-      st1_id: "0c510d",
-      st1_name: "Oshxona ombori",
-      item_id: "4417f1",
-      item_name: "Sabzi",
-      item_type: "ingredient",
-      group: "Sabzavotlar",
-      unit: "kg",
-      price: 3521,
-      amount: 20,
-      worker: "Zayd",
-      worker_id: "0a709d",
-      responsible: "Muzaffar",
-      invoice_group: "income",
-      description: "Sabzi sotib olindi",
-      is_undone: 0,
-    },
-    {
-      action_type: "received_goods",
-      order: 1,
-      time: "2024-06-24",
-      res_id: "2899b5",
-      st1_id: "0c510d",
-      item_id: "0237e31e",
-      st1_name: "Oshxona ombori",
-      item_name: "kartoshka",
-      item_type: "Ingredient",
-      group: "Sabzavotlar",
-      unit: "kg",
-      price: 3000,
-      amount: "10",
-      worker: "test",
-      worker_id: "2899b5",
-      responsible: "ds",
-      invoice_group: "income",
-      description: "ds",
-      supplier: "Go’shtchi",
-      supplier_id: "6c1adc",
-    },
-  ];
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
