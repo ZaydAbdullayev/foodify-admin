@@ -22,28 +22,39 @@ export const StorageDamaged = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: demagedData = [], isLoading } = useFetchDataQuery({
-    url: `get/damagedGoods/${res_id}`,
-    tags: ["damaged"],
+    url: `get/actions/${res_id}/damaged_goods`,
+    tags: ["action"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        {
+          ...item,
+          ...formV?.vl,
+          action_type: "damaged_goods",
+          invoice_group: "expense",
+        },
+      ]);
     }
   };
 
@@ -66,9 +77,9 @@ export const StorageDamaged = () => {
   ];
 
   const displayKeys = [
-    { name: "storage", size: "16.5%" },
-    { name: "cost", size: "16.5%", p: "center" },
-    { name: "ingredient_group", size: "16.5%" },
+    { name: "st1_name", size: "16.5%" },
+    { name: "total_amount", size: "16.5%", p: "center" },
+    { name: "invoice_group", size: "16.5%" },
     { name: "description", size: "16.5%" },
   ];
 
@@ -82,10 +93,10 @@ export const StorageDamaged = () => {
   ];
 
   const innerDisplayKeys = [
-    { name: "name", size: "28%" },
+    { name: "item_name", size: "28%" },
     { name: "price", size: "19.3%" },
-    { name: "old_quantity", size: "19.3%", tick: true },
-    { name: "total_quantity", size: "19.3%", tick: true },
+    { name: "old_amount", size: "19.3%", tick: true },
+    { name: "total_amount", size: "19.3%", tick: true },
     { name: "amount", size: "10%", tick: true },
   ];
 
@@ -131,6 +142,7 @@ export const StorageDamaged = () => {
                   cursor: item?.sort ? "pointer" : "default",
                   justifyContent: item?.p,
                 }}
+                key={`${item.name}_${index}`}
                 onClick={() => {
                   if (item?.sort) {
                     setSort({ id: index, state: !sort.state });
@@ -156,12 +168,13 @@ export const StorageDamaged = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item) => {
+            sortData?.map((item, ind) => {
               const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
                 day: "numeric",
                 month: "numeric",
                 year: "numeric",
               });
+              date.replace(/\//g, ".");
               const innerData = JSON.parse(item?.ingredients);
               const check = ckddt?.damaged?.some((el) => el?.id === item?.id);
               return (
@@ -170,14 +183,14 @@ export const StorageDamaged = () => {
                     showMore?.includes(item?.id)
                       ? "storage_body__box active"
                       : "storage_body__box"
-                  }>
+                  }
+                  key={item?.id}>
                   <div
                     className={
                       acItem === item?.id
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item?.id}
                     onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">
                       <input
@@ -301,16 +314,7 @@ export const StorageDamaged = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={
-              !isLoading && {
-                num:
-                  JSON.parse(
-                    demagedData?.data
-                      ? parseInt(demagedData?.data[0]?.order)
-                      : 0
-                  ) + 1,
-              }
-            }
+            NUM={!isLoading && { num: 1 }}
             acItem={acItem}
           />
         </Suspense>

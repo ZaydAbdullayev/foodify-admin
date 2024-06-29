@@ -54,8 +54,7 @@ export const Addproduct = memo(() => {
           <label
             style={files.length ? { border: "none" } : {}}
             className="product_img"
-            htmlFor="image"
-          >
+            htmlFor="image">
             {files.length ? "" : <IoIosRestaurant />}
             <input
               type="file"
@@ -73,8 +72,7 @@ export const Addproduct = memo(() => {
             type="button"
             className="product_box_btn"
             onClick={() => dispatch(acGetUrl({ st: false, img: "" }))}
-            aria-label="get out from add picture page"
-          >
+            aria-label="get out from add picture page">
             Chiqish
           </button>
           <button className="product_box_btn relative">
@@ -139,8 +137,7 @@ export const ShowProduct = memo(() => {
         <button
           className="product_box_btn"
           onClick={() => navigate("/managment")}
-          aria-label="backword all products page"
-        >
+          aria-label="backword all products page">
           Orqaga qaytish
         </button>
       </div>

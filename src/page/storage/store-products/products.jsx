@@ -26,14 +26,11 @@ export const StorageProducts = () => {
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
   const [activePart, setActivePart] = useState(1);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, acItemAction] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const id = useSelector((state) => state.storageId);
   const img = useSelector((state) => state.image);
   const res_id = useSelector((state) => state.res_id);
-  const acIngredients = acItem?.ingredients
-    ? JSON?.parse(acItem?.ingredients)
-    : [];
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: products = [], isLoading } = useFetchDataQuery({
@@ -118,6 +115,12 @@ export const StorageProducts = () => {
     { name: "price", size: "16.5%", position: 2 },
   ];
 
+  const itemAction = (item) => {
+    dispatch(acItem.id ? acPassiveThing() : acActiveThing(item));
+    dispatch(setDocuments("products", item));
+    navigate(`?page-code=products`);
+  };
+
   const modalData = activePart === 1 ? ingredients : products;
 
   return (
@@ -187,25 +190,13 @@ export const StorageProducts = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("products", item));
-                      navigate(`?page-code=products`);
-                    }}>
+                    onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("products", item));
-                          navigate(`?page-code=products`);
-                        }}
+                        onChange={() => itemAction(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
@@ -349,7 +340,8 @@ export const StorageProducts = () => {
       <UniversalControlModal
         status={acItem?.id ? true : false}
         type="product"
-        Pdata={[...checkedData, ...acIngredients]}
+        Pdata={checkedData}
+        // Pdata={[...checkedData, ...acItem?.ingredients]}
         setCheckedData={setCheckedData}>
         <UniversalForm
           formData={[
@@ -418,13 +410,13 @@ export const StorageProducts = () => {
           </div>
           <div className="product_box_body">
             {modalData?.data?.map((item, index) => {
-              const checked = [...checkedData, ...acIngredients]?.find(
-                (i) => i.id === item.id
+              const checked = [...checkedData, ...acItem?.ingredients]?.find(
+                (i) => i.item_id === item.item_id
               );
               return (
                 <div
                   className={`product_box_item ${checked ? "active" : ""}`}
-                  key={item.id}>
+                  key={item.item_id}>
                   <label>
                     <input
                       type="checkbox"
@@ -438,7 +430,7 @@ export const StorageProducts = () => {
                     style={{
                       "--data-line-size": activePart === 1 ? "35%" : "60%",
                     }}>
-                    {item.name}
+                    {item.item_name}
                   </p>
                   {activePart === 1 && (
                     <>
@@ -486,7 +478,7 @@ export const StorageProducts = () => {
             })}
           </div>
         </UniversalProductControl>
-        <CalcResult data={[...checkedData, ...acIngredients]} status="cr">
+        <CalcResult data={[...checkedData, ...acItem?.ingredients]} status="cr">
           <CalcResultHeader>
             <p style={{ inlineSize: "var(--univslH)" }}>№</p>
             <p style={{ "--data-line-size": "30%" }}>Nomi</p>
@@ -497,7 +489,7 @@ export const StorageProducts = () => {
           <CalcResultBody
             data={checkedData}
             displayKeys={[
-              { name: "name", size: "30%" },
+              { name: "item_name", size: "30%" },
               { name: "amount", size: "20%" },
               { name: "price", size: "20%" },
             ]}

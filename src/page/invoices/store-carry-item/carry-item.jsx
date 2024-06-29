@@ -22,6 +22,7 @@ export const StorageCarryUp = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   React.useEffect(() => {
@@ -29,24 +30,27 @@ export const StorageCarryUp = () => {
   }, [dispatch]);
 
   const { data: cuttingData = [], isLoading } = useFetchDataQuery({
-    url: `/get/movedGoods/${res_id}`,
+    url: `/get/actions/${res_id}/moved_goods`,
     tags: ["carry-up"],
   });
 
-  console.log("acI", acItem, "ch", checkedData);
-
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        { ...item, ...formV.vl, id: acItem?.id, action_type: "moved_goods" },
+      ]);
     }
   };
 
@@ -84,10 +88,10 @@ export const StorageCarryUp = () => {
   ];
 
   const displayKeys = [
-    { name: "storage_sender", size: "14%" },
-    { name: "storage_receiver", size: "14%" },
+    { name: "st1_name", size: "14%" },
+    { name: "st2_name", size: "14%" },
     { name: "amount", size: "14%", position: "flex-end" },
-    { name: "ingredient_group", size: "14%" },
+    { name: "invoice_group", size: "14%" },
     { name: "description", size: "14%" },
   ];
 
@@ -100,10 +104,10 @@ export const StorageCarryUp = () => {
   ];
 
   const innerDisplayKeys = [
-    { name: "name", size: "35%" },
+    { name: "item_name", size: "35%" },
     { name: "price", size: "20%" },
     { name: "amount", size: "15%" },
-    { name: "total", size: "25%" },
+    { name: "total_amount", size: "25%" },
   ];
 
   return (
@@ -167,7 +171,7 @@ export const StorageCarryUp = () => {
                 month: "numeric",
                 year: "numeric",
               });
-              const innerData = JSON.parse(item?.ingredients);
+              const innerData = item?.ingredients || [];
               const check = ckddt?.movedGoods?.some(
                 (el) => el?.id === item?.id
               );
@@ -293,14 +297,7 @@ export const StorageCarryUp = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={
-              !isLoading && {
-                num:
-                  JSON.parse(
-                    cuttingData?.data ? cuttingData?.data[0]?.order : 0
-                  ) + 1,
-              }
-            }
+            NUM={!isLoading && { num: 1 }}
             acItem={acItem}
           />
         </Suspense>

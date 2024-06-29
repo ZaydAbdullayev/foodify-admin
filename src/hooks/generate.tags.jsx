@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { DatePicker, Input, InputNumber, Select, Checkbox, Table } from "antd";
 import dayjs from "dayjs";
-import { useDispatch } from "react-redux";
-import { acActiveSt_id } from "../redux/active";
+import { useDispatch, useSelector } from "react-redux";
+import { acActiveSt_id, acFormValues } from "../redux/active";
 import "./hook.css";
 import { acCutting } from "../redux/calc";
 
@@ -14,6 +14,7 @@ function genrateId() {
 
 export const GenerateField = ({ fieldData }) => {
   const dispatch = useDispatch();
+  const values = useSelector((state) => state.values);
   const [datas, setDatas] = useState({ name: "", id: "" });
   const {
     type = "text",
@@ -24,25 +25,43 @@ export const GenerateField = ({ fieldData }) => {
     extra = "",
     take_id = false,
     shareV = false,
-    visible = true,
+    // visible = true,
     u_option = [],
   } = fieldData;
 
-  const getExtraValue = (extra) => {
-    const values = extra?.split("=")?.[1]?.split("|");
-    setDatas({ ...datas, name: values[0], id: values[1] });
+  // useEffect(() => {
+  //   if (type === "inputH") {
+  //     dispatch(acFormValues("A_V", { ...values?.vl, [name]: df_value }));
+  //   }
+  // }, [dispatch, type, values?.vl, name, df_value]);
+
+  const getExtraValue = (extraV) => {
+    const value = extraV?.split("=")?.[1]?.split("|");
+    setDatas({ name: value[0], id: value[1] });
+    dispatch(
+      acFormValues("A_V", {
+        ...values?.vl,
+        [name]: value[0],
+        [extra]: value[1],
+      })
+    );
     if (take_id) {
-      dispatch(acActiveSt_id(values[1]));
+      dispatch(acActiveSt_id(value[1]));
     }
   };
 
   const getSelectValue = (value) => {
-    setDatas({ ...datas, select: value });
+    setDatas((prevDatas) => ({ ...prevDatas, select: value }));
+    dispatch(acFormValues("A_V", { ...values?.vl, [name]: value }));
   };
 
   const onlyNumber = (value) => {
     const newValue = value.replace(/[^0-9]/g, "");
     return newValue;
+  };
+
+  const getValues = (e) => {
+    dispatch(acFormValues("A_V", { ...values?.vl, [name]: e.target.value }));
   };
 
   switch (type) {
@@ -73,6 +92,7 @@ export const GenerateField = ({ fieldData }) => {
             name={name}
             placeholder={plc_hr}
             defaultValue={df_value}
+            onChange={getValues}
             aria-label="place for write info"
           />
         </>
@@ -84,6 +104,11 @@ export const GenerateField = ({ fieldData }) => {
           <DatePicker
             name={name}
             defaultValue={dayjs(df_value)}
+            onChange={(date, dateString) => {
+              dispatch(
+                acFormValues("A_V", { ...values?.vl, [name]: dateString })
+              );
+            }}
             aria-label="place for select date"
           />
         </>
@@ -95,6 +120,7 @@ export const GenerateField = ({ fieldData }) => {
           <Checkbox
             name={name}
             defaultChecked={df_value}
+            onChange={getValues}
             aria-label="place for check this element"
           />
         </>
@@ -108,20 +134,13 @@ export const GenerateField = ({ fieldData }) => {
           parser={(value) => onlyNumber(value)}
           placeholder={plc_hr}
           defaultValue={df_value}
-          onChange={(e) => shareV && dispatch(acCutting(e))}
+          onChange={(e) => {
+            dispatch(acFormValues("A_V", { ...values?.vl, [name]: e }));
+            if (shareV) dispatch(acCutting(e));
+          }}
           min={1}
           max={9999999999}
           aria-label="place for write number value"
-        />
-      );
-
-    case "inputH":
-      return (
-        <input
-          type="hidden"
-          name={visible ? name : ""}
-          defaultValue={df_value}
-          aria-label="place for secret value"
         />
       );
 

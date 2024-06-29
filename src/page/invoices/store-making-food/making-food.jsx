@@ -21,10 +21,11 @@ export const InvoicesMakingFood = () => {
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
+  const fromV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
-    url: `get/preparedFoods/${res_id}`,
+    url: `get/actions/${res_id}/making_foods`,
     tags: ["makingFood"],
   });
   React.useEffect(() => {
@@ -32,14 +33,16 @@ export const InvoicesMakingFood = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData?.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData?.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData?.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
       setCheckedData((prevData) => [...prevData, item]);
@@ -69,12 +72,12 @@ export const InvoicesMakingFood = () => {
   ];
 
   const displayKeys = [
-    { name: "food_id", size: "12%" },
-    { name: "storage_sender", size: "12%" },
-    { name: "storage_receiver", size: "12%" },
+    { name: "item_id", size: "12%" },
+    { name: "st1_name", size: "12%" },
+    { name: "st2_name", size: "12%" },
     { name: "amount", size: "10%", position: "flex-end" },
-    { name: "total_price", size: "10%", position: "flex-end" },
-    { name: "total_price", size: "10%", position: "flex-end" },
+    { name: "total_amount", size: "10%", position: "flex-end" },
+    { name: "total_amount", size: "10%", position: "flex-end" },
     { name: "description", size: "9%" },
   ];
 
@@ -255,7 +258,7 @@ export const InvoicesMakingFood = () => {
                               {ind + 1}
                             </p>
                             <p style={{ "--data-line-size": "35%" }}>
-                              {product.name}
+                              {product?.item_name}
                             </p>
                             <p style={{ "--data-line-size": "20%" }}>
                               {product.password}
@@ -282,11 +285,7 @@ export const InvoicesMakingFood = () => {
           checkedData={checkedData}
           setCheckedData={setCheckedData}
           getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num: 1,
-            }
-          }
+          NUM={!isLoading && { num: 1 }}
         />
       </Suspense>
     </div>

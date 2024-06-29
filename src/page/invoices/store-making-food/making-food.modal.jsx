@@ -66,31 +66,34 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           },
           {
             type: "inputD",
-            name: "date",
+            name: "time",
             df_value: acItem?.date,
           },
           {
             type: "s_extra",
-            extra: "food_id",
-            df_value: acItem?.food_id
+            name: "item_name",
+            extra: "item_id",
+            df_value: acItem?.item_id
               ? { value: "default", label: "Mahsulot tanlang*" }
-              : { value: acItem?.food_id, label: acItem?.food_id },
+              : { value: acItem?.item_id, label: acItem?.item_name },
             options: data?.data,
           },
           {
             type: "s_extra",
             take_id: true,
-            extra: "storage_sender",
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
+            name: "st1_name",
+            extra: "st1_id",
+            df_value: acItem?.st1_id
+              ? { value: acItem?.st1_id, label: acItem?.st1_name }
               : { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
           },
           {
             type: "s_extra",
-            extra: "storage_receiver",
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
+            name: "st2_name",
+            extra: "st2_id",
+            df_value: acItem?.st2_id
+              ? { value: acItem?.st2_id, label: acItem?.st2_name }
               : { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
           },
@@ -116,7 +119,9 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() =>
+                addAllIng(checkedData, data?.data, setCheckedData)
+              }
             />
           </label>
           <p style={{ "--data-line-size": "27%" }}>Nomi</p>
@@ -127,11 +132,11 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
         </div>
         <div className="product_box_body">
           {currentData?.map((item) => {
-            const checked = checkedData.find((i) => i.id === item.id);
+            const checked = checkedData.find((i) => i.item_id === item.item_id);
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item.id}>
+                key={item.item_id}>
                 <label>
                   <input
                     type="checkbox"
@@ -141,7 +146,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "27%" }}>{item.name}</p>
+                <p style={{ "--data-line-size": "27%" }}>{item.item_name}</p>
                 <p
                   style={{
                     "--data-line-size": "9.9%",
@@ -207,7 +212,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
         <CalcResultBody
           data={updatedData}
           displayKeys={[
-            { name: "name", size: "18%" },
+            { name: "item_name", size: "18%" },
             { name: "unit", size: "10%", position: 1 },
             { name: "old_quantity", size: "14%", position: 2 },
             { name: "amount", size: "14%", position: 2 },

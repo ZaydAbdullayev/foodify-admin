@@ -13,24 +13,23 @@ import { addAllIng } from "../../../service/unique.service";
 const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
   const acItem = useSelector((state) => state.activeThing);
-  const res_id = useSelector((state) => state.res_id);
   const s_id = useSelector((state) => state.activeSt_id);
   const dispatch = useDispatch();
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data = [] } = useFetchDataQuery({
-    url: `get/ingredients/${res_id}`,
+    url: `get/ingredients/${user?.id}`,
     tags: ["ingredient"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
+    url: `get/storage/${user?.id}`,
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${s_id}`,
+    url: `get/storageItems/${user?.id}/${s_id || acItem?.st1_id}`,
     tags: ["invoices"],
   });
   const { data: suplierData = [] } = useFetchDataQuery({
-    url: `get/suppliers/${res_id}`,
+    url: `get/suppliers/${user?.id}`,
     tags: ["suplier"],
   });
   const acIngredients = acItem?.ingredients
@@ -69,15 +68,60 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
   }, [acItem?.storage, dispatch, storeData?.data]);
 
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
+  const ds = [
+    {
+      action_type: "received_goods",
+      order: 4,
+      time: "2021-03-07",
+      res_id: "2899b5",
+      st1_id: "0c510d",
+      st1_name: "Oshxona ombori",
+      item_id: "4417f1",
+      item_name: "Sabzi",
+      item_type: "ingredient",
+      group: "Sabzavotlar",
+      unit: "kg",
+      price: 3521,
+      amount: 20,
+      worker: "Zayd",
+      worker_id: "0a709d",
+      responsible: "Muzaffar",
+      invoice_group: "income",
+      description: "Sabzi sotib olindi",
+      is_undone: 0,
+    },
+    {
+      action_type: "received_goods",
+      order: 1,
+      time: "2024-06-24",
+      res_id: "2899b5",
+      st1_id: "0c510d",
+      item_id: "0237e31e",
+      st1_name: "Oshxona ombori",
+      item_name: "kartoshka",
+      item_type: "Ingredient",
+      group: "Sabzavotlar",
+      unit: "kg",
+      price: 3000,
+      amount: "10",
+      worker: "test",
+      worker_id: "2899b5",
+      responsible: "ds",
+      invoice_group: "income",
+      description: "ds",
+      supplier: "Go’shtchi",
+      supplier_id: "6c1adc",
+    },
+  ];
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
-      type="invoice"
+      type="action"
       Pdata={[...checkedData, ...acIngredients]}
       Udata={updatedData}
-      id={s_id}
+      id={s_id || acItem?.st1_id}
       setCheckedData={setCheckedData}>
       <UniversalForm
         formData={[
@@ -89,8 +133,8 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           },
           {
             type: "inputD",
-            name: "date",
-            df_value: acItem?.date,
+            name: "time",
+            df_value: acItem?.time || new Date().toISOString().split("T")[0],
           },
           {
             type: "s_extra",
@@ -99,20 +143,22 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             df_value: acItem?.supplier
               ? {
                   value: acItem?.supplier,
-                  label: acItem?.supplier,
+                  label: acItem?.supplier_id,
                 }
               : { value: "default", label: "Yetkazuvchi tanlang*" },
             options: suplierData?.data,
+            u_option: [acItem?.supplier, acItem?.supplier_id],
           },
           {
             type: "s_extra",
-            name: "storage",
-            extra: "storage_id",
+            name: "st1_name",
+            extra: "st1_id",
             take_id: true,
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
+            df_value: acItem?.st1_name
+              ? { value: acItem?.st1_name, label: acItem?.st1_id }
               : { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
+            u_option: [acItem?.st1_name, acItem?.st1_id],
           },
           {
             type: "input",
@@ -149,12 +195,12 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
         <div className="product_box_body">
           {data?.data?.map((item) => {
             const checked = [...checkedData, ...acIngredients]?.find(
-              (i) => i.id === item?.id
+              (i) => i.item_id === item?.item_id
             );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item?.id}>
+                key={item?.item_id}>
                 <label>
                   <input
                     type="checkbox"
@@ -164,7 +210,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
@@ -245,7 +291,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "20%" },
+            { name: "item_name", size: "20%" },
             { name: "unit", size: "18%", position: 1 },
             { name: "old_quantity", size: "18%", position: 2 },
             { name: "amount", size: "18%", position: 2 },

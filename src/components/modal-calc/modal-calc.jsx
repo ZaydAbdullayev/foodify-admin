@@ -76,17 +76,10 @@ export const UniversalControlModal = ({
     </div>
   );
 
-  const fetchValues = async (value) => {
+  const fetchValues = async (v) => {
     setLoading(true);
     console.log("fetchdata", fetchdata?.length, fetchdata);
-    if (!Object.keys(fetchdata).length) {
-      openWarning("topRight", true);
-      setLoading(false);
-      return;
-    }
-    if (value.ingredients && Array.isArray(value.ingredients)) {
-      value.ingredients = JSON.stringify(value.ingredients);
-    }
+    const value = v.ingredients;
     try {
       let result;
 
@@ -133,11 +126,11 @@ export const UniversalControlModal = ({
               data: value,
               tags: ["carry-up"],
             });
-            result = await postData({
-              url: "reverse/items",
-              data: value,
-              tags: ["carry-up"],
-            });
+            // result = await postData({
+            //   url: "reverse/items",
+            //   data: value,
+            //   tags: ["carry-up"],
+            // });
             break;
           case "making":
             result = await patchData({
@@ -169,16 +162,11 @@ export const UniversalControlModal = ({
               tags: ["s-products"],
             });
             break;
-          case "invoice":
+          case "action":
             result = await postData({
-              url: "add/receivedGoods",
-              data: value,
+              url: "add/action",
+              data: Pdata,
               tags: ["invoices"],
-            });
-            result = await patchData({
-              url: `update/storageItems/${id}`,
-              data: { ingredients: Udata },
-              tags: ["inventory"],
             });
             break;
           case "cutting":
@@ -188,13 +176,13 @@ export const UniversalControlModal = ({
               tags: ["cutting"],
             });
             break;
-          case "damaged":
-            result = await postData({
-              url: "add/damagedGoods",
-              data: value,
-              tags: ["damaged"],
-            });
-            break;
+          // case "damaged":
+          //   result = await postData({
+          //     url: "add/damagedGoods",
+          //     data: value,
+          //     tags: ["damaged"],
+          //   });
+          //   break;
           case "edr":
             result = await postData({
               url: "add/usedGoods",
@@ -241,6 +229,7 @@ export const UniversalControlModal = ({
       }
     } catch (err) {
       console.error(err);
+      console.log("error", err);
     } finally {
       setLoading(false);
     }
@@ -265,14 +254,6 @@ export const UniversalControlModal = ({
       setFetchdata({ ...data, ...result });
       console.log("product");
     }
-    if (type === "invoice") {
-      setFetchdata({
-        ...data,
-        cost: result.prime_cost,
-        leftover: result.prime_cost,
-      });
-      console.log("invoice");
-    }
     if (type === "edr") {
       setFetchdata({
         ...data,
@@ -283,14 +264,6 @@ export const UniversalControlModal = ({
     if (type === "cutting") {
       setFetchdata({ ...data });
       console.log("cutting");
-    }
-    if (type === "carryUp") {
-      setFetchdata({ ...data, amount: result?.prime_cost });
-      console.log("carryUp");
-    }
-    if (type === "damaged") {
-      setFetchdata({ ...data, cost: result?.prime_cost });
-      console.log("damaged");
     }
     if (type === "making") {
       setFetchdata({ ...data, total_price: result?.prime_cost });

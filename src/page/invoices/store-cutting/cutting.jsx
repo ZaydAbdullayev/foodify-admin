@@ -18,9 +18,10 @@ export const StorageCutting = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,14 +34,16 @@ export const StorageCutting = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
       setCheckedData((prevData) => [...prevData, item]);
@@ -69,13 +72,20 @@ export const StorageCutting = () => {
   ];
 
   const displayKeys = [
-    { name: "storage", size: "12%" },
-    { name: "ingredient", size: "12%" },
+    { name: "st1_name", size: "12%" },
+    { name: "item_name", size: "12%" },
     { name: "amount", size: "12%", position: "flex-end" },
     { name: "waste", size: "12%", position: "flex-end" },
     { name: "invoice_group", size: "12%" },
     { name: "description", size: "12%" },
   ];
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("cutting", item));
+    navigate(`?page-code=cutting`);
+    setAcItem(item);
+  };
 
   return (
     <div className="storage_container">
@@ -89,7 +99,7 @@ export const StorageCutting = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              onChange={() => {
                 setChecked(!checked);
                 dispatch(
                   checked
@@ -147,25 +157,13 @@ export const StorageCutting = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("cutting", item));
-                      navigate(`?page-code=cutting`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("cutting", item));
-                          navigate(`?page-code=cutting`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -277,11 +275,7 @@ export const StorageCutting = () => {
           checkedData={checkedData}
           setCheckedData={setCheckedData}
           getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num: JSON.parse(dmData?.data ? dmData?.data[0]?.order : 0) + 1,
-            }
-          }
+          NUM={!isLoading && { num: 1 }}
         />
       </Suspense>
     </div>

@@ -87,6 +87,58 @@ export const reActiveB = (state = {}, action) => {
   }
 };
 
+export const reFormValues = (
+  state = {
+    st: false,
+    vl: {
+      worker: user?.worker_name || user?.username,
+      worker_id: user?.worker_id || user?.id,
+    },
+  },
+  action
+) => {
+  switch (action?.type) {
+    case "A_V":
+      return { st: true, vl: action?.payload };
+    case "R_V":
+      return { st: false, vl: {} };
+    default:
+      return state;
+  }
+};
+
+// const getProduct = (item, status) => {
+//   const isChecked = checkedData.some((i) => i.id === item?.id);
+//   if (status === 0) {
+//     setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
+//     return;
+//   }
+//   if (isChecked) {
+//     setCheckedData((prevData) =>
+//       prevData.map((i) => (i.id === item?.id ? item : i))
+//     );
+//   } else {
+//     setCheckedData((prevData) => [...prevData, item]);
+//   }
+// };
+
+export const reProduct = (state = [], action) => {
+  switch (action?.type) {
+    case "A_P":
+      return [...state, action?.payload];
+    case "R_P":
+      return state.filter((i) => i.id !== action?.payload);
+    case "CH_P":
+      return state.map((i) =>
+        i.id === action?.payload.id ? action?.payload : i
+      );
+    case "CLEAR_PRODUCT":
+      return [];
+    default:
+      return state;
+  }
+};
+
 export const acActive = (payload) => ({ type: "SIDE_ACTIVE", payload });
 export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
 export const acPassiveThing = (payload) => ({ type: "PASSIVE_THING", payload });
@@ -94,3 +146,4 @@ export const acStorageId = (payload) => ({ type: "STORAGE_ID", payload });
 export const acActiveSt_id = (payload) => ({ type: "ACTIVE_ST_ID", payload });
 export const acAddBill = (payload) => ({ type: "ADD_BILL", payload });
 export const acRemoveBill = (payload) => ({ type: "REMOVE_BILL", payload });
+export const acFormValues = (v, p) => ({ type: v, payload: p });

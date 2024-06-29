@@ -52,14 +52,14 @@ export const Navbar = () => {
         tags: [page_code],
       });
       console.log(result);
-      if (result.status === "success") {
+      if (result?.data?.status === "success") {
         es({ message: "Muvaffaqiyatli o'chirildi", variant: "success" });
         dispatch(setRelease(page_code));
       } else {
         es({ message: "Xatolik yuz berdi", variant: "error" });
       }
     } else {
-      const placement = "topRight";
+      const placement = "topRight"; 
       api.warning({
         message: "Xatolik",
         description: "O'chirish uchun mavjud malumot yo'q!",

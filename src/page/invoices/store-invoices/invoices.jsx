@@ -17,58 +17,74 @@ const InvoicesModal = lazy(() => import("./invoices.modal"));
 const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
 
 export const StorageInvoices = () => {
+  const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [pay, setPay] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
   // const [payment, setPayment] = useState(null);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
+  const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("formV", formV);
 
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
-    url: `get/receivedGoods/${res_id}`,
-    tags: ["invoices"],
+    url: `get/actions/${user?.id}/received_goods`,
+    tags: ["action"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData?.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.id === item?.id);
     if (status === 0) {
       setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData?.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.id === item?.id ? item : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, item]);
+      setCheckedData((prevData) => [
+        ...prevData,
+        {
+          ...item,
+          ...formV?.vl,
+          action_type: "received_goods",
+          invoice_group: "income",
+        },
+      ]);
     }
+  };
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("invoice", item));
+    navigate(`?page-code=invoice`);
+    setAcItem(item);
   };
 
   const headerKeys = [
     { name: "Kun", size: "13%" },
     { name: "Ombor", size: "12%" },
-    { name: "Yetkazuvchi", size: "11%" },
-    { name: "Summa", size: "10%" },
-    { name: "To'langan", size: "10%" },
+    { name: "Yetkazuvchi", size: "12%" },
+    { name: "Summa", size: "12%" },
+    { name: "To'langan", size: "12%" },
     { name: "Qarzdorlik", size: "12%" },
     { name: "Javobgar", size: "12%" },
     { name: "Tavsif", size: "10%" },
-    { name: "Tafsilot", size: "8%" },
   ];
 
   const displayKeys = [
-    { name: "storage", size: "12%" },
-    { name: "supplier", size: "11%" },
-    { name: "cost", size: "10%", position: "flex-end" },
-    { name: "paid", size: "10%", position: "flex-end" },
+    { name: "st1_name", size: "12%" },
+    { name: "supplier", size: "12%" },
+    { name: "total_amount", size: "12%", position: "flex-end" },
+    { name: "paid", size: "12%", position: "flex-end" },
     { name: "leftover", size: "12%", position: "flex-end" },
     { name: "responsible", size: "12%" },
   ];
@@ -82,7 +98,7 @@ export const StorageInvoices = () => {
   ];
 
   const innerDisplayKeys = [
-    { name: "name", size: "24%" },
+    { name: "item_name", size: "24%" },
     { name: "unit", size: "15%", position: "center" },
     { name: "price", size: "19%", position: "flex-end" },
     { name: "amount", size: "19%", position: "flex-end" },
@@ -161,12 +177,11 @@ export const StorageInvoices = () => {
             </span>
           ) : (
             sortData?.map((item) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
+              const date = new Date(item?.time).toLocaleDateString("uz-UZ", {
                 day: "numeric",
                 month: "numeric",
                 year: "numeric",
               });
-              const ingredient = JSON.parse(item?.ingredients);
               const check = ckddt?.invoice?.some((i) => i.id === item?.id);
               return (
                 <div
@@ -186,25 +201,13 @@ export const StorageInvoices = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("invoice", item));
-                      navigate(`?page-code=invoice`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("invoice", item));
-                          navigate(`?page-code=invoice`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -250,25 +253,6 @@ export const StorageInvoices = () => {
                         )}
                       </span>
                     </p>
-                    <p
-                      style={{
-                        "--data-line-size": "8%",
-                        justifyContent: "center",
-                      }}
-                      onClick={() =>
-                        setShowMore(
-                          showMore?.includes(item?.id) ? null : item?.id
-                        )
-                      }>
-                      <u
-                        style={
-                          showMore?.includes(item?.id)
-                            ? { color: "var(--cl26)" }
-                            : {}
-                        }>
-                        tarix
-                      </u>
-                    </p>
                   </div>
                   {showMore?.includes(item?.id) && (
                     <div className=" storage-body_inner_item">
@@ -292,7 +276,7 @@ export const StorageInvoices = () => {
                           );
                         })}
                       </div>
-                      {ingredient?.map((product, ind) => {
+                      {item?.ingredients?.map((product, ind) => {
                         return (
                           <div
                             className="storage_body_item inner_item"
@@ -321,7 +305,7 @@ export const StorageInvoices = () => {
                                 "--data-line-size": "19%",
                                 justifyContent: "flex-end",
                               }}>
-                              {product?.price * product?.amount}
+                              {product?.total_amount}
                             </p>
                           </div>
                         );
@@ -338,7 +322,7 @@ export const StorageInvoices = () => {
                             "--data-line-size": "30%",
                             justifyContent: "flex-end",
                           }}>
-                          {CalculateTotalP(ingredient, "price", "amount")}
+                          {item?.total_amount}
                         </p>
                       </div>
                     </div>
@@ -356,10 +340,7 @@ export const StorageInvoices = () => {
           getProduct={getProduct}
           NUM={
             !isLoading && {
-              num:
-                JSON.parse(
-                  invoiceData?.data ? invoiceData?.data[0]?.order : 0
-                ) + 1,
+              num: 1,
             }
           }
         />

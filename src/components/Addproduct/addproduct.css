@@ -47,7 +47,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap6);
-  background: var(--cl3);
+  background: var(--cl4);
   border-radius: 15px;
   z-index: 9;
 }
@@ -84,7 +84,7 @@
   justify-content: center;
   border: none;
   border-radius: 5px;
-  background: var(--cl5);
+  background: var(--cl49);
   font-size: var(--fs6);
   color: var(--cl3);
 }

@@ -21,7 +21,7 @@ const InvoicesModal = ({
   const id = useSelector((state) => state?.activeSt_id);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id || acItem?.storage_id}`,
+    url: `get/storageItems/${res_id}/${id || acItem?.st1_id}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -29,8 +29,8 @@ const InvoicesModal = ({
     tags: ["store"],
   });
   const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${res_id}`,
-    tags: ["groups"],
+    url: `get/invoiceGroups/${res_id}`,
+    tags: ["invoice-group"],
   });
   const [activePart, setActivePart] = useState(1);
 
@@ -52,23 +52,21 @@ const InvoicesModal = ({
     return newItem;
   });
 
-  console.log(updatedData);
-
   useEffect(() => {
-    if (acItem?.storage) {
+    if (acItem?.st1_name) {
       const selectedItem = storeData?.data?.find(
-        (item) => item?.name === acItem?.storage
+        (item) => item?.name === acItem?.st1_name
       );
       const selectedId = selectedItem?.id || null;
       dispatch(acActiveSt_id(selectedId));
     }
-  }, [acItem?.storage, dispatch, storeData?.data]);
+  }, [acItem?.st1_name, dispatch, storeData?.data]);
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
-      type="damaged"
+      type="action"
       Pdata={checkedData}
       setCheckedData={setCheckedData}>
       <UniversalForm
@@ -81,18 +79,19 @@ const InvoicesModal = ({
           },
           {
             type: "inputD",
-            name: "date",
-            df_value: acItem?.date,
+            name: "time",
+            df_value: acItem?.time || new Date().toISOString().split("T")[0],
           },
           {
             type: "s_extra",
-            name: "storage",
+            name: "st1_name",
             take_id: true,
-            extra: "storage_id",
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
+            extra: "st1_id",
+            df_value: acItem?.st1_name
+              ? { value: acItem?.st1_name, label: acItem?.st1_name }
               : { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
+            u_option: [acItem?.st1_name, acItem?.st1_id],
           },
           {
             type: "select",
@@ -103,7 +102,8 @@ const InvoicesModal = ({
                   label: acItem?.invoice_group,
                 }
               : { value: "default", label: "Guruh tanlang*" },
-            options: groupsData?.data,
+            options: groupsData?.data || [],
+            u_option: [acItem?.invoice_group],
           },
           {
             type: "input",
@@ -121,7 +121,9 @@ const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() =>
+                addAllIng(checkedData, data?.data, setCheckedData)
+              }
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -147,7 +149,7 @@ const InvoicesModal = ({
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
@@ -174,7 +176,7 @@ const InvoicesModal = ({
                     "--data-line-size": "15%",
                     justifyContent: "center",
                   }}>
-                  {item?.type}
+                  {item?.item_type}
                 </p>
                 <p
                   style={{
@@ -212,8 +214,8 @@ const InvoicesModal = ({
           data={updatedData}
           status="inv"
           displayKeys={[
-            { name: "name", size: "15%" },
-            { name: "type", size: "13.33%", position: 1 },
+            { name: "item_name", size: "15%" },
+            { name: "item_type", size: "13.33%", position: 1 },
             { name: "old_quantity", size: "13.33%", position: 2 },
             { name: "amount", size: "13.33%", position: 2 },
             { name: "total_quantity", size: "13.33%", position: 2 },

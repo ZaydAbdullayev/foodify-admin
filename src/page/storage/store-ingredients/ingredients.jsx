@@ -19,7 +19,7 @@ export const StorageIngredients = () => {
   const [newIngGr, setNewIngGr] = useState(null);
   const [showMore, setShowMore] = useState([]);
   const [newGrData, setNewGrData] = useState(null);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState({ item_id: null });
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,6 +44,13 @@ export const StorageIngredients = () => {
       }
     });
 
+  const acionItem = (item) => {
+    dispatch(!acItem?.item_id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("ingredient", item));
+    navigate(`?page-code=ingredient`);
+    setAcItem(item);
+  };
+
   const headerKeys = [
     { name: "Nomi", size: "40%" },
     { name: "O'lchov birligi", size: "20%" },
@@ -52,7 +59,7 @@ export const StorageIngredients = () => {
   ];
 
   const displayKeys = [
-    { name: "name", size: 40 },
+    { name: "item_name", size: 40 },
     { name: "unit", size: 20, position: "center" },
     { name: "group", size: 30 },
     { name: "price", size: 20, position: "flex-end" },
@@ -134,40 +141,30 @@ export const StorageIngredients = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
-              const check = ckddt?.ingredient?.find((el) => el.id === item.id);
+              const check = ckddt?.ingredient?.find(
+                (el) => el.item_id === item.item_id
+              );
               return (
                 <div
                   className={
-                    showMore?.includes(item?.id)
+                    showMore?.includes(item?.item_id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }>
                   <div
                     className={
-                      acItem === item.id
+                      acItem === item.item_id
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("ingredient", item));
-                      navigate(`?page-code=ingredient`);
-                    }}>
+                    key={item.item_id}
+                    onDoubleClick={() => acionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("ingredient", item));
-                          navigate(`?page-code=ingredient`);
-                        }}
+                        onChange={() => acionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
@@ -188,14 +185,14 @@ export const StorageIngredients = () => {
                       }}
                       onClick={() =>
                         setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((el) => el !== item?.id)
-                            : [...prev, item?.id]
+                          prev?.includes(item?.item_id)
+                            ? prev?.filter((el) => el !== item?.item_id)
+                            : [...prev, item?.item_id]
                         )
                       }>
                       <u
                         style={
-                          showMore?.includes(item?.id)
+                          showMore?.includes(item?.item_id)
                             ? { color: "#787aff" }
                             : {}
                         }>
@@ -203,7 +200,7 @@ export const StorageIngredients = () => {
                       </u>
                     </p>
                   </div>
-                  {showMore?.includes(item?.id) && (
+                  {showMore?.includes(item?.item_id) && (
                     <>
                       <div className=" storage-body_inner_item">
                         <div
@@ -336,7 +333,7 @@ export const StorageIngredients = () => {
                                     {fix
                                       ? new Date(
                                           product[name]
-                                        ).toLocaleDateString()
+                                        )?.toLocaleDateString()
                                       : product[name]}
                                   </p>
                                 )
@@ -359,16 +356,18 @@ export const StorageIngredients = () => {
           newGrData={{ name: newGrData, res_id: user?.id }}
           setChecked={setChecked}
           title="Ingredient qo'shish"
-          status={acItem.id ? false : true}>
+          status={acItem.item_id ? false : true}>
           <input
             type="text"
-            name="name"
-            defaultValue={acItem.name}
+            name="item_name"
+            defaultValue={acItem.item_name}
             placeholder="Ingredient nomi*"
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          {acItem.item_id && (
+            <input type="hidden" name="item_id" value={acItem?.item_id} />
+          )}
           <select name="unit">
             {acItem?.unit ? (
               <option value={acItem.unit}>{acItem.unit}</option>

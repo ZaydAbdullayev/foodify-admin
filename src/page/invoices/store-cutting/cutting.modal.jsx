@@ -32,7 +32,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
     tags: ["groups"],
   });
   const acIngredients = acItem?.ingredients
-    ? JSON.parse(acItem?.ingredients)
+    ? JSON?.parse(acItem?.ingredients)
     : [];
 
   const total_quantity = CalculateTotalQuantity(
@@ -93,24 +93,24 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           },
           {
             type: "inputD",
-            name: "date",
-            df_value: acItem?.date,
+            name: "time",
+            df_value: acItem?.time,
           },
           {
             type: "s_extra",
-            name: "storage",
+            name: "st1_name",
             take_id: true,
-            extra: "storage_id",
+            extra: "st1_id",
             df_value: { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
           },
           {
             type: "s_search",
-            name: "ingredient",
-            extra: "ingredient_id",
+            name: "item_name",
+            extra: "item_id",
             df_value: {
-              value: acItem?.ingredient || "default",
-              label: acItem?.ingredient || "Ingredient tanlang*",
+              value: acItem?.item_id || "default",
+              label: acItem?.item_name || "Ingredient tanlang*",
             },
             options: data?.data,
           },
@@ -136,11 +136,11 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             plc_hr: "Tavsif",
             df_value: acItem?.description || "",
           },
-          {
-            type: "inputH",
-            name: "waste",
-            df_value: amount - total_quantity || 0,
-          },
+          // {
+          //   type: "inputH",
+          //   name: "waste",
+          //   df_value: amount - total_quantity || 0,
+          // },
         ]}
       />
       <UniversalProductControl
@@ -151,7 +151,9 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() =>
+                addAllIng(checkedData, data?.data, setCheckedData)
+              }
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -164,12 +166,12 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
         <div className="product_box_body">
           {data?.data?.map((item) => {
             const checked = [...checkedData, ...acIngredients].find(
-              (i) => i.id === item?.id
+              (i) => i.item_id === item?.item_id
             );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={item?.id}>
+                key={item?.item_id}>
                 <label>
                   <input
                     type="checkbox"
@@ -179,7 +181,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                     }
                   />
                 </label>
-                <p style={{ "--data-line-size": "20%" }}>{item?.name}</p>
+                <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
                 <p
                   style={{
                     "--data-line-size": "15%",
@@ -219,10 +221,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
                   {checked && (
                     <select
                       onChange={(e) =>
-                        getProduct(
-                          { ...checked, st_receiver: e.target.value },
-                          1
-                        )
+                        getProduct({ ...checked, st1_id: e.target.value }, 1)
                       }>
                       <option value={acItem?.storage || "default"}>
                         {acItem?.storage || "Ombor tanlang*"}
@@ -269,10 +268,10 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM }) => {
           data={[...updatedIngData, ...updatedData]}
           status="inv"
           displayKeys={[
-            { name: "name", size: "24%" },
+            { name: "item_name", size: "24%" },
             { name: "waste", size: "24%", position: 2 },
             { name: "amount", size: "24%", position: 2 },
-            { name: "total_price", size: "24%", position: 2 },
+            { name: "total_amount", size: "24%", position: 2 },
           ]}
         />
       </CalcResult>

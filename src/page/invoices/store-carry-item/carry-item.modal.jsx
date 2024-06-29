@@ -22,7 +22,7 @@ const InvoicesModal = ({
   NUM,
   acItem,
 }) => {
-  // const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1);
   const [calcData, setCalcData] = useState([]);
   const res_id = useSelector((state) => state?.res_id);
@@ -30,7 +30,7 @@ const InvoicesModal = ({
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id || acItem?.s_storage}`,
+    url: `get/storageItems/${res_id}/${id || acItem?.st1_id}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -38,15 +38,13 @@ const InvoicesModal = ({
     tags: ["store"],
   });
   const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${res_id}`,
-    tags: ["groups"],
+    url: `get/InvoiceGroups/${res_id}`,
+    tags: ["invoice-group"],
   });
   const { data: productData = [] } = useFetchDataQuery({
     url: `get/foods/${res_id}`,
     tags: ["s-products", "product"],
   });
-
-  console.log("check", checkedData);
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = data?.data?.find((old) => old.id === newItem.id) || {};
@@ -111,7 +109,7 @@ const InvoicesModal = ({
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
-      type="carryUp"
+      type="action"
       Pdata={checkedData}
       setCheckedData={setCheckedData}
       Udata={acItem}>
@@ -125,32 +123,32 @@ const InvoicesModal = ({
           },
           {
             type: "inputD",
-            name: "date",
-            df_value: acItem?.date,
+            name: "time",
+            df_value: acItem?.time || today,
           },
           {
             type: "s_extra",
-            name: "storage_sender",
-            extra: "s_storage",
+            name: "st1_name",
+            extra: "st1_id",
             take_id: true,
-            df_value: acItem?.storage_sender
-              ? { value: acItem?.storage_sender, label: acItem?.storage_sender }
+            df_value: acItem?.st1_name
+              ? { value: acItem?.st1_name, label: acItem?.st1_id }
               : { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
-            u_option: [acItem?.storage_sender, acItem?.s_storage],
+            u_option: [acItem?.st1_name, acItem?.st1_id],
           },
           {
             type: "s_extra",
-            name: "storage_receiver",
-            extra: "r_storage",
-            df_value: acItem?.storage_receiver
+            name: "st2_name",
+            extra: "st2_id",
+            df_value: acItem?.st2_name
               ? {
-                  value: acItem?.storage_receiver,
-                  label: acItem?.storage_receiver,
+                  value: acItem?.st2_name,
+                  label: acItem?.st2_id,
                 }
               : { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
-            u_option: [acItem?.storage_sender, acItem?.r_storage],
+            u_option: [acItem?.st2_name, acItem?.st2_id],
           },
           {
             type: "select",
@@ -165,13 +163,7 @@ const InvoicesModal = ({
             type: "input",
             name: "description",
             plc_hr: "Tavsif",
-            df_value: acItem?.description,
-          },
-          {
-            type: "inputH",
-            name: "id",
-            df_value: acItem?.id,
-            visible: acItem?.id ? true : false,
+            df_value: acItem?.description || "",
           },
         ]}
       />
@@ -202,7 +194,9 @@ const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {activeData?.map((item) => {
-            const checked = checkedData?.find((i) => i.id === item.id);
+            const checked = checkedData?.find(
+              (i) => i.item_id === item.item_id
+            );
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -220,7 +214,7 @@ const InvoicesModal = ({
                   style={{
                     "--data-line-size": activePart === 1 ? "20%" : "60%",
                   }}>
-                  {item.name}
+                  {item.item_name}
                 </p>
                 {activePart === 1 && (
                   <>
@@ -250,7 +244,7 @@ const InvoicesModal = ({
                         "--data-line-size": "15%",
                         justifyContent: "center",
                       }}>
-                      {item?.type?.charAt(0)}
+                      {item?.item_type?.charAt(0)}
                     </p>
                   </>
                 )}
@@ -273,11 +267,7 @@ const InvoicesModal = ({
                               storage_sender: id,
                             })
                           : getProduct(
-                              {
-                                ...checked,
-                                amount: e.target.value,
-                                old_amount: item?.total_quantity,
-                              },
+                              { ...checked, amount: e.target.value },
                               1
                             )
                       }
