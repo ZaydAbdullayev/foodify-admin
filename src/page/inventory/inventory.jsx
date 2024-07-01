@@ -33,7 +33,7 @@ export const Inventory = () => {
   const [syncsValue, setSyncsValue] = useState([]);
   const [storageV, setStorageV] = useState({
     number: 1,
-    sync_time: new Date().toISOString().split("T")[0],
+    time: new Date().toISOString().split("T")[0],
     description: "",
   });
   const [active, setActive] = useState(null);
@@ -54,9 +54,33 @@ export const Inventory = () => {
   });
 
   const { data: lastN = {} } = useFetchDataQuery({
-    url: `get/lastSync/${user.id}`,
+    url: `get/actions/${user.id}/sync_goods`,
     tags: ["invoices", "storeItems"],
   });
+
+  const sd = {
+    action_type: "sync_goods",
+    order: 9,
+    time: "2024-06-30",
+    res_id: "2899b5",
+    st1_id: "0c510d",
+    st1_name: "Oshxona ombori",
+    st2_id: "",
+    st2_name: "",
+    item_id: "4a81eb32",
+    item_name: "kartoshka",
+    item_type: "Ingredient",
+    group: "Sabzavotlar",
+    unit: "kg",
+    price: 3521,
+    worker: "Zayd",
+    worker_id: "0a709d",
+    responsible: "Muzaffar",
+    amount: -30,
+    invoice_group: "income",
+    description: "Sabzi sotib olindi",
+    is_undone: 0,
+  };
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
@@ -94,18 +118,14 @@ export const Inventory = () => {
 
   const changeQuantity = (value, ingredientId) => {
     const parsedValue = parseInt(value);
-
     const item = (seeOne ? active?.details : data?.data)?.find(
       (item) => item.item_id === ingredientId
     );
-    if (!item) return; // İlgili öğe bulunamadıysa işlemi sonlandır
-
+    if (!item) return;
     const ind = syncsValue.findIndex((item) => item.item_id === ingredientId);
-
     if (parsedValue === item?.total_quantity) {
-      return; // Eğer yeni değer eski değerle aynıysa işlemi sonlandır
+      return;
     }
-
     const updatedNewData = [...syncsValue];
 
     if (ind !== -1) {
@@ -124,6 +144,9 @@ export const Inventory = () => {
         total_quantity: parsedValue,
         st1_name: storage?.name,
         st1_id: storage?.id,
+        worker: user?.name || user?.username,
+        worker_id: user?.user_id || user?.id,
+        action_type: "sync_goods",
       });
     }
 
@@ -135,9 +158,9 @@ export const Inventory = () => {
       setLoading(true);
       let res;
       const values = {
-        url: seeOne ? `/update/syncStorage/${active?.id}` : `/sync/storage`,
+        url: seeOne ? `/update/syncStorage/${active?.id}` : `/add/action`,
         data: [...syncsValue],
-        tags: ["inventory", "storeItems"],
+        tags: ["action", "storeItems"],
       };
       if (seeOne) {
         res = await patchData(values);
@@ -174,13 +197,12 @@ export const Inventory = () => {
           {seeOne ? (
             <span>
               {" "}
-              {active.st1_name} — {active.sync_time}
+              {active.st1_name} — {active.time}
             </span>
           ) : (
             <div className="df aic gap5">
               <Select
                 name="storage"
-                style={{ fontSize: "4px" }}
                 defaultValue={{
                   value: `${storage?.id}|${storage?.name}` || null,
                   label: storage?.name || "Ombor tanlang",
@@ -228,7 +250,7 @@ export const Inventory = () => {
                     {syncsData?.data?.map((item, index) => {
                       return (
                         <p key={index} onClick={() => getOneSyncData(item)}>
-                          {item.st1_name} <span>{item.sync_time}</span>
+                          {item.st1_name} <span>{item.time}</span>
                         </p>
                       );
                     })}
@@ -254,7 +276,7 @@ export const Inventory = () => {
                   setSnc(true);
                   setStorageV({
                     number: active?.number,
-                    sync_time: active?.sync_time,
+                    time: active?.time,
                     description: active?.description,
                   });
                   setStorage(active?.storage_id);
@@ -362,7 +384,7 @@ export const Inventory = () => {
           <DatePicker
             style={{ width: "100%", fontSize: "10px" }}
             defaultValue={dayjs(new Date())}
-            name="sync_time"
+            name="time"
           />
           <InputNumber
             style={{ width: "100%" }}
