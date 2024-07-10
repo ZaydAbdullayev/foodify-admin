@@ -26,7 +26,7 @@ export const store = configureStore({
     search: reSearch,
     permission: rePermission,
     uModal: reUModal,
-    side: reActive,
+    ing: reActive,
     calc: reCalc,
     modalType: reModalType,
     activeThing: reActiveThing,

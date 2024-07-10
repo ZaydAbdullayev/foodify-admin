@@ -1,9 +1,9 @@
 const user = JSON?.parse(localStorage.getItem("user"))?.user || null;
 
-export const reActive = (state = false, action) => {
+export const reActive = (state = {}, action) => {
   switch (action.type) {
-    case "SIDE_ACTIVE":
-      return !state;
+    case "ADD_ING":
+      return action?.payload;
     default:
       return state;
   }
@@ -107,21 +107,6 @@ export const reFormValues = (
   }
 };
 
-// const getProduct = (item, status) => {
-//   const isChecked = checkedData.some((i) => i.id === item?.id);
-//   if (status === 0) {
-//     setCheckedData((prevData) => prevData.filter((i) => i.id !== item?.id));
-//     return;
-//   }
-//   if (isChecked) {
-//     setCheckedData((prevData) =>
-//       prevData.map((i) => (i.id === item?.id ? item : i))
-//     );
-//   } else {
-//     setCheckedData((prevData) => [...prevData, item]);
-//   }
-// };
-
 export const reProduct = (state = [], action) => {
   switch (action?.type) {
     case "A_P":
@@ -139,7 +124,7 @@ export const reProduct = (state = [], action) => {
   }
 };
 
-export const acActive = (payload) => ({ type: "SIDE_ACTIVE", payload });
+export const acActive = (payload) => ({ type: "ADD_ING", payload });
 export const acActiveThing = (payload) => ({ type: "ACTIVE_THING", payload });
 export const acPassiveThing = (payload) => ({ type: "PASSIVE_THING", payload });
 export const acStorageId = (payload) => ({ type: "STORAGE_ID", payload });

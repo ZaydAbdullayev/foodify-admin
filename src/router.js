@@ -64,8 +64,6 @@ import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
-import { acPassiveThing } from "./redux/active.js";
-import { getBrowserInfo } from "./service/unique.service";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
@@ -75,37 +73,29 @@ export const Router = () => {
 
   useEffect(() => {
     if (nothificate) {
-      var audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
-      if (audioContext) {
-        let sound = new Howl({
-          src: [audio],
-          html5: true,
-        });
-        sound.play();
-        setTimeout(() => {
-          dispatch(acNothification(false));
-          sound.stop();
-        }, 1000);
-      }
+      let sound = new Howl({
+        src: [audio],
+        html5: true,
+      });
+      sound.play();
+      setTimeout(() => {
+        sound.stop();
+        dispatch(acNothification(false));
+      }, 1000);
     }
-
-    const browserInfo = getBrowserInfo();
-    console.log(
-      `Browser: ${browserInfo.browserName}, Version: ${browserInfo.browserVersion}`
-    );
   }, [dispatch, nothificate]);
 
   useEffect(() => {
     dispatch(acCloseUModal());
-    dispatch(acPassiveThing());
   }, [dispatch, location?.search]);
 
-  if (window.innerWidth < 600) {
-    dispatch(acDeviceWidth(true));
-  } else {
-    dispatch(acDeviceWidth(false));
-  }
+  useEffect(() => {
+    if (window.innerWidth < 600) {
+      dispatch(acDeviceWidth(true));
+    } else {
+      dispatch(acDeviceWidth(false));
+    }
+  }, [dispatch]);
 
   return (
     <Routes>
@@ -198,18 +188,17 @@ export const Router = () => {
 
             {/* ============== pages of the single ================= */}
             <Route path="more/info/:id" element={<ShowProduct />} />
-            <Route path="more/info/test" element={<FullReportById />} />
             <Route
               path="get-full-report/:res_id/:storage_id/:storage/:id/:item/:type"
               element={<FullReportById />}
             />
-            <Route path="view/fullreport/:id" element={<FullReportById />} />
             <Route path="view/food-report/:id" element={<ReportOneItems />} />
             <Route path="statistic/:name" element={<StatisticsExpenses />} />
             <Route path="statistic/incomes" element={<StatisticsIncome />} />
             <Route path="statistic-details" element={<StatisticDetails />} />
             <Route path="bills-report" element={<BillsReport />} />
             <Route path="one-bill-report/:id" element={<BillReportById />} />
+            <Route path="report-ingredients/:id" element={<FullReportById />} />
             <Route path="category/:type/:number/:id" element={<Orders />} />
             <Route
               path="update-order/:type/:number/:id/:ProductId/:queue"

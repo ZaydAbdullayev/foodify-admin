@@ -3,7 +3,7 @@ import { useState } from "react";
 import { DatePicker, Input, InputNumber, Select, Checkbox, Table } from "antd";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { acActiveSt_id, acFormValues } from "../redux/active";
+import { acActiveSt_id, acFormValues, acActive } from "../redux/active";
 import "./hook.css";
 import { acCutting } from "../redux/calc";
 
@@ -24,9 +24,9 @@ export const GenerateField = ({ fieldData }) => {
     name = "",
     extra = "",
     take_id = false,
-    shareV = false,
-    // visible = true,
+    getAmount = false,
     u_option = [],
+    getFullInfo = false,
   } = fieldData;
 
   // useEffect(() => {
@@ -37,14 +37,21 @@ export const GenerateField = ({ fieldData }) => {
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");
-    setDatas({ name: value[0], id: value[1] });
-    dispatch(
-      acFormValues("A_V", {
-        ...values?.vl,
-        [name]: value[0],
-        [extra]: value[1],
-      })
-    );
+    console.log(";", getFullInfo);
+    if (!getFullInfo) {
+      setDatas({ name: value[0], id: value[1] });
+      dispatch(
+        acFormValues("A_V", {
+          ...values?.vl,
+          [name]: value[0],
+          [extra]: value[1],
+        })
+      );
+    } else {
+      console.log("calisti");
+      const i = options.find((item) => item.item_id === value[1]);
+      dispatch(acActive(i ? i : {}));
+    }
     if (take_id) {
       dispatch(acActiveSt_id(value[1]));
     }
@@ -136,7 +143,9 @@ export const GenerateField = ({ fieldData }) => {
           defaultValue={df_value}
           onChange={(e) => {
             dispatch(acFormValues("A_V", { ...values?.vl, [name]: e }));
-            if (shareV) dispatch(acCutting(e));
+            if (getAmount) {
+              dispatch(acCutting(e));
+            }
           }}
           min={1}
           max={9999999999}
@@ -193,8 +202,8 @@ export const GenerateField = ({ fieldData }) => {
             }
             options={
               options?.map((item) => ({
-                value: `${extra}=${item?.name}|${item?.id}`,
-                label: item?.name,
+                value: `${extra}=${item?.item_name}|${item?.item_id}`,
+                label: item?.item_name,
               })) || []
             }
             aria-label="place for search option"

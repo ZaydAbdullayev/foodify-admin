@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +19,6 @@ export const StorageCarryUp = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
   const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
@@ -30,8 +28,8 @@ export const StorageCarryUp = () => {
   }, [dispatch]);
 
   const { data: cuttingData = [], isLoading } = useFetchDataQuery({
-    url: `/get/actions/${res_id}/moved_goods`,
-    tags: ["action"],
+    url: `/get/actions/moved_goods`,
+    tags: ["action", "invoices"],
   });
 
   const getProduct = (item, status) => {
@@ -55,11 +53,9 @@ export const StorageCarryUp = () => {
   };
 
   const itemAction = (item) => {
-    const ings = JSON.parse(item?.ingredients) || [];
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("movedGoods", item));
     navigate(`?page-code=movedGoods`);
-    setCheckedData(acItem?.id ? [] : ings);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
     setAcItem(
       acItem?.id && ckddt?.movedGoods?.length > 0
         ? { id: null, ingredients: [] }

@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useNavigate } from "react-router-dom";
 
@@ -20,13 +19,12 @@ export const InvoicesMakingFood = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
   const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/${res_id}/making_foods`,
-    tags: ["action"],
+    url: `get/actions/making_foods`,
+    tags: ["action", "invoices"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 15]));
@@ -85,10 +83,14 @@ export const InvoicesMakingFood = () => {
   ];
 
   const actionItem = (item) => {
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("making", item));
     navigate(`?page-code=making`);
-    setAcItem(item);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
+    setAcItem(
+      acItem?.id && ckddt?.making?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   return (

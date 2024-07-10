@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 // import { CalculateTotalP } from "../../../service/calc.service";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +16,6 @@ const InvoicesModal = lazy(() => import("./invoices.modal"));
 const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
 
 export const StorageInvoices = () => {
-  const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [pay, setPay] = useState(false);
@@ -31,9 +29,35 @@ export const StorageInvoices = () => {
   const navigate = useNavigate();
   console.log("formV", formV);
 
+  const ds = [
+    {
+      id: "2d7a97f46e9dada2",
+      action_type: "received_goods",
+      order: 9,
+      time: "2022-01-07",
+      st1_id: "0c510d",
+      st1_name: "Oshxona ombori",
+      st2_id: "def809",
+      st2_name: "Bar ombori",
+      item_id: "4a81eb32",
+      item_name: "kartoshka",
+      item_type: "Ingredient",
+      group: "Sabzavotlar",
+      unit: "kg",
+      price: 6000,
+      worker: "Zayd",
+      worker_id: "0a709d",
+      responsible: "Muzaffar",
+      amount: 300,
+      invoice_group: "income",
+      description: "Sabzi sotib olindi",
+      is_undone: 0,
+    },
+  ];
+
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/${user?.id}/received_goods`,
-    tags: ["action"],
+    url: `get/actions/received_goods`,
+    tags: ["action", "invoices"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
@@ -63,12 +87,15 @@ export const StorageInvoices = () => {
   };
 
   const actionItem = (item) => {
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("invoice", item));
     navigate(`?page-code=invoice`);
-    setAcItem(item);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
+    setAcItem(
+      acItem?.id && ckddt?.invoice?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
-
   const headerKeys = [
     { name: "Kun", size: "13%" },
     { name: "Ombor", size: "12%" },

@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useNavigate } from "react-router-dom";
 import { CalculateTotalP } from "../../../service/calc.service";
@@ -21,14 +20,13 @@ export const StorageExpenditures = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
   const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data: invoiceData = [], isLoading } = useFetchDataQuery({
-    url: `get/action/${res_id}/used_goods`,
-    tags: ["action"],
+  const { data: expenseData = [], isLoading } = useFetchDataQuery({
+    url: `get/actions/used_goods`,
+    tags: ["action", "invoices"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
@@ -54,8 +52,8 @@ export const StorageExpenditures = () => {
   };
 
   const sortData =
-    invoiceData &&
-    [...invoiceData].sort((a, b) => {
+    expenseData?.data &&
+    [...(expenseData?.data || [])].sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -74,7 +72,7 @@ export const StorageExpenditures = () => {
 
   const displayKeys = [
     { name: "st1_name", size: "15.6%" },
-    { name: "amount", size: "15.6%" },
+    { name: "total_amount", size: "15.6%" },
     { name: "invoice_group", size: "15.6%" },
     { name: "description", size: "15.6%" },
   ];
@@ -94,15 +92,19 @@ export const StorageExpenditures = () => {
     { name: "item_name", size: "18.7%", border: "1px solid #ccc5" },
     { name: "item_type", size: "8.7%", border: "1px solid #ccc5", short: true },
     { name: "price", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "total_amount", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "total_quantity", size: "13.7%", border: "1px solid #ccc5" },
     { name: "amount", size: "13.7%", border: "1px solid #ccc5" },
   ];
 
   const actionItem = (item) => {
-    dispatch(acActiveThing(item));
-    dispatch(setDocuments("invoice", item));
-    navigate(`?page-code=invoice`);
-    setAcItem(item);
+    dispatch(setDocuments("expense", item));
+    navigate(`?page-code=expense`);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
+    setAcItem(
+      acItem?.id && ckddt?.expense?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   return (
@@ -122,7 +124,7 @@ export const StorageExpenditures = () => {
                 dispatch(
                   checked
                     ? setRelease("invoice")
-                    : setAllDocuments("invoice", invoiceData?.data)
+                    : setAllDocuments("invoice", expenseData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -162,7 +164,6 @@ export const StorageExpenditures = () => {
           ) : (
             sortData?.map((item, index) => {
               const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
-              const innerDatas = JSON.parse(item?.ingredients);
               return (
                 <div
                   className={
@@ -189,7 +190,9 @@ export const StorageExpenditures = () => {
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "15.6%" }}>{item?.time}</p>
+                    <p style={{ "--data-line-size": "15.6%" }}>
+                      {item?.time?.split(" ")?.[0]}
+                    </p>
                     {displayKeys.map((key) => {
                       return (
                         <p style={{ "--data-line-size": key.size }}>
@@ -235,7 +238,7 @@ export const StorageExpenditures = () => {
                           );
                         })}
                       </div>
-                      {innerDatas?.map((product, ind) => {
+                      {item?.ingredients?.map((product, ind) => {
                         return (
                           <div
                             className="storage_body_item inner_item"
@@ -286,7 +289,11 @@ export const StorageExpenditures = () => {
                             "--data-line-size": "30%",
                             justifyContent: "flex-end",
                           }}>
-                          {CalculateTotalP(innerDatas, "price", "amount")}
+                          {CalculateTotalP(
+                            item?.ingredients,
+                            "price",
+                            "amount"
+                          )}
                         </p>
                       </div>
                     </div>
@@ -304,10 +311,7 @@ export const StorageExpenditures = () => {
           getProduct={getProduct}
           NUM={
             !isLoading && {
-              num:
-                JSON.parse(
-                  invoiceData?.data ? invoiceData?.data[0]?.order : 0
-                ) + 1,
+              num: expenseData?.data?.length + 1,
             }
           }
           acItem={acItem}

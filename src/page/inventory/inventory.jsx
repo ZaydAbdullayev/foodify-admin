@@ -24,7 +24,7 @@ export const Inventory = () => {
     tags: ["store"],
   });
   const { data: syncsData = [] } = useFetchDataQuery({
-    url: user ? `get/syncStorage/${user?.id}` : "",
+    url: user ? `get/actions/sync_storage` : "",
     tags: ["inventory"],
   });
   const [storage, setStorage] = useState(null);
@@ -50,12 +50,12 @@ export const Inventory = () => {
 
   const { data = {} } = useFetchDataQuery({
     url: storage?.id ? `get/storageItems/${user.id}/${storage?.id}` : "",
-    tags: ["invoices", "storeItems"],
+    tags: ["invoices"],
   });
 
   const { data: lastN = {} } = useFetchDataQuery({
     url: `get/actions/${user.id}/sync_goods`,
-    tags: ["invoices", "storeItems"],
+    tags: ["invoices"],
   });
 
   const sd = {
@@ -160,7 +160,7 @@ export const Inventory = () => {
       const values = {
         url: seeOne ? `/update/syncStorage/${active?.id}` : `/add/action`,
         data: [...syncsValue],
-        tags: ["action", "storeItems"],
+        tags: ["action", "invoices"],
       };
       if (seeOne) {
         res = await patchData(values);

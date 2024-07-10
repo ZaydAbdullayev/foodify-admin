@@ -37,7 +37,6 @@ const InvoicesModal = ({
     url: `get/suppliers/${user?.id}`,
     tags: ["suplier"],
   });
-  const acIngredients = acItem?.ingredients;
 
   const updatedData = checkedData?.map((newItem) => {
     const oldData = storageItems?.data?.find(
@@ -64,22 +63,20 @@ const InvoicesModal = ({
 
   useEffect(() => {
     if (acItem?.st1_id) {
-      const selectedItem = storeData?.data?.find(
-        (item) => item?.name === acItem?.st1_id
-      );
-      const selectedId = selectedItem?.id;
-      dispatch(acActiveSt_id(selectedId));
+      dispatch(acActiveSt_id(acItem?.st1_id));
     }
-  }, [acItem?.st1_id, dispatch, storeData?.data]);
+  }, [acItem?.st1_id, dispatch]);
 
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
 
   const num = acItem?.order ? acItem?.order : NUM.num;
+
+  console.log("acItem", checkedData, acItem);
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
       type="action"
-      Pdata={[...checkedData, ...acIngredients]}
+      Pdata={checkedData}
       Udata={updatedData}
       id={s_id || acItem?.st1_id}
       setCheckedData={setCheckedData}>
@@ -154,7 +151,7 @@ const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.data?.map((item) => {
-            const checked = [...checkedData, ...acIngredients]?.find(
+            const checked = checkedData?.find(
               (i) => i.item_id === item?.item_id
             );
             return (
@@ -238,7 +235,7 @@ const InvoicesModal = ({
           })}
         </div>
       </UniversalProductControl>
-      <CalcResult data={[...checkedData, ...acIngredients]}>
+      <CalcResult data={checkedData}>
         <CalcResultHeader>
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>

@@ -54,14 +54,10 @@ const InvoicesModal = ({
   });
 
   useEffect(() => {
-    if (acItem?.st1_name) {
-      const selectedItem = storeData?.data?.find(
-        (item) => item?.name === acItem?.st1_name
-      );
-      const selectedId = selectedItem?.id || null;
-      dispatch(acActiveSt_id(selectedId));
+    if (acItem?.st1_id) {
+      dispatch(acActiveSt_id(acItem?.st1_id));
     }
-  }, [acItem?.st1_name, dispatch, storeData?.data]);
+  }, [acItem?.st1_id, dispatch]);
 
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (

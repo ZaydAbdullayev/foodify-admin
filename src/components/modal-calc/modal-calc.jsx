@@ -10,7 +10,7 @@ import { useFetchDataQuery } from "../../service/fetch.service";
 import { usePostDataMutation } from "../../service/fetch.service";
 import { usePatchDataMutation } from "../../service/fetch.service";
 import { ClearForm } from "../../service/form.service";
-import { acPassiveThing } from "../../redux/active";
+import { acFormValues, acPassiveThing } from "../../redux/active";
 import { acGetUrl } from "../../redux/u-modal";
 import { acStorageId } from "../../redux/active";
 import { notification } from "antd";
@@ -29,11 +29,13 @@ export const UniversalControlModal = ({
   type,
   Pdata,
   Udata,
-  id,
   setCheckedData,
+  a_t = false,
 }) => {
   const open = useSelector((state) => state.uModal);
   const image = useSelector((state) => state.image);
+  const ing = useSelector((state) => state.ing);
+  const formV = useSelector((state) => state.values);
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
@@ -165,43 +167,19 @@ export const UniversalControlModal = ({
           case "action":
             result = await postData({
               url: "add/action",
-              data: Pdata,
-              tags: ["action"],
-            });
-            break;
-          case "cutting":
-            result = await postData({
-              url: "add/cutting",
-              data: value,
-              tags: ["cutting"],
-            });
-            break;
-          // case "damaged":
-          //   result = await postData({
-          //     url: "add/damagedGoods",
-          //     data: value,
-          //     tags: ["damaged"],
-          //   });
-          //   break;
-          case "edr":
-            result = await postData({
-              url: "add/usedGoods",
-              data: value,
-              tags: ["expenditure"],
-            });
-            break;
-          case "carryUp":
-            result = await postData({
-              url: "move/goods",
-              data: value,
-              tags: ["carry-up"],
-            });
-            break;
-          case "making":
-            result = await postData({
-              url: "make/food",
-              data: value,
-              tags: ["makingFood"],
+              data: !a_t
+                ? Pdata
+                : [
+                    ...Pdata,
+                    {
+                      ...(ing || {}),
+                      ...formV.vl,
+                      action_type: a_t,
+                      st1_id: formV.vl.st2_id,
+                      s1_name: formV.vl.s2_name,
+                    },
+                  ],
+              tags: ["action", "invoices"],
             });
             break;
           case "preOrder":
@@ -223,6 +201,7 @@ export const UniversalControlModal = ({
         ClearForm("#u-control-form");
         dispatch(acCloseUModal());
         dispatch(acPassiveThing());
+        dispatch(acFormValues("R_V", {}));
         setCheckedData([]);
         dispatch(acCutting(0));
         dispatch(acGetUrl({ st: false, img: "" }));
@@ -247,7 +226,6 @@ export const UniversalControlModal = ({
     if (type !== "cutting") {
       delete data.amount;
     }
-    console.log(type);
     const result = calculateTotal(data);
     dispatch(acCalc(result));
     if (type === "product") {
@@ -464,7 +442,7 @@ export const CalcResult = ({ children, status }) => {
   );
 };
 
-export const CalcResultHeader = ({ children, headerKeys }) => {
+export const CalcResultHeader = ({ children }) => {
   return <div className="product_box_item">{children}</div>;
 };
 
@@ -472,11 +450,11 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
   return (
     <div className="product_box_body">
       {data?.map((item, index) => (
-        <div className="product_box_item" key={item.id + index}>
+        <div className="product_box_item" key={item.item_id + index}>
           <label>{index + 1}</label>
           {displayKeys?.map(({ name, size, position }, ind) => (
             <p
-              key={ind}
+              key={`${ind}_${name}`}
               style={{
                 "--data-line-size": size,
                 justifyContent: position

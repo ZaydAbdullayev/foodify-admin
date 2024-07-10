@@ -17,7 +17,6 @@ const InvoicesModal = ({
   NUM,
   acItem,
 }) => {
-  // const today = new Date().toISOString().split("T")[0];
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
@@ -34,10 +33,9 @@ const InvoicesModal = ({
     url: `get/InvoiceGroups/${res_id}`,
     tags: ["invoice-group"],
   });
-  const acIngredients = acItem?.ingredients;
   const updatedData = checkedData?.map((newItem) => {
     const oldData =
-      data?.data?.find((old) => old.item_id === newItem?.item_id) || {};
+      data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
 
     if (oldData) {
       return {
@@ -53,21 +51,16 @@ const InvoicesModal = ({
     return newItem;
   });
   useEffect(() => {
-    if (acItem?.st1_name) {
-      const selectedItem = storeData?.data?.find(
-        (item) => item.name === acItem?.st1_name
-      );
-      const selectedId = selectedItem?.id;
-
-      dispatch(acActiveSt_id(selectedId));
+    if (acItem?.st1_id) {
+      dispatch(acActiveSt_id(acItem?.st1_id));
     }
-  }, [acItem?.st1_name, dispatch, storeData?.data]);
+  }, [acItem?.st1_id, dispatch]);
   const num = acItem?.order ? acItem?.order : NUM.num;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
-      type="edr"
-      Pdata={[...checkedData, ...acIngredients]}
+      type="action"
+      Pdata={checkedData}
       setCheckedData={setCheckedData}>
       <UniversalForm
         formData={[
@@ -79,22 +72,22 @@ const InvoicesModal = ({
           },
           {
             type: "inputD",
-            name: "date",
-            df_value: acItem?.date,
+            name: "time",
+            df_value: acItem?.time || new Date().toISOString().split("T")[0],
           },
           {
             type: "s_extra",
-            name: "storage",
+            name: "st1_name",
             take_id: true,
-            extra: "storage_id",
-            df_value: acItem?.storage
-              ? { value: acItem?.storage, label: acItem?.storage }
+            extra: "st1_id",
+            df_value: acItem?.st1_name
+              ? { value: acItem?.st1_name, label: acItem?.st1_name }
               : { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
           },
           {
             type: "select",
-            name: "group",
+            name: "invoice_group",
             df_value: acItem?.invoice_group
               ? {
                   value: acItem?.invoice_group,
@@ -131,8 +124,8 @@ const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.data?.map((item, index) => {
-            const checked = [...checkedData, ...acIngredients]?.find(
-              (i) => i.id === item?.item_id
+            const checked = checkedData?.find(
+              (i) => i.item_id === item?.item_id
             );
             return (
               <div
@@ -185,9 +178,9 @@ const InvoicesModal = ({
                     <input
                       type="number"
                       name="amount"
-                      defaultValue={checked?.amount ? checked?.amount : ""}
+                      defaultValue={checked?.amount || 0}
                       onChange={(e) =>
-                        getProduct({ ...item, amount: e.target.value }, 1)
+                        getProduct({ ...checked, amount: e.target.value }, 1)
                       }
                     />
                   )}

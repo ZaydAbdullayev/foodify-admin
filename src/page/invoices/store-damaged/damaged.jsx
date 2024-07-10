@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
@@ -20,14 +19,13 @@ export const StorageDamaged = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
   const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: demagedData = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/${res_id}/damaged_goods`,
-    tags: ["action"],
+    url: `get/actions/damaged_goods`,
+    tags: ["action", "invoices"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
@@ -58,12 +56,15 @@ export const StorageDamaged = () => {
     }
   };
 
-  const itemAction = (item) => {
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+  const actionItem = (item) => {
     dispatch(setDocuments("movedGoods", item));
     navigate(`?page-code=movedGoods`);
-    setAcItem(item);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
+    setAcItem(
+      acItem?.id && ckddt?.movedGoods?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   const headerKeys = [
@@ -168,13 +169,6 @@ export const StorageDamaged = () => {
             </span>
           ) : (
             sortData?.map((item, ind) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
-              date.replace(/\//g, ".");
-              const innerData = JSON.parse(item?.ingredients);
               const check = ckddt?.damaged?.some((el) => el?.id === item?.id);
               return (
                 <div
@@ -190,19 +184,21 @@ export const StorageDamaged = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    onDoubleClick={() => itemAction(item)}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => itemAction(item)}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "16.5%" }}>{date}</p>
+                    <p style={{ "--data-line-size": "16.5%" }}>
+                      {item?.time?.split(" ")?.[0]}
+                    </p>
                     {displayKeys.map((key, ind) => (
                       <p
                         style={{
@@ -251,7 +247,7 @@ export const StorageDamaged = () => {
                           </p>
                         ))}
                       </div>
-                      {innerData?.map((product, ind) => {
+                      {item?.ingredients?.map((product, ind) => {
                         return (
                           <div
                             className="storage_body_item inner_item"

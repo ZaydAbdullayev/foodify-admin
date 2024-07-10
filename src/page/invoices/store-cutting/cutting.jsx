@@ -1,6 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
@@ -20,14 +19,13 @@ export const StorageCutting = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const res_id = useSelector((state) => state.res_id);
   const formV = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { data: dmData = [], isLoading } = useFetchDataQuery({
-    url: `get/cutting/${res_id}`,
-    tags: ["action"],
+    url: `get/actions/cutting_increase`,
+    tags: ["action", "invoices"],
   });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
@@ -48,7 +46,7 @@ export const StorageCutting = () => {
     } else {
       setCheckedData((prevData) => [
         ...prevData,
-        { ...item, ...formV?.vl, action_type: "cutting_increase" },
+        { ...formV?.vl, ...item, action_type: "cutting_increase" },
       ]);
     }
   };
@@ -84,10 +82,14 @@ export const StorageCutting = () => {
   ];
 
   const actionItem = (item) => {
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("cutting", item));
     navigate(`?page-code=cutting`);
-    setAcItem(item);
+    setCheckedData(acItem?.id ? [] : item?.ingredients);
+    setAcItem(
+      acItem?.id && ckddt?.cutting?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   return (
@@ -167,7 +169,9 @@ export const StorageCutting = () => {
                     <p style={{ inlineSize: "var(--univslH)" }}>
                       {item?.order}
                     </p>
-                    <p style={{ "--data-line-size": "12%" }}>{item?.time}</p>
+                    <p style={{ "--data-line-size": "12%" }}>
+                      {item?.time?.split(" ")?.[0]}
+                    </p>
                     {displayKeys?.map((key, index) => {
                       return (
                         <p
@@ -234,7 +238,7 @@ export const StorageCutting = () => {
                         </p>
                         <p style={{ "--data-line-size": "15%" }}>Foyda</p>
                       </div>
-                      {item?.data?.map((product, ind) => {
+                      {item?.ingredients?.map((product, ind) => {
                         return (
                           <div
                             className="storage_body_item inner_item"
@@ -246,16 +250,16 @@ export const StorageCutting = () => {
                               {ind + 1}
                             </p>
                             <p style={{ "--data-line-size": "35%" }}>
-                              {product.name}
+                              {product.item_name}
                             </p>
                             <p style={{ "--data-line-size": "20%" }}>
-                              {product.password}
+                              {product.price}
                             </p>
                             <p style={{ "--data-line-size": "25%" }}>
-                              {item?.remain}
+                              {product?.cost_price}
                             </p>
                             <p style={{ "--data-line-size": "15%" }}>
-                              {item?.total}
+                              {product?.total_amount}
                             </p>
                           </div>
                         );
@@ -273,7 +277,7 @@ export const StorageCutting = () => {
           checkedData={checkedData}
           setCheckedData={setCheckedData}
           getProduct={getProduct}
-          NUM={!isLoading && { num: 1 }}
+          NUM={!isLoading && { num: dmData?.length + 1 }}
           acItem={acItem}
         />
       </Suspense>

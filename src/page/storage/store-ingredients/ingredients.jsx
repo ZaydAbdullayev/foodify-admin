@@ -44,11 +44,14 @@ export const StorageIngredients = () => {
       }
     });
 
-  const acionItem = (item) => {
-    dispatch(!acItem?.item_id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("ingredient", item));
-    navigate(`?page-code=ingredient`);
-    setAcItem(item);
+  const actionItem = (item) => {
+    dispatch(setDocuments("ingradient", item));
+    navigate(`?page-code=ingradient`);
+    setAcItem(
+      acItem?.id && ckddt?.ingradient?.length > 0
+        ? { id: null, ingredients: [] }
+        : item
+    );
   };
 
   const headerKeys = [
@@ -158,13 +161,13 @@ export const StorageIngredients = () => {
                         : "storage_body_item"
                     }
                     key={item.item_id}
-                    onDoubleClick={() => acionItem(item)}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => acionItem(item)}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
