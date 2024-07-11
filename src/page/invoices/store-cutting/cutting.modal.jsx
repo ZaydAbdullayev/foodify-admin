@@ -72,7 +72,7 @@ const InvoicesModal = ({
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
-      type="action"
+      type="pile_action"
       Pdata={checkedData}
       setCheckedData={setCheckedData}
       sp={"cutting_decrease"}>

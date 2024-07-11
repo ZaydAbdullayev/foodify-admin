@@ -26,15 +26,16 @@ export const StorageProducts = () => {
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
   const [activePart, setActivePart] = useState(1);
-  const [acItem, acItemAction] = useState({ id: null, ingredients: [] });
+  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const id = useSelector((state) => state.storageId);
   const img = useSelector((state) => state.image);
   const res_id = useSelector((state) => state.res_id);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: products = [], isLoading } = useFetchDataQuery({
-    url: `get/foods/${res_id}`,
+    url: `get/foods`,
     tags: ["s-products", "product"],
   });
   const { data: ingredients = [] } = useFetchDataQuery({
@@ -51,19 +52,19 @@ export const StorageProducts = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData.filter((i) => i.id !== item.id));
+      setCheckedData((prevData) =>
+        prevData.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) =>
-          i.id === item.id ? { ...item, storage_id: id } : i
-        )
+        prevData.map((i) => (i.item_id === item?.item_id ? { ...item } : i))
       );
     } else {
-      setCheckedData((prevData) => [...prevData, { ...item, storage_id: id }]);
+      setCheckedData((prevData) => [...prevData, { ...item }]);
     }
   };
 
@@ -90,7 +91,7 @@ export const StorageProducts = () => {
   ];
 
   const displayKeys = [
-    { name: "name", size: "15%" },
+    { name: "food_name", size: "15%" },
     { name: "price", size: "10%", position: 2 },
     { name: "prime_cost", size: "11%", position: 2 },
     { name: "profit", size: "10%", position: 2 },
@@ -116,9 +117,10 @@ export const StorageProducts = () => {
   ];
 
   const itemAction = (item) => {
-    dispatch(acItem.id ? acPassiveThing() : acActiveThing(item));
+    dispatch(acItem?.id ? acPassiveThing() : acActiveThing(item));
     dispatch(setDocuments("products", item));
     navigate(`?page-code=products`);
+    setAcItem(item);
   };
 
   const modalData = activePart === 1 ? ingredients : products;
@@ -151,10 +153,10 @@ export const StorageProducts = () => {
             return (
               <label
                 onClick={() => setSort({ id: 1, state: !sort.state })}
-                style={{ "--data-line-size": item.size }}
+                style={{ "--data-line-size": item?.size }}
                 key={index}
                 aria-label="sort data down of top or top of down">
-                <p>{item.name}</p>
+                <p>{item?.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
                 ) : (
@@ -174,22 +176,24 @@ export const StorageProducts = () => {
               const ingredients = item?.ingredients
                 ? JSON?.parse(item?.ingredients)
                 : [];
-              const check = ckddt?.products?.some((i) => i.id === item.id);
+              const check = ckddt?.products?.some(
+                (i) => i.food_id === item?.food_id
+              );
               return (
                 <div
                   className={
-                    showMore?.includes(item?.id)
+                    showMore?.includes(item?.food_id)
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
-                  key={item.id}>
+                  key={item?.food_id}>
                   <div
                     className={
-                      acItem === item.id
+                      acItem === item?.food_id
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    key={item.id}
+                    key={item?.food_id}
                     onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">
                       <input
@@ -221,14 +225,14 @@ export const StorageProducts = () => {
                       }}
                       onClick={() =>
                         setShowMore(
-                          showMore?.includes(item?.id)
-                            ? showMore?.filter((i) => i !== item?.id)
-                            : [...showMore, item.id]
+                          showMore?.includes(item?.food_id)
+                            ? showMore?.filter((i) => i !== item?.food_id)
+                            : [...showMore, item?.food_id]
                         )
                       }>
                       <u
                         style={
-                          showMore?.includes(item?.id)
+                          showMore?.includes(item?.food_id)
                             ? { color: "#787aff" }
                             : {}
                         }>
@@ -242,14 +246,14 @@ export const StorageProducts = () => {
                       }}
                       onClick={() =>
                         setShowMore(
-                          showMore?.includes(item?.id)
-                            ? showMore?.filter((i) => i !== item?.id)
-                            : [...showMore, item.id]
+                          showMore?.includes(item?.food_id)
+                            ? showMore?.filter((i) => i !== item?.food_id)
+                            : [...showMore, item?.food_id]
                         )
                       }>
                       <u
                         style={
-                          showMore?.includes(item?.id)
+                          showMore?.includes(item?.food_id)
                             ? { color: "#787aff" }
                             : {}
                         }>
@@ -257,7 +261,7 @@ export const StorageProducts = () => {
                       </u>
                     </p>
                   </div>
-                  {showMore?.includes(item?.id) && (
+                  {showMore?.includes(item?.food_id) && (
                     <div className=" storage-body_inner_item">
                       <div
                         className="storage_body_item"
@@ -266,11 +270,11 @@ export const StorageProducts = () => {
                           return (
                             <p
                               style={{
-                                "--data-line-size": item.size,
-                                borderRight: item.border,
+                                "--data-line-size": item?.size,
+                                borderRight: item?.border,
                               }}
                               key={index}>
-                              {item.name}
+                              {item?.name}
                             </p>
                           );
                         })}
@@ -307,7 +311,7 @@ export const StorageProducts = () => {
                               style={{
                                 "--data-line-size": "16.5%",
                               }}>
-                              {product.amount * item.price}
+                              {product.amount * item?.price}
                             </p>
                           </div>
                         );
@@ -337,166 +341,187 @@ export const StorageProducts = () => {
           )}
         </div>
       </div>
-      <UniversalControlModal
-        status={acItem?.id ? true : false}
-        type="product"
-        Pdata={checkedData}
-        // Pdata={[...checkedData, ...acItem?.ingredients]}
-        setCheckedData={setCheckedData}>
-        <UniversalForm
-          formData={[
-            {
-              type: "input",
-              name: "name",
-              plc_hr: "Nomi*",
-              df_value: acItem?.name,
-            },
-            {
-              type: "s_extra",
-              extra: "category_id",
-              name: "category",
-              df_value: { value: "default", label: "Kategoriya tanlang*" },
-              options: category?.data,
-            },
-            {
-              type: "inputN",
-              name: "price",
-              plc_hr: "Narxi*",
-              df_value: acItem?.price,
-            },
-            {
-              type: "inputD",
-              name: "date",
-              df_value: acItem?.date,
-            },
-            {
-              type: "input",
-              name: "description",
-              plc_hr: "Tavsif*",
-              df_value: acItem?.description || "",
-            },
-            {
-              type: "inputH",
-              name: "img",
-              df_value: img?.img || "",
-            },
-          ]}
-        />
-        <UniversalProductControl
-          activePart={activePart}
-          setActivePart={setActivePart}>
-          <div className="product_box_item">
-            <label>
-              <input
-                type="checkbox"
-                name="id"
-                onClick={() => getProduct(data)}
-              />
-            </label>
-            <p
-              style={{
-                "--data-line-size": activePart === 1 ? "35%" : "60%",
-              }}>
-              Nomi
-            </p>
-            {activePart === 1 && (
-              <>
-                <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
-                <p style={{ "--data-line-size": "20%" }}>Guruh</p>
-                <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-              </>
-            )}
-            <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-          </div>
-          <div className="product_box_body">
-            {modalData?.data?.map((item, index) => {
-              const checked = [...checkedData, ...acItem?.ingredients]?.find(
-                (i) => i.item_id === item.item_id
-              );
-              return (
-                <div
-                  className={`product_box_item ${checked ? "active" : ""}`}
-                  key={item.item_id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() =>
-                        getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
+      {open && (
+        <Suspense>
+          <UniversalControlModal
+            status={acItem?.id ? true : false}
+            type="product"
+            Pdata={checkedData}
+            // Pdata={[...checkedData, ...acItem?.ingredients]}
+            setCheckedData={setCheckedData}>
+            <UniversalForm
+              formData={[
+                {
+                  type: "input",
+                  name: "food_name",
+                  plc_hr: "Nomi*",
+                  df_value: acItem?.food_name || "",
+                },
+                {
+                  type: "s_extra",
+                  extra: "category_id",
+                  name: "category",
+                  df_value: acItem.category
+                    ? {
+                        value: `category_id=${acItem?.category}|${acItem?.category_id}`,
+                        label: acItem?.category,
                       }
-                    />
-                  </label>
-                  <p
-                    style={{
-                      "--data-line-size": activePart === 1 ? "35%" : "60%",
-                    }}>
-                    {item.item_name}
-                  </p>
-                  {activePart === 1 && (
-                    <>
+                    : { value: "default", label: "Kategoriya tanlang*" },
+                  options: category?.data,
+                },
+                {
+                  type: "inputN",
+                  name: "price",
+                  plc_hr: "Narxi*",
+                  df_value: acItem?.price,
+                },
+                {
+                  type: "inputD",
+                  name: "date",
+                  df_value:
+                    acItem?.date || new Date().toISOString().slice(0, 10),
+                },
+                {
+                  type: "input",
+                  name: "description",
+                  plc_hr: "Tavsif*",
+                  df_value: acItem?.description || "",
+                },
+                {
+                  type: "inputH",
+                  name: "img",
+                  df_value: img?.img || "",
+                },
+              ]}
+            />
+            <UniversalProductControl
+              activePart={activePart}
+              setActivePart={setActivePart}>
+              <div className="product_box_item">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="id"
+                    onClick={() => getProduct(data)}
+                  />
+                </label>
+                <p
+                  style={{
+                    "--data-line-size": activePart === 1 ? "35%" : "60%",
+                  }}>
+                  Nomi
+                </p>
+                {activePart === 1 && (
+                  <>
+                    <p style={{ "--data-line-size": "20%" }}>O'lchov birligi</p>
+                    <p style={{ "--data-line-size": "20%" }}>Guruh</p>
+                    <p style={{ "--data-line-size": "20%" }}>Narxi</p>
+                  </>
+                )}
+                <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
+              </div>
+              <div className="product_box_body">
+                {modalData?.data?.map((item, index) => {
+                  const checked = [
+                    ...checkedData,
+                    ...acItem?.ingredients,
+                  ]?.find((i) => i.item_id === item?.item_id);
+                  return (
+                    <div
+                      className={`product_box_item ${checked ? "active" : ""}`}
+                      key={item?.item_id}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            getProduct(
+                              {
+                                item_id: item?.item_id,
+                                price: item?.price,
+                                amount: 0,
+                              },
+                              checked ? 0 : 1
+                            )
+                          }
+                        />
+                      </label>
+                      <p
+                        style={{
+                          "--data-line-size": activePart === 1 ? "35%" : "60%",
+                        }}>
+                        {item?.item_name}
+                      </p>
+                      {activePart === 1 && (
+                        <>
+                          <p
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "center",
+                            }}>
+                            {item?.unit}
+                          </p>
+                          <p
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "center",
+                            }}>
+                            {item?.group}
+                          </p>
+                          <p
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "flex-end",
+                            }}>
+                            {item?.price}
+                          </p>
+                        </>
+                      )}
                       <p
                         style={{
                           "--data-line-size": "20%",
                           justifyContent: "center",
                         }}>
-                        {item.unit}
+                        {checked && (
+                          <input
+                            type="text"
+                            name="amount"
+                            defaultValue={checked?.amount ? checked.amount : 0}
+                            onChange={(e) =>
+                              getProduct(
+                                { ...checked, amount: e.target.value },
+                                1
+                              )
+                            }
+                          />
+                        )}
                       </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          justifyContent: "center",
-                        }}>
-                        {item.group}
-                      </p>
-                      <p
-                        style={{
-                          "--data-line-size": "20%",
-                          justifyContent: "flex-end",
-                        }}>
-                        {item.price}
-                      </p>
-                    </>
-                  )}
-                  <p
-                    style={{
-                      "--data-line-size": "20%",
-                      justifyContent: "center",
-                    }}>
-                    {checked && (
-                      <input
-                        type="text"
-                        name="amount"
-                        defaultValue={checked?.amount ? checked.amount : 0}
-                        onChange={(e) =>
-                          getProduct({ ...checked, amount: e.target.value }, 1)
-                        }
-                      />
-                    )}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </UniversalProductControl>
-        <CalcResult data={[...checkedData, ...acItem?.ingredients]} status="cr">
-          <CalcResultHeader>
-            <p style={{ inlineSize: "var(--univslH)" }}>№</p>
-            <p style={{ "--data-line-size": "30%" }}>Nomi</p>
-            <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
-            <p style={{ "--data-line-size": "20%" }}>Tan narxi</p>
-            <p style={{ "--data-line-size": "20%" }}>Narxi</p>
-          </CalcResultHeader>
-          <CalcResultBody
-            data={checkedData}
-            displayKeys={[
-              { name: "item_name", size: "30%" },
-              { name: "amount", size: "20%" },
-              { name: "price", size: "20%" },
-            ]}
-          />
-        </CalcResult>
-      </UniversalControlModal>
-      <Addproduct />
+                    </div>
+                  );
+                })}
+              </div>
+            </UniversalProductControl>
+            <CalcResult data={checkedData} status="cr">
+              <CalcResultHeader>
+                <p style={{ inlineSize: "var(--univslH)" }}>№</p>
+                <p style={{ "--data-line-size": "30%" }}>Nomi</p>
+                <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
+                <p style={{ "--data-line-size": "20%" }}>Tan narxi</p>
+                <p style={{ "--data-line-size": "20%" }}>Narxi</p>
+              </CalcResultHeader>
+              <CalcResultBody
+                data={checkedData}
+                displayKeys={[
+                  { name: "item_name", size: "30%" },
+                  { name: "amount", size: "20%" },
+                  { name: "price", size: "20%" },
+                ]}
+              />
+            </CalcResult>
+          </UniversalControlModal>
+          <Addproduct />
+        </Suspense>
+      )}
     </div>
   );
 };

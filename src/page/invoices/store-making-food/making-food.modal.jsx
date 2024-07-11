@@ -57,10 +57,12 @@ const InvoicesModal = ({
   const currentData = activePart === 1 ? data?.data : storageItems?.data;
   return (
     <UniversalControlModal
-      type="making"
+      status={acItem?.id ? true : false}
+      type="pile_action"
       Pdata={checkedData}
       id={id}
-      setCheckedData={setCheckedData}>
+      setCheckedData={setCheckedData}
+      sp={"making_decease"}>
       <UniversalForm
         formData={[
           {
@@ -72,15 +74,15 @@ const InvoicesModal = ({
           {
             type: "inputD",
             name: "time",
-            df_value: acItem?.time,
+            df_value: acItem?.time || new Date().toISOString().slice(0, 10),
           },
           {
             type: "s_extra",
             name: "item_name",
             extra: "item_id",
             df_value: acItem?.item_id
-              ? { value: "default", label: "Mahsulot tanlang*" }
-              : { value: acItem?.item_id, label: acItem?.item_name },
+              ? { value: acItem?.item_id, label: acItem?.item_name }
+              : { value: "default", label: "Mahsulot tanlang*" },
             options: data?.data,
           },
           {

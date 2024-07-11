@@ -22,6 +22,7 @@ export const InvoicesGroups = () => {
   const [activeIndex, setActiveIndex] = useState(2);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useFetchDataQuery({
@@ -157,22 +158,24 @@ export const InvoicesGroups = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <UniversalModal
-          type="invGr"
-          title="Guruh qo'shish"
-          status={acItem?.id ? false : true}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Guruh nomi*"
-            defaultValue={acItem.name}
-            required
-          />
-          <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
-        </UniversalModal>
-      </Suspense>
+      {open && (
+        <Suspense>
+          <UniversalModal
+            type="invGr"
+            title="Guruh qo'shish"
+            status={acItem?.id ? false : true}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Guruh nomi*"
+              defaultValue={acItem.name}
+              required
+            />
+            <input type="hidden" name="res_id" value={user?.id} />
+            {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          </UniversalModal>
+        </Suspense>
+      )}
     </div>
   );
 };

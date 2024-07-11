@@ -30,7 +30,7 @@ export const UniversalControlModal = ({
   Pdata,
   Udata,
   setCheckedData,
-  a_t = false,
+  sp = false,
 }) => {
   const open = useSelector((state) => state.uModal);
   const image = useSelector((state) => state.image);
@@ -160,25 +160,33 @@ export const UniversalControlModal = ({
           case "product":
             result = await postData({
               url: "add/food",
-              data: value,
+              data: {
+                food: { ...formV.vl, img: image.img },
+                ingredients: Pdata,
+              },
               tags: ["s-products"],
             });
             break;
           case "action":
             result = await postData({
               url: "add/action",
-              data: !a_t
-                ? Pdata
-                : [
-                    ...Pdata,
-                    {
-                      ...(ing || {}),
-                      ...formV.vl,
-                      action_type: a_t,
-                      st1_id: formV.vl.st2_id,
-                      s1_name: formV.vl.s2_name,
-                    },
-                  ],
+              data: Pdata,
+              tags: ["action", "invoices"],
+            });
+            break;
+          case "pile_action":
+            result = await postData({
+              url: "add/action",
+              data: [
+                ...Pdata,
+                {
+                  ...(ing || {}),
+                  ...formV.vl,
+                  action_type: sp,
+                  st1_id: formV.vl.st2_id,
+                  s1_name: formV.vl.s2_name,
+                },
+              ],
               tags: ["action", "invoices"],
             });
             break;

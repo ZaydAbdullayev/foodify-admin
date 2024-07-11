@@ -163,8 +163,10 @@ export const GenerateField = ({ fieldData }) => {
             options={
               Array.isArray(options)
                 ? options.map((item) => ({
-                    label: item?.name,
-                    value: `${extra}=${item?.name}|${item?.id}`,
+                    label: item?.name || item?.item_name || item?.food_name,
+                    value: `${extra}=${
+                      item?.name || item?.item_name || item?.food_name
+                    }|${item?.id || item?.item_id || item?.food_id}`,
                   }))
                 : []
             }

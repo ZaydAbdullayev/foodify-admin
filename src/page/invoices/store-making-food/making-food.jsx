@@ -23,7 +23,7 @@ export const InvoicesMakingFood = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/making_foods`,
+    url: `get/actions/making_goods`,
     tags: ["action", "invoices"],
   });
   React.useEffect(() => {
@@ -45,7 +45,7 @@ export const InvoicesMakingFood = () => {
     } else {
       setCheckedData((prevData) => [
         ...prevData,
-        { ...item, ...formV?.vl, action_type: "making_goods" },
+        { ...formV?.vl, ...item, action_type: "making_increae" },
       ]);
     }
   };

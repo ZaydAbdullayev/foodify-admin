@@ -20,6 +20,7 @@ export const TransactionGroups = () => {
   const [status, setStatus] = useState(false);
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
+  const open = useSelector((state) => state.uModel);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data = [], isLoading } = useFetchDataQuery({
@@ -182,40 +183,42 @@ export const TransactionGroups = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <UniversalModal
-          type="cashboxGr"
-          title={"To'lov guruhlari"}
-          setChecked={setChecked}
-          status={acItem?.id ? false : true}>
-          <input type="text" name="name" placeholder="Nomi *" required />
-          <select
-            name="activity_kind"
-            onChange={(e) => setStatus(e.target.value)}>
-            {acItem?.activity_king ? (
-              <option value={acItem?.activity_king}>
-                {acItem?.activity_king}
-              </option>
-            ) : (
-              <option value="default">To'lov turini tanlang*</option>
-            )}
-            <option value="operating">Operativ</option>
-            <option value="finacialy">Moliyaviy</option>
-            <option value="invest">Sarmoya</option>
-          </select>
-          {status === "operating" && (
-            <select name="category">
-              {acItem?.category ? (
-                <option value={acItem?.category}>{acItem?.category}</option>
+      {open && (
+        <Suspense>
+          <UniversalModal
+            type="cashboxGr"
+            title={"To'lov guruhlari"}
+            setChecked={setChecked}
+            status={acItem?.id ? false : true}>
+            <input type="text" name="name" placeholder="Nomi *" required />
+            <select
+              name="activity_kind"
+              onChange={(e) => setStatus(e.target.value)}>
+              {acItem?.activity_king ? (
+                <option value={acItem?.activity_king}>
+                  {acItem?.activity_king}
+                </option>
               ) : (
-                <option value="default">Categoriya tanlang*</option>
+                <option value="default">To'lov turini tanlang*</option>
               )}
-              <option value="permanent">Doimiy</option>
+              <option value="operating">Operativ</option>
+              <option value="finacialy">Moliyaviy</option>
+              <option value="invest">Sarmoya</option>
             </select>
-          )}
-          <input type="hidden" name="res_id" value={user?.id} />
-        </UniversalModal>
-      </Suspense>
+            {status === "operating" && (
+              <select name="category">
+                {acItem?.category ? (
+                  <option value={acItem?.category}>{acItem?.category}</option>
+                ) : (
+                  <option value="default">Categoriya tanlang*</option>
+                )}
+                <option value="permanent">Doimiy</option>
+              </select>
+            )}
+            <input type="hidden" name="res_id" value={user?.id} />
+          </UniversalModal>
+        </Suspense>
+      )}
     </div>
   );
 };
