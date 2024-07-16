@@ -9,11 +9,14 @@ export const Loading = memo(() => {
 export const LoadingBtn = () => {
   return (
     <div className="loading_btn">
-      <BiLoader />
+      <BiLoader className="svg_loader" />
     </div>
   );
 };
 
+export const LoaderSvg = () => {
+  return <BiLoader className="svg_loader" />;
+};
 
 // export const Router = () => {
 //   const department = useSelector((state) => state.permission);

@@ -25,6 +25,7 @@ export const StorageInvoices = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const formV = useSelector((state) => state.values);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   console.log("formV", formV);
@@ -64,14 +65,16 @@ export const StorageInvoices = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.id === item?.id);
+    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
     if (status === 0) {
-      setCheckedData((prevData) => prevData?.filter((i) => i.id !== item?.id));
+      setCheckedData((prevData) =>
+        prevData?.filter((i) => i.item_id !== item?.item_id)
+      );
       return;
     }
     if (isChecked) {
       setCheckedData((prevData) =>
-        prevData.map((i) => (i.id === item?.id ? item : i))
+        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
       );
     } else {
       setCheckedData((prevData) => [
@@ -361,17 +364,15 @@ export const StorageInvoices = () => {
         </div>
       </div>
       <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num: 1,
-            }
-          }
-          acItem={acItem}
-        />
+        {open && (
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={!isLoading && { num: invoiceData?.data?.length + 1 }}
+            acItem={acItem}
+          />
+        )}
         {pay && <InvoicesPaymentModal setS={setPay} s={pay} />}
       </Suspense>
     </div>

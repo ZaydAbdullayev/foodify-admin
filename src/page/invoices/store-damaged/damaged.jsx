@@ -309,7 +309,7 @@ export const StorageDamaged = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={!isLoading && { num: 1 }}
+            NUM={!isLoading && { num: demagedData?.data?.length + 1 }}
             acItem={acItem}
           />
         </Suspense>

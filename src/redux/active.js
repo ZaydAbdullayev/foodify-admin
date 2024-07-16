@@ -87,13 +87,12 @@ export const reActiveB = (state = {}, action) => {
   }
 };
 
+const df_s = { worker: user?.worker_name || user?.username, worker_id: user?.worker_id || user?.id, }
+
 export const reFormValues = (
   state = {
     st: false,
-    vl: {
-      worker: user?.worker_name || user?.username,
-      worker_id: user?.worker_id || user?.id,
-    },
+    vl: df_s,
   },
   action
 ) => {
@@ -101,7 +100,7 @@ export const reFormValues = (
     case "A_V":
       return { st: true, vl: action?.payload };
     case "R_V":
-      return { st: false, vl: {} };
+      return { st: false, vl: df_s };
     default:
       return state;
   }

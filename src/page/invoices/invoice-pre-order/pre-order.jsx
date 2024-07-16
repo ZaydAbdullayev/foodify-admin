@@ -344,12 +344,7 @@ export const InvoicePreOrders = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={
-              !isLoading && {
-                num:
-                  JSON.parse(preOrder?.data ? preOrder?.data[0]?.order : 0) + 1,
-              }
-            }
+            NUM={!isLoading && { num: preOrder?.data?.length + 1 }}
           />
         </Suspense>
       )}

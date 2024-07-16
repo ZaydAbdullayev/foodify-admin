@@ -1,19 +1,13 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { data } from "../../../components/modal-calc/components";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
+import { acActiveThing, acFormValues, acPassiveThing } from "../../../redux/active";
 import { Addproduct } from "../../../components/Addproduct/addproduct";
 import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useNavigate } from "react-router-dom";
-import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
-import { UniversalForm } from "../../../components/modal-calc/modal-calc";
-import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
-import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
-import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
-import { CalcResult } from "../../../components/modal-calc/modal-calc";
-import { CalculateTotalP } from "../../../service/calc.service";
+import { UniversalControlModal, UniversalForm, UniversalProductControl, CalcResultHeader, CalcResultBody, CalcResult } from "../../../components/modal-calc/modal-calc";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -32,14 +26,15 @@ export const StorageProducts = () => {
   const img = useSelector((state) => state.image);
   const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
+  const values = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: products = [], isLoading } = useFetchDataQuery({
+  let { data: products = [], isLoading } = useFetchDataQuery({
     url: `get/foods`,
     tags: ["s-products", "product"],
   });
   const { data: ingredients = [] } = useFetchDataQuery({
-    url: `get/ingredients/${res_id}`,
+    url: `get/ingredients`,
     tags: ["ingredient"],
   });
   const { data: category = [] } = useFetchDataQuery({
@@ -52,75 +47,45 @@ export const StorageProducts = () => {
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
-    if (status === 0) {
-      setCheckedData((prevData) =>
-        prevData.filter((i) => i.item_id !== item?.item_id)
-      );
-      return;
-    }
-    if (isChecked) {
-      setCheckedData((prevData) =>
-        prevData.map((i) => (i.item_id === item?.item_id ? { ...item } : i))
-      );
-    } else {
-      setCheckedData((prevData) => [...prevData, { ...item }]);
-    }
+    const itemId = item?.item_id;
+    const acItemId = acItem?.food_id;
+
+    setCheckedData((prevData) => {
+      const isChecked = prevData.some((i) => i.item_id === itemId);
+      if (status === 0) {
+        if (acItemId) {
+          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
+        }
+        return prevData.filter((i) => i.item_id !== itemId);
+      }
+      if (isChecked) {
+        return prevData.map((i) => i.item_id === itemId ? { ...item, status: acItemId ? "update" : undefined } : i);
+      }
+      return [...prevData, { ...item, status: acItemId ? "add" : undefined }];
+    });
   };
 
-  const sortData =
-    products?.data &&
-    [...products?.data].sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b?.name);
-      } else {
-        return b?.name?.localeCompare(a?.name);
-      }
-    });
+  const sortData = products?.data && [...products?.data].sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b?.name);
+    } else {
+      return b?.name?.localeCompare(a?.name);
+    }
+  });
 
-  const headerData = [
-    { name: "Nomi", size: "15%" },
-    { name: "Narxi", size: "10%" },
-    { name: "Tan narxi", size: "11%" },
-    { name: "Foyda", size: "10%" },
-    { name: "Foyda%", size: "10%" },
-    { name: "Kategoriya", size: "12%" },
-    { name: "Ombor", size: "12%" },
-    { name: "Hisoblash", size: "10%" },
-    { name: "Tarix", size: "8%" },
-  ];
-
-  const displayKeys = [
-    { name: "food_name", size: "15%" },
-    { name: "price", size: "10%", position: 2 },
-    { name: "prime_cost", size: "11%", position: 2 },
-    { name: "profit", size: "10%", position: 2 },
-    { name: "markup", size: "10%", position: 2 },
-    { name: "category", size: "12%" },
-    { name: "storage", size: "12%" },
-  ];
-
-  const innerHeaderData = [
-    { name: "№", size: "", border: "1px solid #ccc4" },
-    { name: "Nomi", size: "30%", border: "1px solid #ccc4" },
-    { name: "O'lchov birligi", size: "16.5%", border: "1px solid #ccc4" },
-    { name: "Miqdori", size: "16.5%", border: "1px solid #ccc4" },
-    { name: "Narxi", size: "16.5%", border: "1px solid #ccc4" },
-    { name: "Jami", size: "16.5%", border: "0" },
-  ];
-
-  const innerDisplayKeys = [
-    { name: "name", size: "30%" },
-    { name: "unit", size: "16.5%", position: 1 },
-    { name: "amount", size: "16.5%", position: 1 },
-    { name: "price", size: "16.5%", position: 2 },
-  ];
+  const headerData = [{ name: "Nomi", size: "15%" }, { name: "Narxi", size: "10%" }, { name: "Tan narxi", size: "11%" }, { name: "Foyda", size: "10%" }, { name: "Foyda%", size: "10%" }, { name: "Kategoriya", size: "12%" }, { name: "Ombor", size: "12%" }, { name: "Hisoblash", size: "10%" }, { name: "Tarix", size: "8%" },];
+  const displayKeys = [{ name: "food_name", size: "15%" }, { name: "price", size: "10%", position: 2 }, { name: "prime_cost", size: "11%", position: 2 }, { name: "profit", size: "10%", position: 2 }, { name: "markup", size: "10%", position: 2 }, { name: "category", size: "12%" }, { name: "storage", size: "12%" },];
+  const innerHeaderData = [{ name: "№", size: "", border: "1px solid #ccc4" }, { name: "Nomi", size: "30%", border: "1px solid #ccc4" }, { name: "O'lchov birligi", size: "16.5%", border: "1px solid #ccc4" }, { name: "Miqdori", size: "16.5%", border: "1px solid #ccc4" }, { name: "Narxi", size: "16.5%", border: "1px solid #ccc4" }, { name: "Jami", size: "16.5%", border: "0" },];
+  const innerDisplayKeys = [{ name: "item_name", size: "30%" }, { name: "unit", size: "16.5%", position: 1 }, { name: "amount", size: "16.5%", position: 1 }, { name: "price", size: "16.5%", position: 2 },];
 
   const itemAction = (item) => {
-    dispatch(acItem?.id ? acPassiveThing() : acActiveThing(item));
+    const acID = acItem?.food_id;
+    dispatch(acID ? acPassiveThing() : acActiveThing(item));
     dispatch(setDocuments("products", item));
     navigate(`?page-code=products`);
     setAcItem(item);
+    setCheckedData(acID ? [] : acItem?.ingredients);
+    dispatch(acFormValues("A_V", { ...values?.vl, food_id: item.food_id }))
   };
 
   const modalData = activePart === 1 ? ingredients : products;
@@ -172,17 +137,14 @@ export const StorageProducts = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
-              const ingredients = item?.ingredients
-                ? JSON?.parse(item?.ingredients)
-                : [];
+              sortData?.map((item, index) => {
               const check = ckddt?.products?.some(
                 (i) => i.food_id === item?.food_id
               );
               return (
                 <div
                   className={
-                    showMore?.includes(item?.food_id)
+                    showMore?.includes(item?.food_id) || acItem?.food_id === item?.food_id
                       ? "storage_body__box active"
                       : "storage_body__box"
                   }
@@ -279,7 +241,7 @@ export const StorageProducts = () => {
                           );
                         })}
                       </div>
-                      {ingredients?.map((product, ind) => {
+                      {item?.ingredients?.map((product, ind) => {
                         return (
                           <div
                             className="storage_body_item inner_item"
@@ -311,7 +273,7 @@ export const StorageProducts = () => {
                               style={{
                                 "--data-line-size": "16.5%",
                               }}>
-                              {product.amount * item?.price}
+                              {product.total_price}
                             </p>
                           </div>
                         );
@@ -330,7 +292,7 @@ export const StorageProducts = () => {
                             "--data-line-size": "30%",
                             justifyContent: "flex-end",
                           }}>
-                          {CalculateTotalP(ingredients, "price", "amount")}
+                          {item?.prime_cost}
                         </p>
                       </div>
                     </div>
@@ -344,10 +306,9 @@ export const StorageProducts = () => {
       {open && (
         <Suspense>
           <UniversalControlModal
-            status={acItem?.id ? true : false}
+            status={acItem?.food_id ? true : false}
             type="product"
             Pdata={checkedData}
-            // Pdata={[...checkedData, ...acItem?.ingredients]}
             setCheckedData={setCheckedData}>
             <UniversalForm
               formData={[
@@ -363,9 +324,9 @@ export const StorageProducts = () => {
                   name: "category",
                   df_value: acItem.category
                     ? {
-                        value: `category_id=${acItem?.category}|${acItem?.category_id}`,
-                        label: acItem?.category,
-                      }
+                      value: `category_id=${acItem?.category}|${acItem?.category_id}`,
+                      label: acItem?.category,
+                    }
                     : { value: "default", label: "Kategoriya tanlang*" },
                   options: category?.data,
                 },

@@ -20,6 +20,7 @@ export const StorageCutting = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const formV = useSelector((state) => state.values);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -272,15 +273,17 @@ export const StorageCutting = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={!isLoading && { num: dmData?.length + 1 }}
-          acItem={acItem}
-        />
-      </Suspense>
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={!isLoading && { num: dmData?.length + 1 }}
+            acItem={acItem}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

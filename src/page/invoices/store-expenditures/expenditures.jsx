@@ -21,6 +21,7 @@ export const StorageExpenditures = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const formV = useSelector((state) => state.values);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -304,19 +305,17 @@ export const StorageExpenditures = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num: expenseData?.data?.length + 1,
-            }
-          }
-          acItem={acItem}
-        />
-      </Suspense>
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={!isLoading && { num: expenseData?.data?.length + 1 }}
+            acItem={acItem}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

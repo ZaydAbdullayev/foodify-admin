@@ -248,11 +248,9 @@
   overflow: hidden;
 }
 
-.status > span {
+.status > span {  
   width: calc(100% / 2);
-  text-align: center;
-  padding: 1px 0 5px;
-  background: transparent;
+  height: 35px;
   color: var(--cl1);
   cursor: pointer;
 }

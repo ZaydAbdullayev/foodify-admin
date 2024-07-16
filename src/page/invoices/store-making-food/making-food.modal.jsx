@@ -21,7 +21,7 @@ const InvoicesModal = ({
   const id = useSelector((state) => state?.activeSt_id);
   const [activePart, setActivePart] = useState(1);
   const { data = [] } = useFetchDataQuery({
-    url: `get/ingredients/${res_id}`,
+    url: `get/ingredients`,
     tags: ["ingredient"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
@@ -62,7 +62,7 @@ const InvoicesModal = ({
       Pdata={checkedData}
       id={id}
       setCheckedData={setCheckedData}
-      sp={"making_decease"}>
+      sp={"making_decrease"}>
       <UniversalForm
         formData={[
           {

@@ -21,6 +21,7 @@ export const InvoiceInvantar = () => {
   const acItem = useSelector((state) => state.activeThing);
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.re_id);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: preOrder = [], isLoading } = useFetchDataQuery({
@@ -269,19 +270,16 @@ export const InvoiceInvantar = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={
-            !isLoading && {
-              num:
-                JSON.parse(preOrder?.data ? preOrder?.data[0]?.order : 0) + 1,
-            }
-          }
-        />
-      </Suspense>
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={!isLoading && { num: preOrder?.data?.length + 1 }}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

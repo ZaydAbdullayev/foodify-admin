@@ -4,13 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingBtn } from "../../components/loading/loading";
+import { LoaderSvg, LoadingBtn } from "../../components/loading/loading";
 import { acNavStatus } from "../../redux/navbar.status";
 import { useNavigate } from "react-router-dom";
 import { ImgService } from "../../service/image.service";
-import { useFetchDataQuery } from "../../service/fetch.service";
-import { useDelDataMutation } from "../../service/fetch.service";
-import { usePatchDataMutation } from "../../service/fetch.service";
+import { useFetchDataQuery, useDelDataMutation, usePatchDataMutation } from "../../service/fetch.service";
 
 import { GoSearch } from "react-icons/go";
 import { AiFillDelete } from "react-icons/ai";
@@ -25,15 +23,10 @@ export const Products = () => {
   const [update, setUpdate] = useState(false);
   const res_id = useSelector((state) => state?.res_id);
   const [info, setInfo] = useState({});
+  const [loading, setLoading] = useState(null);
   // const [detail, setDetail] = useState(false);
-  const { data: products = [], isLoading } = useFetchDataQuery({
-    url: `get/foods/${res_id}`,
-    tags: ["s-products", "product"],
-  });
-  const { data: categorys = [] } = useFetchDataQuery({
-    url: `get/${res_id}/categories`,
-    tags: ["category"],
-  });
+  const { data: products = [], isLoading } = useFetchDataQuery({ url: `get/foods`, tags: ["s-products", "product"], });
+  const { data: categorys = [] } = useFetchDataQuery({ url: `get/${res_id}/categories`, tags: ["category"], });
   const [delData] = useDelDataMutation();
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
@@ -49,25 +42,20 @@ export const Products = () => {
   };
 
   const handleUpdate = async (product) => {
-    const { data } = await patchData({
-      url: `update/foods/${product.id}`,
-      data: product,
-      tags: ["s-products"],
-    });
+    const { data } = await patchData({ url: `update/foods/${product.food_id}`, data: product, tags: ["s-products"], });
+    console.log(isLoading);
     if (data) {
-      es("Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!", {
-        variant: "success",
-      });
-      setInfo({});
-      setUpdate(false);
+      setTimeout(() => {
+        es("Mahsulot malumotlari muvoffaqiyatli o'zgartirildi!", { variant: "success", });
+        setInfo({});
+        setUpdate(false);
+        setLoading(null);
+      }, 1300);
     }
   };
 
   const handleDelete = async (id) => {
-    const { data } = await delData({
-      url: `delete/food/${id}`,
-      tags: ["s-products"],
-    });
+    const { data } = await delData({ url: `delete/food/${id}`, tags: ["s-products"], });
     if (data) {
       const msg = "Mahsulotni O'zgartirishda qandaydir xatolik yuz berdi";
       es(msg, { variant: "error" });
@@ -76,26 +64,20 @@ export const Products = () => {
 
   const updateImg = async (product) => {
     const { data } = await patchData({
-      url: `update/productImg/${product.id}`,
-      data: {
-        img: product?.image,
-        deleteImg: product.deleteImg,
-      },
+      url: `update/productImg/${product.food_id}`,
+      data: { img: product?.image, deleteImg: product.deleteImg, },
       tags: ["s-products"],
     });
     if (data) {
       const msg = "Mahsulot rasmi muvoffaqiyatli o'zgartirildi!";
       es(msg, { variant: "success" });
+      setLoading(null);
     }
   };
 
   const filteredProducts = products?.data?.filter((product) => {
-    const categoryMatches =
-      category === "" ||
-      product?.category?.toLowerCase().includes(category.toLowerCase());
-    const nameMatches = product?.name
-      ?.toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const categoryMatches = category === "" || product?.category?.toLowerCase().includes(category.toLowerCase());
+    const nameMatches = product?.food_name?.toLowerCase().includes(searchTerm.toLowerCase());
     return categoryMatches && nameMatches;
   });
 
@@ -111,13 +93,7 @@ export const Products = () => {
           <button type="button">
             <GoSearch />
           </button>
-          <input
-            type="search"
-            name="foundname"
-            placeholder="Qidirish ? "
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+          <input type="search" name="foundname" placeholder="Qidirish ? " value={searchTerm} onChange={handleSearch} />
         </form>
         <span
           className="more"
@@ -146,7 +122,7 @@ export const Products = () => {
           filteredProducts?.map((product) => {
             const st = parseInt(product?.stop_list);
             return (
-              <div className="item" key={product.id}>
+              <div className="item" key={product.food_id}>
                 <label
                   className="img_box"
                   aria-label="the input is update product image">
@@ -161,121 +137,80 @@ export const Products = () => {
                   <ImgService src={product?.img} fallbackSrc alt="images" />
                 </label>
                 <div className="_item_info-box">
-                  {update === product?.id ? (
+                  {update === product.food_id ? (
                     <>
                       <input
                         type="text"
-                        defaultValue={product.name}
+                        defaultValue={product.food_name}
                         style={{ textTransform: "capitalize" }}
                         autoFocus
-                        onChange={(e) =>
-                          handleInfoChange("name", e.target.value)
-                        }
+                        onChange={(e) => handleInfoChange("name", e.target.value)}
                         autoComplete="off"
                       />
                       <input
                         type="text"
                         defaultValue={product.description}
-                        onChange={(e) =>
-                          handleInfoChange("description", e.target.value)
-                        }
+                        onChange={(e) => handleInfoChange("description", e.target.value)}
                         autoComplete="off"
                       />
                     </>
                   ) : (
                     <>
-                      <p className="name">{product.name}</p>
-                      <p>{product.description}</p>
+                        <p className="name">{product.food_name}</p>
+                        <p style={{ color: "#aaa" }}>{product.description}</p>
                     </>
                   )}
                   <NumericFormat
-                    displayType={update === product?.id ? "input" : "text"}
+                    displayType={update === product?.food_id ? "input" : "text"}
                     defaultValue={product.price}
                     thousandSeparator=" "
                     suffix=" so'm"
-                    onChange={(e) =>
-                      handleInfoChange(
-                        "price",
-                        e.target.value.split(" ").join("")
-                      )
-                    }
+                    onChange={(e) => handleInfoChange("price", e.target.value.split(" ").join(""))}
                   />
                 </div>
                 <NumericFormat
-                  className={
-                    update === product?.id
-                      ? ""
-                      : st > 999
-                      ? "_count active"
-                      : "_count"
-                  }
-                  displayType={update === product?.id ? "input" : "text"}
-                  style={{
-                    background:
-                      st <= 15 && st >= 10
-                        ? "#f07167"
-                        : st < 10
-                        ? "#ef233c"
-                        : "",
-                  }}
+                  className={update === product?.food_id ? "" : st > 999 ? "_count active" : "_count"}
+                  displayType={update === product?.food_id ? "input" : "text"}
+                  style={{ background: st <= 15 && st >= 10 ? "#f07167" : st < 10 ? "#ef233c" : "", }}
                   defaultValue={st > 999 ? "" : st}
-                  onChange={(e) =>
-                    handleInfoChange("stop_list", e.target.value)
-                  }
+                  onChange={(e) => handleInfoChange("stop_list", e.target.value)}
                 />
                 <div className="_item_action-box">
                   <div className="status">
                     <span
-                      style={
-                        product.status === 1
-                          ? { background: "#33ff09" }
-                          : { color: "#aaaa" }
-                      }
-                      onClick={() =>
-                        handleUpdate({ id: product.id, status: 1 })
-                      }
+                      className="df aic jcc"
+                      style={product.status === 1 ? { background: "#33ff09" } : { color: "#aaaa" }}
+                      onClick={() => { if (product.status === 0) { handleUpdate({ food_id: product.food_id, status: 1 }); setLoading(1); } }}
                       aria-label="change to active this product for sell">
-                      active
+                      {loading === 1 ? <LoaderSvg /> : "active"}
                     </span>
                     <span
+                      className="df aic jcc"
                       style={
                         product.status === 0
                           ? { background: "#d82" }
                           : { color: "#aaaa" }
                       }
-                      onClick={() =>
-                        handleUpdate({ id: product.id, status: 0 })
-                      }
+                      onClick={() => { if (product.status === 1) { handleUpdate({ food_id: product.food_id, status: 0 }); setLoading(0); } }}
                       aria-label="change to  passive this product for sell">
-                      passive
+                      {loading === 0 ? <LoaderSvg /> : "passive"}
                     </span>
                   </div>
                   <NumericFormat
-                    className={update === product?.id ? "" : "_count"}
-                    displayType={update === product?.id ? "input" : "text"}
-                    style={{
-                      background:
-                        st <= 15 && st >= 10
-                          ? "#f07167"
-                          : st < 10
-                          ? "#ef233c"
-                          : "",
-                    }}
+                    className={update === product?.food_id ? "" : "_count"}
+                    displayType={update === product?.food_id ? "input" : "text"}
+                    style={{ background: st <= 15 && st >= 10 ? "#f07167" : st < 10 ? "#ef233c" : "", }}
                     defaultValue={st > 999 ? 1 : st}
                     suffix={st >= 999 ? "∞" : ""}
-                    onChange={(e) =>
-                      handleInfoChange("stop_list", e.target.value)
-                    }
+                    onChange={(e) => handleInfoChange("stop_list", e.target.value)}
                   />
                   <div className="update_btn">
-                    {update === product?.id ? (
+                    {update === product?.food_id ? (
                       <>
                         <span
-                          onClick={() =>
-                            handleUpdate({ ...info, id: product.id })
-                          }
+                          onClick={() => { if (loading !== 3) { handleUpdate({ ...info, food_id: product.food_id }); setLoading(3); } }}
                           aria-label="to confirm chnages">
-                          <FaCheck />
+                          {loading === 3 ? <LoaderSvg /> : <FaCheck />}
                         </span>{" "}
                         <span
                           onClick={() => setUpdate(false)}
@@ -285,7 +220,7 @@ export const Products = () => {
                       </>
                     ) : (
                       <span
-                        onClick={() => setUpdate(product.id)}
+                          onClick={() => setUpdate(product.food_id)}
                         aria-label="to click edit this product info">
                         <FaPen />
                       </span>
@@ -293,13 +228,13 @@ export const Products = () => {
                   </div>
                   <button
                     style={{ fontSize: "var(--fs4)", color: "#d82a0c" }}
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => { if (loading !== 4) { handleDelete(product.food_id); setLoading(4) } }}
                     aria-label="the button for delete this product">
                     <AiFillDelete />
                   </button>
                   <button
                     style={{ fontSize: "var(--fs4)", color: "#4361ee" }}
-                    onClick={() => navigate(`/more/info/${product.id}`)}
+                    onClick={() => navigate(`/more/info/${product.food_id}`)}
                     aria-label="the button is for get more info about this product">
                     <TbInfoSquareRounded />
                   </button>

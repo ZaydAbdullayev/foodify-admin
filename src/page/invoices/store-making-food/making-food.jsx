@@ -20,6 +20,7 @@ export const InvoicesMakingFood = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const formV = useSelector((state) => state.values);
+  const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: makedFood = [], isLoading } = useFetchDataQuery({
@@ -45,7 +46,7 @@ export const InvoicesMakingFood = () => {
     } else {
       setCheckedData((prevData) => [
         ...prevData,
-        { ...formV?.vl, ...item, action_type: "making_increae" },
+        { ...formV?.vl, ...item, action_type: "making_increase" },
       ]);
     }
   };
@@ -275,15 +276,17 @@ export const InvoicesMakingFood = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <InvoicesModal
-          checkedData={checkedData}
-          setCheckedData={setCheckedData}
-          getProduct={getProduct}
-          NUM={!isLoading && { num: 1 }}
-          acItem={acItem}
-        />
-      </Suspense>
+      {open && (
+        <Suspense>
+          <InvoicesModal
+            checkedData={checkedData}
+            setCheckedData={setCheckedData}
+            getProduct={getProduct}
+            NUM={!isLoading && { num: 1 }}
+            acItem={acItem}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

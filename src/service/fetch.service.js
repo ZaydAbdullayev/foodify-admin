@@ -17,6 +17,7 @@ const api = createApi({
   reducerPath: "api",
   baseQuery,
   tagTypes: [
+    "action",
     "ingredient",
     "groups",
     "carry-up",
@@ -61,7 +62,7 @@ const api = createApi({
       providesTags: (result, error, { tags = [] }) => [...tags],
     }),
     postData: builder.mutation({
-      query: ({ url, data }) => ({
+      query: ({ url, data = [] }) => ({
         url,
         method: "POST",
         body: data,
@@ -69,7 +70,7 @@ const api = createApi({
       invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
     patchData: builder.mutation({
-      query: ({ url, data }) => ({
+      query: ({ url, data = [] }) => ({
         url,
         method: "PATCH",
         body: data,
@@ -77,7 +78,7 @@ const api = createApi({
       invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
     delData: builder.mutation({
-      query: ({ url, data }) => ({
+      query: ({ url, data = [] }) => ({         
         url,
         method: "DELETE",
         body: data || [],

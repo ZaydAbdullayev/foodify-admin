@@ -9,10 +9,10 @@
   justify-content: center;
   background: inherit;
   color: inherit;
-  font-size: var(--fs1);
+  font-size: var(--fs2);
 }
 
-.loading_btn > svg {
+.svg_loader {
   animation: loader 1s linear infinite;
 }
 

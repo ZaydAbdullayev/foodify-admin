@@ -24,7 +24,7 @@ export const StorageGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useFetchDataQuery({
-    url: `get/ingredientGroups/${user?.id}`,
+    url: `get/ingredientGroups`,
     tags: ["groups"],
   });
   React.useEffect(() => {

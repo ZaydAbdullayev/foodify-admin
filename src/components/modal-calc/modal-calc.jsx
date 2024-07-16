@@ -2,17 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./modal-calc.css";
 import { enqueueSnackbar as es } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
-import { acCloseUModal } from "../../redux/u-modal";
+import { acCloseUModal, acGetUrl } from "../../redux/u-modal";
 import { calculateTotal } from "./components";
 import { acCalc, acCutting } from "../../redux/calc";
 import { LoadingBtn } from "../../components/loading/loading";
-import { useFetchDataQuery } from "../../service/fetch.service";
-import { usePostDataMutation } from "../../service/fetch.service";
-import { usePatchDataMutation } from "../../service/fetch.service";
+import { useFetchDataQuery, usePostDataMutation, usePatchDataMutation } from "../../service/fetch.service";
 import { ClearForm } from "../../service/form.service";
-import { acFormValues, acPassiveThing } from "../../redux/active";
-import { acGetUrl } from "../../redux/u-modal";
-import { acStorageId } from "../../redux/active";
+import { acFormValues, acPassiveThing, acStorageId } from "../../redux/active";
 import { notification } from "antd";
 import middlewareService from "../../middleware/form.middleware";
 import { GenerateField } from "../../hooks/generate.tags";
@@ -23,15 +19,7 @@ import { TbArrowBarLeft } from "react-icons/tb";
 import { RiImageAddFill } from "react-icons/ri";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
-export const UniversalControlModal = ({
-  children,
-  status,
-  type,
-  Pdata,
-  Udata,
-  setCheckedData,
-  sp = false,
-}) => {
+export const UniversalControlModal = ({ children, status, type, Pdata, Udata, setCheckedData, sp = false, }) => {
   const open = useSelector((state) => state.uModal);
   const image = useSelector((state) => state.image);
   const ing = useSelector((state) => state.ing);
@@ -51,11 +39,7 @@ export const UniversalControlModal = ({
   const openWarning = (placement, c) => {
     api.warning({
       message: "Yaroqsiz ma'lumot",
-      description: `Iltimos, ${
-        c
-          ? `Hisoblashni 📇 bosganingizdan amin bo'ling`
-          : "barcha maydonlarni to'ldiring"
-      } yoki to'g'ri ma'lumot kiritganingizni tekshiring!`,
+      description: `Iltimos, ${c ? `Hisoblashni 📇 bosganingizdan amin bo'ling` : "barcha maydonlarni to'ldiring"} yoki to'g'ri ma'lumot kiritganingizni tekshiring!`,
       placement,
     });
   };
@@ -89,67 +73,19 @@ export const UniversalControlModal = ({
         switch (type) {
           case "product":
             result = await patchData({
-              url: `update/foods/${value.id}`,
-              data: value,
+              url: `update/foods`,
+              data: {
+                food: formV.vl,
+                ingredients: Pdata,
+              },
               tags: ["s-products"],
             });
             break;
-          case "invoice":
+          case "action":
             result = await patchData({
               url: `update/receivedGoods/${value.id}`,
               data: value,
-              tags: ["invoices"],
-            });
-            break;
-          case "cutting":
-            result = await patchData({
-              url: `update/cutting/${value.id}`,
-              data: value,
-              tags: ["cutting"],
-            });
-            break;
-          case "damaged":
-            result = await patchData({
-              url: `update/damagedGoods/${value.id}`,
-              data: value,
-              tags: ["damaged"],
-            });
-            break;
-          case "edr":
-            result = await patchData({
-              url: `update/usedGoods/${value.id}`,
-              data: value,
-              tags: ["expenditure"],
-            });
-            break;
-          case "carryUp":
-            result = await patchData({
-              url: `update/movedGoods/${value.id}`,
-              data: value,
-              tags: ["carry-up"],
-            });
-            // result = await postData({
-            //   url: "reverse/items",
-            //   data: value,
-            //   tags: ["carry-up"],
-            // });
-            break;
-          case "making":
-            result = await patchData({
-              url: `update/preparedFoods/${value.id}`,
-              data: value,
-              tags: ["makingFood"],
-            });
-            break;
-          case "preOrder":
-            result = await patchData({
-              url: `update/preOrders/${value.id}`,
-              data: {
-                res_id: value.res_id,
-                name: value.name,
-                department: value.department,
-              },
-              tags: ["pre-order"],
+              tags: ["action"],
             });
             break;
           default:
@@ -300,9 +236,7 @@ export const UniversalControlModal = ({
           </ConfigProvider>
           {image.img !== "" && (
             <figure
-              onClick={() =>
-                dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))
-              }>
+              onClick={() => dispatch(acGetUrl({ st: true, img: image?.img, type: "view" }))}>
               <img src={image?.img} alt="peoduct images" />
             </figure>
           )}
@@ -348,20 +282,9 @@ export const UniversalForm = ({ formData }) => {
   );
 };
 
-export const UniversalProductControl = ({
-  children,
-  setActivePart,
-  activePart,
-  type,
-}) => {
-  const { data: store = [] } = useFetchDataQuery({
-    url: `/get/storage/${user?.id}`,
-    tags: ["store"],
-  });
-  const { data: groups = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${user?.id}`,
-    tags: ["groups"],
-  });
+export const UniversalProductControl = ({ children, setActivePart, activePart, type, }) => {
+  const { data: store = [] } = useFetchDataQuery({ url: `/get/storage/${user?.id}`, tags: ["store"], });
+  const { data: groups = [] } = useFetchDataQuery({ url: `get/ingredientGroups`, tags: ["groups"], });
   const dispatch = useDispatch();
   React.useEffect(() => {
     if (store?.data?.length > 0) {
@@ -465,21 +388,14 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
               key={`${ind}_${name}`}
               style={{
                 "--data-line-size": size,
-                justifyContent: position
-                  ? position === 1
-                    ? "center"
-                    : "end"
-                  : "start",
+                justifyContent: position ? position === 1 ? "center" : "end" : "start",
               }}>
               {item?.[name] || 0}
             </p>
           ))}
           {status !== "inv" && (
             <p
-              style={{
-                "--data-line-size": "18%",
-                justifyContent: "end",
-              }}>
+              style={{ "--data-line-size": "18%", justifyContent: "end", }}>
               {(item.price * item.amount)?.toFixed(1)}
             </p>
           )}

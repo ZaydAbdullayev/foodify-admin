@@ -22,7 +22,7 @@ const InvoicesModal = ({
   const dispatch = useDispatch();
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const { data = [] } = useFetchDataQuery({
-    url: `get/ingredients/${user?.id}`,
+    url: `get/ingredients`,
     tags: ["ingredient"],
   });
   const { data: storeData = [] } = useFetchDataQuery({

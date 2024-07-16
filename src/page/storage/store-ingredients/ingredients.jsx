@@ -23,77 +23,33 @@ export const StorageIngredients = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: groupData = [] } = useFetchDataQuery({
-    url: `get/ingredientGroups/${user?.id}`,
-    tags: ["groups"],
-  });
-  const { data: ingredientData = [], isLoading } = useFetchDataQuery({
-    url: `get/ingredients/${user?.id}`,
-    tags: ["ingredient"],
-  });
+  const { data: groupData = [] } = useFetchDataQuery({ url: `get/ingredientGroups`, tags: ["groups"], });
+  const { data: ingredientData = [], isLoading } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
   }, [dispatch]);
-  const sortData =
-    ingredientData?.data &&
-    [...ingredientData?.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  // const sortData =
+  //   ingredientData?.data &&
+  //   [...ingredientData?.data].sort((a, b) => {
+  //     if (sort.state) {
+  //       return a.name.localeCompare(b.name);
+  //     } else {
+  //       return b.name.localeCompare(a.name);
+  //     }
+  //   });
 
   const actionItem = (item) => {
     dispatch(setDocuments("ingradient", item));
     navigate(`?page-code=ingradient`);
-    setAcItem(
-      acItem?.id && ckddt?.ingradient?.length > 0
-        ? { id: null, ingredients: [] }
-        : item
-    );
+    setAcItem(acItem?.id && ckddt?.ingradient?.length > 0 ? { id: null, ingredients: [] } : item);
   };
 
-  const headerKeys = [
-    { name: "Nomi", size: "40%" },
-    { name: "O'lchov birligi", size: "20%" },
-    { name: "Guruh", size: "30%" },
-    { name: "Narxi", size: "20%" },
-  ];
-
-  const displayKeys = [
-    { name: "item_name", size: 40 },
-    { name: "unit", size: 20, position: "center" },
-    { name: "group", size: 30 },
-    { name: "price", size: 20, position: "flex-end" },
-  ];
-
-  const item_d_hk = [
-    { name: "Nomi", size: 21, border: "1px solid #ccc5" },
-    { name: "Categoriya", size: 21, border: "1px solid #ccc5" },
-    { name: "Bo'lim", size: 21, border: "1px solid #ccc5" },
-    { name: "Ombor", size: 21, border: "1px solid #ccc5" },
-    { name: "Miqdor", size: 12 },
-  ];
-  const item_d_dk = [
-    { name: "name", size: 21, border: "1px solid #ccc5" },
-    { name: "category", size: 21, border: "1px solid #ccc5" },
-    { name: "department", size: 21, border: "1px solid #ccc5" },
-    { name: "storage", size: 21, border: "1px solid #ccc5" },
-    { name: "quantity", size: 12 },
-  ];
-  const item_p_hk = [
-    { name: "Raqam", size: 16, border: "1px solid #ccc5" },
-    { name: "Sana", size: 26, border: "1px solid #ccc5" },
-    { name: "Harakat", size: 26, border: "1px solid #ccc5" },
-    { name: "1x/narxi", size: 26 },
-  ];
-  const item_p_dk = [
-    { name: "order", size: 16, border: "1px solid #ccc5" },
-    { name: "date", size: 26, border: "1px solid #ccc5", fix: true },
-    { name: "action", size: 26, border: "1px solid #ccc5" },
-    { name: "price", size: 26 },
-  ];
+  const headerKeys = [{ name: "Nomi", size: "40%" }, { name: "O'lchov birligi", size: "20%" }, { name: "Guruh", size: "30%" }, { name: "Narxi", size: "20%" },];
+  const displayKeys = [{ name: "item_name", size: 40 }, { name: "unit", size: 20, position: "center" }, { name: "group", size: 30 }, { name: "price", size: 20, position: "flex-end" },];
+  const item_d_hk = [{ name: "Nomi", size: 21, border: "1px solid #ccc5" }, { name: "Categoriya", size: 21, border: "1px solid #ccc5" }, { name: "Bo'lim", size: 21, border: "1px solid #ccc5" }, { name: "Ombor", size: 21, border: "1px solid #ccc5" }, { name: "Miqdor", size: 12 },];
+  const item_d_dk = [{ name: "name", size: 21, border: "1px solid #ccc5" }, { name: "category", size: 21, border: "1px solid #ccc5" }, { name: "department", size: 21, border: "1px solid #ccc5" }, { name: "storage", size: 21, border: "1px solid #ccc5" }, { name: "quantity", size: 12 },];
+  const item_p_hk = [{ name: "Raqam", size: 16, border: "1px solid #ccc5" }, { name: "Sana", size: 26, border: "1px solid #ccc5" }, { name: "Harakat", size: 26, border: "1px solid #ccc5" }, { name: "1x/narxi", size: 26 },];
+  const item_p_dk = [{ name: "order", size: 16, border: "1px solid #ccc5" }, { name: "date", size: 26, border: "1px solid #ccc5", fix: true }, { name: "action", size: 26, border: "1px solid #ccc5" }, { name: "price", size: 26 },];
 
   return (
     <div className="storage_container">
@@ -109,11 +65,7 @@ export const StorageIngredients = () => {
               name="id"
               onClick={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("ingredient")
-                    : setAllDocuments("ingredient", ingredientData?.data)
-                );
+                dispatch(checked ? setRelease("ingredient") : setAllDocuments("ingredient", ingredientData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -143,23 +95,13 @@ export const StorageIngredients = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
-              const check = ckddt?.ingredient?.find(
-                (el) => el.item_id === item.item_id
-              );
+              ingredientData?.data?.map((item, index) => {
+                const check = ckddt?.ingredient?.find((el) => el.item_id === item.item_id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.item_id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }>
+                  className={showMore?.includes(item?.item_id) ? "storage_body__box active" : "storage_body__box"}>
                   <div
-                    className={
-                      acItem === item.item_id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item.item_id ? "storage_body_item active" : "storage_body_item"}
                     key={item.item_id}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
@@ -186,13 +128,8 @@ export const StorageIngredients = () => {
                         "--data-line-size": "20%",
                         justifyContent: "center",
                       }}
-                      onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.item_id)
-                            ? prev?.filter((el) => el !== item?.item_id)
-                            : [...prev, item?.item_id]
-                        )
-                      }>
+                      onClick={() => setShowMore((prev) => prev?.includes(item?.item_id) ? prev?.filter((el) => el !== item?.item_id) : [...prev, item?.item_id])}
+                    >
                       <u
                         style={
                           showMore?.includes(item?.item_id)
@@ -221,9 +158,7 @@ export const StorageIngredients = () => {
                         <div
                           className="storage_body_item"
                           style={{
-                            display: JSON?.parse(item?.details)?.length
-                              ? "flex"
-                              : "none",
+                            display: JSON?.parse(item?.details)?.length ? "flex" : "none",
                             background: "#454545",
                           }}>
                           <p
@@ -282,17 +217,13 @@ export const StorageIngredients = () => {
                               justifyContent: "center",
                             }}>
                             Faktura narxi{" "}
-                            {!JSON?.parse(item?.priceAction)?.length
-                              ? " yo'q"
-                              : ""}
+                            {!JSON?.parse(item?.priceAction)?.length ? " yo'q" : ""}
                           </p>
                         </div>
                         <div
                           className="storage_body_item"
                           style={{
-                            display: JSON?.parse(item?.priceAction)?.length
-                              ? "flex"
-                              : "none",
+                            display: JSON?.parse(item?.priceAction)?.length ? "flex" : "none",
                             background: "#454545",
                           }}>
                           <p
@@ -333,11 +264,7 @@ export const StorageIngredients = () => {
                                       borderRight: border,
                                     }}
                                     key={`${index}_${name}`}>
-                                    {fix
-                                      ? new Date(
-                                          product[name]
-                                        )?.toLocaleDateString()
-                                      : product[name]}
+                                    {fix ? new Date(product[name])?.toLocaleDateString() : product[name]}
                                   </p>
                                 )
                               )}
@@ -367,7 +294,6 @@ export const StorageIngredients = () => {
             placeholder="Ingredient nomi*"
             required
           />
-          <input type="hidden" name="res_id" value={user?.id} />
           {acItem.item_id && (
             <input type="hidden" name="item_id" value={acItem?.item_id} />
           )}

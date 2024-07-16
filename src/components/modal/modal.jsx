@@ -9,17 +9,7 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { ClearForm } from "../../service/form.service";
 import { acClosePayModal } from "../../redux/modal";
 
-const UniversalModal = ({
-  children,
-  type,
-  newGrData,
-  setChecked,
-  status,
-  title,
-  payment,
-  darkMode,
-  color,
-}) => {
+const UniversalModal = ({ children, type, newGrData, setChecked, status, title, payment, darkMode, color, }) => {
   const open = useSelector((state) => state.uModal);
   const pay = useSelector((state) => state.pay);
   const dispatch = useDispatch();
@@ -32,7 +22,9 @@ const UniversalModal = ({
     e.preventDefault();
     const formdata = new FormData(e.target);
     const value = Object.fromEntries(formdata.entries());
+    setLoading(true);
     if (value.department === "default") {
+      setLoading(false);
       return es({ message: "Taxrirlash tugallanmadi!", variant: "warning" });
     }
     if (type === "supp") {
@@ -178,10 +170,9 @@ const UniversalModal = ({
             break;
           case "ing":
             result = await patchData({
-              url: `update/ingredient/${value.id}`,
+              url: `update/ingredient/${value.item_id}`,
               data: {
-                res_id: value.res_id,
-                name: value.name,
+                item_name: value.item_name,
                 unit: value.unit,
                 group: value.group,
               },
@@ -275,9 +266,8 @@ const UniversalModal = ({
       }>
       <div className="w100 df aic jcc u_modal_box">
         <form
-          className={`df flc aic u_modal ${
-            darkMode ? "dark-mode" : color ? "dark-color-mode" : ""
-          }`}
+          className={`df flc aic u_modal ${darkMode ? "dark-mode" : color ? "dark-color-mode" : ""
+            }`}
           onSubmit={fetchValues}>
           <p>{status ? title : "Taxrirlash"}</p>
           {children}

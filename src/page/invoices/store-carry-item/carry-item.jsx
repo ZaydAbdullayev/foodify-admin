@@ -288,7 +288,7 @@ export const StorageCarryUp = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={!isLoading && { num: 1 }}
+            NUM={!isLoading && { num: cuttingData?.data?.length + 1 }}
             acItem={acItem}
           />
         </Suspense>

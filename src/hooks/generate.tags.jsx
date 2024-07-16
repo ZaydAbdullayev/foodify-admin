@@ -30,14 +30,13 @@ export const GenerateField = ({ fieldData }) => {
   } = fieldData;
 
   // useEffect(() => {
-  //   if (type === "inputH") {
+  //   if (df_value && df_value !== "" && values?.vl[name] !== df_value) {
   //     dispatch(acFormValues("A_V", { ...values?.vl, [name]: df_value }));
   //   }
-  // }, [dispatch, type, values?.vl, name, df_value]);
+  // }, [dispatch, values?.vl, name, df_value]);
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");
-    console.log(";", getFullInfo);
     if (!getFullInfo) {
       setDatas({ name: value[0], id: value[1] });
       dispatch(
@@ -48,7 +47,6 @@ export const GenerateField = ({ fieldData }) => {
         })
       );
     } else {
-      console.log("calisti");
       const i = options.find((item) => item.item_id === value[1]);
       dispatch(acActive(i ? i : {}));
     }
