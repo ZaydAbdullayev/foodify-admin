@@ -15,7 +15,7 @@ import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 const { RangePicker } = DatePicker;
 
-export const UniversalFilter = (data, key, value) => {
+export const universalFilter = (data, key, value) => {
   return data.filter((item) => {
     if (Array.isArray(item[key])) {
       return item[key].includes(value);
@@ -27,29 +27,15 @@ export const UniversalFilter = (data, key, value) => {
   });
 };
 
-export const filterData = (filters) => {
-  // Filtreleme işlemleri burada gerçekleştirilir
-  // Örneğin, veriler üzerinde filter işlemleri yapabilirsiniz
-};
 
-export const UniversalFilterBox = () => {
+export const UniversalFilterBox = ({ status }) => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
   const { date } = useSelector((state) => state.uSearch);
-  const status = useSelector((state) => state.status);
   const res_id = useSelector((state) => state.res_id);
-  const { data = [] } = useFetchDataQuery({
-    url: `get/cashbox/${res_id}`,
-    tags: ["cashbox"],
-  });
-  const { data: storage = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
-  const { data: ingredientData = [] } = useFetchDataQuery({
-    url: `get/ingredients`,
-    tags: ["ingredient"],
-  });
+  const { data = [] } = useFetchDataQuery({ url: `get/cashbox/${res_id}`, tags: ["cashbox"], });
+  const { data: storage = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: ingredientData = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   const navigate = useNavigate();
 
   const today = getFormattedDate(0);
@@ -261,3 +247,28 @@ export const UniversalFilterBox = () => {
     </div>
   );
 };
+
+const filter_codes_by_page = {
+  1: [5, 6, 7, 8, 9, 10, 11, 12, 15],
+  2: [5, 6, 7, 8, 9, 10, 11, 12, 15],
+  3: [5, 6, 7, 8, 9, 10, 11, 12, 15],
+  4: [4, 6, 7, 8, 9, 15],
+  5: [4, 6, 7, 8, 9, 15],
+  6: [4, 6, 7, 8, 9, 15],
+  7: [4, 6, 7, 8, 9, 15],
+  8: [4, 6, 7, 8, 9, 15],
+  9: [4, 6, 7, 8, 9, 15],
+  10: [4, 6, 7, 8, 9, 15],
+  11: [4, 6, 7, 8, 9, 15],
+  12: [4, 6, 7, 8, 9, 15],
+  13: [4, 6, 7, 8, 9, 15],
+  14: [4, 6, 7, 8, 9, 15],
+  15: [4, 6, 7, 8, 9, 15],
+  16: [4, 6, 7, 8, 9, 15],
+  17: [4, 6, 7, 8, 9, 15],
+  18: [4, 6, 7, 8, 9, 15],
+  19: [4, 6, 7, 8, 9, 15],
+  20: [4, 6, 7, 8, 9, 15],
+  21: [4, 6, 7, 8, 9, 15],
+  22: [4, 6, 7, 8, 9, 15],
+}

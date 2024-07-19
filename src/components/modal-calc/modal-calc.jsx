@@ -17,6 +17,8 @@ import { Popover, ConfigProvider } from "antd";
 import { FaCalculator, FaCheck, FaInfo } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
 import { RiImageAddFill } from "react-icons/ri";
+import { setRelease } from "../../redux/deleteFoods";
+import { useLocation } from "react-router-dom";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
 export const UniversalControlModal = ({ children, status, type, Pdata, Udata, setCheckedData, sp = false, }) => {
@@ -24,6 +26,8 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
   const image = useSelector((state) => state.image);
   const ing = useSelector((state) => state.ing);
   const formV = useSelector((state) => state.values);
+  const lc = useLocation()?.search;
+  const p_code = new URLSearchParams(lc).get("page-code");
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
@@ -73,7 +77,7 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         switch (type) {
           case "product":
             result = await patchData({
-              url: `update/foods`,
+              url: `update/foodIngredients`,
               data: {
                 food: formV.vl,
                 ingredients: Pdata,
@@ -83,8 +87,8 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
             break;
           case "action":
             result = await patchData({
-              url: `update/receivedGoods/${value.id}`,
-              data: value,
+              url: `update/action`,
+              data: Pdata,
               tags: ["action"],
             });
             break;
@@ -142,13 +146,14 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         es({ message: "Xatolik", variant: "error" });
       } else {
         es({ message: "Qo'shildi", variant: "success" });
-        ClearForm("#u-control-form");
-        dispatch(acCloseUModal());
-        dispatch(acPassiveThing());
-        dispatch(acFormValues("R_V", {}));
-        setCheckedData([]);
-        dispatch(acCutting(0));
-        dispatch(acGetUrl({ st: false, img: "" }));
+        // ClearForm("#u-control-form");
+        // dispatch(acCloseUModal());
+        // dispatch(acPassiveThing());
+        // dispatch(acFormValues("R_V", {}));
+        // setCheckedData([]);
+        // dispatch(acCutting(0));
+        // dispatch(acGetUrl({ st: false, img: "" }));
+        // dispatch(setRelease(p_code));
       }
     } catch (err) {
       console.error(err);
@@ -172,29 +177,6 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
     }
     const result = calculateTotal(data);
     dispatch(acCalc(result));
-    if (type === "product") {
-      setFetchdata({ ...data, ...result });
-      console.log("product");
-    }
-    if (type === "edr") {
-      setFetchdata({
-        ...data,
-        cost: result.prime_cost,
-      });
-      console.log("edr");
-    }
-    if (type === "cutting") {
-      setFetchdata({ ...data });
-      console.log("cutting");
-    }
-    if (type === "making") {
-      setFetchdata({ ...data, total_price: result?.prime_cost });
-      console.log("making");
-    }
-    if (type === "preOrder") {
-      setFetchdata({ ...data, cost: result?.prime_cost });
-      console.log("preOrder");
-    }
     console.log("data", data, "result", result, "fetchdata", fetchdata);
   };
 
@@ -213,9 +195,7 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         id="u-control-form">
         {children}
         <div
-          className={
-            open ? "u-control_action__box active" : "u-control_action__box"
-          }>
+          className={open ? "u-control_action__box active" : "u-control_action__box"}>
           <ConfigProvider
             theme={{
               components: {

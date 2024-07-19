@@ -61,11 +61,15 @@ import { ReportOneItems } from "./page/reports/report-items/report-one-items.jsx
 import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report-one-ingredient.jsx";
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
+import { setRelease } from "./redux/deleteFoods.js";
+import { acFormValues } from "./redux/active.js";
 
 export const Router = () => {
   const department = useSelector((state) => state.permission);
   const nothificate = useSelector((state) => state.nothificate);
-  const location = useLocation();
+  const lc = useLocation();
+  const page_code = new URLSearchParams(lc?.search).get("page-code")
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -84,7 +88,12 @@ export const Router = () => {
 
   useEffect(() => {
     dispatch(acCloseUModal());
-  }, [dispatch, location?.search]);
+    dispatch(setRelease(page_code));
+  }, [dispatch, lc?.search, page_code]);
+
+  useEffect(() => {
+    dispatch(acFormValues("R_V", {}));
+  }, [dispatch, lc?.pathname]);
 
   useEffect(() => {
     if (window.innerWidth < 600) {

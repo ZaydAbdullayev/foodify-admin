@@ -118,13 +118,9 @@ export const StorageCarryUp = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("movedGoods")
-                    : setAllDocuments("movedGoods", cuttingData?.data)
-                );
+                dispatch(checked ? setRelease("movedGoods") : setAllDocuments("movedGoods", cuttingData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -168,18 +164,10 @@ export const StorageCarryUp = () => {
               );
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item?.id}>
                   <div
-                    className={
-                      acItem === item?.id || check
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id || check ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
                     onDoubleClick={() => itemAction(item)}>
                     <label aria-label="checked this elements">

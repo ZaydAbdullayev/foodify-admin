@@ -17,7 +17,7 @@ export const StorageCatgegories = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,6 +42,13 @@ export const StorageCatgegories = () => {
       }
     });
 
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("category", item));
+    navigate(`?page-code=category`);
+    setAcItem(item);
+  }
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -54,7 +61,8 @@ export const StorageCatgegories = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
                 dispatch(
                   checked

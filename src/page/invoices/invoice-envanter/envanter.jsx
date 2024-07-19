@@ -18,16 +18,13 @@ export const InvoiceInvantar = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.re_id);
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: preOrder = [], isLoading } = useFetchDataQuery({
-    url: `get/preOrders/${res_id}`,
-    tags: ["pre-order"],
-  });
+  const { data: preOrder = [], isLoading } = useFetchDataQuery({ url: `get/preOrders/${res_id}`, tags: ["pre-order"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
@@ -47,15 +44,13 @@ export const InvoiceInvantar = () => {
     }
   };
 
-  const sortData =
-    preOrder?.data &&
-    [...preOrder?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = preOrder?.data && [...preOrder?.data]?.sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const headerData = [
     { name: "Sana", size: "23%" },
@@ -69,6 +64,13 @@ export const InvoiceInvantar = () => {
     { name: "description", size: "25%" },
   ];
 
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("envanter", item));
+    navigate(`?page-code=envanter`);
+    setAcItem(item);
+  }
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -81,13 +83,10 @@ export const InvoiceInvantar = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("envanter")
-                    : setAllDocuments("envanter", preOrder?.data)
-                );
+                dispatch(checked ? setRelease("envanter") : setAllDocuments("envanter", preOrder?.data));
               }}
               aria-label="checked this elements"
             />
@@ -139,25 +138,13 @@ export const InvoiceInvantar = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("envanter", item));
-                      navigate(`?page-code=envanter`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("envanter", item));
-                          navigate(`?page-code=envanter`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>

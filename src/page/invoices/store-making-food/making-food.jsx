@@ -51,9 +51,7 @@ export const InvoicesMakingFood = () => {
     }
   };
 
-  const sortData =
-    makedFood?.data &&
-    [...makedFood?.data].sort((a, b) => {
+  const sortData = makedFood?.data && [...makedFood?.data].sort((a, b) => {
       if (sort?.state) {
         return a?.name?.localeCompare(b?.name);
       } else {
@@ -87,11 +85,7 @@ export const InvoicesMakingFood = () => {
     dispatch(setDocuments("making", item));
     navigate(`?page-code=making`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(
-      acItem?.id && ckddt?.making?.length > 0
-        ? { id: null, ingredients: [] }
-        : item
-    );
+    setAcItem(acItem?.id && ckddt?.making?.length > 0 ? { id: null, ingredients: [] } : item);
   };
 
   return (
@@ -106,13 +100,10 @@ export const InvoicesMakingFood = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("making")
-                    : setAllDocuments("making", makedFood?.data)
-                );
+                dispatch(checked ? setRelease("making") : setAllDocuments("making", makedFood?.data));
               }}
               aria-label="checked this elements"
             />
@@ -151,17 +142,9 @@ export const InvoicesMakingFood = () => {
               const check = ckddt?.making?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }>
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
@@ -188,24 +171,12 @@ export const InvoicesMakingFood = () => {
                         </p>
                       );
                     })}
-                    <p
-                      style={{
-                        "--data-line-size": "8%",
-                        justifyContent: "center",
-                      }}
+                    <p style={{ "--data-line-size": "8%", justifyContent: "center", }}
                       onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((i) => i !== item?.id)
-                            : [...prev, item?.id]
-                        )
+                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((i) => i !== item?.id) : [...prev, item?.id])
                       }>
                       <u
-                        style={
-                          showMore?.includes(item?.id)
-                            ? { color: "#787aff" }
-                            : {}
-                        }>
+                        style={showMore?.includes(item?.id) ? { color: "#787aff" } : {}}>
                         tafsilot
                       </u>
                     </p>
@@ -213,31 +184,16 @@ export const InvoicesMakingFood = () => {
                   {showMore?.includes(item?.id) && (
                     <div className=" storage-body_inner_item">
                       <div className="storage_body_item">
-                        <p
-                          style={{
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                        <p style={{ borderRight: "1px solid #ccc5", }}>
                           №
                         </p>
-                        <p
-                          style={{
-                            "--data-line-size": "35%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                        <p style={{ "--data-line-size": "35%", borderRight: "1px solid #ccc5", }}>
                           Nomi
                         </p>
-                        <p
-                          style={{
-                            "--data-line-size": "20%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                        <p style={{ "--data-line-size": "20%", borderRight: "1px solid #ccc5", }}>
                           Narxi
                         </p>
-                        <p
-                          style={{
-                            "--data-line-size": "25%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                        <p style={{ "--data-line-size": "25%", borderRight: "1px solid #ccc5", }}>
                           Tan Narxi
                         </p>
                         <p style={{ "--data-line-size": "15%" }}>Foyda</p>

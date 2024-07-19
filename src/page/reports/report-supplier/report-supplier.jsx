@@ -17,7 +17,7 @@ export const ReportSuppliers = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
     url: `get/${res_id}/categories`,

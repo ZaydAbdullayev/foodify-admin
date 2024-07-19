@@ -18,28 +18,23 @@ export const TransactionGroups = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [status, setStatus] = useState(false);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModel);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.id}/transactionGroups`,
-    tags: ["tr-group"],
-  });
+  const { data = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
 
-  const sortData =
-    data?.data &&
-    [...data?.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  const sortData = data?.data && [...data?.data].sort((a, b) => {
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
 
   const [activeIndex, setActiveIndex] = useState(0);
   const handlers = useSwipeable({
@@ -52,10 +47,9 @@ export const TransactionGroups = () => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
     await setActiveIndex((newIndex + 3) % 3);
     navigate(
-      `/sections/${
-        newIndex === 0
-          ? "cashbox/transaction-group"
-          : newIndex === 1
+      `/sections/${newIndex === 0
+        ? "cashbox/transaction-group"
+        : newIndex === 1
           ? "groups"
           : "invoice-group"
       }`
@@ -69,8 +63,15 @@ export const TransactionGroups = () => {
 
   const displayKeys = [
     { name: "name", size: "60%" },
-    { name: "activity_kind", size: "34%", position: 1 },
+    { name: "activity_kind", size: "34%", position: "center" },
   ];
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("cashboxGr", item));
+    navigate(`?page-code=cashboxGr`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -97,13 +98,10 @@ export const TransactionGroups = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(checked ? false : true);
-                dispatch(
-                  checked
-                    ? setRelease("cashboxGr")
-                    : setAllDocuments("cashboxGr", data?.data)
-                );
+                dispatch(checked ? setRelease("cashboxGr") : setAllDocuments("cashboxGr", data?.data));
               }}
             />
           </label>
@@ -135,31 +133,15 @@ export const TransactionGroups = () => {
               const check = ckddt?.cashboxGr?.some((el) => el.id === item.id);
               return (
                 <div
-                  className={
-                    acItem.id === item.id
-                      ? "storage_body_item active"
-                      : "storage_body_item"
-                  }
+                  className={acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
-                  onDoubleClick={() => {
-                    dispatch(
-                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                    );
-                    dispatch(setDocuments("cashboxGr", item));
-                    navigate(`?page-code=cashboxGr`);
-                  }}>
+                  onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
                       name="id"
                       checked={check}
-                      onChange={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("cashboxGr", item));
-                        navigate(`?page-code=cashboxGr`);
-                      }}
+                      onChange={() => actionItem(item)}
                     />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
@@ -168,11 +150,7 @@ export const TransactionGroups = () => {
                       key={ind}
                       style={{
                         "--data-line-size": size,
-                        justifyContent: position
-                          ? position === 1
-                            ? "center"
-                            : "flex-end"
-                          : "flex-start",
+                        justifyContent: position ? position : "flex-start",
                       }}>
                       {item[name]}
                     </p>

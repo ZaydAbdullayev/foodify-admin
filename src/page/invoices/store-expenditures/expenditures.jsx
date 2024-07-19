@@ -101,11 +101,7 @@ export const StorageExpenditures = () => {
     dispatch(setDocuments("expense", item));
     navigate(`?page-code=expense`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(
-      acItem?.id && ckddt?.expense?.length > 0
-        ? { id: null, ingredients: [] }
-        : item
-    );
+    setAcItem(acItem?.id && ckddt?.expense?.length > 0 ? { id: null, ingredients: [] } : item);
   };
 
   return (
@@ -120,13 +116,9 @@ export const StorageExpenditures = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("invoice")
-                    : setAllDocuments("invoice", expenseData?.data)
-                );
+                dispatch(checked ? setRelease("invoice") : setAllDocuments("invoice", expenseData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -167,18 +159,10 @@ export const StorageExpenditures = () => {
               const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item.id}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
@@ -207,11 +191,7 @@ export const StorageExpenditures = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((i) => i !== item?.id)
-                            : [...prev, item?.id]
-                        )
+                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((i) => i !== item?.id) : [...prev, item?.id])
                       }>
                       <u
                         style={
@@ -259,9 +239,7 @@ export const StorageExpenditures = () => {
                                     borderRight: key.border,
                                   }}
                                   key={index}>
-                                  {key.short
-                                    ? product[key.name]?.slice(0, 1)
-                                    : product[key.name]}
+                                  {key.short ? product[key.name]?.slice(0, 1) : product[key.name]}
                                 </p>
                               );
                             })}
@@ -290,11 +268,7 @@ export const StorageExpenditures = () => {
                             "--data-line-size": "30%",
                             justifyContent: "flex-end",
                           }}>
-                          {CalculateTotalP(
-                            item?.ingredients,
-                            "price",
-                            "amount"
-                          )}
+                          {CalculateTotalP(item?.ingredients, "price", "amount")}
                         </p>
                       </div>
                     </div>

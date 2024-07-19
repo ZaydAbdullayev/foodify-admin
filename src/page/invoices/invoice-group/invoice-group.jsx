@@ -20,7 +20,7 @@ export const InvoicesGroups = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [activeIndex, setActiveIndex] = useState(2);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
@@ -53,15 +53,21 @@ export const InvoicesGroups = () => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
     await setActiveIndex((newIndex + 3) % 3);
     navigate(
-      `/sections/${
-        newIndex === 0
-          ? "cashbox/transaction-group"
-          : newIndex === 1
+      `/sections/${newIndex === 0
+        ? "cashbox/transaction-group"
+        : newIndex === 1
           ? "groups"
           : "invoice-group"
       }`
     );
   };
+
+  const actionItem = (item) => {
+    dispatch(acActiveThing(item));
+    dispatch(setDocuments("invGr", item));
+    navigate(`?page-code=invGr`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -88,13 +94,10 @@ export const InvoicesGroups = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("invGr")
-                    : setAllDocuments("invGr", groupData?.data)
-                );
+                dispatch(checked ? setRelease("invGr") : setAllDocuments("invGr", groupData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -122,31 +125,15 @@ export const InvoicesGroups = () => {
               return (
                 <div className={"storage_body__box"}>
                   <div
-                    className={
-                      acItem === item.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
                     key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("invGr", item));
-                      navigate(`?page-code=invGr`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("invGr", item));
-                          navigate(`?page-code=invGr`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

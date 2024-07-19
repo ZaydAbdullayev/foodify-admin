@@ -15,27 +15,29 @@ export const Cashboxes = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useFetchDataQuery({
-    url: `get/cashbox/${user?.id}`,
-    tags: ["cashbox"],
-  });
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
 
-  const sortData =
-    cashboxData?.data &&
-    [...(cashboxData?.data || [])]?.sort((a, b) => {
-      if (sort?.state) {
-        return a?.name?.localeCompare(b?.name);
-      } else {
-        return b?.name?.localeCompare(a?.name);
-      }
-    });
+  const sortData = cashboxData?.data && [...(cashboxData?.data || [])]?.sort((a, b) => {
+    if (sort?.state) {
+      return a?.name?.localeCompare(b?.name);
+    } else {
+      return b?.name?.localeCompare(a?.name);
+    }
+  });
+
+  const actionItem = (item) => {
+    dispatch(acActiveThing(item));
+    dispatch(setDocuments("cashbox", item));
+    navigate(`?page-code=cashbox`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -49,13 +51,10 @@ export const Cashboxes = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("cashbox")
-                    : setAllDocuments("cashbox", cashboxData.data)
-                );
+                dispatch(checked ? setRelease("cashbox") : setAllDocuments("cashbox", cashboxData.data));
               }}
             />
           </label>
@@ -81,31 +80,15 @@ export const Cashboxes = () => {
               const check = ckddt?.cashbox?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={
-                    acItem.id === item.id
-                      ? "storage_body_item active"
-                      : "storage_body_item"
-                  }
+                  className={acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
-                  onDoubleClick={() => {
-                    dispatch(
-                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                    );
-                    dispatch(setDocuments("cashbox", item));
-                    navigate(`?page-code=cashbox`);
-                  }}>
+                  onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
                       name="id"
-                      defaultValue={check}
-                      onChange={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("cashbox", item));
-                        navigate(`?page-code=cashbox`);
-                      }}
+                      checked={check}
+                      onChange={() => actionItem(item)}
                     />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

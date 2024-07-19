@@ -14,8 +14,7 @@ import { notification } from "antd";
 import { useDelDataMutation } from "../../service/fetch.service";
 
 import { BiEdit, BiPlus } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
-import { MdTableBar } from "react-icons/md";
+import { MdDelete, MdTableBar } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
 import { FaBell } from "react-icons/fa";
 import { ImStatsBars } from "react-icons/im";
@@ -35,8 +34,7 @@ export const Navbar = () => {
   const media = useSelector((state) => state.media);
   const delDocuments = useSelector((state) => state.delRouter);
   const search = useLocation().search;
-  const searchParams = new URLSearchParams(search);
-  const page_code = searchParams.get("page-code");
+  const page_code = new URLSearchParams(search).get("page-code")
   const delDatas = delDocuments?.[page_code];
   const [api, contextHolder] = notification.useNotification();
 
@@ -103,7 +101,7 @@ export const Navbar = () => {
     <div className="navbar">
       {contextHolder}
       <span className="backword" onClick={() => navigate(-1)}>
-        <SlArrowLeft /> orqaga
+        <SlArrowLeft />
       </span>
       <div
         className="nav_menu"
@@ -132,11 +130,7 @@ export const Navbar = () => {
           {status?.includes(2) && (
             <button
               type="button"
-              style={
-                delDocuments?.[page_code]?.length === 1
-                  ? {}
-                  : { opacity: "0.4", border: "1px solid #ccc6" }
-              }
+              style={delDocuments?.[page_code]?.length === 1 ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
               onClick={openUModalU}
               aria-label="open modal for edit belong's active page">
               <BiEdit />
@@ -145,17 +139,13 @@ export const Navbar = () => {
           {status?.includes(3) && (
             <button
               type="button"
-              style={
-                delDocuments?.[page_code]?.length > 0
-                  ? {}
-                  : { opacity: "0.4", border: "1px solid #ccc6" }
-              }
+              style={delDocuments?.[page_code]?.length > 0 ? {} : { opacity: "0.4", border: "1px solid #ccc6" }}
               onClick={deleteDocuments}
               aria-label="open modal for delete belong's active page">
               <MdDelete />
             </button>
           )}
-          <UniversalFilterBox />
+          <UniversalFilterBox status={status} />
         </form>
       )}
 

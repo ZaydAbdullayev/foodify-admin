@@ -18,7 +18,7 @@ export const ReportItems = () => {
   const [showMore, setShowMore] = useState([]);
   const navigate = useNavigate();
   console.log(showMore);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const { date } = useSelector((state) => state.uSearch);
   const res_id = useSelector((state) => state.res_id);
   // const navigate = useNavigate();

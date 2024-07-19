@@ -122,13 +122,10 @@ export const StorageDamaged = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("movedGoods")
-                    : setAllDocuments("movedGoods", demagedData?.data)
-                );
+                dispatch(checked ? setRelease("movedGoods") : setAllDocuments("movedGoods", demagedData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -172,18 +169,10 @@ export const StorageDamaged = () => {
               const check = ckddt?.damaged?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item?.id}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input

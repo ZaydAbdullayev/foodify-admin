@@ -19,36 +19,25 @@ export const CashboxTransaction = () => {
   const [modalType, setModalType] = useState("default");
   const [cashId, setCashId] = useState("none");
   const today = new Date().toISOString().split("T")[0];
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const open = useSelector((state) => state.uModal);
   const ckddt = useSelector((state) => state.delTouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useFetchDataQuery({
-    url: `get/cashbox/${user?.id}`,
-    tags: ["cashbox"],
-  });
-  const { data: cashboxGrData = [] } = useFetchDataQuery({
-    url: `get/${user?.id}/transactionGroups`,
-    tags: ["tr-group"],
-  });
-  const { data: cashTrData = [] } = useFetchDataQuery({
-    url: `get/transactions/${user?.id}`,
-    tags: ["cashbox-transaction"],
-  });
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
+  const { data: cashboxGrData = [] } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
+  const { data: cashTrData = [] } = useFetchDataQuery({ url: `get/transactions/${user?.id}`, tags: ["cashbox-transaction"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
 
-  const sortData =
-    cashTrData?.data &&
-    [...cashTrData?.data].sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = cashTrData?.data && [...cashTrData?.data].sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const headerData = [
     { name: "Kun", size: "10%" },
@@ -86,6 +75,13 @@ export const CashboxTransaction = () => {
     depozit: "Depozit",
   };
 
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("trsn", item));
+    navigate(`?page-code=trsn`);
+    setAcItem(item);
+  }
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -98,13 +94,9 @@ export const CashboxTransaction = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              onChange={() => {
                 setChecked(checked ? false : true);
-                dispatch(
-                  checked
-                    ? setRelease("trsn")
-                    : setAllDocuments("trsn", cashTrData?.data)
-                );
+                dispatch(checked ? setRelease("trsn") : setAllDocuments("trsn", cashTrData?.data));
               }}
             />
           </label>
@@ -117,9 +109,8 @@ export const CashboxTransaction = () => {
                   "--data-line-size": item?.size,
                   justifyContent: item?.position || "flex-start",
                 }}
-                onClick={() => {
-                  setSort({ id: index, state: !sort.state });
-                }}>
+                onClick={() => setSort({ id: index, state: !sort.state })}
+              >
                 {item?.name}{" "}
                 {sort.id === index ? (
                   sort.state ? (
@@ -153,25 +144,13 @@ export const CashboxTransaction = () => {
                         ? "storage_body_item active"
                         : "storage_body_item"
                     }
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("trsn", item));
-                      navigate(`?page-code=trsn`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={isChecked}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("trsn", item));
-                          navigate(`?page-code=trsn`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p>{ind + 1}</p>
@@ -184,9 +163,7 @@ export const CashboxTransaction = () => {
                             "--data-line-size": key?.size,
                             justifyContent: key?.position || "flex-start",
                           }}>
-                          {key?.name === "transaction_category"
-                            ? TCD?.[item[key?.name]]
-                            : item[key?.name]}
+                          {key?.name === "transaction_category" ? TCD?.[item[key?.name]] : item[key?.name]}
                         </p>
                       );
                     })}
@@ -322,33 +299,13 @@ export const CashboxTransaction = () => {
                     <option value="click">Click</option>
                   </select>
                 </label>
-                <input
-                  type="text"
-                  name="amount"
-                  placeholder="Miqdor kiriting*"
-                  required
-                  autoComplete="off"
-                />
-                <input
-                  type="text"
-                  name="description"
-                  placeholder="Tavsif"
-                  required
-                  autoComplete="off"
-                />
+                <input type="text" name="amount" placeholder="Miqdor kiriting*" requiredautoComplete="off" />
+                <input type="text" name="description" placeholder="Tavsif" requiredautoComplete="off" />
               </>
             )}
             <input type="hidden" name="res_id" value={user?.id} />
-            <input
-              type="hidden"
-              name="worker"
-              value={user?.worker_name || "owner"}
-            />
-            <input
-              type="hidden"
-              name="worker_id"
-              value={user?.user_id || user?.id}
-            />
+            <input type="hidden" name="worker" value={user?.worker_name || "owner"} />
+            <input type="hidden" name="worker_id" value={user?.user_id || user?.id} />
           </UniversalModal>
         </Suspense>
       )}

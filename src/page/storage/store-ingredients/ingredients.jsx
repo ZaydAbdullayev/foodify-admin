@@ -63,7 +63,8 @@ export const StorageIngredients = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
                 dispatch(checked ? setRelease("ingredient") : setAllDocuments("ingredient", ingredientData?.data));
               }}

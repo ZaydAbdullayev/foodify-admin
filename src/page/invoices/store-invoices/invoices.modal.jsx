@@ -99,8 +99,8 @@ const InvoicesModal = ({
             extra: "supplier_id",
             df_value: acItem?.supplier
               ? {
-                  value: acItem?.supplier,
-                  label: acItem?.supplier_id,
+                value: acItem?.supplier_id,
+                label: acItem?.supplier,
                 }
               : { value: "default", label: "Yetkazuvchi tanlang*" },
             options: suplierData?.data,
@@ -112,7 +112,7 @@ const InvoicesModal = ({
             extra: "st1_id",
             take_id: true,
             df_value: acItem?.st1_name
-              ? { value: acItem?.st1_name, label: acItem?.st1_id }
+              ? { value: acItem?.st1_id, label: acItem?.st1_name }
               : { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
             u_option: [acItem?.st1_name, acItem?.st1_id],
@@ -139,7 +139,7 @@ const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>

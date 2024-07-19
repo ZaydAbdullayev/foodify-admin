@@ -110,7 +110,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "25%" }}>Nomi</p>
@@ -130,9 +130,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
                   <input
                     type="checkbox"
                     checked={checked}
-                    onChange={() =>
-                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
-                    }
+                    onChange={() => getProduct({ ...item, amount: 0 }, checked ? 0 : 1)}
                   />
                 </label>
                 <p style={{ "--data-line-size": "60%" }}>{item.name}</p>
@@ -147,9 +145,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
                       name="amount"
                       placeholder="miqdori"
                       autoComplete="off"
-                      onChange={(e) =>
-                        getProduct({ ...item, amount: e.target.value }, 1)
-                      }
+                      onChange={(e) => getProduct({ ...item, amount: e.target.value }, 1)}
                     />
                   )}
                 </p>

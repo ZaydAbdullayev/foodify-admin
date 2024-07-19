@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 // import { CalculateTotalP } from "../../../service/calc.service";
@@ -11,6 +11,7 @@ import { setDocuments, setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acOpenPayModal } from "../../../redux/modal";
+import { acFormValues } from "../../../redux/active";
 
 const InvoicesModal = lazy(() => import("./invoices.modal"));
 const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
@@ -30,75 +31,43 @@ export const StorageInvoices = () => {
   const navigate = useNavigate();
   console.log("formV", formV);
 
-  const ds = [
-    {
-      id: "2d7a97f46e9dada2",
-      action_type: "received_goods",
-      order: 9,
-      time: "2022-01-07",
-      st1_id: "0c510d",
-      st1_name: "Oshxona ombori",
-      st2_id: "def809",
-      st2_name: "Bar ombori",
-      item_id: "4a81eb32",
-      item_name: "kartoshka",
-      item_type: "Ingredient",
-      group: "Sabzavotlar",
-      unit: "kg",
-      price: 6000,
-      worker: "Zayd",
-      worker_id: "0a709d",
-      responsible: "Muzaffar",
-      amount: 300,
-      invoice_group: "income",
-      description: "Sabzi sotib olindi",
-      is_undone: 0,
-    },
-  ];
-
-  const { data: invoiceData = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/received_goods`,
-    tags: ["action", "invoices"],
-  });
-  React.useEffect(() => {
+  const { data: invoiceData = [], isLoading } = useFetchDataQuery({ url: `get/actions/received_goods`, tags: ["action", "invoices"], });
+  useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
 
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
-    if (status === 0) {
-      setCheckedData((prevData) =>
-        prevData?.filter((i) => i.item_id !== item?.item_id)
-      );
-      return;
-    }
-    if (isChecked) {
-      setCheckedData((prevData) =>
-        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
-      );
-    } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        {
-          ...item,
-          ...formV?.vl,
-          action_type: "received_goods",
-          invoice_group: "income",
-        },
-      ]);
-    }
+    const itemId = item?.item_id;
+    const acItemId = acItem?.id;
+    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
+
+    setCheckedData((prevData) => {
+      const isChecked = prevData.some((i) => i.item_id === itemId);
+      if (status === 0) {
+        if (acItemId) {
+          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
+        }
+        return prevData.filter((i) => i.item_id !== itemId);
+      }
+      if (isChecked) {
+        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update" : item.status } : i);
+      }
+      return [...prevData, {
+        ...item, ...formV?.vl, action_type: "received_goods", invoice_group: "income", status: acItemId ? "add" : undefined
+      }];
+    });
   };
 
   const actionItem = (item) => {
     dispatch(setDocuments("invoice", item));
     navigate(`?page-code=invoice`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(
-      acItem?.id && ckddt?.invoice?.length > 0
-        ? { id: null, ingredients: [] }
-        : item
-    );
+    setAcItem(acItem?.id && ckddt?.invoice?.length > 0 ? { id: null, ingredients: [] } : item);
+    dispatch(acFormValues("A_V", { ...formV?.vl, id: item?.id }));
   };
+
+  console.log(acItem, checkedData, ckddt);
+
   const headerKeys = [
     { name: "Kun", size: "13%" },
     { name: "Ombor", size: "12%" },
@@ -134,20 +103,27 @@ export const StorageInvoices = () => {
     { name: "amount", size: "19%", position: "flex-end" },
   ];
 
-  const sortData =
-    invoiceData?.data &&
-    [...invoiceData?.data].sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = invoiceData?.data && [...invoiceData?.data].sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const openPaymentModal = (price) => {
     setPay(true);
     dispatch(acOpenPayModal(price));
   };
+
+  const object = [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]
 
   return (
     <div className="storage_container">
@@ -161,13 +137,10 @@ export const StorageInvoices = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(checked ? false : true);
-                dispatch(
-                  checked
-                    ? setRelease("invoice")
-                    : setAllDocuments("invoice", invoiceData?.data)
-                );
+                dispatch(checked ? setRelease("invoice") : setAllDocuments("invoice", invoiceData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -183,18 +156,12 @@ export const StorageInvoices = () => {
                 {item?.name}
                 {sort.id === item?.name ? (
                   sort.state ? (
-                    <RiArrowUpSLine
-                      onClick={() => setSort({ id: item?.name, state: false })}
-                    />
+                    <RiArrowUpSLine onClick={() => setSort({ id: item?.name, state: false })} />
                   ) : (
-                    <RiArrowDownSLine
-                      onClick={() => setSort({ id: item?.name, state: true })}
-                    />
+                      <RiArrowDownSLine onClick={() => setSort({ id: item?.name, state: true })} />
                   )
                 ) : (
-                  <RiArrowDownSLine
-                    onClick={() => setSort({ id: item?.name, state: true })}
-                  />
+                    <RiArrowDownSLine onClick={() => setSort({ id: item?.name, state: true })} />
                 )}
               </p>
             );
@@ -215,21 +182,13 @@ export const StorageInvoices = () => {
               const check = ckddt?.invoice?.some((i) => i.id === item?.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   style={{
                     background: item?.leftover < 0 ? "#a0aed950" : "",
                   }}
                   key={item?.id}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
@@ -263,17 +222,9 @@ export const StorageInvoices = () => {
                       }}>
                       <span>
                         <u
-                          style={
-                            showMore?.includes(item?.id)
-                              ? { color: "var(--cl26)" }
-                              : {}
-                          }
+                          style={showMore?.includes(item?.id) ? { color: "var(--cl26)" } : {}}
                           onClick={() =>
-                            setShowMore((prev) =>
-                              prev?.includes(item?.id)
-                                ? prev?.filter((i) => i !== item?.id)
-                                : [...prev, item?.id]
-                            )
+                            setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((i) => i !== item?.id) : [...prev, item?.id])
                           }>
                           hisoblash
                         </u>

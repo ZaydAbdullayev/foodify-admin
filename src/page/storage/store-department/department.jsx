@@ -16,7 +16,7 @@ export const StorageDep = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,6 +42,13 @@ export const StorageDep = () => {
       }
     });
 
+  const actionItem = (item) => {
+    dispatch(acActiveThing(item));
+    dispatch(setDocuments("main", item));
+    navigate(`?page-code=main`);
+    setAcItem(item);
+  }
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -54,7 +61,8 @@ export const StorageDep = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
                 dispatch(
                   checked
@@ -104,25 +112,13 @@ export const StorageDep = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() => {
-                    dispatch(
-                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                    );
-                    dispatch(setDocuments("main", item));
-                    navigate(`?page-code=main`);
-                  }}>
+                  onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
                       name="id"
                       checked={check}
-                      onChange={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("main", item));
-                        navigate(`?page-code=main`);
-                      }}
+                      onChange={() => actionItem(item)}
                     />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

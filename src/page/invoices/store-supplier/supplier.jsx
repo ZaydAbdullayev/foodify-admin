@@ -15,7 +15,7 @@ const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const [sort, setSort] = useState({ id: null, state: false });
   const [type, setType] = useState();
@@ -29,15 +29,20 @@ export const StorageSupplier = () => {
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
-  const sortData =
-    suplierData?.data &&
-    [...suplierData.data].sort((a, b) => {
+  const sortData = suplierData?.data && [...suplierData.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
         return b.name.localeCompare(a.name);
       }
-    });
+  });
+
+  const actionItem = (item) => {
+    dispatch(acActiveThing(item));
+    dispatch(setDocuments("supplier", item));
+    navigate(`?page-code=supplier`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -51,13 +56,10 @@ export const StorageSupplier = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(checked ? false : true);
-                dispatch(
-                  checked
-                    ? setRelease("supplier")
-                    : setAllDocuments("supplier", suplierData?.data)
-                );
+                dispatch(checked ? setRelease("supplier") : setAllDocuments("supplier", suplierData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -121,24 +123,12 @@ export const StorageSupplier = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("supplier", item));
-                      navigate(`?page-code=supplier`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("supplier", item));
-                          navigate(`?page-code=supplier`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

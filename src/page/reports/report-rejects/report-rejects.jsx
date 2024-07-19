@@ -14,7 +14,7 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 export const ReportRejects = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const res_id = useSelector((state) => state.res_id);
   const { start, end } = useSelector((state) => state.uSearch)?.date;
   const dispatch = useDispatch();

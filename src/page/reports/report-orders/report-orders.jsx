@@ -20,7 +20,7 @@ export const ReportOrders = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const { date } = useSelector((state) => state.uSearch);
@@ -65,6 +65,13 @@ export const ReportOrders = () => {
     { name: "paid", size: "9.3%", position: 2 },
   ];
 
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("orderReport", item));
+    navigate(`?page-code=orderReport`);
+    setAcItem(item);
+  }
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -77,13 +84,10 @@ export const ReportOrders = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("orderReport")
-                    : setAllDocuments("orderReport", storageD)
-                );
+                dispatch(checked ? setRelease("orderReport") : setAllDocuments("orderReport", storageD));
               }}
               aria-label="for chacked this product"
             />
@@ -118,37 +122,17 @@ export const ReportOrders = () => {
               const chek = ckddt?.orderReport?.some((el) => el.id === item?.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item?.id}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item or-rp active"
-                        : "storage_body_item or-rp"
-                    }
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("orderReport", item));
-                      navigate(`?page-code=orderReport`);
-                    }}>
+                    className={acItem === item?.id ? "storage_body_item or-rp active" : "storage_body_item or-rp"}
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={chek}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("orderReport", item));
-                          navigate(`?page-code=orderReport`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

@@ -15,7 +15,7 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [details, setDetails] = useState({ ind: null, title: "" });
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const res_id = useSelector((state) => state.res_id);
   const { date } = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();

@@ -86,11 +86,7 @@ export const StorageCutting = () => {
     dispatch(setDocuments("cutting", item));
     navigate(`?page-code=cutting`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(
-      acItem?.id && ckddt?.cutting?.length > 0
-        ? { id: null, ingredients: [] }
-        : item
-    );
+    setAcItem(acItem?.id && ckddt?.cutting?.length > 0 ? { id: null, ingredients: [] } : item);
   };
 
   return (
@@ -105,13 +101,10 @@ export const StorageCutting = () => {
             <input
               type="checkbox"
               name="id"
+              checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("cutting")
-                    : setAllDocuments("cutting", dmData?.data)
-                );
+                dispatch(checked ? setRelease("cutting") : setAllDocuments("cutting", dmData?.data));
               }}
               aria-label="checked this elements"
             />

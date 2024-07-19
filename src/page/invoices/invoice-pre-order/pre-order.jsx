@@ -19,7 +19,7 @@ export const InvoicePreOrders = () => {
   const [checked, setChecked] = useState(false);
   const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
@@ -48,15 +48,13 @@ export const InvoicePreOrders = () => {
     }
   };
 
-  const sortData =
-    preOrder?.data &&
-    [...preOrder?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = preOrder?.data && [...preOrder?.data]?.sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const headerData = [
     { name: "Sana", size: "14%" },
@@ -82,27 +80,17 @@ export const InvoicePreOrders = () => {
 
   const innerDisplayKeys = [
     { name: "name", size: "30%", border: "1px solid #ccc5" },
-    {
-      name: "price",
-      size: "25%",
-      position: "flex-end",
-      border: "1px solid #ccc5",
-      amount: true,
-    },
-    {
-      name: "prime_cost",
-      size: "20%",
-      position: "flex-end",
-      border: "1px solid #ccc5",
-      amount: true,
-    },
-    {
-      name: "profit",
-      size: "21%",
-      position: "flex-end",
-      amount: true,
-    },
+    { name: "price", size: "25%", position: "flex-end", border: "1px solid #ccc5", amount: true, },
+    { name: "prime_cost", size: "20%", position: "flex-end", border: "1px solid #ccc5", amount: true, },
+    { name: "profit", size: "21%", position: "flex-end", amount: true, },
   ];
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("preOrder", item));
+    navigate(`?page-code=preOrder`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -116,13 +104,10 @@ export const InvoicePreOrders = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("preOrder")
-                    : setAllDocuments("preOrder", preOrder?.data)
-                );
+                dispatch(checked ? setRelease("preOrder") : setAllDocuments("preOrder", preOrder?.data));
               }}
               aria-label="checked this elements"
             />
@@ -163,37 +148,18 @@ export const InvoicePreOrders = () => {
               return (
                 <div
                   key={item?.id}
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }>
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}>
                   <div
                     className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                      acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("preOrder", item));
-                      navigate(`?page-code=preOrder`);
-                    }}>
+                    onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("preOrder", item));
-                          navigate(`?page-code=preOrder`);
-                        }}
+                        onChange={() => actionItem(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>

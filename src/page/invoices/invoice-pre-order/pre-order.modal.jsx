@@ -73,7 +73,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => addAllIng(checkedData, data?.data, setCheckedData)}
+              onChange={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "60%" }}>Nomi</p>

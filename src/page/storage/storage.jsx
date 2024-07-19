@@ -17,27 +17,29 @@ export const Storage = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const acItem = useSelector((state) => state.activeThing);
+  const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
+  const { data = [], isLoading } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
   useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
-  const sortData =
-    data?.data &&
-    [...data.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  const sortData = data?.data && [...data.data].sort((a, b) => {
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  const actionItem = (item) => {
+    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
+    dispatch(setDocuments("main", item));
+    navigate(`?page-code=main`);
+    setAcItem(item);
+  }
 
   return (
     <div className="storage_container">
@@ -51,13 +53,10 @@ export const Storage = () => {
             <input
               type="checkbox"
               name="id"
-              onClick={() => {
+              checked={checked}
+              onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("main")
-                    : setAllDocuments("main", data?.data)
-                );
+                dispatch(checked ? setRelease("main") : setAllDocuments("main", data?.data));
               }}
               aria-label="checked this elements"
             />
@@ -85,30 +84,15 @@ export const Storage = () => {
               return (
                 <div
                   className={
-                    acItem.id === item.id
-                      ? "storage_body_item active"
-                      : "storage_body_item"
-                  }
+                    acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
-                  onDoubleClick={() => {
-                    dispatch(
-                      !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                    );
-                    dispatch(setDocuments("main", item));
-                    navigate(`?page-code=main`);
-                  }}>
+                  onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
                       name="id"
                       checked={check}
-                      onChange={() => {
-                        dispatch(
-                          !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                        );
-                        dispatch(setDocuments("main", item));
-                        navigate(`?page-code=main`);
-                      }}
+                      onChange={() => actionItem(item)}
                     />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
