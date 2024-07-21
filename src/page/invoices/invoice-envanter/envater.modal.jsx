@@ -25,7 +25,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${user?.id}/${id}`,
+    url: `get/storageItems/${id}`,
     tags: ["invoices"],
   });
 

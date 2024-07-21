@@ -20,14 +20,8 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const [moneyOnSupp, setMoneyOnSupp] = useState(null);
   const id = user?.user_id || user?.id;
   const name = user?.name || user?.username;
-  const { data: cashs = [] } = useFetchDataQuery({
-    url: `get/cashbox/${user?.id}`,
-    tags: ["cashbox"],
-  });
-  const { data: trg = [] } = useFetchDataQuery({
-    url: `get/invoiceGroups/${user?.id}`,
-    tags: ["cashbox"],
-  });
+  const { data: cashs = [] } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
+  const { data: trg = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${user?.id}`, tags: ["cashbox"], });
   const { data: sp = [] } = useFetchDataQuery({
     url: `get/supplierPayments/${user?.id}/${pay?.supplier_id}`,
     tags: ["cashbox"],
@@ -37,9 +31,7 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const openWarning = (placement, s) => {
     api.warning({
       message: s ? "Yetarsiz summa" : "Yaroqsiz ma'lumot",
-      description: s
-        ? "Kiritilgan summa tanlangan summadan ko'p!"
-        : "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
+      description: s ? "Kiritilgan summa tanlangan summadan ko'p!" : "Iltimos, barcha maydonlarni to'ldiring yoki to'g'ri ma'lumot kiritganingizni tekshiring!",
       placement,
     });
   };

@@ -24,15 +24,15 @@ export const Inventory = () => {
     tags: ["store"],
   });
   const { data: syncsData = [] } = useFetchDataQuery({
-    url: user ? `get/actions/sync_storage` : "",
-    tags: ["inventory"],
+    url: user ? `get/actions/sync_goods` : "",
+    tags: ["action"],
   });
   const [storage, setStorage] = useState(null);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncsValue, setSyncsValue] = useState([]);
   const [storageV, setStorageV] = useState({
-    number: 1,
+    order: 1,
     time: new Date().toISOString().split("T")[0],
     description: "",
   });
@@ -49,38 +49,9 @@ export const Inventory = () => {
   }, [dispatch]);
 
   const { data = {} } = useFetchDataQuery({
-    url: storage?.id ? `get/storageItems/${user.id}/${storage?.id}` : "",
-    tags: ["invoices"],
+    url: storage?.id ? `get/storageItems/${storage?.id}` : "",
+    tags: ["invoices", "action"],
   });
-
-  const { data: lastN = {} } = useFetchDataQuery({
-    url: `get/actions/${user.id}/sync_goods`,
-    tags: ["invoices"],
-  });
-
-  const sd = {
-    action_type: "sync_goods",
-    order: 9,
-    time: "2024-06-30",
-    res_id: "2899b5",
-    st1_id: "0c510d",
-    st1_name: "Oshxona ombori",
-    st2_id: "",
-    st2_name: "",
-    item_id: "4a81eb32",
-    item_name: "kartoshka",
-    item_type: "Ingredient",
-    group: "Sabzavotlar",
-    unit: "kg",
-    price: 3521,
-    worker: "Zayd",
-    worker_id: "0a709d",
-    responsible: "Muzaffar",
-    amount: -30,
-    invoice_group: "income",
-    description: "Sabzi sotib olindi",
-    is_undone: 0,
-  };
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
@@ -118,10 +89,11 @@ export const Inventory = () => {
 
   const changeQuantity = (value, ingredientId) => {
     const parsedValue = parseInt(value);
-    const item = (seeOne ? active?.details : data?.data)?.find(
+    const item = (seeOne ? active?.ingredients : data?.data)?.find(
       (item) => item.item_id === ingredientId
     );
     if (!item) return;
+    const old_amount = seeOne ? item?.amount : 0;
     const ind = syncsValue.findIndex((item) => item.item_id === ingredientId);
     if (parsedValue === item?.total_quantity) {
       return;
@@ -131,15 +103,17 @@ export const Inventory = () => {
     if (ind !== -1) {
       updatedNewData[ind] = {
         ...updatedNewData[ind],
-        amount: parsedValue - updatedNewData[ind].total_quantity,
+        amount: parsedValue - updatedNewData[ind].total_quantity + old_amount,
         old_quantity: updatedNewData[ind].total_quantity,
         total_quantity: parsedValue,
+        status: "update_amount",
+        id: active?.id ? active?.id : undefined,
       };
     } else if (parsedValue !== item.total_quantity) {
       updatedNewData.push({
         ...item,
         ...storageV,
-        amount: parsedValue - item.total_quantity,
+        amount: parsedValue - item.total_quantity + old_amount,
         old_quantity: item.total_quantity,
         total_quantity: parsedValue,
         st1_name: storage?.name,
@@ -147,6 +121,9 @@ export const Inventory = () => {
         worker: user?.name || user?.username,
         worker_id: user?.user_id || user?.id,
         action_type: "sync_goods",
+        invoice_group: "",
+        id: active?.id ? active?.id : undefined,
+        status: "update_amount"
       });
     }
 
@@ -155,25 +132,26 @@ export const Inventory = () => {
 
   const syncData = async (status) => {
     try {
-      setLoading(true);
+      setLoading(true); 
       let res;
       const values = {
-        url: seeOne ? `/update/syncStorage/${active?.id}` : `/add/action`,
+        url: seeOne ? `/update/action` : `/add/action`,
         data: [...syncsValue],
         tags: ["action", "invoices"],
       };
       if (seeOne) {
-        res = await patchData(values);
+        res = await patchData(values); 
       } else {
         res = await postData(values);
       }
 
       if (res?.data?.status === 200) {
-        setSnc(status);
+        setStorage({ id: active?.st1_id, name: active?.st1_name });
+        setSnc(false);
         setSyncsValue([]);
-        setActive(null);
         setSeeOne(false);
         es("Sinxronlashtirish yakunlandi", { variant: "success" });
+        setActive(null);
       }
     } catch (error) {
       console.log(error);
@@ -275,11 +253,11 @@ export const Inventory = () => {
                 if (seeOne) {
                   setSnc(true);
                   setStorageV({
-                    number: active?.number,
+                    order: active?.order,
                     time: active?.time,
                     description: active?.description,
                   });
-                  setStorage(active?.storage_id);
+                  setStorage(active?.st1_id);
                 } else {
                   showModal();
                 }
@@ -307,7 +285,7 @@ export const Inventory = () => {
       <div
         className="workers_body inventory_body"
         onClick={() => setSyncs(false)}>
-        {(seeOne ? active?.details : data?.data || [])?.map(
+        {(seeOne ? active?.ingredients : data?.data || [])?.map(
           (ingredient, ind) => {
             return (
               <div
@@ -317,7 +295,7 @@ export const Inventory = () => {
                 <p style={{ "--worker-t-w": "20%" }}>
                   <span>
                     {ingredient?.item_name}
-                    {seeOne && "sync"}
+                    {seeOne && " sync"}
                   </span>
                 </p>
                 <p style={{ "--worker-t-w": "20%" }}>
@@ -335,9 +313,7 @@ export const Inventory = () => {
                       <input
                         type="number"
                         defaultValue={ingredient?.total_quantity}
-                        onBlur={(e) =>
-                          changeQuantity(e.target.value, ingredient?.item_id)
-                        }
+                        onBlur={(e) => changeQuantity(e.target.value, ingredient?.item_id)}
                       />
                     </label>
                   ) : (
@@ -381,23 +357,11 @@ export const Inventory = () => {
               label: item?.name || "",
             }))}
           />
-          <DatePicker
-            style={{ width: "100%", fontSize: "10px" }}
-            defaultValue={dayjs(new Date())}
-            name="time"
-          />
-          <InputNumber
-            style={{ width: "100%" }}
-            defaultValue={lastN?.data?.number + 1 || 1}
-            name="number"
-          />
-          <Input
-            style={{ width: "100%" }}
-            placeholder="Tafsilot"
-            name="description"
-          />
-          <input type="hidden" name="storage_id" value={storage?.id} />
-          <input type="hidden" name="st_name" value={storage?.name} />
+          <DatePicker style={{ width: "100%", fontSize: "10px" }} defaultValue={dayjs(new Date())} name="time" />
+          <InputNumber style={{ width: "100%" }} defaultValue={syncsData?.data?.length + 1} name="order" />
+          <Input style={{ width: "100%" }} placeholder="Tafsilot" name="description" />
+          <input type="hidden" name="st1_id" value={storage?.id} />
+          <input type="hidden" name="st1_name" value={storage?.name} />
         </form>
       </Modal>
     </div>

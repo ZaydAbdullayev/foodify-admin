@@ -86,7 +86,7 @@ export const StorageProducts = () => {
     navigate(`?page-code=products`);
     setAcItem(acID ? { food_id: null, ingredients: [] } : item);
     setCheckedData(acID ? [] : item.ingredients);
-    dispatch(acFormValues("A_V", { ...values?.vl, food_id: item.food_id, food_name: item?.food_name }))
+    dispatch(acFormValues("A_V", { food_id: item.food_id, food_name: item?.food_name }))
   };
   console.log("c", checkedData);
 

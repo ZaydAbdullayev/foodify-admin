@@ -98,7 +98,9 @@ export const reFormValues = (
 ) => {
   switch (action?.type) {
     case "A_V":
-      return { st: true, vl: action?.payload };
+      return { st: true, vl: { ...state?.vl, ...action?.payload } };
+    case "A_F_V":
+      return { st: false, vl: action?.payload };
     case "R_V":
       return { st: false, vl: df_s };
     default:

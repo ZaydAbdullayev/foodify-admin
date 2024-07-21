@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
-import { setAllDocuments } from "../../../redux/deleteFoods";
+import { setDocuments, setRelease, setAllDocuments } from "../../../redux/deleteFoods";
 const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const CashboxTransaction = () => {
@@ -27,9 +26,7 @@ export const CashboxTransaction = () => {
   const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
   const { data: cashboxGrData = [] } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
   const { data: cashTrData = [] } = useFetchDataQuery({ url: `get/transactions/${user?.id}`, tags: ["cashbox-transaction"], });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3]));
-  }, [dispatch]);
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
 
   const sortData = cashTrData?.data && [...cashTrData?.data].sort((a, b) => {
     if (sort.state) {
@@ -82,6 +79,24 @@ export const CashboxTransaction = () => {
     setAcItem(item);
   }
 
+  const options = [
+    { value: "income", label: "Kirim" },
+    { value: "expense", label: "Chiqim" },
+    { value: "invoicePayment", label: "Mahsulot uchun to'lov" },
+    { value: "paymnetToSupplier", label: "Yetkazuvchiga to'lov" },
+    { value: "transfer", label: "Kassalar aro o'tkazma" },
+    { value: "deposit", label: "Depozit" },
+  ];
+
+  const getOptionsByType = (type) => {
+    const typeOrder = { income: 1, expense: 2, transfer: 3, };
+    return options.sort((a, b) => {
+      if (a.value === type) return -1;
+      if (b.value === type) return 1;
+      return (typeOrder[a.value] || 4) - (typeOrder[b.value] || 4);
+    });
+  };
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />
@@ -105,20 +120,11 @@ export const CashboxTransaction = () => {
             return (
               <p
                 key={index}
-                style={{
-                  "--data-line-size": item?.size,
-                  justifyContent: item?.position || "flex-start",
-                }}
+                style={{ "--data-line-size": item?.size, justifyContent: item?.position || "flex-start", }}
                 onClick={() => setSort({ id: index, state: !sort.state })}
               >
                 {item?.name}{" "}
-                {sort.id === index ? (
-                  sort.state ? (
-                    <RiArrowUpSLine />
-                  ) : (
-                    <RiArrowDownSLine />
-                  )
-                ) : null}
+                {sort.id === index ? (sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)) : null}
               </p>
             );
           })}
@@ -130,20 +136,12 @@ export const CashboxTransaction = () => {
             </span>
           ) : (
             sortData?.map((item, ind) => {
-              const date = new Date(item?.date).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
+              const date = new Date(item?.date).toLocaleDateString("uz-UZ", { day: "numeric", month: "numeric", year: "numeric", });
               const isChecked = ckddt?.trsn?.some((i) => i.id === item?.id);
               return (
                 <div className={"storage_body__box"} key={item?.id}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     onDoubleClick={() => actionItem(item)}>
                     <label aria-label="checked this elements">
                       <input
@@ -159,10 +157,7 @@ export const CashboxTransaction = () => {
                       return (
                         <p
                           key={index}
-                          style={{
-                            "--data-line-size": key?.size,
-                            justifyContent: key?.position || "flex-start",
-                          }}>
+                          style={{ "--data-line-size": key?.size, justifyContent: key?.position || "flex-start", }}>
                           {key?.name === "transaction_category" ? TCD?.[item[key?.name]] : item[key?.name]}
                         </p>
                       );
@@ -194,48 +189,11 @@ export const CashboxTransaction = () => {
               <>
                 <label>
                   <select name="transaction_category">
-                    {modalType === "income" && (
-                      <>
-                        <option value="income">Kirim</option>
-                        <option value="expense">Chiqim</option>
-                        <option value="invoicePayment">
-                          Mahsulot uchun to'lov
-                        </option>
-                        <option value="paymnetToSupplier">
-                          Yetkazuvchiga to'lov
-                        </option>
-                        <option value="transfer">Kassalar aro o'tkazma </option>
-                        <option value="deposit">Depozit</option>
-                      </>
-                    )}
-                    {modalType === "expense" && (
-                      <>
-                        <option value="expense">Chiqim</option>
-                        <option value="income">Kirim</option>
-                        <option value="invoicePayment">
-                          Mahsulot uchun to'lov
-                        </option>
-                        <option value="paymnetToSupplier">
-                          Yetkazuvchiga to'lov
-                        </option>
-                        <option value="transfer">Kassalar aro o'tkazma </option>
-                        <option value="deposit">Depozit</option>
-                      </>
-                    )}
-                    {modalType === "transfer" && (
-                      <>
-                        <option value="transfer">Kassalar aro o'tkazma </option>
-                        <option value="income">Kirim</option>
-                        <option value="expense">Chiqim</option>
-                        <option value="invoicePayment">
-                          Mahsulot uchun to'lov
-                        </option>
-                        <option value="paymnetToSupplier">
-                          Yetkazuvchiga to'lov
-                        </option>
-                        <option value="deposit">Depozit</option>
-                      </>
-                    )}
+                    {getOptionsByType(modalType).map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                   <select name="transaction_group">
                     <option value="default">Guruh tanlang*</option>

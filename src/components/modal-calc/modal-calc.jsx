@@ -26,8 +26,8 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
   const image = useSelector((state) => state.image);
   const ing = useSelector((state) => state.ing);
   const formV = useSelector((state) => state.values);
-  const lc = useLocation()?.search;
-  const p_code = new URLSearchParams(lc).get("page-code");
+  // const lc = useLocation()?.search;
+  // const p_code = new URLSearchParams(lc).get("page-code");
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
@@ -68,8 +68,14 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
 
   const fetchValues = async (v) => {
     setLoading(true);
-    console.log("fetchdata", fetchdata?.length, fetchdata);
-    const value = v.ingredients;
+    Pdata.forEach(item => {
+      if (item.status === "delete") {
+        Object.assign(item, { ...formV.vl, status: "delete" });
+      } else {
+        Object.assign(item, formV.vl);
+      }
+    })
+    console.log("s", Pdata);
     try {
       let result;
 
@@ -133,7 +139,7 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
           case "preOrder":
             result = await postData({
               url: "add/preOrders",
-              data: value,
+              data: Pdata,
               tags: ["pre-order"],
             });
             break;

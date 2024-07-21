@@ -52,7 +52,7 @@ const api = createApi({
   ],
   endpoints: (builder) => ({
     fetchData: builder.query({
-      query: ({ url }) => {
+      query: ({ url = '' }) => {
         if (url === "") {
           return console.log("url not found");
         }

@@ -14,8 +14,7 @@ function genrateId() {
 
 export const GenerateField = ({ fieldData }) => {
   const dispatch = useDispatch();
-  const values = useSelector((state) => state.values);
-  const [datas, setDatas] = useState({ name: "", id: "" });
+  // const [datas, setDatas] = useState({ name: "", id: "" });
   const {
     type = "text",
     options = [],
@@ -31,19 +30,20 @@ export const GenerateField = ({ fieldData }) => {
 
   // useEffect(() => {
   //   if (df_value && df_value !== "" && values?.vl[name] !== df_value) {
-  //     dispatch(acFormValues("A_V", { ...values?.vl, [name]: df_value }));
+  //     dispatch(acFormValues("A_V", { [name]: df_value }));
   //   }
   // }, [dispatch, values?.vl, name, df_value]);
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");
     if (!getFullInfo) {
-      setDatas({ name: value[0], id: value[1] });
+      // setDatas({ name: value[0], id: value[1] });
       dispatch(
         acFormValues("A_V", {
-          ...values?.vl,
+
           [name]: value[0],
           [extra]: value[1],
+          status: df_value ? "update_full" : undefined
         })
       );
     } else {
@@ -56,8 +56,8 @@ export const GenerateField = ({ fieldData }) => {
   };
 
   const getSelectValue = (value) => {
-    setDatas((prevDatas) => ({ ...prevDatas, select: value }));
-    dispatch(acFormValues("A_V", { ...values?.vl, [name]: value }));
+    // setDatas((prevDatas) => ({ ...prevDatas, select: value }));
+    dispatch(acFormValues("A_V", { [name]: value, status: df_value ? "update_full" : undefined }));
   };
 
   const onlyNumber = (value) => {
@@ -66,7 +66,7 @@ export const GenerateField = ({ fieldData }) => {
   };
 
   const getValues = (e) => {
-    dispatch(acFormValues("A_V", { ...values?.vl, [name]: e.target.value }));
+    dispatch(acFormValues("A_V", { [name]: e.target.value, status: df_value ? "update_full" : undefined }));
   };
 
   switch (type) {
@@ -81,11 +81,6 @@ export const GenerateField = ({ fieldData }) => {
               label: item?.name,
               value: item?.name,
             }))}
-          />
-          <input
-            name={name}
-            type="hidden"
-            value={u_option?.[0] || datas?.select}
           />
         </>
       );
@@ -111,7 +106,7 @@ export const GenerateField = ({ fieldData }) => {
             defaultValue={dayjs(df_value)}
             onChange={(date, dateString) => {
               dispatch(
-                acFormValues("A_V", { ...values?.vl, [name]: dateString })
+                acFormValues("A_V", { [name]: dateString, status: df_value ? "update_full" : undefined })
               );
             }}
             aria-label="place for select date"
@@ -140,12 +135,10 @@ export const GenerateField = ({ fieldData }) => {
           placeholder={plc_hr}
           defaultValue={df_value}
           onChange={(e) => {
-            dispatch(acFormValues("A_V", { ...values?.vl, [name]: e }));
-            if (getAmount) {
-              dispatch(acCutting(e));
-            }
+            dispatch(acFormValues("A_V", { [name]: e, status: df_value ? "update_full" : undefined }));
+            if (getAmount) { dispatch(acCutting(e)); }
           }}
-          min={1}
+          min={3}
           max={9999999999}
           aria-label="place for write number value"
         />
@@ -161,25 +154,11 @@ export const GenerateField = ({ fieldData }) => {
             options={
               Array.isArray(options)
                 ? options.map((item) => ({
-                    label: item?.name || item?.item_name || item?.food_name,
-                    value: `${extra}=${
-                      item?.name || item?.item_name || item?.food_name
-                    }|${item?.id || item?.item_id || item?.food_id}`,
-                  }))
+                  label: item?.name || item?.item_name || item?.food_name,
+                  value: `${extra}=${item?.name || item?.item_name || item?.food_name}|${item?.id || item?.item_id || item?.food_id}`,
+                }))
                 : []
             }
-          />
-          <input
-            type="hidden"
-            name={name}
-            value={u_option?.[0] || datas?.name}
-            aria-label={`place for secret value ${datas?.name}`}
-          />
-          <input
-            type="hidden"
-            name={extra}
-            value={u_option?.[1] || datas?.id}
-            aria-label={`place for secret value ${datas?.id}`}
           />
         </>
       );
@@ -192,14 +171,8 @@ export const GenerateField = ({ fieldData }) => {
             placeholder={plc_hr}
             defaultValue={df_value}
             optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").includes(input)
-            }
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
-            }
+            filterOption={(input, option) => (option?.label ?? "").includes(input)}
+            filterSort={(optionA, optionB) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
             options={
               options?.map((item) => ({
                 value: `${extra}=${item?.item_name}|${item?.item_id}`,
@@ -208,18 +181,6 @@ export const GenerateField = ({ fieldData }) => {
             }
             aria-label="place for search option"
             onChange={getExtraValue}
-          />
-          <input
-            type="hidden"
-            name={name}
-            value={u_option?.[0] || datas?.name}
-            aria-label={`place for secret value ${datas?.name}`}
-          />
-          <input
-            type="hidden"
-            name={extra}
-            value={u_option?.[1] || datas?.id}
-            aria-label={`place for secret value ${datas?.id}`}
           />
         </>
       );

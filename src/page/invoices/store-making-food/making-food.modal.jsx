@@ -29,7 +29,7 @@ const InvoicesModal = ({
     tags: ["store"],
   });
   const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${acItem.st1_id || id}`,
+    url: `get/storageItems/${acItem.st1_id || id}`,
     tags: ["invoices"],
   });
   // const { data: productData = [] } = useFetchDataQuery({

@@ -25,11 +25,9 @@ export const StorageInvoices = () => {
   // const [payment, setPayment] = useState(null);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const formV = useSelector((state) => state.values);
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("formV", formV);
 
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({ url: `get/actions/received_goods`, tags: ["action", "invoices"], });
   useEffect(() => {
@@ -50,11 +48,9 @@ export const StorageInvoices = () => {
         return prevData.filter((i) => i.item_id !== itemId);
       }
       if (isChecked) {
-        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update" : item.status } : i);
+        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
       }
-      return [...prevData, {
-        ...item, ...formV?.vl, action_type: "received_goods", invoice_group: "income", status: acItemId ? "add" : undefined
-      }];
+      return [...prevData, { ...item, action_type: "received_goods", invoice_group: "income", status: acItemId ? "add" : undefined }];
     });
   };
 
@@ -63,10 +59,11 @@ export const StorageInvoices = () => {
     navigate(`?page-code=invoice`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
     setAcItem(acItem?.id && ckddt?.invoice?.length > 0 ? { id: null, ingredients: [] } : item);
-    dispatch(acFormValues("A_V", { ...formV?.vl, id: item?.id }));
+    const mutationItem = { ...item }
+    delete mutationItem.ingredients;
+    dispatch(acFormValues("A_F_V", mutationItem));
   };
 
-  console.log(acItem, checkedData, ckddt);
 
   const headerKeys = [
     { name: "Kun", size: "13%" },
@@ -115,15 +112,6 @@ export const StorageInvoices = () => {
     setPay(true);
     dispatch(acOpenPayModal(price));
   };
-
-  const object = [
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ]
 
   return (
     <div className="storage_container">
@@ -174,18 +162,12 @@ export const StorageInvoices = () => {
             </span>
           ) : (
             sortData?.map((item) => {
-              const date = new Date(item?.time).toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-              });
+              const date = new Date(item?.time).toLocaleDateString("uz-UZ", { day: "numeric", month: "numeric", year: "numeric", });
               const check = ckddt?.invoice?.some((i) => i.id === item?.id);
               return (
                 <div
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
-                  style={{
-                    background: item?.leftover < 0 ? "#a0aed950" : "",
-                  }}
+                  style={{ background: item?.leftover < 0 ? "#a0aed950" : "", }}
                   key={item?.id}>
                   <div
                     className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}

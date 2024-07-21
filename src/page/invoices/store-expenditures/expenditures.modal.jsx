@@ -22,7 +22,7 @@ const InvoicesModal = ({
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${acItem?.st1_id || acS}`,
+    url: `get/storageItems/${acItem?.st1_id || acS}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({

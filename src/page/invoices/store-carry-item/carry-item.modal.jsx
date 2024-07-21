@@ -30,7 +30,7 @@ const InvoicesModal = ({
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
   const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${res_id}/${id || acItem?.st1_id}`,
+    url: `get/storageItems/${id || acItem?.st1_id}`,
     tags: ["invoices"],
   });
   const { data: storeData = [] } = useFetchDataQuery({
