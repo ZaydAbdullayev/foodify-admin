@@ -69,13 +69,16 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
   const fetchValues = async (v) => {
     setLoading(true);
     Pdata.forEach(item => {
+      if (!Object.isExtensible(item)) {
+        item = { ...item };
+      }
       if (item.status === "delete") {
         Object.assign(item, { ...formV.vl, status: "delete" });
       } else {
         Object.assign(item, formV.vl);
       }
     })
-    console.log("s", Pdata);
+    console.log("s", Pdata, formV.vl);
     try {
       let result;
 

@@ -138,7 +138,7 @@ export const GenerateField = ({ fieldData }) => {
             dispatch(acFormValues("A_V", { [name]: e, status: df_value ? "update_full" : undefined }));
             if (getAmount) { dispatch(acCutting(e)); }
           }}
-          min={3}
+          min={1}
           max={9999999999}
           aria-label="place for write number value"
         />

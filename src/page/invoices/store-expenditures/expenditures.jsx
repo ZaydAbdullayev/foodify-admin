@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,9 @@ import { CalculateTotalP } from "../../../service/calc.service";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
-import { setAllDocuments } from "../../../redux/deleteFoods";
+import { setDocuments, setRelease, setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { acFormValues } from "../../../redux/active";
 
 const InvoicesModal = lazy(() => import("./expenditures.modal"));
 
@@ -20,47 +20,41 @@ export const StorageExpenditures = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const formV = useSelector((state) => state.values);
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data: expenseData = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/used_goods`,
-    tags: ["action", "invoices"],
-  });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
-  }, [dispatch]);
+  const { data: expenseData = [], isLoading } = useFetchDataQuery({ url: `get/actions/used_goods`, tags: ["action", "invoices"], });
+
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
+
   const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
-    if (status === 0) {
-      setCheckedData((prevData) =>
-        prevData.filter((i) => i.item_id !== item?.item_id)
-      );
-      return;
-    }
-    if (isChecked) {
-      setCheckedData((prevData) =>
-        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
-      );
-    } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...item, ...formV?.vl, action_type: "used_goods" },
-      ]);
-    }
+    const itemId = item?.item_id;
+    const acItemId = acItem?.id;
+    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
+
+    setCheckedData((prevData) => {
+      const isChecked = prevData.some((i) => i.item_id === itemId);
+      if (status === 0) {
+        if (acItemId) {
+          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
+        }
+        return prevData.filter((i) => i.item_id !== itemId);
+      }
+      if (isChecked) {
+        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
+      }
+      return [...prevData, { ...item, action_type: "used_goods", invoice_group: "expense", status: acItemId ? "add" : undefined }];
+    });
   };
 
-  const sortData =
-    expenseData?.data &&
-    [...(expenseData?.data || [])].sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = expenseData?.data && [...(expenseData?.data || [])].sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const headerData = [
     { name: "Kun", size: "15.6%" },
@@ -80,28 +74,29 @@ export const StorageExpenditures = () => {
 
   const innerHEaderKeys = [
     { name: "№", border: "1px solid #ccc5" },
-    { name: "Nomi", size: "18.7%", border: "1px solid #ccc5" },
-    { name: "Turi", size: "8.7%", border: "1px solid #ccc5" },
-    { name: "Narx", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "Oldingi soni", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "Soni", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "Keyingi soni", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "Jami", size: "13.7%" },
+    { name: "Nomi", size: "20%", border: "1px solid #ccc5" },
+    { name: "Narx", size: "15.7%", border: "1px solid #ccc5" },
+    { name: "Oldingi soni", size: "14%", border: "1px solid #ccc5" },
+    { name: "Soni", size: "13.8%", border: "1px solid #ccc5" },
+    { name: "Keyingi soni", size: "14.7%", border: "1px solid #ccc5" },
+    { name: "Jami", size: "17.8%" },
   ];
 
   const innerData = [
-    { name: "item_name", size: "18.7%", border: "1px solid #ccc5" },
-    { name: "item_type", size: "8.7%", border: "1px solid #ccc5", short: true },
-    { name: "price", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "total_quantity", size: "13.7%", border: "1px solid #ccc5" },
-    { name: "amount", size: "13.7%", border: "1px solid #ccc5" },
+    { name: "item_name", size: "20%", border: "1px solid #ccc5" },
+    { name: "price", size: "15.7%", border: "1px solid #ccc5" },
+    { name: "total_quantity", size: "14%", border: "1px solid #ccc5" },
+    { name: "amount", size: "13.8%", border: "1px solid #ccc5" },
   ];
 
   const actionItem = (item) => {
     dispatch(setDocuments("expense", item));
     navigate(`?page-code=expense`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.expense?.length > 0 ? { id: null, ingredients: [] } : item);
+    setAcItem(acItem?.id && ckddt?.expense?.length > 1 ? { id: null, ingredients: [] } : item);
+    const mutationItem = { ...item }
+    delete mutationItem.ingredients;
+    dispatch(acFormValues("A_F_V", mutationItem));
   };
 
   return (
@@ -118,7 +113,7 @@ export const StorageExpenditures = () => {
               name="id"
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("invoice") : setAllDocuments("invoice", expenseData?.data));
+                dispatch(checked ? setRelease("expense") : setAllDocuments("expense", expenseData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -127,18 +122,9 @@ export const StorageExpenditures = () => {
           {headerData.map((item, index) => {
             return (
               <p
-                style={{
-                  "--data-line-size": item.size,
-                  justifyContent: "center",
-                  cursor: "pointer",
-                }}
+                style={{ "--data-line-size": item.size, justifyContent: "center", cursor: "pointer", }}
                 key={index}
-                onClick={() =>
-                  setSort({
-                    id: index,
-                    state: !sort.state,
-                  })
-                }>
+                onClick={() => setSort({ id: index, state: !sort.state, })}>
                 {item.name}
                 {sort.id === index && sort.state ? (
                   <RiArrowUpSLine className="sort_icon" />
@@ -155,8 +141,8 @@ export const StorageExpenditures = () => {
               <LoadingBtn />
             </span>
           ) : (
-            sortData?.map((item, index) => {
-              const check = ckddt?.invoice?.some((el) => el?.id === item?.id);
+              sortData?.map((item) => {
+                const check = ckddt?.expense?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
@@ -185,20 +171,11 @@ export const StorageExpenditures = () => {
                         </p>
                       );
                     })}
-                    <p
-                      style={{
-                        "--data-line-size": "15.6%",
-                        justifyContent: "center",
-                      }}
+                    <p style={{ "--data-line-size": "15.6%", justifyContent: "center", }}
                       onClick={() =>
                         setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((i) => i !== item?.id) : [...prev, item?.id])
                       }>
-                      <u
-                        style={
-                          showMore?.includes(item?.id)
-                            ? { color: "#787aff" }
-                            : {}
-                        }>
+                      <u style={showMore?.includes(item?.id) ? { color: "#787aff" } : {}}>
                         Tafsilot
                       </u>
                     </p>
@@ -209,10 +186,7 @@ export const StorageExpenditures = () => {
                         {innerHEaderKeys.map((item, index) => {
                           return (
                             <p
-                              style={{
-                                "--data-line-size": item.size,
-                                borderRight: item.border,
-                              }}
+                              style={{ "--data-line-size": item.size, borderRight: item.border, }}
                               key={index}>
                               {item.name}
                             </p>
@@ -224,33 +198,21 @@ export const StorageExpenditures = () => {
                           <div
                             className="storage_body_item inner_item"
                             key={ind}>
-                            <p
-                              style={{
-                                borderRight: "1px solid #ccc5",
-                                justifyContent: "center",
-                              }}>
+                            <p style={{ borderRight: "1px solid #ccc5", justifyContent: "center", }}>
                               {ind + 1}
                             </p>
                             {innerData.map((key, index) => {
                               return (
-                                <p
-                                  style={{
-                                    "--data-line-size": key.size,
-                                    borderRight: key.border,
-                                  }}
+                                <p style={{ "--data-line-size": key.size, borderRight: key.border, }}
                                   key={index}>
                                   {key.short ? product[key.name]?.slice(0, 1) : product[key.name]}
                                 </p>
                               );
                             })}
-                            <p
-                              style={{
-                                "--data-line-size": "13.7%",
-                                borderRight: "1px solid #ccc5",
-                              }}>
+                            <p style={{ "--data-line-size": "14.7%", borderRight: "1px solid #ccc5", }}>
                               {product?.total_quantity - product?.amount}
                             </p>
-                            <p style={{ "--data-line-size": "13.7%" }}>
+                            <p style={{ "--data-line-size": "17.8%" }}>
                               {product?.price * product?.amount}
                             </p>
                           </div>
@@ -263,11 +225,7 @@ export const StorageExpenditures = () => {
                         <p style={{ "--data-line-size": "66%" }}>
                           {item?.time} ga ko'ra Jami mablag'
                         </p>
-                        <p
-                          style={{
-                            "--data-line-size": "30%",
-                            justifyContent: "flex-end",
-                          }}>
+                        <p style={{ "--data-line-size": "30%", justifyContent: "flex-end", }}>
                           {CalculateTotalP(item?.ingredients, "price", "amount")}
                         </p>
                       </div>

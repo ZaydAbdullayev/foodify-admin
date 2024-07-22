@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
-import { UniversalForm } from "../../../components/modal-calc/modal-calc";
-import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
-import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
-import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
-import { CalcResult } from "../../../components/modal-calc/modal-calc";
+import { UniversalControlModal, UniversalForm, UniversalProductControl, CalcResultHeader, CalcResultBody, CalcResult } from "../../../components/modal-calc/modal-calc";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
@@ -124,64 +120,38 @@ const InvoicesModal = ({
         </div>
         <div className="product_box_body">
           {data?.data?.map((item, index) => {
-            const checked = checkedData?.find(
-              (i) => i.item_id === item?.item_id
-            );
+            const checked = checkedData?.find((i) => i.item_id === item?.item_id);
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
-                key={index + 298283200}>
+                key={`${item?.item_id}-${index}`}>
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
-                    onChange={() =>
-                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
-                    }
+                    checked={checked}
+                    onChange={() => getProduct({ ...item, amount: 0 }, checked ? 0 : 1)}
                   />
                 </label>
                 <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.unit}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.group}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "flex-end",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "flex-end", }}>
                   {item?.price}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.item_type}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {checked && (
                     <input
                       type="number"
                       name="amount"
                       defaultValue={checked?.amount || 0}
-                      onChange={(e) =>
-                        getProduct({ ...checked, amount: e.target.value }, 1)
-                      }
+                      onChange={(e) => getProduct({ ...checked, amount: e.target.value }, 1)}
                     />
                   )}
                 </p>

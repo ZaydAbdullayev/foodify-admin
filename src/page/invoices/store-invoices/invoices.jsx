@@ -58,7 +58,7 @@ export const StorageInvoices = () => {
     dispatch(setDocuments("invoice", item));
     navigate(`?page-code=invoice`);
     setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.invoice?.length > 0 ? { id: null, ingredients: [] } : item);
+    setAcItem(acItem?.id && ckddt?.invoice?.length > 1 ? { id: null, ingredients: [] } : item);
     const mutationItem = { ...item }
     delete mutationItem.ingredients;
     dispatch(acFormValues("A_F_V", mutationItem));

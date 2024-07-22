@@ -1,52 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
-import { UniversalForm } from "../../../components/modal-calc/modal-calc";
-import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
-import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
-import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
-import { CalcResult } from "../../../components/modal-calc/modal-calc";
+import { UniversalControlModal, UniversalForm, UniversalProductControl, CalcResultHeader, CalcResultBody, CalcResult } from "../../../components/modal-calc/modal-calc";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { useDispatch, useSelector } from "react-redux";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  getProduct,
-  NUM,
-  acItem,
-}) => {
+const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
   const res_id = useSelector((state) => state?.res_id);
   const id = useSelector((state) => state?.activeSt_id);
   const dispatch = useDispatch();
-  const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${acItem?.st1_id || id}`,
-    tags: ["invoices"],
-  });
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
-  const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/invoiceGroups/${res_id}`,
-    tags: ["invoice-group"],
-  });
+  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem?.st1_id || id}`, tags: ["invoices"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: groupsData = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const [activePart, setActivePart] = useState(1);
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData =
-      data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
+    const oldData = data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
 
     if (oldData) {
+      newItem.amount = parseInt(newItem.amount);
       return {
         ...newItem,
-        old_quantity: acItem?.item_id
-          ? oldData?.total_quantity + parseInt(newItem?.amount)
-          : oldData?.total_quantity,
-        total_quantity:
-          oldData?.total_quantity - parseInt(newItem?.amount) || 0,
-        total_price: parseInt(newItem?.amount) * newItem?.price,
+        old_quantity: acItem?.item_id ? oldData?.total_quantity + newItem?.amount : oldData?.total_quantity,
+        total_quantity: oldData?.total_quantity - newItem?.amount || 0,
+        total_price: newItem?.amount * newItem?.price,
       };
     }
 
@@ -94,10 +71,7 @@ const InvoicesModal = ({
             type: "select",
             name: "invoice_group",
             df_value: acItem?.invoice_group
-              ? {
-                  value: acItem?.invoice_group,
-                  label: acItem?.invoice_group,
-                }
+              ? { value: acItem?.invoice_group, label: acItem?.invoice_group, }
               : { value: "default", label: "Guruh tanlang*" },
             options: groupsData?.data || [],
             u_option: [acItem?.invoice_group],
@@ -118,9 +92,7 @@ const InvoicesModal = ({
             <input
               type="checkbox"
               name="id"
-              onChange={() =>
-                addAllIng(checkedData, data?.data, setCheckedData)
-              }
+              onChange={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "20%" }}>Nomi</p>
@@ -141,45 +113,23 @@ const InvoicesModal = ({
                   <input
                     type="checkbox"
                     checked={checked}
-                    onChange={() =>
-                      getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
-                    }
+                    onChange={() => getProduct({ ...item, amount: 0 }, checked ? 0 : 1)}
                   />
                 </label>
                 <p style={{ "--data-line-size": "20%" }}>{item?.item_name}</p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.unit}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.group}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "flex-end",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "flex-end", }}>
                   {item?.price}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {item?.item_type}
                 </p>
-                <p
-                  style={{
-                    "--data-line-size": "15%",
-                    justifyContent: "center",
-                  }}>
+                <p style={{ "--data-line-size": "15%", justifyContent: "center", }}>
                   {checked && (
                     <input
                       type="number"
