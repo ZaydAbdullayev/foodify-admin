@@ -16,25 +16,25 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
   const [calcData, setCalcData] = useState([]);
   const res_id = useSelector((state) => state?.res_id);
   const id = useSelector((state) => state?.activeSt_id);
+  const { time = today } = useSelector((state) => state?.values);
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
-  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${id || acItem?.st1_id}`, tags: ["invoices"], });
+  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${id || acItem?.st1_id}/${time}`, tags: ["invoices"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
   const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const { data: productData = [] } = useFetchDataQuery({ url: `get/foods/${res_id}`, tags: ["s-products", "product"], });
 
   const updatedData = checkedData?.map((newItem) => {
-    const oldData =
-      data?.data?.find((old) => old.item_id === newItem.item_id) || {};
+    const oldData = data?.data?.find((old) => old.item_id === newItem.item_id) || {};
 
     if (oldData) {
-      newItem.amount = parseInt(newItem.amount);
-      const after = oldData?.total_quantity ? oldData?.total_quantity - newItem?.amount : newItem?.amount;
+      const n = parseFloat(newItem.amount);
+      const after = oldData?.total_quantity ? oldData?.total_quantity - n : -n;
       return {
         ...newItem,
-        total_quantity: acItem?.item_id ? oldData?.total_quantity + newItem?.amount : oldData?.total_quantity || 0,
+        total_quantity: acItem?.item_id ? oldData?.total_quantity + n : oldData?.total_quantity || 0,
         total_after: after,
-        total_price: newItem?.amount * parseInt(newItem?.price),
+        total_price: n * parseFloat(newItem?.price),
       };
     }
 
@@ -94,8 +94,8 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             name: "st1_name",
             extra: "st1_id",
             take_id: true,
-            df_value: acItem?.st1_name
-              ? { value: acItem?.st1_name, label: acItem?.st1_id }
+            df_value: acItem?.st1_id
+              ? { value: acItem?.st1_id, label: acItem?.st1_name }
               : { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
             u_option: [acItem?.st1_name, acItem?.st1_id],
@@ -104,8 +104,8 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             type: "s_extra",
             name: "st2_name",
             extra: "st2_id",
-            df_value: acItem?.st2_name
-              ? { value: acItem?.st2_name, label: acItem?.st2_id, }
+            df_value: acItem?.st2_id
+              ? { value: acItem?.st2_id, label: acItem?.st2_name, }
               : { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
             u_option: [acItem?.st2_name, acItem?.st2_id],

@@ -11,7 +11,7 @@ import { acOpenUModal } from "../../redux/u-modal";
 import { enqueueSnackbar as es } from "notistack";
 import { setRelease } from "../../redux/deleteFoods";
 import { notification } from "antd";
-import { useDelDataMutation } from "../../service/fetch.service";
+import { usePatchDataMutation } from "../../service/fetch.service";
 
 import { BiEdit, BiPlus } from "react-icons/bi";
 import { MdDelete, MdTableBar } from "react-icons/md";
@@ -21,6 +21,7 @@ import { ImStatsBars } from "react-icons/im";
 import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
 import { SlArrowLeft } from "react-icons/sl";
+import { acFormValues } from "../../redux/active";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -28,7 +29,7 @@ export const Navbar = () => {
   const modal = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [delData] = useDelDataMutation();
+  const [pathData] = usePatchDataMutation();
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
@@ -40,10 +41,10 @@ export const Navbar = () => {
 
   const deleteDocuments = async () => {
     if (delDocuments?.[page_code]?.length > 0) {
-      const result = await delData({
-        url: `delete/${page_code}`,
+      const result = await pathData({
+        url: `delete/action`,
         data: delDatas,
-        tags: [page_code],
+        tags: [page_code, "action"],
       });
       console.log(result);
       if (result?.data?.status === "success") {
@@ -71,6 +72,7 @@ export const Navbar = () => {
   };
 
   const openUModal = () => {
+    dispatch(acFormValues("R_V", {}));
     dispatch(acOpenUModal());
   };
 

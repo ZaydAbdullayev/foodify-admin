@@ -23,7 +23,7 @@ export const StorageDamaged = () => {
   const open = useSelector((state) => state.uModal);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: demagedData = [], isLoading } = useFetchDataQuery({ url: `get/actions/damaged_goods`, tags: ["action", "invoices"], });
+  const { data: demagedData = [], isLoading } = useFetchDataQuery({ url: `get/actions/damaged_goods`, tags: ["action"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
   const getProduct = (item, status) => {
@@ -83,10 +83,10 @@ export const StorageDamaged = () => {
 
   const innerDisplayKeys = [
     { name: "item_name", size: "28%" },
-    { name: "price", size: "19.3%" },
-    { name: "old_amount", size: "19.3%", tick: true },
-    { name: "total_amount", size: "19.3%", tick: true },
-    { name: "amount", size: "10%", tick: true },
+    { name: "price", size: "19%" },
+    { name: "old_amount", size: "17%", tick: true },
+    { name: "total_quantity", size: "17%", tick: true },
+    { name: "amount", size: "14.9%", tick: true },
   ];
 
   const sortData = demagedData?.data && [...demagedData?.data]?.sort((a, b) => {
@@ -218,7 +218,7 @@ export const StorageDamaged = () => {
                               <p
                                 style={{ "--data-line-size": key?.size, borderRight: key?.border, }}
                                 key={index}>
-                                {product[key?.name] === 0 ? parseInt(product?.amount) + product?.total_quantity : product[key?.name]}{" "}
+                                {product[key?.name] ? product[key?.name] : product?.total_quantity - parseInt(product?.amount)}
                                 {key?.tick ? product?.unit : ""}
                               </p>
                             ))}

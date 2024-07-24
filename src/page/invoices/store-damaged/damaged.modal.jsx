@@ -9,7 +9,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
   const res_id = useSelector((state) => state?.res_id);
   const id = useSelector((state) => state?.activeSt_id);
   const dispatch = useDispatch();
-  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem?.st1_id || id}`, tags: ["invoices"], });
+  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem?.st1_id || id}`, tags: ["invoices", "action"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
   const { data: groupsData = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const [activePart, setActivePart] = useState(1);
@@ -18,12 +18,12 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
     const oldData = data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
 
     if (oldData) {
-      newItem.amount = parseInt(newItem.amount);
+      const n = /^-?\d+(\.\d+)?$/.test(newItem.amount) ? newItem.amount : parseFloat(newItem.amount)
       return {
         ...newItem,
-        old_quantity: acItem?.item_id ? oldData?.total_quantity + newItem?.amount : oldData?.total_quantity,
-        total_quantity: oldData?.total_quantity - newItem?.amount || 0,
-        total_price: newItem?.amount * newItem?.price,
+        old_quantity: acItem?.item_id ? oldData?.total_quantity + n : oldData?.total_quantity,
+        total_quantity: oldData?.total_quantity + n || 0,
+        total_price: n * newItem?.price,
       };
     }
 
@@ -104,7 +104,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
         </div>
         <div className="product_box_body">
           {data?.data?.map((item) => {
-            const checked = checkedData?.find((i) => i.id === item?.id);
+            const checked = checkedData?.find((i) => i.item_id === item?.item_id);
             return (
               <div
                 className={`product_box_item ${checked ? "active" : ""}`}
@@ -136,7 +136,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
                       name="amount"
                       defaultValue={checked?.amount}
                       onChange={(e) =>
-                        getProduct({ ...checked, amount: e.target.value }, 1)
+                        getProduct({ ...checked, amount: -e.target.value }, 1)
                       }
                     />
                   )}

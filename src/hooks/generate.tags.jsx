@@ -105,9 +105,7 @@ export const GenerateField = ({ fieldData }) => {
             name={name}
             defaultValue={dayjs(df_value)}
             onChange={(date, dateString) => {
-              dispatch(
-                acFormValues("A_V", { [name]: dateString, status: df_value ? "update_full" : undefined })
-              );
+              dispatch(acFormValues("A_V", { [name]: dateString, status: df_value ? "update_full" : undefined }));
             }}
             aria-label="place for select date"
           />

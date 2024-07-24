@@ -26,8 +26,7 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
   const image = useSelector((state) => state.image);
   const ing = useSelector((state) => state.ing);
   const formV = useSelector((state) => state.values);
-  // const lc = useLocation()?.search;
-  // const p_code = new URLSearchParams(lc).get("page-code");
+  const p_code = new URLSearchParams(useLocation()?.search).get("page-code");
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
@@ -155,14 +154,14 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         es({ message: "Xatolik", variant: "error" });
       } else {
         es({ message: "Qo'shildi", variant: "success" });
-        // ClearForm("#u-control-form");
-        // dispatch(acCloseUModal());
-        // dispatch(acPassiveThing());
-        // dispatch(acFormValues("R_V", {}));
-        // setCheckedData([]);
-        // dispatch(acCutting(0));
-        // dispatch(acGetUrl({ st: false, img: "" }));
-        // dispatch(setRelease(p_code));
+        ClearForm("#u-control-form");
+        dispatch(acCloseUModal());
+        dispatch(acPassiveThing());
+        dispatch(acFormValues("R_V", {}));
+        setCheckedData([]);
+        dispatch(acCutting(0));
+        dispatch(acGetUrl({ st: false, img: "" }));
+        dispatch(setRelease(p_code));
       }
     } catch (err) {
       console.error(err);

@@ -7,13 +7,15 @@ import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
 const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
+  const today = new Date().toISOString().split("T")[0]
   const user = JSON.parse(localStorage.getItem("user"))?.user || [];
   const s_id = useSelector((state) => state.activeSt_id);
+  const { time = today } = useSelector((state) => state.values)?.vl;
   const dispatch = useDispatch();
   const [activePart, setActivePart] = useState(1);
   const { data = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${user?.id}`, tags: ["store"], });
-  const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem?.st1_id || s_id}`, tags: ["invoices", "action"], });
+  const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem?.st1_id || s_id}/${time}`, tags: ["invoices", "action"], });
   const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
 
   const updatedData = checkedData?.map((newItem) => {
@@ -59,7 +61,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
           {
             type: "inputD",
             name: "time",
-            df_value: acItem?.time || new Date().toISOString().split("T")[0],
+            df_value: acItem?.time || today,
           },
           {
             type: "s_extra",

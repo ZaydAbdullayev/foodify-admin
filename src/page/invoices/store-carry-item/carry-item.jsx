@@ -149,9 +149,7 @@ export const StorageCarryUp = () => {
           ) : (
             sortData?.map((item) => {
               const innerData = item?.ingredients || [];
-              const check = ckddt?.movedGoods?.some(
-                (el) => el?.id === item?.id
-              );
+              const check = ckddt?.movedGoods?.some((el) => el?.id === item?.id);
               return (
                 <div
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
