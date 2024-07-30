@@ -12,30 +12,17 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  getProduct,
-  NUM,
-  acItem,
-}) => {
+const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
+  const today = new Date().toISOString().slice(0, 10)
   const [activePart, setActivePart] = useState(1);
   const id = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
   const amount = useSelector((state) => state.cuttingA);
+  const { time = today } = useSelector((state) => state.values).vl;
   const dispatch = useDispatch();
-  const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${acItem.st1_id || id}`,
-    tags: ["invoices"],
-  });
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
-  const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/invoiceGroups/${res_id}`,
-    tags: ["invoice-groups"],
-  });
+  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem.st1_id || id}/${time}`, tags: ["invoices", "action"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: groupsData = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${res_id}`, tags: ["invoice-groups"], });
 
   const total_quantity = CalculateTotalQuantity(checkedData, "amount");
   const total_price = CalculateTotalP(checkedData, "price", "amount");
@@ -87,7 +74,7 @@ const InvoicesModal = ({
           {
             type: "inputD",
             name: "time",
-            df_value: acItem?.time || new Date().toISOString().slice(0, 10),
+            df_value: acItem?.time || today,
           },
           {
             type: "s_extra",

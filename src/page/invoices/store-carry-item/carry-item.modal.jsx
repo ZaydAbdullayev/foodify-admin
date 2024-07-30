@@ -19,7 +19,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
   const { time = today } = useSelector((state) => state?.values);
   const dispatch = useDispatch();
   const [postData] = usePostDataMutation();
-  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${id || acItem?.st1_id}/${time}`, tags: ["invoices"], });
+  const { data = [] } = useFetchDataQuery({ url: `get/storageItems/${id || acItem?.st1_id}/${time}`, tags: ["invoices", "action"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
   const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const { data: productData = [] } = useFetchDataQuery({ url: `get/foods/${res_id}`, tags: ["s-products", "product"], });

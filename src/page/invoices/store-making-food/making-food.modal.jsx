@@ -10,28 +10,15 @@ import { useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  getProduct,
-  NUM,
-  acItem,
-}) => {
+const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
+  const today = new Date().toISOString().split("T")[0]
   const res_id = useSelector((state) => state?.res_id);
   const id = useSelector((state) => state?.activeSt_id);
+  const { time = today } = useSelector((state) => state?.values).vl;
   const [activePart, setActivePart] = useState(1);
-  const { data = [] } = useFetchDataQuery({
-    url: `get/ingredients`,
-    tags: ["ingredient"],
-  });
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
-  const { data: storageItems = [] } = useFetchDataQuery({
-    url: `get/storageItems/${acItem.st1_id || id}`,
-    tags: ["invoices"],
-  });
+  const { data = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem.st1_id || id}/${time}`, tags: ["invoices", "action"], });
   // const { data: productData = [] } = useFetchDataQuery({
   //   url: `get/foods/${res_id}`,
   //   tags: ["s-products", "product"],
@@ -74,7 +61,7 @@ const InvoicesModal = ({
           {
             type: "inputD",
             name: "time",
-            df_value: acItem?.time || new Date().toISOString().slice(0, 10),
+            df_value: acItem?.time || today,
           },
           {
             type: "s_extra",

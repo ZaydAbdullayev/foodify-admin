@@ -22,10 +22,13 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const name = user?.name || user?.username;
   const { data: cashs = [] } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
   const { data: trg = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${user?.id}`, tags: ["cashbox"], });
+  const { data: p_h = [] } = useFetchDataQuery({ url: `/get/paymentHistory/${pay?.id}`, tags: ["payment_history"], });
   const { data: sp = [] } = useFetchDataQuery({
     url: `get/supplierPayments/${user?.id}/${pay?.supplier_id}`,
     tags: ["cashbox"],
   });
+
+  console.log("p_h", p_h);
 
   const [api, contextHolder] = notification.useNotification();
   const openWarning = (placement, s) => {
@@ -76,31 +79,36 @@ const InvoicesPaymentModal = ({ s, setS }) => {
       }
       const res1 = await postData({
         url: "add/transaction",
-        data: value,
+        data: { ...value, supplier: `${pay?.supplier}/_${pay?.supplier_id}`, },
         tags: [""],
       });
-      if (res1?.data?.message === "Transaction has been added") {
-        if (type === "double") {
-          await postData({
-            url: "add/transaction",
-            data: {
-              ...value,
-              transaction_category: "paymentToSupplier",
-              amount: amount - pay?.leftover,
-            },
-            tags: [""],
-          });
-        }
-        await patchData({
-          url: `update/receivedGoods/${pay.id}`,
-          data: {
-            paid: value.amount,
-            leftover: type === "double" ? 0 : pay.leftover - value.amount,
-          },
-          tags: ["invoices"],
-        });
-        // e.target.reset();
-        // setS(false);
+      // if (res1?.data?.message === "Transaction has been added") {
+      //   if (type === "double") {
+      //     await postData({
+      //       url: "add/transaction",
+      //       data: {
+      //         ...value,
+      //         transaction_category: "paymentToSupplier",
+      //         amount: amount - pay?.for_payment,
+      //       },
+      //       tags: [""],
+      //     });
+      //   }
+      //   await patchData({
+      //     url: `update/receivedGoods/${pay.id}`,
+      //     data: {
+      //       paid: value.amount,
+      //       for_payment: type === "double" ? 0 : pay.for_payment - value.amount,
+      //     },
+      //     tags: ["invoices"],
+      //   });
+      //   // e.target.reset();
+      //   // setS(false);
+      // }
+      console.log("res1", res1);
+      if (res1?.data?.status === 200) {
+        e.target.reset();
+        setS(false);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -161,11 +169,7 @@ const InvoicesPaymentModal = ({ s, setS }) => {
           />
           <input
             type="text"
-            value={`${pay?.order || 0} - ${new Date(
-              pay?.date
-            ).toLocaleDateString()} to'lov miqdori: ${new Intl.NumberFormat(
-              "en-US"
-            ).format(pay?.cost || 0)}`}
+            value={`${pay?.order || 0} - ${pay?.time} to'lov miqdori: ${new Intl.NumberFormat("en-US").format(pay?.cost || 0)}`}
             disabled
           />
           <select
@@ -194,33 +198,29 @@ const InvoicesPaymentModal = ({ s, setS }) => {
             type="number"
             name="amount"
             placeholder={`To'lanishi kerak bo'lgan to'lov miqdori`}
-            defaultValue={pay?.leftover || 0}
+            defaultValue={pay?.for_payment || 0}
             onChange={(e) => setAmount(e.target.value)}
           />
           <input type="text" name="description" placeholder="Tavsif" />
-          <input type="hidden" name="res_id" value={user?.id} />
           <input type="hidden" name="transaction_type" value="expense" />
           <input type="hidden" name="worker" value={name} />
           <input type="hidden" name="worker_id" value={id} />
           <input type="hidden" name="cashbox_id" value={cashId} />
-          <input type="hidden" name="invoice_id" value={pay?.id} />
+          <input type="hidden" name="action_id" value={pay?.id} />
           <Popconfirm
             title="Ortiqcha to'lov miqdori mavjud!"
-            description={`Qolgan ${(amount - pay?.leftover)
+            description={`Qolgan ${(amount - pay?.for_payment)
               .toString()
-              .replace(
-                /(\d)(?=(\d{3})+$)/g,
-                "$1 "
-              )} so'm yetkazuvchidagi pullaringiz ro'yhatiga qo'shilsinmi?`}
+              .replace(/(\d)(?=(\d{3})+$)/g, "$1 ")} so'm yetkazuvchidagi pullaringiz ro'yhatiga qo'shilsinmi?`}
             onConfirm={() => addData("double")}
-            disabled={amount <= pay?.leftover}
+            disabled={amount <= pay?.for_payment}
             onCancel={() => addData("single")}
             okText="Yes"
             cancelText="No">
             <button
               type="button"
               onClick={() => addData("single")}
-              disabled={amount > pay?.leftover}>
+              disabled={amount > pay?.for_payment}>
               To'lov
             </button>
           </Popconfirm>

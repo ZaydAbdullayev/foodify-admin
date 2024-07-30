@@ -6,13 +6,7 @@ import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 
-const InvoicesModal = ({
-  checkedData,
-  setCheckedData,
-  getProduct,
-  NUM,
-  acItem,
-}) => {
+const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
   const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
   const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
