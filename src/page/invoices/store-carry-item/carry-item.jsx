@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useFetchDataQuery } from "../../../service/fetch.service";
@@ -9,6 +9,7 @@ import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 import { setDocuments, setRelease, setAllDocuments } from "../../../redux/deleteFoods";
 import { acFormValues } from "../../../redux/active";
+import { useActionItemService } from "../../../service/form.service";
 
 const InvoicesModal = lazy(() => import("./carry-item.modal"));
 
@@ -20,51 +21,28 @@ export const StorageCarryUp = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
+  const { actionItem, getProductService } = useActionItemService();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
-  const { data: cuttingData = [], isLoading } = useFetchDataQuery({ url: `/get/actions/moved_goods`, tags: ["action", "invoices"], });
+  const { data: movedData = [], isLoading } = useFetchDataQuery({ url: `/get/actions/moved_goods`, tags: ["action", "invoices"], });
 
-  const getProduct = (item, status) => {
-    const itemId = item?.item_id;
-    const acItemId = acItem?.id;
-    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
+  const getProduct = useCallback((item, status) => {
+    getProductService(item, status, acItem, setCheckedData, "moved_goods", "transfer");
+  }, [acItem, getProductService])
 
-    setCheckedData((prevData) => {
-      const isChecked = prevData.some((i) => i.item_id === itemId);
-      if (status === 0) {
-        if (acItemId) {
-          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
-        }
-        return prevData.filter((i) => i.item_id !== itemId);
-      }
-      if (isChecked) {
-        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
-      }
-      return [...prevData, { ...item, action_type: "moved_goods", status: acItemId ? "add" : undefined }];
-    });
-  };
+  const actionItemLabel = useCallback((item) => {
+    actionItem("movedGoods", item, acItem, setCheckedData, setAcItem);
+  }, [actionItem, acItem])
 
-  const itemAction = (item) => {
-    dispatch(setDocuments("movedGoods", item));
-    navigate(`?page-code=movedGoods`);
-    setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.movedGoods?.length > 0 ? { id: null, ingredients: [] } : item);
-    const mutationItem = { ...item }
-    delete mutationItem.ingredients;
-    dispatch(acFormValues("A_F_V", mutationItem));
-  };
-
-  const sortData =
-    cuttingData?.data &&
-    [...cuttingData?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+  const sortData = movedData?.data && [...movedData?.data]?.sort((a, b) => {
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   const headerKeys = [
     { name: "Kun", size: "14%", sort: true },
@@ -113,7 +91,7 @@ export const StorageCarryUp = () => {
               name="id"
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("movedGoods") : setAllDocuments("movedGoods", cuttingData?.data));
+                dispatch(checked ? setRelease("movedGoods") : setAllDocuments("movedGoods", movedData?.data));
               }}
               aria-label="checked this elements"
             />
@@ -121,7 +99,7 @@ export const StorageCarryUp = () => {
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           {headerKeys?.map((item, index) => {
             return (
-              <label 
+              <label
                 style={{ "--data-line-size": item?.size, justifyContent: item?.position, }}
                 key={index}
                 onClick={() => {
@@ -157,13 +135,13 @@ export const StorageCarryUp = () => {
                   <div
                     className={acItem === item?.id || check ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
-                    onDoubleClick={() => itemAction(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => itemAction(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -212,7 +190,7 @@ export const StorageCarryUp = () => {
                             </p>
                             {innerDisplayKeys?.map((key, index) => {
                               return (
-                                <p 
+                                <p
                                   style={{ "--data-line-size": key?.size, borderRight: key?.border, }}
                                   key={index}>
                                   {key?.name === "total" ? product?.price * product?.amount : product[key?.name] || 0}
@@ -236,7 +214,7 @@ export const StorageCarryUp = () => {
             checkedData={checkedData}
             setCheckedData={setCheckedData}
             getProduct={getProduct}
-            NUM={!isLoading && { num: cuttingData?.data?.length + 1 }}
+            NUM={!isLoading && { num: movedData?.data?.length + 1 }}
             acItem={acItem}
           />
         </Suspense>

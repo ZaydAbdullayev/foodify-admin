@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../cash-universal.css";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -6,38 +6,20 @@ import { NumericFormat } from "react-number-format";
 import AnimatedNumber from "animated-number-react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { CalculateTotalQuantity } from "../../../service/calc.service";
-import { CalculateTotal } from "../../../service/calc.service";
-import { CalculateTotalByLine } from "../../../service/calc.service";
+import { CalculateTotal, CalculateTotalByLine, CalculateTotalQuantity } from "../../../service/calc.service";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
 
 export const TransactionRapor = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [details, setDetails] = useState({ ind: null, title: "" });
-  const [acItem, setAcItem] = useState();
-  const res_id = useSelector((state) => state.res_id);
   const { date } = useSelector((state) => state.uSearch);
   const dispatch = useDispatch();
-  const { data: trData = [], isLoading } = useFetchDataQuery({
-    url: `get/transactionsTable/${res_id}/${date?.start}/${date?.end}`,
-    tags: ["transaction-report"],
-  });
-  const { data: trExpData = [] } = useFetchDataQuery({
-    url: `get/expenseTransactions/${res_id}/${date?.start}/${date?.end}`,
-    tags: ["transaction-report"],
-  });
-  const { data: trIncData = [] } = useFetchDataQuery({
-    url: `get/incomeTransactions/${res_id}/${date?.start}/${date?.end}`,
-    tags: ["transaction-report"],
-  });
-  const { data: balance = [] } = useFetchDataQuery({
-    url: `get/balance/${res_id}/${date?.start}`,
-    tags: ["transaction-report"],
-  });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 6, 7, 15]));
-  }, [dispatch]);
+  const { data: trData = [], isLoading } = useFetchDataQuery({ url: `get/transactionsTable/${date?.start}/${date?.end}`, tags: ["transaction-report"], });
+  const { data: trExpData = [] } = useFetchDataQuery({ url: `get/expenseTransactions/${date?.start}/${date?.end}`, tags: ["transaction-report"], });
+  const { data: trIncData = [] } = useFetchDataQuery({ url: `get/incomeTransactions/${date?.start}/${date?.end}`, tags: ["transaction-report"], });
+  const { data: balance = [] } = useFetchDataQuery({ url: `get/balance/${date?.start}`, tags: ["transaction-report"], });
+  useEffect(() => { dispatch(acNavStatus([0, 6, 7, 15])); }, [dispatch]);
   let total = 0;
   console.log(details);
 
@@ -80,13 +62,8 @@ export const TransactionRapor = () => {
     startOfDay: balance?.data,
     income: CalculateTotal(trIncData?.data, "transactions"),
     expense: CalculateTotal(trExpData?.data, "transactions"),
-    balance:
-      CalculateTotal(trIncData?.data, "transactions") -
-      CalculateTotal(trExpData?.data, "transactions"),
-    endOfDay:
-      CalculateTotal(trIncData?.data, "transactions") -
-      CalculateTotal(trExpData?.data, "transactions") +
-      balance?.data,
+    balance: CalculateTotal(trIncData?.data, "transactions") - CalculateTotal(trExpData?.data, "transactions"),
+    endOfDay: CalculateTotal(trIncData?.data, "transactions") - CalculateTotal(trExpData?.data, "transactions") + balance?.data,
   };
 
   return (
@@ -111,13 +88,7 @@ export const TransactionRapor = () => {
                 }}
                 aria-label="sort data down of top or top of down">
                 {item?.name}{" "}
-                {sort.id === index ? (
-                  sort.state ? (
-                    <RiArrowUpSLine />
-                  ) : (
-                    <RiArrowDownSLine />
-                  )
-                ) : null}
+                {sort.id === index ? (sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)) : null}
               </p>
             );
           })}
@@ -132,11 +103,7 @@ export const TransactionRapor = () => {
               return (
                 <div className={"storage_body__box"} key={index}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={"storage_body_item"}
                     key={item?.id}>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map((key, index) => {
@@ -236,12 +203,11 @@ export const TransactionRapor = () => {
                             <u>tafsilot</u>
                           </p>
                         </div>
-                        {details.ind === ind &&
-                          details.title === tr?.payment_type && (
-                            <div className="_details__item-info">
+                        {details.ind === ind && details.title === tr?.payment_type && (
+                          <div className="_details__item-info">
                               {tr?.details.map((item, id) => (
-                                <div className="__item-info-piece" key={id}>
-                                  <p>{item.amount}</p> <p>{item.description}</p>
+                                <div className="w100 df aic jcsb __item-info-piece" key={id}>
+                                  <p>{item.description}</p><p>{item.amount}</p>
                                 </div>
                               ))}
                             </div>
@@ -268,9 +234,9 @@ export const TransactionRapor = () => {
                 <div className="_body__item" key={index + 543}>
                   <p>{inner?.transaction_group}</p>
                   <div className="_body__item_details">
-                    {inner?.transactions?.map((tr, ind) => {
-                      return (
-                        <div className="_details__item" key={tr?.id}>
+                    {inner?.transactions?.map((tr, ind) => (
+                      <>
+                        <div className="_details__item" key={ind + 121}>
                           <p>{tr?.payment_type}</p>
                           <NumericFormat
                             value={CalculateTotalQuantity(
@@ -284,12 +250,25 @@ export const TransactionRapor = () => {
                             style={{
                               "--data-line-size": "15%",
                               justifyContent: "center",
-                            }}>
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              setDetails({ ind: ind, title: tr?.payment_type })
+                            }>
                             <u>tafsilot</u>
                           </p>
                         </div>
-                      );
-                    })}
+                        {details.ind === ind && details.title === tr?.payment_type && (
+                          <div className="_details__item-info">
+                            {tr?.details.map((item, id) => (
+                              <div className="w100 df aic jcsb __item-info-piece" key={id}>
+                                <p>{item.description}</p><p>{item.amount}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ))}
                   </div>
                 </div>
               );

@@ -1,13 +1,12 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
-import { useNavigate } from "react-router-dom";
+import { useActionItemService } from "../../../service/form.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 const UniversalModal = lazy(() => import("../../../components/modal/modal"));
@@ -21,13 +20,11 @@ export const StorageIngredients = () => {
   const [newGrData, setNewGrData] = useState(null);
   const [acItem, setAcItem] = useState({ item_id: null });
   const ckddt = useSelector((state) => state.delRouter);
+  const { actionItem } = useActionItemService();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { data: groupData = [] } = useFetchDataQuery({ url: `get/ingredientGroups`, tags: ["groups"], });
   const { data: ingredientData = [], isLoading } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15]));
-  }, [dispatch]);
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 4, 5, 15])); }, [dispatch]);
   // const sortData =
   //   ingredientData?.data &&
   //   [...ingredientData?.data].sort((a, b) => {
@@ -38,11 +35,9 @@ export const StorageIngredients = () => {
   //     }
   //   });
 
-  const actionItem = (item) => {
-    dispatch(setDocuments("ingradient", item));
-    navigate(`?page-code=ingradient`);
-    setAcItem(acItem?.id && ckddt?.ingradient?.length > 0 ? { id: null, ingredients: [] } : item);
-  };
+  const actionItemLabel = useCallback((item) => {
+    actionItem("ingradient", item, acItem, null, setAcItem);
+  }, [actionItem, acItem]);
 
   const headerKeys = [{ name: "Nomi", size: "40%" }, { name: "O'lchov birligi", size: "20%" }, { name: "Guruh", size: "30%" }, { name: "Narxi", size: "20%" },];
   const displayKeys = [{ name: "item_name", size: 40 }, { name: "unit", size: 20, position: "center" }, { name: "group", size: 30 }, { name: "price", size: 20, position: "flex-end" },];
@@ -104,13 +99,13 @@ export const StorageIngredients = () => {
                   <div
                     className={acItem === item.item_id ? "storage_body_item active" : "storage_body_item"}
                     key={item.item_id}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

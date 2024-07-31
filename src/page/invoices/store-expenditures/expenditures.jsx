@@ -1,15 +1,14 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
-import { useNavigate } from "react-router-dom";
 import { CalculateTotalP } from "../../../service/calc.service";
+import { useActionItemService } from "../../../service/form.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease, setAllDocuments } from "../../../redux/deleteFoods";
+import { setRelease, setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { acFormValues } from "../../../redux/active";
 
 const InvoicesModal = lazy(() => import("./expenditures.modal"));
 
@@ -21,32 +20,16 @@ export const StorageExpenditures = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
+  const { actionItem, getProductService } = useActionItemService();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { data: expenseData = [], isLoading } = useFetchDataQuery({ url: `get/actions/used_goods`, tags: ["action", "invoices"], });
 
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
-  const getProduct = (item, status) => {
-    const itemId = item?.item_id;
-    const acItemId = acItem?.id;
-    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
-
-    setCheckedData((prevData) => {
-      const isChecked = prevData.some((i) => i.item_id === itemId);
-      if (status === 0) {
-        if (acItemId) {
-          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
-        }
-        return prevData.filter((i) => i.item_id !== itemId);
-      }
-      if (isChecked) {
-        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
-      }
-      return [...prevData, { ...item, action_type: "used_goods", invoice_group: "expense", status: acItemId ? "add" : undefined }];
-    });
-  };
+  const getProduct = useCallback((item, status) => {
+    getProductService(item, status, acItem, setCheckedData, "used_goods", "expense");
+  }, [acItem, getProductService])
 
   const sortData = expenseData?.data && [...(expenseData?.data || [])].sort((a, b) => {
     if (sort.state) {
@@ -89,15 +72,9 @@ export const StorageExpenditures = () => {
     { name: "amount", size: "13.8%", border: "1px solid #ccc5" },
   ];
 
-  const actionItem = (item) => {
-    dispatch(setDocuments("expense", item));
-    navigate(`?page-code=expense`);
-    setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.expense?.length > 1 ? { id: null, ingredients: [] } : item);
-    const mutationItem = { ...item }
-    delete mutationItem.ingredients;
-    dispatch(acFormValues("A_F_V", mutationItem));
-  };
+  const actionItemLabel = useCallback((item) => {
+    actionItem("expense", item, acItem, setCheckedData, setAcItem);
+  }, [actionItem, acItem])
 
   return (
     <div className="storage_container">
@@ -149,13 +126,13 @@ export const StorageExpenditures = () => {
                   key={item.id}>
                   <div
                     className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>

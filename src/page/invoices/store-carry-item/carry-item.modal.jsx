@@ -61,7 +61,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
         const existingItemIndex = updatedFoodsData.findIndex((existItem) => existItem.item_id === item.item_id);
 
         if (existingItemIndex !== -1) {
-          updatedFoodsData[existingItemIndex].amount = parseInt(updatedFoodsData[existingItemIndex].amount) + item?.amount;
+          updatedFoodsData[existingItemIndex].amount = parseFloat(updatedFoodsData[existingItemIndex].amount) + item?.amount;
         } else {
           updatedFoodsData.push(item);
         }

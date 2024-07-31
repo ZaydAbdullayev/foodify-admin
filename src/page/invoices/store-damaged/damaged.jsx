@@ -1,15 +1,14 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
-import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { acFormValues } from "../../../redux/active";
+import { useActionItemService } from "../../../service/form.service";
 
 const InvoicesModal = lazy(() => import("./damaged.modal"));
 
@@ -21,40 +20,18 @@ export const StorageDamaged = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
+  const { actionItem, getProductService } = useActionItemService();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { data: demagedData = [], isLoading } = useFetchDataQuery({ url: `get/actions/damaged_goods`, tags: ["action"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
-  const getProduct = (item, status) => {
-    const itemId = item?.item_id;
-    const acItemId = acItem?.id;
-    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
+  const getProduct = useCallback((item, status) => {
+    getProductService(item, status, acItem, setCheckedData, "damaged_goods", "expense");
+  }, [acItem, getProductService])
 
-    setCheckedData((prevData) => {
-      const isChecked = prevData.some((i) => i.item_id === itemId);
-      if (status === 0) {
-        if (acItemId) {
-          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
-        }
-        return prevData.filter((i) => i.item_id !== itemId);
-      }
-      if (isChecked) {
-        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
-      }
-      return [...prevData, { ...item, action_type: "damaged_goods", invoice_group: "expense", status: acItemId ? "add" : undefined }];
-    });
-  };
-
-  const actionItem = (item) => {
-    dispatch(setDocuments("damagedGoods", item));
-    navigate(`?page-code=damagedGoods`);
-    setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.damagedGoods?.length > 1 ? { id: null, ingredients: [] } : item);
-    const mutationItem = { ...item }
-    delete mutationItem.ingredients;
-    dispatch(acFormValues("A_F_V", mutationItem));
-  };
+  const actionItemLabel = useCallback((item) => {
+    actionItem("damagedGoods", item, acItem, setCheckedData, setAcItem);
+  }, [actionItem, acItem])
 
   const headerKeys = [
     { name: "Kun", size: "16.5%", sort: true },
@@ -160,13 +137,13 @@ export const StorageDamaged = () => {
                   key={item?.id}>
                   <div
                     className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>

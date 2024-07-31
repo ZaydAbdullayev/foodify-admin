@@ -35,7 +35,7 @@ export const CalculateTotalByLine = (cart, keyToExclude) => {
   const totalPrice =
     cart?.reduce((accumulator, item) => {
       if (!item.hasOwnProperty(keyToExclude)) {
-        accumulator += parseInt(item[keyToExclude], 10);
+        accumulator += parseFloat(item[keyToExclude], 10);
       }
       return accumulator;
     }, 0) || 0;
@@ -50,7 +50,7 @@ export const CalculateTotal = (data, key) => {
       total += CalculateTotalQuantity(tr?.details, "amount");
     });
   });
-  return total?.toFixed(2);
+  return total || 0;
 };
 
 export const CalculateTotalCH = (data, key, vl) => {
@@ -61,5 +61,5 @@ export const CalculateTotalCH = (data, key, vl) => {
       total += value ? value : 0;
     });
   }
-  return total?.toFixed(2);
+  return total?.toFixed(0);
 };

@@ -29,12 +29,11 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
     const oldData = parsedData?.find((old) => old.id === newItem.id);
 
     if (oldData) {
+      const n = parseFloat(newItem?.amount) || 0;
       return {
         ...newItem,
         old_quantity: oldData?.total_quantity,
-        total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity + newItem?.amount
-          : newItem?.amount,
+        total_quantity: oldData?.total_quantity ? oldData?.total_quantity + n : n,
       };
     }
 
@@ -71,6 +70,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
               ? { value: acItem?.item_id, label: acItem?.item_name }
               : { value: "default", label: "Mahsulot tanlang*" },
             options: data?.data,
+            u_option: [acItem?.item_name, acItem?.item_id],
           },
           {
             type: "s_extra",
@@ -81,6 +81,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
               ? { value: acItem?.st1_id, label: acItem?.st1_name }
               : { value: "default", label: "Beruvchi ombor*" },
             options: storeData?.data,
+            u_option: [acItem?.st1_name, acItem?.st1_id],
           },
           {
             type: "s_extra",
@@ -90,6 +91,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
               ? { value: acItem?.st2_id, label: acItem?.st2_name }
               : { value: "default", label: "Oluvchi ombor*" },
             options: storeData?.data,
+            u_option: [acItem?.st2_name, acItem?.st2_id],
           },
           {
             type: "inputN",

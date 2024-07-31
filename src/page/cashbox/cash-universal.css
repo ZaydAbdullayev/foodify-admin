@@ -27,11 +27,11 @@
 
 ._body__item {
   width: 100%;
-  padding: 1%;
+  padding: 2%;
   display: flex;
   align-items: flex-start;
   border: 1px solid var(--cl37);
-  background: var(--cl18) 5;
+  background: var(--cl54);
 }
 
 ._body__item > p {
@@ -50,7 +50,11 @@
   display: flex;
   align-items: center;
   gap: var(--gap3);
-  border-bottom: 1px solid var(--cl61);
+  border-bottom: 1px solid var(--cl38);
+}
+
+.__item-info-piece {
+  border-bottom: 1px dotted var(--cl38);
 }
 
 ._details__item:last-child {
@@ -70,7 +74,7 @@
 
 .report_daily > i {
   flex: 1;
-  border-bottom: 1px dashed var(--cl61);
+  border-bottom: 1px dashed var(--cl38);
 }
 
 .big_fs {

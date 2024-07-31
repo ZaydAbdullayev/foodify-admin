@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import "../../storage/storage.css";
 import "../../../components/modal/modal.css";
-import { useFetchDataQuery } from "../../../service/fetch.service";
-import { usePostDataMutation } from "../../../service/fetch.service";
-import { usePatchDataMutation } from "../../../service/fetch.service";
+import { useFetchDataQuery, usePostDataMutation } from "../../../service/fetch.service";
 import { useSelector } from "react-redux";
 import { Table, Popconfirm, notification } from "antd";
 import middlewareService from "../../../middleware/form.middleware";
@@ -15,7 +13,6 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const pay = useSelector((state) => state.pay);
   const [cashId, setCashId] = useState(null);
   const [postData] = usePostDataMutation();
-  const [patchData] = usePatchDataMutation();
   const [amount, setAmount] = useState(0);
   const [moneyOnSupp, setMoneyOnSupp] = useState(null);
   const id = user?.user_id || user?.id;
@@ -24,7 +21,7 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const { data: trg = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${user?.id}`, tags: ["cashbox"], });
   const { data: p_h = [] } = useFetchDataQuery({ url: `/get/paymentHistory/${pay?.id}`, tags: ["payment_history"], });
   const { data: sp = [] } = useFetchDataQuery({
-    url: `get/supplierPayments/${user?.id}/${pay?.supplier_id}`,
+    url: `get/supplierPayments/${pay?.supplier_id}`,
     tags: ["cashbox"],
   });
 
@@ -40,31 +37,11 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   };
 
   const columns = [
-    {
-      title: "№",
-      dataIndex: "order",
-      key: "order",
-    },
-    {
-      title: "Sana",
-      dataIndex: "date",
-      key: "date",
-    },
-    {
-      title: "Kassa",
-      dataIndex: "cashbox",
-      key: "cashbox",
-    },
-    {
-      title: "To'lov turi",
-      dataIndex: "payment_type",
-      key: "payment_type",
-    },
-    {
-      title: "To'lov miqdori",
-      dataIndex: "cost",
-      key: "cost",
-    },
+    { title: "№", dataIndex: "order", key: "order", },
+    { title: "Sana", dataIndex: "date", key: "date", },
+    { title: "Kassa", dataIndex: "cashbox", key: "cashbox", },
+    { title: "To'lov turi", dataIndex: "payment_type", key: "payment_type", },
+    { title: "To'lov miqdori", dataIndex: "cost", key: "cost", },
   ];
   const addData = async (type) => {
     try {
@@ -181,14 +158,14 @@ const InvoicesPaymentModal = ({ s, setS }) => {
                 );
               setMoneyOnSupp(parseInt(selectedKey));
             }}>
-            <option value={"invoicePayment"}>
+            <option value={"invoice_payment"}>
               Yetkazuvchidagi puldan olmaslik
             </option>
             {sp?.data?.length &&
               sp?.data?.map((i) => (
                 <option
                   key={i.date}
-                  value={"invoicePaymnetFromSupplier"}
+                  value={"invoice_payment_form_supplier"}
                   money-on-supp={i.available}>
                   {i.date} dan: {i.available} so'm mavjud
                 </option>

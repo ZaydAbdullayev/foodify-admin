@@ -1,17 +1,15 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
-// import { CalculateTotalP } from "../../../service/calc.service";
-import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acOpenPayModal } from "../../../redux/modal";
-import { acFormValues } from "../../../redux/active";
+import { useActionItemService } from "../../../service/form.service";
 
 const InvoicesModal = lazy(() => import("./invoices.modal"));
 const InvoicesPaymentModal = lazy(() => import("./invoices.payment.modal"));
@@ -26,43 +24,21 @@ export const StorageInvoices = () => {
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
+  const { actionItem, getProductService } = useActionItemService()
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { data: invoiceData = [], isLoading } = useFetchDataQuery({ url: `get/actions/received_goods`, tags: ["action", "invoices"], });
   useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
 
-  const getProduct = (item, status) => {
-    const itemId = item?.item_id;
-    const acItemId = acItem?.id;
-    const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
+  const getProduct = useCallback((item, status) => {
+    getProductService(item, status, acItem, setCheckedData, "received_goods", "income");
+  }, [acItem, getProductService])
 
-    setCheckedData((prevData) => {
-      const isChecked = prevData.some((i) => i.item_id === itemId);
-      if (status === 0) {
-        if (acItemId) {
-          return prevData.map((i) => i.item_id === itemId ? { ...item, status: "delete" } : i);
-        }
-        return prevData.filter((i) => i.item_id !== itemId);
-      }
-      if (isChecked) {
-        return prevData.map((i) => i.item_id === itemId ? { ...item, id: acItem.id, status: acItemId && e ? "update_amount" : item.status } : i);
-      }
-      return [...prevData, { ...item, action_type: "received_goods", invoice_group: "income", status: acItemId ? "add" : undefined }];
-    });
-  };
-
-  const actionItem = (item) => {
-    dispatch(setDocuments("invoice", item));
-    navigate(`?page-code=invoice`);
-    setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.invoice?.length > 1 ? { id: null, ingredients: [] } : item);
-    const mutationItem = { ...item }
-    delete mutationItem.ingredients;
-    dispatch(acFormValues("A_F_V", mutationItem));
-  };
+  const actionItemLabel = useCallback((item) => {
+    actionItem("invoice", item, acItem, setCheckedData, setAcItem);
+  }, [acItem, actionItem]);
 
 
   const headerKeys = [
@@ -81,7 +57,7 @@ export const StorageInvoices = () => {
     { name: "supplier", size: "12%" },
     { name: "total_amount", size: "12%", position: "flex-end" },
     { name: "paid", size: "12%", position: "flex-end" },
-    { name: "leftover", size: "12%", position: "flex-end" },
+    { name: "for_payment", size: "12%", position: "flex-end" },
     { name: "responsible", size: "12%" },
   ];
 
@@ -167,18 +143,18 @@ export const StorageInvoices = () => {
               return (
                 <div
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
-                  style={{ background: item?.leftover < 0 ? "#a0aed950" : "", }}
+                  style={{ background: item?.for_payment < 0 ? "#a0aed950" : "", }}
                   key={item?.id}>
                   <div
                     className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -211,7 +187,7 @@ export const StorageInvoices = () => {
                           hisoblash
                         </u>
                         <br />
-                        {!(item?.leftover <= 0) && (
+                        {!(item?.for_payment <= 0) && (
                           <u onClick={() => openPaymentModal(item)}>to'lov</u>
                         )}
                       </span>

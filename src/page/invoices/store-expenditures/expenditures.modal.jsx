@@ -74,6 +74,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
               ? { value: acItem?.st1_name, label: acItem?.st1_name }
               : { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
+            u_option: [acItem?.st1_name, acItem?.st1_id],
           },
           {
             type: "select",
@@ -85,6 +86,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
                 }
               : { value: "default", label: "Guruh tanlang*" },
             options: groupsData?.data,
+            u_option: [acItem?.invoice_group],
           },
           {
             type: "input",

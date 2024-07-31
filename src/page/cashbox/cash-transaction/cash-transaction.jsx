@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useEffect } from "react";
+import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -25,7 +25,8 @@ export const CashboxTransaction = () => {
   const navigate = useNavigate();
   const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
   const { data: cashboxGrData = [] } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
-  const { data: cashTrData = [] } = useFetchDataQuery({ url: `get/transactions/${user?.id}`, tags: ["cashbox-transaction"], });
+  const { data: cashTrData = [] } = useFetchDataQuery({ url: `get/transactions`, tags: ["cashbox-transaction"], });
+  const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
 
   const sortData = cashTrData?.data && [...cashTrData?.data].sort((a, b) => {
@@ -64,26 +65,26 @@ export const CashboxTransaction = () => {
   const TCD = {
     income: "Kirim",
     expense: "Chiqim",
-    paymentToSupplier: "Yetkazuvchiga to'lov",
-    paymentFromSupplier: "Yetkazuvchidan to'lov",
-    invoicePaymentFromSupplier: "Yetkazuvchidagi puldan to'lov",
-    invoicePayment: "Mahsulot uchun to'lov",
+    payment_to_supplier: "Yetkazuvchiga to'lov",
+    payment_from_supplier: "Yetkazuvchidan to'lov",
+    invoice_payment_from_supplier: "Yetkazuvchidagi puldan to'lov",
+    invoice_payment: "Mahsulot uchun to'lov",
     transfer: "Kassalar aro o'tkazma ",
     depozit: "Depozit",
   };
 
-  const actionItem = (item) => {
+  const actionItem = useCallback((item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
     dispatch(setDocuments("trsn", item));
     navigate(`?page-code=trsn`);
     setAcItem(item);
-  }
+  }, [acItem?.id, dispatch, navigate])
 
   const options = [
     { value: "income", label: "Kirim" },
     { value: "expense", label: "Chiqim" },
-    { value: "invoicePayment", label: "Mahsulot uchun to'lov" },
-    { value: "paymnetToSupplier", label: "Yetkazuvchiga to'lov" },
+    { value: "invoice_payment", label: "Mahsulot uchun to'lov" },
+    { value: "payment_to_supplier", label: "Yetkazuvchiga to'lov" },
     { value: "transfer", label: "Kassalar aro o'tkazma" },
     { value: "deposit", label: "Depozit" },
   ];
@@ -109,6 +110,7 @@ export const CashboxTransaction = () => {
             <input
               type="checkbox"
               name="id"
+              checked={checked}
               onChange={() => {
                 setChecked(checked ? false : true);
                 dispatch(checked ? setRelease("trsn") : setAllDocuments("trsn", cashTrData?.data));
@@ -151,7 +153,7 @@ export const CashboxTransaction = () => {
                         onChange={() => actionItem(item)}
                       />
                     </label>
-                    <p>{ind + 1}</p>
+                    <p style={{ inlineSize: "var(--univslH)" }}>{ind + 1}</p>
                     <p style={{ "--data-line-size": "10%" }}>{date}</p>
                     {displayKeys?.map((key, index) => {
                       return (
@@ -206,7 +208,7 @@ export const CashboxTransaction = () => {
                     })}
                   </select>
                 </label>
-                {modalType === "expenses" || modalType === "income" ? (
+                {modalType === "expense" || modalType === "income" ? (
                   <>
                     <select name="cashbox">
                       <option value="default">Kassir tanlang*</option>
@@ -250,6 +252,16 @@ export const CashboxTransaction = () => {
                   </>
                 )}
                 <label>
+                  <select name="supplier">
+                    <option value="Prixod">Yetkazuvchi tanlang*</option>
+                    {suplierData?.data?.map((item) => {
+                      return (
+                        <option value={`${item?.name}/_${item?.id}`} key={item.id}>
+                          {item?.name}
+                        </option>
+                      );
+                    })}
+                  </select>
                   <select name="payment_type">
                     <option value="Prixod">To'lov turini tanlang*</option>
                     <option value="cash">Naxt</option>
@@ -261,7 +273,7 @@ export const CashboxTransaction = () => {
                 <input type="text" name="description" placeholder="Tavsif" requiredautoComplete="off" />
               </>
             )}
-            <input type="hidden" name="res_id" value={user?.id} />
+            <input type="hidden" name="action_id" value={""} />
             <input type="hidden" name="worker" value={user?.worker_name || "owner"} />
             <input type="hidden" name="worker_id" value={user?.user_id || user?.id} />
           </UniversalModal>

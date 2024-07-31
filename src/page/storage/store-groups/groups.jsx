@@ -1,14 +1,14 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useSwipeable } from "react-swipeable";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
+import { useActionItemService } from "../../../service/form.service";
 
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { GoDotFill } from "react-icons/go";
 import { useFetchDataQuery } from "../../../service/fetch.service";
@@ -20,18 +20,16 @@ export const StorageGroups = () => {
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState();
+  const [activeIndex, setActiveIndex] = useState(1);
   const ckddt = useSelector((state) => state.delRouter);
+  const { actionItem } = useActionItemService();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: groupData = [], isLoading } = useFetchDataQuery({
-    url: `get/ingredientGroups`,
-    tags: ["groups"],
-  });
-  React.useEffect(() => {
+  const { data: groupData = [], isLoading } = useFetchDataQuery({ url: `get/ingredientGroups`, tags: ["groups"], });
+  useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
 
-  const [activeIndex, setActiveIndex] = useState(1);
   const handlers = useSwipeable({
     onSwipedLeft: () => handleSwipe("LEFT"),
     onSwipedRight: () => handleSwipe("RIGHT"),
@@ -42,34 +40,28 @@ export const StorageGroups = () => {
     const newIndex = direction === "LEFT" ? activeIndex + 1 : activeIndex - 1;
     setActiveIndex((newIndex + 3) % 3);
     navigate(
-      `/sections/${
-        newIndex === 0
-          ? "cashbox/transaction-group"
-          : newIndex === 1
-          ? "groups"
-          : "invoice-group"
-      }`
+      `/sections/${newIndex === 0 ? "cashbox/transaction-group" : newIndex === 1 ? "groups" : "invoice-group"}`
     );
   };
 
-  const sortData =
-    groupData?.data &&
-    [...groupData.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+  const sortData = groupData?.data && [...groupData.data].sort((a, b) => {
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  const actionItemLabel = useCallback((item) => {
+    actionItem("ingGroup", item, acItem, null, setAcItem);
+  }, [actionItem, acItem])
 
   return (
     <div className="storage_container">
       <UniversalFilterBox />
       <div className="storage_body">
         <i>
-          <GoDotFill
-            onClick={() => navigate("/sections/cashbox/transaction-group")}
-          />
+          <GoDotFill onClick={() => navigate("/sections/cashbox/transaction-group")} />
           <GoDotFill className="active" />
           <GoDotFill onClick={() => navigate("/sections/invoice-group")} />
         </i>
@@ -86,10 +78,7 @@ export const StorageGroups = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("ingGroup")
-                    : setAllDocuments("ingGroup", groupData?.data)
+                dispatch(checked ? setRelease("ingGroup") : setAllDocuments("ingGroup", groupData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -100,21 +89,13 @@ export const StorageGroups = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "60%" }}>
             <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "30%" }}>
             <p>Ingredientlar</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
         </div>
         <div className="storage_body_box">
@@ -127,38 +108,18 @@ export const StorageGroups = () => {
               const check = ckddt?.ingGroup?.find((el) => el.id === item.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item.id}>
                   <div
-                    className={
-                      acItem === item.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
                     key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("ingGroup", item));
-                      navigate(`?page-code=ingGroup`);
-                    }}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("ingGroup", item));
-                          navigate(`?page-code=ingGroup`);
-                        }}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

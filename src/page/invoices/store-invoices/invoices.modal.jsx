@@ -21,17 +21,18 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
   const updatedData = checkedData?.map((newItem) => {
     const oldData = storageItems?.data?.find((old) => old.item_id === newItem?.item_id);
     const ototal = oldData ? oldData?.total_quantity : 0;
+    const n = parseFloat(newItem?.amount);
     if (oldData) {
       return {
         ...newItem,
         old_quantity: ototal || 0,
-        total_quantity: ototal ? parseInt(ototal) + parseInt(newItem?.amount) : parseInt(newItem?.amount),
+        total_quantity: ototal ? parseFloat(ototal) + n : n,
       };
     } else {
       return {
         ...newItem,
         old_quantity: 0,
-        total_quantity: parseInt(newItem?.amount),
+        total_quantity: n,
       };
     }
   });
@@ -129,7 +130,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
                 <label>
                   <input
                     type="checkbox"
-                    checked={checked || false}
+                    checked={checked}
                     onChange={() =>
                       getProduct({ ...item, amount: 0 }, checked ? 0 : 1)
                     }

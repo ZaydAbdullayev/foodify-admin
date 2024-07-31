@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -6,9 +6,10 @@ import { UniversalFilterBox } from "../../../components/filter/filter";
 import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { useActionItemService } from "../../../service/form.service";
 
 const InvoicesModal = lazy(() => import("./cutting.modal"));
 
@@ -19,42 +20,24 @@ export const StorageCutting = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const formV = useSelector((state) => state.values);
   const open = useSelector((state) => state.uModal);
+  const { actionItem, getProductService } = useActionItemService();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { data: dmData = [], isLoading } = useFetchDataQuery({
-    url: `get/actions/cutting_increase`,
-    tags: ["action", "invoices"],
-  });
+  const { data: dmData = [], isLoading } = useFetchDataQuery({ url: `get/actions/cutting_increase`, tags: ["action", "invoices"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
   }, [dispatch]);
 
-  const getProduct = (item, status) => {
-    const isChecked = checkedData.some((i) => i.item_id === item?.item_id);
-    if (status === 0) {
-      setCheckedData((prevData) =>
-        prevData.filter((i) => i.item_id !== item?.item_id)
-      );
-      return;
-    }
-    if (isChecked) {
-      setCheckedData((prevData) =>
-        prevData.map((i) => (i.item_id === item?.item_id ? item : i))
-      );
-    } else {
-      setCheckedData((prevData) => [
-        ...prevData,
-        { ...formV?.vl, ...item, action_type: "cutting_increase" },
-      ]);
-    }
-  };
+  const getProduct = useCallback((item, status) => {
+    getProductService(item, status, acItem, setCheckedData, "cutting_increase", "income");
+  }, [acItem, getProductService])
 
-  const sortData =
-    dmData?.data &&
-    [...dmData?.data]?.sort((a, b) => {
+  const actionItemLabel = useCallback((item) => {
+    actionItem("cutting", item, acItem, setCheckedData, setAcItem);
+  }, [actionItem, acItem])
+
+
+  const sortData = dmData?.data && [...dmData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a?.name?.localeCompare(b.name);
       } else {
@@ -81,13 +64,6 @@ export const StorageCutting = () => {
     { name: "invoice_group", size: "12%" },
     { name: "description", size: "12%" },
   ];
-
-  const actionItem = (item) => {
-    dispatch(setDocuments("cutting", item));
-    navigate(`?page-code=cutting`);
-    setCheckedData(acItem?.id ? [] : item?.ingredients);
-    setAcItem(acItem?.id && ckddt?.cutting?.length > 0 ? { id: null, ingredients: [] } : item);
-  };
 
   return (
     <div className="storage_container">
@@ -151,13 +127,13 @@ export const StorageCutting = () => {
                         : "storage_body_item"
                     }
                     key={item?.id}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>

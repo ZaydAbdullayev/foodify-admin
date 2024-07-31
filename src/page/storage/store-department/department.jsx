@@ -1,13 +1,12 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
-import { useNavigate } from "react-router-dom";
+import { useActionItemService } from "../../../service/form.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 const UniversalModal = lazy(() => import("../../../components/modal/modal"));
@@ -19,22 +18,12 @@ export const StorageDep = () => {
   const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { data: depData = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.id}/departments`,
-    tags: ["department"],
-  });
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${user?.id}`,
-    tags: ["store"],
-  });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3]));
-  }, [dispatch]);
+  const { actionItem } = useActionItemService();
+  const { data: depData = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/departments`, tags: ["department"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${user?.id}`, tags: ["store"], });
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
 
-  const sortData =
-    depData?.data &&
-    [...depData.data].sort((a, b) => {
+  const sortData = depData?.data && [...depData.data].sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -42,12 +31,9 @@ export const StorageDep = () => {
       }
     });
 
-  const actionItem = (item) => {
-    dispatch(acActiveThing(item));
-    dispatch(setDocuments("main", item));
-    navigate(`?page-code=main`);
-    setAcItem(item);
-  }
+  const actionItemLabel = useCallback((item) => {
+    actionItem("main", item, acItem, null, setAcItem);
+  }, [actionItem, acItem])
 
   return (
     <div className="storage_container">
@@ -64,10 +50,7 @@ export const StorageDep = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("main")
-                    : setAllDocuments("main", depData?.data)
+                dispatch(checked ? setRelease("main") : setAllDocuments("main", depData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -112,13 +95,13 @@ export const StorageDep = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() => actionItem(item)}>
+                  onDoubleClick={() => actionItemLabel(item)}>
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
                       name="id"
                       checked={check}
-                      onChange={() => actionItem(item)}
+                      onChange={() => actionItemLabel(item)}
                     />
                   </label>
                   <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

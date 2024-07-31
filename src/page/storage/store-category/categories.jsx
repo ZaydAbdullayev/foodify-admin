@@ -1,13 +1,12 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, Suspense, lazy, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { acNavStatus } from "../../../redux/navbar.status";
-import { useNavigate } from "react-router-dom";
+import { useActionItemService } from "../../../service/form.service";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease } from "../../../redux/deleteFoods";
+import { setRelease } from "../../../redux/deleteFoods";
 import { setAllDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 const UniversalModal = lazy(() => import("../../../components/modal/modal"));
@@ -20,21 +19,11 @@ export const StorageCatgegories = () => {
   const [acItem, setAcItem] = useState();
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { data: depData = [] } = useFetchDataQuery({
-    url: `get/${user?.id}/departments`,
-    tags: ["department"],
-  });
-  const { data: storeData = [], isLoading } = useFetchDataQuery({
-    url: `get/${user?.id}/categories`,
-    tags: ["category"],
-  });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3]));
-  }, [dispatch]);
-  const sortData =
-    storeData?.data &&
-    [...storeData?.data]?.sort((a, b) => {
+  const { actionItem } = useActionItemService();
+  const { data: depData = [] } = useFetchDataQuery({ url: `get/${user?.id}/departments`, tags: ["department"], });
+  const { data: storeData = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/categories`, tags: ["category"], });
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
+  const sortData = storeData?.data && [...storeData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -42,12 +31,9 @@ export const StorageCatgegories = () => {
       }
     });
 
-  const actionItem = (item) => {
-    dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("category", item));
-    navigate(`?page-code=category`);
-    setAcItem(item);
-  }
+  const actionItemLabel = useCallback((item) => {
+    actionItem("category", item, acItem, null, setAcItem);
+  }, [actionItem, acItem])
 
   return (
     <div className="storage_container">
@@ -64,10 +50,7 @@ export const StorageCatgegories = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(
-                  checked
-                    ? setRelease("category")
-                    : setAllDocuments("category", storeData?.data)
+                dispatch(checked ? setRelease("category") : setAllDocuments("category", storeData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -78,31 +61,19 @@ export const StorageCatgegories = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "40%" }}>
             <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "30%" }}>
             <p>Bo'limlar</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "30%" }}>
             <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <p style={{ "--data-line-size": "10%" }}>Oyqatlar</p>
         </div>
@@ -116,38 +87,18 @@ export const StorageCatgegories = () => {
               const check = ckddt?.category?.some((el) => el.id === item.id);
               return (
                 <div
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item.id}>
                   <div
-                    className={
-                      acItem === item.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
                     key={item.id}
-                    onDoubleClick={() => {
-                      dispatch(
-                        !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                      );
-                      dispatch(setDocuments("category", item));
-                      navigate(`?page-code=category`);
-                    }}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => {
-                          dispatch(
-                            !acItem?.id ? acActiveThing(item) : acPassiveThing()
-                          );
-                          dispatch(setDocuments("category", item));
-                          navigate(`?page-code=category`);
-                        }}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
@@ -159,11 +110,7 @@ export const StorageCatgegories = () => {
                     <p
                       style={{ "--data-line-size": "10%" }}
                       onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((el) => el !== item?.id)
-                            : [...prev, item?.id]
-                        )
+                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((el) => el !== item?.id) : [...prev, item?.id])
                       }>
                       <u
                         style={

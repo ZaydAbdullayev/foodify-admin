@@ -14,7 +14,7 @@ function genrateId() {
 
 export const GenerateField = ({ fieldData }) => {
   const dispatch = useDispatch();
-  // const [datas, setDatas] = useState({ name: "", id: "" });
+  const values = useSelector((state) => state.values);
   const {
     type = "text",
     options = [],
@@ -28,16 +28,23 @@ export const GenerateField = ({ fieldData }) => {
     getFullInfo = false,
   } = fieldData;
 
-  // useEffect(() => {
-  //   if (df_value && df_value !== "" && values?.vl[name] !== df_value) {
-  //     dispatch(acFormValues("A_V", { [name]: df_value }));
-  //   }
-  // }, [dispatch, values?.vl, name, df_value]);
+  useEffect(() => {
+    const dfVal = df_value?.value || df_value;
+    if ((df_value && dfVal !== "default") && values?.vl[name] !== dfVal) {
+      const isSelectableType = ["s_extra", "s_search", "select"].includes(type);
+      if (u_option.length > 0 && isSelectableType) {
+        const payload = extra ? { [name]: u_option[0], [extra]: u_option[1] } : { [name]: u_option[0] };
+        dispatch(acFormValues("A_V", payload));
+      } else {
+        dispatch(acFormValues("A_V", { [name]: dfVal }));
+      }
+    }
+  }, [dispatch, values?.vl, name, df_value, type, u_option, extra]);
+
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");
     if (!getFullInfo) {
-      // setDatas({ name: value[0], id: value[1] });
       dispatch(
         acFormValues("A_V", {
 

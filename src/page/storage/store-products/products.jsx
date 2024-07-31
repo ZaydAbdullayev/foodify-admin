@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { data } from "../../../components/modal-calc/components";
@@ -22,31 +22,18 @@ export const StorageProducts = () => {
   const [activePart, setActivePart] = useState(1);
   const [acItem, setAcItem] = useState({ food_id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
-  const id = useSelector((state) => state.storageId);
   const img = useSelector((state) => state.image);
   const res_id = useSelector((state) => state.res_id);
   const open = useSelector((state) => state.uModal);
-  const values = useSelector((state) => state.values);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let { data: products = [], isLoading } = useFetchDataQuery({
-    url: `get/foods`,
-    tags: ["s-products", "product"],
-  });
-  const { data: ingredients = [] } = useFetchDataQuery({
-    url: `get/ingredients`,
-    tags: ["ingredient"],
-  });
-  const { data: category = [] } = useFetchDataQuery({
-    url: `get/${res_id}/categories`,
-    tags: ["category"],
-  });
+  let { data: products = [], isLoading } = useFetchDataQuery({ url: `get/foods`, tags: ["s-products", "product"], });
+  const { data: ingredients = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
+  const { data: category = [] } = useFetchDataQuery({ url: `get/${res_id}/categories`, tags: ["category"], });
 
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15]));
-  }, [dispatch]);
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 5, 4, 9, 15])); }, [dispatch]);
 
-  const getProduct = (item, status) => {
+  const getProduct = useCallback((item, status) => {
     const itemId = item?.item_id;
     const acItemId = acItem?.food_id;
     const e = acItem?.ingredients?.some((i) => i.item_id === itemId);
@@ -64,7 +51,7 @@ export const StorageProducts = () => {
       }
       return [...prevData, { ...item, status: acItemId ? "add" : undefined }];
     });
-  };
+  }, [acItem?.food_id, acItem?.ingredients]);
 
   const sortData = products?.data && [...products?.data].sort((a, b) => {
     if (sort.state) {
@@ -79,7 +66,7 @@ export const StorageProducts = () => {
   const innerHeaderData = [{ name: "№", size: "", border: "1px solid #ccc4" }, { name: "Nomi", size: "30%", border: "1px solid #ccc4" }, { name: "O'lchov birligi", size: "16.5%", border: "1px solid #ccc4" }, { name: "Miqdori", size: "16.5%", border: "1px solid #ccc4" }, { name: "Narxi", size: "16.5%", border: "1px solid #ccc4" }, { name: "Jami", size: "16.5%", border: "0" },];
   const innerDisplayKeys = [{ name: "item_name", size: "30%" }, { name: "unit", size: "16.5%", position: 1 }, { name: "amount", size: "16.5%", position: 1 }, { name: "price", size: "16.5%", position: 2 },];
 
-  const itemAction = (item) => {
+  const actionItemLabel = useCallback((item) => {
     const acID = acItem?.food_id;
     dispatch(acID ? acPassiveThing() : acActiveThing(item));
     dispatch(setDocuments("products", item));
@@ -87,8 +74,7 @@ export const StorageProducts = () => {
     setAcItem(acID ? { food_id: null, ingredients: [] } : item);
     setCheckedData(acID ? [] : item.ingredients);
     dispatch(acFormValues("A_V", { food_id: item.food_id, food_name: item?.food_name }))
-  };
-  console.log("c", checkedData);
+  }, [acItem?.food_id, dispatch, navigate]);
 
   const modalData = activePart === 1 ? ingredients : products;
 
@@ -147,13 +133,13 @@ export const StorageProducts = () => {
                   <div
                     className={acItem === item?.food_id ? "storage_body_item active" : "storage_body_item"}
                     key={item?.food_id}
-                    onDoubleClick={() => itemAction(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => itemAction(item)}
+                        onChange={() => actionItemLabel(item)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>

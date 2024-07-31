@@ -34,7 +34,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
     if (oldData) {
       return {
         ...newItem,
-        total_price: parseInt(newItem?.amount) * newItem?.price,
+        total_price: parseFloat(newItem?.amount) * newItem?.price,
       };
     }
 
@@ -83,6 +83,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             extra: "st2_id",
             df_value: { value: "default", label: "Ombor tanlang*" },
             options: storeData?.data,
+            u_option: [acItem?.st2_name, acItem?.st2_id],
           },
           {
             type: "s_search",
@@ -94,6 +95,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             },
             options: data?.data,
             getFullInfo: true,
+            u_option: [acItem?.item_name, acItem?.item_id],
           },
           {
             type: "inputN",
@@ -110,6 +112,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
               label: acItem?.invoice_group || "Guruh tanlang*",
             },
             options: groupsData?.data,
+            u_option: [acItem?.invoice_group]
           },
           {
             type: "input",

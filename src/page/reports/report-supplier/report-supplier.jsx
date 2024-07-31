@@ -19,10 +19,7 @@ export const ReportSuppliers = () => {
   const [showMore, setShowMore] = useState([]);
   const [acItem, setAcItem] = useState();
   const res_id = useSelector((state) => state.res_id);
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/${res_id}/categories`,
-    tags: ["category"],
-  });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/${res_id}/categories`, tags: ["category"], });
   const today = new Date().toISOString().slice(0, 10);
   console.log(storeData);
   const isLoading = false;
