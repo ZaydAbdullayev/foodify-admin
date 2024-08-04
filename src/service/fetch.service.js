@@ -20,15 +20,10 @@ const api = createApi({
     "action",
     "ingredient",
     "groups",
-    "carry-up",
     "category",
-    "cutting",
-    "damaged",
     "department",
-    "expenditure",
     "invoice-group",
     "invoices",
-    "makingFood",
     "product",
     "s-products",
     "store",
@@ -36,7 +31,6 @@ const api = createApi({
     "user",
     "order",
     "worker",
-    "pre-order",
     "transaction",
     "tr-group",
     "cashbox",
@@ -52,8 +46,8 @@ const api = createApi({
   ],
   endpoints: (builder) => ({
     fetchData: builder.query({
-      query: ({ url = '' }) => {
-        if (url === "") {
+      query: ({ url = null }) => {
+        if (!url) {
           return console.log("url not found");
         }
         return url;
@@ -78,7 +72,7 @@ const api = createApi({
       invalidatesTags: (result, error, { tags = [] }) => [...tags],
     }),
     delData: builder.mutation({
-      query: ({ url, data = [] }) => ({         
+      query: ({ url, data = [] }) => ({
         url,
         method: "DELETE",
         body: data || [],

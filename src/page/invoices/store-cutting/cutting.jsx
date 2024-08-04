@@ -1,9 +1,8 @@
-import React, { useState, lazy, Suspense, useCallback } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { setRelease } from "../../../redux/deleteFoods";
@@ -16,35 +15,21 @@ const InvoicesModal = lazy(() => import("./cutting.modal"));
 export const StorageCutting = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
-  const { actionItem, getProductService } = useActionItemService();
+  const { actionItem } = useActionItemService();
   const dispatch = useDispatch();
-  const { data: dmData = [], isLoading } = useFetchDataQuery({ url: `get/actions/cutting_increase`, tags: ["action", "invoices"], });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15]));
-  }, [dispatch]);
-
-  const getProduct = useCallback((item, status) => {
-    getProductService(item, status, acItem, setCheckedData, "cutting_increase", "income");
-  }, [acItem, getProductService])
-
-  const actionItemLabel = useCallback((item) => {
-    actionItem("cutting", item, acItem, setCheckedData, setAcItem);
-  }, [actionItem, acItem])
-
+  const { data: dmData = [], isLoading } = useFetchDataQuery({ url: `get/actions/cutting_decrease/${null}`, tags: ["action", "invoices"], });
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
   const sortData = dmData?.data && [...dmData?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
-
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
   const headerData = [
     { name: "Kun", size: "12%" },
     { name: "Ombor", size: "12%" },
@@ -55,7 +40,6 @@ export const StorageCutting = () => {
     { name: "Ta'rif", size: "12%" },
     { name: "Tafsilot", size: "10%", position: "center" },
   ];
-
   const displayKeys = [
     { name: "st1_name", size: "12%" },
     { name: "item_name", size: "12%" },
@@ -94,9 +78,7 @@ export const StorageCutting = () => {
                   "--data-line-size": item?.size,
                   justifyContent: item?.position,
                 }}
-                onClick={() => {
-                  setSort({ id: index, state: !sort.state });
-                }}>
+                onClick={() => setSort({ id: index, state: !sort.state })}>
                 {item?.name}
                 {sort.id === index &&
                   (sort.state ? <RiArrowUpSLine /> : <RiArrowDownSLine />)}
@@ -115,25 +97,17 @@ export const StorageCutting = () => {
               return (
                 <div
                   key={item?.id}
-                  className={
-                    showMore?.includes(item?.id)
-                      ? "storage_body__box active"
-                      : "storage_body__box"
-                  }>
+                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}>
                   <div
-                    className={
-                      acItem === item?.id
-                        ? "storage_body_item active"
-                        : "storage_body_item"
-                    }
+                    className={check ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    onDoubleClick={() => actionItem("cutting", item, check)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItemLabel(item)}
+                        onChange={() => actionItem("cutting", item, check)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -160,18 +134,10 @@ export const StorageCutting = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((i) => i !== item?.id)
-                            : [...prev, item?.id]
-                        )
+                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((i) => i !== item?.id) : [...prev, item?.id])
                       }>
                       <u
-                        style={
-                          showMore?.includes(item?.id)
-                            ? { color: "#787aff" }
-                            : {}
-                        }>
+                        style={showMore?.includes(item?.id) ? { color: "#787aff" } : {}}>
                         tafsilot
                       </u>
                     </p>
@@ -180,30 +146,19 @@ export const StorageCutting = () => {
                     <div className=" storage-body_inner_item">
                       <div className="storage_body_item">
                         <p
-                          style={{
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                          style={{ borderRight: "1px solid #ccc5", }}>
                           №
                         </p>
                         <p
-                          style={{
-                            "--data-line-size": "35%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                          style={{ "--data-line-size": "35%", borderRight: "1px solid #ccc5", }}>
                           Nomi
                         </p>
                         <p
-                          style={{
-                            "--data-line-size": "20%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                          style={{ "--data-line-size": "20%", borderRight: "1px solid #ccc5", }}>
                           Narxi
                         </p>
                         <p
-                          style={{
-                            "--data-line-size": "25%",
-                            borderRight: "1px solid #ccc5",
-                          }}>
+                          style={{ "--data-line-size": "25%", borderRight: "1px solid #ccc5", }}>
                           Tan Narxi
                         </p>
                         <p style={{ "--data-line-size": "15%" }}>Foyda</p>
@@ -244,13 +199,7 @@ export const StorageCutting = () => {
       </div>
       {open && (
         <Suspense>
-          <InvoicesModal
-            checkedData={checkedData}
-            setCheckedData={setCheckedData}
-            getProduct={getProduct}
-            NUM={!isLoading && { num: dmData?.length + 1 }}
-            acItem={acItem}
-          />
+          <InvoicesModal NUM={!isLoading && { num: dmData?.length + 1 }} />
         </Suspense>
       )}
     </div>

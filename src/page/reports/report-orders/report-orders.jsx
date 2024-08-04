@@ -67,8 +67,8 @@ export const ReportOrders = () => {
 
   const actionItem = (item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("orderReport", item));
-    navigate(`?page-code=orderReport`);
+    dispatch(setDocuments("orderReport", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=orderReport`);
     setAcItem(item);
   }
 

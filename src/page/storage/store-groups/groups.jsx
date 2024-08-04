@@ -44,7 +44,7 @@ export const StorageGroups = () => {
     );
   };
 
-  const sortData = groupData?.data && [...groupData.data].sort((a, b) => {
+  const sortData = groupData?.data && [...groupData?.data].sort((a, b) => {
     if (sort.state) {
       return a.name.localeCompare(b.name);
     } else {
@@ -66,9 +66,7 @@ export const StorageGroups = () => {
           <GoDotFill onClick={() => navigate("/sections/invoice-group")} />
         </i>
         <p {...handlers} className="df-aic-gap">
-          <span>
-            {"< "} Ingredient guruhlari {" >"}
-          </span>
+          <span>{"< "} Ingredient guruhlari {" >"}</span>
         </p>
         <div className="storage_body_item _item-header">
           <label>
@@ -105,13 +103,13 @@ export const StorageGroups = () => {
             </span>
           ) : (
             sortData?.map((item, index) => {
-              const check = ckddt?.ingGroup?.find((el) => el.id === item.id);
+              const check = ckddt?.ingGroup?.find((el) => el?.id === item?.id);
               return (
                 <div
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item.id}>
                   <div
-                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
+                    className={check ? "storage_body_item active" : "storage_body_item"}
                     key={item.id}
                     onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
@@ -136,17 +134,11 @@ export const StorageGroups = () => {
                         justifyContent: "center",
                       }}
                       onClick={() =>
-                        setShowMore((prev) =>
-                          prev?.includes(item?.id)
-                            ? prev?.filter((el) => el !== item?.id)
-                            : [...prev, item?.id]
+                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((el) => el !== item?.id) : [...prev, item?.id]
                         )
                       }>
                       <u
-                        style={
-                          showMore?.includes(item?.id)
-                            ? { color: "#787aff" }
-                            : {}
+                        style={showMore?.includes(item?.id) ? { color: "#787aff" } : {}
                         }>
                         ingredientlar
                       </u>
@@ -218,7 +210,7 @@ export const StorageGroups = () => {
           type="group"
           setChecked={setChecked}
           title="Guruh qo'shish"
-          status={acItem.id ? false : true}>
+          status={acItem?.id ? false : true}>
           <input
             type="text"
             name="name"
@@ -227,7 +219,7 @@ export const StorageGroups = () => {
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
     </div>

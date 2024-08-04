@@ -1,28 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { UniversalControlModal, UniversalForm, UniversalProductControl, CalcResultHeader, CalcResultBody, CalcResult } from "../../../components/modal-calc/modal-calc";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acActiveSt_id } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
+import { useSearchAppParams } from "../../../hooks/useSearchParam";
+import { getProductService } from "../../../service/form.service";
+import { LoaderSvg } from "../../../components/loading/loading";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
-  const [activePart, setActivePart] = useState(1); // 1 - product, 2 - invoice
+const InvoicesModal = ({ NUM }) => {
+  const today = new Date().toISOString().split("T")[0]
+  const [activePart, setActivePart] = useState(1);
+  const [checkedData, setCheckedData] = useState([]);
   const acS = useSelector((state) => state.activeSt_id);
   const res_id = useSelector((state) => state.res_id);
+  const { time = today } = useSelector((state) => state.values).vl;
   const dispatch = useDispatch();
-  const { data = [] } = useFetchDataQuery({
-    url: `get/storageItems/${acItem?.st1_id || acS}`,
-    tags: ["invoices"],
-  });
-  const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
-    tags: ["store"],
-  });
-  const { data: groupsData = [] } = useFetchDataQuery({
-    url: `get/InvoiceGroups/${res_id}`,
-    tags: ["invoice-group"],
-  });
+  const { pair } = useSearchAppParams().getAllParams()
+  let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: `get/actions/received_goods/${pair?.id}`, tags: ["invoices"], });
+  const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/storageItems/${pair?.st1_id || acS}/${time}`, tags: ["invoices"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const updatedData = checkedData?.map((newItem) => {
     const oldData =
       data?.data?.find((old) => old?.item_id === newItem?.item_id) || {};
@@ -31,71 +30,78 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
       return {
         ...newItem,
         old_quantity: oldData?.total_quantity || 0,
-        total_quantity: oldData?.total_quantity
-          ? oldData?.total_quantity - parseInt(newItem?.amount)
-          : parseInt(newItem?.amount),
+        total_quantity: oldData?.total_quantity ? oldData?.total_quantity - parseInt(newItem?.amount) : parseInt(newItem?.amount),
         total_price: parseInt(newItem?.amount) * newItem?.price,
       };
     }
 
     return newItem;
   });
+  isLoading = pair?.id ? isLoading : false;
+  acItem = !isLoading ? acItem?.data?.[0] : acItem;
+
+
+  const getProduct = useCallback((item, status) => {
+    if (isLoading) return;
+    getProductService(item, status, acItem, setCheckedData, "used_goods", "expense");
+  }, [acItem, isLoading])
+
   useEffect(() => {
-    if (acItem?.st1_id) {
-      dispatch(acActiveSt_id(acItem?.st1_id));
-    }
-  }, [acItem?.st1_id, dispatch]);
-  const num = acItem?.order ? acItem?.order : NUM.num;
+    if (pair?.st1_id) { dispatch(acActiveSt_id(pair?.st1_id)); }
+  }, [pair?.st1_id, dispatch]);
+
+  useEffect(() => {
+    if (acItem?.ingredients) { setCheckedData(acItem?.ingredients); }
+  }, [acItem?.ingredients]);
+
   return (
     <UniversalControlModal
-      status={acItem?.id ? true : false}
+      status={pair?.id ? true : false}
       type="action"
       Pdata={checkedData}
       setCheckedData={setCheckedData}>
-      <UniversalForm
-        formData={[
-          {
-            type: "inputN",
-            name: "order",
-            plc_hr: "Tartib raqam*",
-            df_value: num || 1,
-          },
-          {
-            type: "inputD",
-            name: "time",
-            df_value: acItem?.time || new Date().toISOString().split("T")[0],
-          },
-          {
-            type: "s_extra",
-            name: "st1_name",
-            take_id: true,
-            extra: "st1_id",
-            df_value: acItem?.st1_name
-              ? { value: acItem?.st1_name, label: acItem?.st1_name }
-              : { value: "default", label: "Ombor tanlang*" },
-            options: storeData?.data,
-            u_option: [acItem?.st1_name, acItem?.st1_id],
-          },
-          {
-            type: "select",
-            name: "invoice_group",
-            df_value: acItem?.invoice_group
-              ? {
-                  value: acItem?.invoice_group,
-                  label: acItem?.invoice_group,
-                }
-              : { value: "default", label: "Guruh tanlang*" },
-            options: groupsData?.data,
-            u_option: [acItem?.invoice_group],
-          },
-          {
-            type: "input",
-            name: "description",
-            plc_hr: "Tavsif",
-            df_value: acItem?.description || "",
-          },
-        ]}
-      />
+      {isLoading ? <LoaderSvg color="#eee" fontSize="24px" /> :
+        <UniversalForm
+          formData={[
+            {
+              type: "inputN",
+              name: "order",
+              plc_hr: "Tartib raqam*",
+              df_value: acItem?.order ? acItem?.order : NUM.num,
+            },
+            {
+              type: "inputD",
+              name: "time",
+              df_value: acItem?.time || today,
+            },
+            {
+              type: "s_extra",
+              name: "st1_name",
+              take_id: true,
+              extra: "st1_id",
+              df_value: acItem?.st1_name
+                ? { value: acItem?.st1_name, label: acItem?.st1_name }
+                : { value: "default", label: "Ombor tanlang*" },
+              options: storeData?.data,
+              u_option: [acItem?.st1_name, acItem?.st1_id],
+            },
+            {
+              type: "select",
+              name: "invoice_group",
+              df_value: acItem?.invoice_group
+                ? { value: acItem?.invoice_group, label: acItem?.invoice_group, }
+                : { value: "default", label: "Guruh tanlang*" },
+              options: groupsData?.data,
+              u_option: [acItem?.invoice_group],
+            },
+            {
+              type: "input",
+              name: "description",
+              plc_hr: "Tavsif",
+              df_value: acItem?.description || "",
+            },
+          ]}
+        />}
       <UniversalProductControl
         activePart={activePart}
         setActivePart={setActivePart}>
@@ -115,7 +121,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
           <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
-          {data?.data?.map((item, index) => {
+          {gl ? <LoaderSvg color="#eee" fontSize="24px" /> : data?.data?.map((item, index) => {
             const checked = checkedData?.find((i) => i.item_id === item?.item_id);
             return (
               <div
@@ -169,7 +175,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
-          status="inv"
+          total={false}
           displayKeys={[
             { name: "item_name", size: "15%" },
             { name: "item_type", size: "13.33%", position: 1 },

@@ -75,8 +75,8 @@ export const CashboxTransaction = () => {
 
   const actionItem = useCallback((item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("trsn", item));
-    navigate(`?page-code=trsn`);
+    dispatch(setDocuments("trsn", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=trsn`);
     setAcItem(item);
   }, [acItem?.id, dispatch, navigate])
 

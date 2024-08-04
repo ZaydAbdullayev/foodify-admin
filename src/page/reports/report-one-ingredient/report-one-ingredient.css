@@ -17,9 +17,7 @@
 }
 
 .row-table > p > span {
-  inline-size: calc(
-    var(--title-w) + ((var(--row-table-height) * 1.1) * var(--extra-w))
-  );
+  inline-size: calc(var(--title-w) + ((var(--row-table-height) * 1.1) * var(--extra-w)));
   padding: 0.5%;
   text-align: center;
   background-color: var(--cl26);
@@ -28,6 +26,10 @@
 
 .row-table > .row-table-item {
   width: var(--title-w);
+  background: linear-gradient(90deg, var(--cl59), var(--cl54));
+  > :where(p, label) {
+    padding: 0 2% 0 4% !important;
+  }
 }
 
 .row-table .row-table-item {
@@ -40,8 +42,8 @@
   padding: 0 2%;
   display: flex;
   align-items: center;
-  border-right: 1px solid var(--cl61);
-  border-bottom: 1px solid var(--cl61);
+  border-right: 1px solid var(--cl14);
+  border-bottom: 1px solid var(--cl14);
 }
 
 /*.row-table-box > .row-table-item > :where(p, label) {

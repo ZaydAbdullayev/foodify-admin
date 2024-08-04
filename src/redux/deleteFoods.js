@@ -35,9 +35,7 @@ export const rootDocuments = (state = initialState, action) => {
       const newDocument = action.payload.document;
 
       if (existingDocuments?.some((doc) => doc?.id === newDocument?.id)) {
-        const filteredDocuments = existingDocuments.filter(
-          (doc) => doc?.id !== newDocument?.id
-        );
+        const filteredDocuments = existingDocuments?.filter((doc) => doc?.id !== newDocument?.id);
 
         return {
           ...state,
@@ -55,9 +53,10 @@ export const rootDocuments = (state = initialState, action) => {
         [action.payload.roomId]: [],
       };
     case "SET_ALL_DOCUMENTS":
+      const allIds = state[action.payload.roomId]?.map((doc) => ({ id: doc.id, st1_id: doc?.st1_id })) || [];
       return {
         ...state,
-        [action.payload.roomId]: action.payload.documents,
+        [action.payload.roomId]: allIds,
       };
 
     default:
@@ -65,25 +64,6 @@ export const rootDocuments = (state = initialState, action) => {
   }
 };
 
-export const setDocuments = (roomId, document) => ({
-  type: "SET_DOCUMENTS",
-  payload: {
-    roomId,
-    document,
-  },
-});
-
-export const setRelease = (roomId) => ({
-  type: "SET_RELEASE",
-  payload: {
-    roomId,
-  },
-});
-
-export const setAllDocuments = (roomId, documents) => ({
-  type: "SET_ALL_DOCUMENTS",
-  payload: {
-    roomId,
-    documents,
-  },
-});
+export const setDocuments = (roomId, document) => ({ type: "SET_DOCUMENTS", payload: { roomId, document, }, });
+export const setRelease = (roomId) => ({ type: "SET_RELEASE", payload: { roomId, }, });
+export const setAllDocuments = (roomId, documents) => ({ type: "SET_ALL_DOCUMENTS", payload: { roomId, documents, }, });

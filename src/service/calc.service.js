@@ -20,7 +20,7 @@ export const CalculateTotalQuantity = (cart, key, qty = null) => {
       return accumulator + parseInt(item[key], 10) * quantityMultiplier;
     }, 0) || 0;
 
-  return totalPrice?.toFixed(2);
+  return totalPrice;
 };
 
 export const CalculateTotalP = (cart, first, second) => {

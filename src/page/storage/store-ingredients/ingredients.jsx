@@ -95,10 +95,10 @@ export const StorageIngredients = () => {
                 const check = ckddt?.ingredient?.find((el) => el.item_id === item.item_id);
               return (
                 <div
-                  className={showMore?.includes(item?.item_id) ? "storage_body__box active" : "storage_body__box"}>
+                  className={showMore?.includes(item?.item_id) ? "storage_body__box active" : "storage_body__box"}
+                  key={item.item_id}>
                   <div
                     className={acItem === item.item_id ? "storage_body_item active" : "storage_body_item"}
-                    key={item.item_id}
                     onDoubleClick={() => actionItemLabel(item)}>
                     <label aria-label="checked this elements">
                       <input

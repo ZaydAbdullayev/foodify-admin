@@ -1,40 +1,25 @@
-import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { useNavigate } from "react-router-dom";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments, setRelease, setAllDocuments } from "../../../redux/deleteFoods";
-import { acFormValues } from "../../../redux/active";
+import { setRelease, setAllDocuments } from "../../../redux/deleteFoods";
 import { useActionItemService } from "../../../service/form.service";
-
 const InvoicesModal = lazy(() => import("./carry-item.modal"));
 
 export const StorageCarryUp = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
-  const { actionItem, getProductService } = useActionItemService();
+  const { actionItem } = useActionItemService();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
-
   const { data: movedData = [], isLoading } = useFetchDataQuery({ url: `/get/actions/moved_goods`, tags: ["action", "invoices"], });
-
-  const getProduct = useCallback((item, status) => {
-    getProductService(item, status, acItem, setCheckedData, "moved_goods", "transfer");
-  }, [acItem, getProductService])
-
-  const actionItemLabel = useCallback((item) => {
-    actionItem("movedGoods", item, acItem, setCheckedData, setAcItem);
-  }, [actionItem, acItem])
 
   const sortData = movedData?.data && [...movedData?.data]?.sort((a, b) => {
     if (sort.state) {
@@ -43,7 +28,6 @@ export const StorageCarryUp = () => {
       return b?.name?.localeCompare(a.name);
     }
   });
-
   const headerKeys = [
     { name: "Kun", size: "14%", sort: true },
     { name: "Ombordan", size: "14%", sort: true },
@@ -53,7 +37,6 @@ export const StorageCarryUp = () => {
     { name: "Tavsif", size: "14%", sort: true },
     { name: "Tafsilot", size: "10%", position: "center" },
   ];
-
   const displayKeys = [
     { name: "st1_name", size: "14%" },
     { name: "st2_name", size: "14%" },
@@ -61,7 +44,6 @@ export const StorageCarryUp = () => {
     { name: "invoice_group", size: "14%" },
     { name: "description", size: "14%" },
   ];
-
   const innerHeaderKeys = [
     { name: "№", border: "1px solid #ccc5" },
     { name: "Nomi", size: "35%", border: "1px solid #ccc5" },
@@ -69,7 +51,6 @@ export const StorageCarryUp = () => {
     { name: "Miqdori", size: "15%", border: "1px solid #ccc5" },
     { name: "Jami", size: "25%" },
   ];
-
   const innerDisplayKeys = [
     { name: "item_name", size: "35%" },
     { name: "price", size: "20%" },
@@ -102,11 +83,7 @@ export const StorageCarryUp = () => {
               <label
                 style={{ "--data-line-size": item?.size, justifyContent: item?.position, }}
                 key={index}
-                onClick={() => {
-                  if (item?.sort) {
-                    setSort({ id: index, state: !sort.state });
-                  }
-                }}>
+                onClick={() => { if (item?.sort) { setSort({ id: index, state: !sort.state }); } }}>
                 <p>{item?.name}</p>
                 {sort.id === index ? (
                   sort.state ? (
@@ -133,15 +110,15 @@ export const StorageCarryUp = () => {
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item?.id}>
                   <div
-                    className={acItem === item?.id || check ? "storage_body_item active" : "storage_body_item"}
+                    className={check ? "storage_body_item active" : "storage_body_item"}
                     key={item?.id}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    onDoubleClick={() => actionItem("movedGoods", item, check)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItemLabel(item)}
+                        onChange={() => actionItem("movedGoods", item, check)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -210,13 +187,7 @@ export const StorageCarryUp = () => {
       </div>
       {open && (
         <Suspense>
-          <InvoicesModal
-            checkedData={checkedData}
-            setCheckedData={setCheckedData}
-            getProduct={getProduct}
-            NUM={!isLoading && { num: movedData?.data?.length + 1 }}
-            acItem={acItem}
-          />
+          <InvoicesModal NUM={!isLoading && { num: movedData?.data?.length + 1 }} />
         </Suspense>
       )}
     </div>

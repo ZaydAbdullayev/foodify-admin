@@ -68,8 +68,8 @@ export const TransactionGroups = () => {
 
   const actionItem = (item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("cashboxGr", item));
-    navigate(`?page-code=cashboxGr`);
+    dispatch(setDocuments("cashboxGr", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=cashboxGr`);
     setAcItem(item);
   }
 
@@ -133,7 +133,7 @@ export const TransactionGroups = () => {
               const check = ckddt?.cashboxGr?.some((el) => el.id === item.id);
               return (
                 <div
-                  className={acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
+                  className={acItem?.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
                   onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">

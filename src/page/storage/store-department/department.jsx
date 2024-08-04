@@ -118,7 +118,7 @@ export const StorageDep = () => {
           type="dep"
           setChecked={setChecked}
           title="Bo'lim qo'shish"
-          status={acItem.id ? false : true}>
+          status={acItem?.id ? false : true}>
           <input
             type="text"
             name="name"
@@ -127,9 +127,9 @@ export const StorageDep = () => {
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
           <select name="storage">
-            {acItem.id ? (
+            {acItem?.id ? (
               <option value={acItem.storage}>{acItem.storage}</option>
             ) : (
               <option value="default">Ombor tanlang</option>

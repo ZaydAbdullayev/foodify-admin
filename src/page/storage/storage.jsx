@@ -36,8 +36,8 @@ export const Storage = () => {
 
   const actionItem = (item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("main", item));
-    navigate(`?page-code=main`);
+    dispatch(setDocuments("main", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=main`);
     setAcItem(item);
   }
 
@@ -84,7 +84,7 @@ export const Storage = () => {
               return (
                 <div
                   className={
-                    acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
+                    acItem?.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
                   onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
@@ -117,7 +117,7 @@ export const Storage = () => {
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
     </div>

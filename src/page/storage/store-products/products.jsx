@@ -68,12 +68,13 @@ export const StorageProducts = () => {
 
   const actionItemLabel = useCallback((item) => {
     const acID = acItem?.food_id;
-    dispatch(acID ? acPassiveThing() : acActiveThing(item));
-    dispatch(setDocuments("products", item));
-    navigate(`?page-code=products`);
+    const mutationItem = { ...item };
+    delete mutationItem?.ingredients;
+    dispatch(setDocuments("products", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=products`);
     setAcItem(acID ? { food_id: null, ingredients: [] } : item);
     setCheckedData(acID ? [] : item.ingredients);
-    dispatch(acFormValues("A_V", { food_id: item.food_id, food_name: item?.food_name }))
+    dispatch(acFormValues("A_F_V", mutationItem))
   }, [acItem?.food_id, dispatch, navigate]);
 
   const modalData = activePart === 1 ? ingredients : products;

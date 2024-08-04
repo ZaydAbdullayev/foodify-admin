@@ -19,10 +19,10 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const name = user?.name || user?.username;
   const { data: cashs = [] } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
   const { data: trg = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${user?.id}`, tags: ["cashbox"], });
-  const { data: p_h = [] } = useFetchDataQuery({ url: `/get/paymentHistory/${pay?.id}`, tags: ["payment_history"], });
+  const { data: p_h = [] } = useFetchDataQuery({ url: `get/paymentHistory/${pay?.id}`, tags: ["payment_history"], });
   const { data: sp = [] } = useFetchDataQuery({
     url: `get/supplierPayments/${pay?.supplier_id}`,
-    tags: ["cashbox"],
+    tags: ["supplier_payments"],
   });
 
   console.log("p_h", p_h);
@@ -57,7 +57,7 @@ const InvoicesPaymentModal = ({ s, setS }) => {
       const res1 = await postData({
         url: "add/transaction",
         data: { ...value, supplier: `${pay?.supplier}/_${pay?.supplier_id}`, },
-        tags: [""],
+        tags: ["payment_history", "supplier_payments", "action"],
       });
       // if (res1?.data?.message === "Transaction has been added") {
       //   if (type === "double") {
@@ -82,10 +82,10 @@ const InvoicesPaymentModal = ({ s, setS }) => {
       //   // e.target.reset();
       //   // setS(false);
       // }
-      console.log("res1", res1);
+      console.log("res1", res1?.data?.status);
       if (res1?.data?.status === 200) {
         e.target.reset();
-        setS(false);
+        setS(!s)
       }
     } catch (error) {
       console.error("Error:", error);

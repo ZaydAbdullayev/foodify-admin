@@ -3,7 +3,6 @@ import "../../storage/storage.css";
 import "../universal.css";
 import "./report-one-ingredient.css";
 import { useSelector, useDispatch } from "react-redux";
-import { storageD } from "../../storage/store-data";
 import { acNavStatus } from "../../../redux/navbar.status";
 
 import { LoadingBtn } from "../../../components/loading/loading";
@@ -23,16 +22,6 @@ export const ReportOneIngredient = () => {
   }, [dispatch]);
   console.log(storeData);
   const isLoading = false;
-
-  //   const sortData =
-  //     storeData?.data &&
-  //     [...storeData?.data]?.sort((a, b) => {
-  //       if (sort.state) {
-  //         return a.name.localeCompare(b.name);
-  //       } else {
-  //         return b.name.localeCompare(a.name);
-  //       }
-  //     });
 
   const firstHeaderKeys = [
     "Kun",
@@ -70,7 +59,7 @@ export const ReportOneIngredient = () => {
     },
   ];
 
-  const SecondeHeaderKeys = [
+  const secondeHeaderKeys = [
     "Kun",
     "Chiqim",
     "Xarajatlar uchun",
@@ -90,7 +79,7 @@ export const ReportOneIngredient = () => {
     "resMovementIncome",
   ];
 
-  const SecondeDisplayKeys = [
+  const secondeDisplayKeys = [
     "date",
     "invoiceExpense",
     "displacementExpense",
@@ -101,8 +90,8 @@ export const ReportOneIngredient = () => {
     "resMovementExpense",
   ];
 
-  const headerKeys = part === 1 ? firstHeaderKeys : SecondeHeaderKeys;
-  const displayKeys = part === 1 ? firstDisplayKeys : SecondeDisplayKeys;
+  const headerKeys = part === 1 ? firstHeaderKeys : secondeHeaderKeys;
+  const displayKeys = part === 1 ? firstDisplayKeys : secondeDisplayKeys;
 
   return (
     <div className="storage_container">
@@ -118,8 +107,8 @@ export const ReportOneIngredient = () => {
         <div className="row-table-item">
           {headerKeys?.map((item, index) => {
             return (
-              <label>
-                <p key={index}>{item}</p>
+              <label key={index}>
+                <p >{item}</p>
               </label>
             );
           })}
@@ -134,7 +123,7 @@ export const ReportOneIngredient = () => {
               return (
                 <div
                   className={"row-table-item"}
-                  key={item.id}
+                  key={item?.item_id}
                   style={{ color: item.profit < 0 ? "#f07167" : "" }}
                 >
                   {displayKeys?.map((key, ind) => (

@@ -28,22 +28,23 @@ export const GenerateField = ({ fieldData }) => {
     getFullInfo = false,
   } = fieldData;
 
-  useEffect(() => {
-    const dfVal = df_value?.value || df_value;
-    if ((df_value && dfVal !== "default") && values?.vl[name] !== dfVal) {
-      const isSelectableType = ["s_extra", "s_search", "select"].includes(type);
-      if (u_option.length > 0 && isSelectableType) {
-        const payload = extra ? { [name]: u_option[0], [extra]: u_option[1] } : { [name]: u_option[0] };
-        dispatch(acFormValues("A_V", payload));
-      } else {
-        dispatch(acFormValues("A_V", { [name]: dfVal }));
-      }
-    }
-  }, [dispatch, values?.vl, name, df_value, type, u_option, extra]);
+  // useEffect(() => {
+  //   const dfVal = df_value?.value || df_value;
+  //   if ((df_value && dfVal !== "default") && values?.vl[name] !== dfVal) {
+  //     const isSelectableType = ["s_extra", "s_search", "select"].includes(type);
+  //     if (u_option.length > 0 && isSelectableType) {
+  //       const payload = extra ? { [name]: u_option[0], [extra]: u_option[1] } : { [name]: u_option[0] };
+  //       dispatch(acFormValues("A_V", payload));
+  //     } else {
+  //       dispatch(acFormValues("A_V", { [name]: dfVal }));
+  //     }
+  //   }
+  // }, [dispatch, values?.vl, name, df_value, type, u_option, extra]);
 
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");
+    console.log(getFullInfo, value);
     if (!getFullInfo) {
       dispatch(
         acFormValues("A_V", {
@@ -54,7 +55,9 @@ export const GenerateField = ({ fieldData }) => {
         })
       );
     } else {
+      console.log("ishladi");
       const i = options.find((item) => item.item_id === value[1]);
+      console.log("i", i);
       dispatch(acActive(i ? i : {}));
     }
     if (take_id) {

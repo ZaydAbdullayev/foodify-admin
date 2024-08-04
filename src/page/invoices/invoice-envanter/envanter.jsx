@@ -66,8 +66,8 @@ export const InvoiceInvantar = () => {
 
   const actionItem = (item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("envanter", item));
-    navigate(`?page-code=envanter`);
+    dispatch(setDocuments("envanter", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=envanter`);
     setAcItem(item);
   }
 

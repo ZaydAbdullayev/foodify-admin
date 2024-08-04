@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { UniversalControlModal } from "../../../components/modal-calc/modal-calc";
 import { UniversalForm } from "../../../components/modal-calc/modal-calc";
 import { UniversalProductControl } from "../../../components/modal-calc/modal-calc";
@@ -6,41 +6,60 @@ import { CalcResultHeader } from "../../../components/modal-calc/modal-calc";
 import { CalcResultBody } from "../../../components/modal-calc/modal-calc";
 import { CalcResult } from "../../../components/modal-calc/modal-calc";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { addAllIng } from "../../../service/unique.service";
+import { useSearchAppParams } from "../../../hooks/useSearchParam";
+import { getProductService } from "../../../service/form.service";
+import { acActiveSt_id } from "../../../redux/active";
+import { LoaderSvg } from "../../../components/loading/loading";
 
-const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }) => {
+const InvoicesModal = ({ NUM }) => {
   const today = new Date().toISOString().split("T")[0]
   const res_id = useSelector((state) => state?.res_id);
   const id = useSelector((state) => state?.activeSt_id);
   const { time = today } = useSelector((state) => state?.values).vl;
   const [activePart, setActivePart] = useState(1);
-  const { data = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
+  const [checkedData, setCheckedData] = useState([]);
+  const { pair } = useSearchAppParams().getAllParams();
+  const dispatch = useDispatch();
+  let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: pair?.id ? `get/actions/received_goods/${pair?.id}` : null, tags: ["invoices"], });
+  const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
-  const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${acItem.st1_id || id}/${time}`, tags: ["invoices", "action"], });
-  // const { data: productData = [] } = useFetchDataQuery({
-  //   url: `get/foods/${res_id}`,
-  //   tags: ["s-products", "product"],
-  // });
-  const parsedData = storageItems?.data;
+  const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${pair.st1_id || id}/${time}`, tags: ["invoices", "action"], });
+  const { data: productData = [] } = useFetchDataQuery({ url: `get/foods/${res_id}`, tags: ["s-products", "product"], });
+  isLoading = pair?.id ? isLoading : false;
+  acItem = !isLoading ? acItem?.data?.[0] : acItem;
 
   const updatedData = checkedData.map((newItem) => {
-    const oldData = parsedData?.find((old) => old.id === newItem.id);
+    const oldData = storageItems?.data?.find((old) => old.item_id === newItem.item_id);
 
     if (oldData) {
       const n = parseFloat(newItem?.amount) || 0;
       return {
         ...newItem,
         old_quantity: oldData?.total_quantity,
-        total_quantity: oldData?.total_quantity ? oldData?.total_quantity + n : n,
+        total_quantity: oldData?.total_quantity ? oldData?.total_quantity - n : -n,
       };
     }
 
     return newItem;
   });
 
-  const currentData = activePart === 1 ? data?.data : storageItems?.data;
+  const getProduct = useCallback((item, status) => {
+    if (isLoading) return;
+    getProductService(item, status, acItem, setCheckedData, "cutting_increase", "income");
+  }, [acItem, isLoading])
+
+  useEffect(() => {
+    if (pair?.st1_id) { dispatch(acActiveSt_id(pair?.st1_id)); }
+  }, [pair?.st1_id, dispatch]);
+
+  useEffect(() => {
+    if (acItem?.ingredients) { setCheckedData(acItem?.ingredients); }
+  }, [acItem?.ingredients]);
+
+  const currentData = activePart === 1 ? data?.data : productData?.data;
   return (
     <UniversalControlModal
       status={acItem?.id ? true : false}
@@ -48,8 +67,9 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
       Pdata={checkedData}
       id={id}
       setCheckedData={setCheckedData}
-      sp={"making_decrease"}>
-      <UniversalForm
+      sp={"making_decrease"}
+    >
+      {isLoading ? <LoaderSvg color="#eee" fontSize="24px" /> : <UniversalForm
         formData={[
           {
             type: "inputN",
@@ -66,6 +86,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             type: "s_extra",
             name: "item_name",
             extra: "item_id",
+            getFullInfo: true,
             df_value: acItem?.item_id
               ? { value: acItem?.item_id, label: acItem?.item_name }
               : { value: "default", label: "Mahsulot tanlang*" },
@@ -106,7 +127,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             df_value: acItem?.description || "",
           },
         ]}
-      />
+      />}
       <UniversalProductControl
         activePart={activePart}
         setActivePart={setActivePart}>
@@ -115,9 +136,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             <input
               type="checkbox"
               name="id"
-              onChange={() =>
-                addAllIng(checkedData, data?.data, setCheckedData)
-              }
+              onChange={() => addAllIng(checkedData, data?.data, setCheckedData)}
             />
           </label>
           <p style={{ "--data-line-size": "27%" }}>Nomi</p>
@@ -127,7 +146,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
           <p style={{ "--data-line-size": "20%" }}>Miqdori</p>
         </div>
         <div className="product_box_body">
-          {currentData?.map((item) => {
+          {gl ? <LoaderSvg color="#eee" fontSize="24px" /> : currentData?.map((item) => {
             const checked = checkedData.find((i) => i.item_id === item.item_id);
             return (
               <div
@@ -166,9 +185,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
                     <input
                       type="number"
                       defaultValue={item.price}
-                      onChange={(e) =>
-                        getProduct({ ...checked, price: e.target.value }, 1)
-                      }
+                      onChange={(e) => getProduct({ ...checked, price: e.target.value }, 1)}
                     />
                   ) : (
                     item.price
@@ -183,9 +200,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
                     <input
                       type="number"
                       name="amount"
-                      onChange={(e) =>
-                        getProduct({ ...checked, amount: e.target.value }, 1)
-                      }
+                      onChange={(e) => getProduct({ ...checked, amount: e.target.value }, 1)}
                     />
                   )}
                 </p>
@@ -207,6 +222,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
         </CalcResultHeader>
         <CalcResultBody
           data={updatedData}
+          total={true}
           displayKeys={[
             { name: "item_name", size: "18%" },
             { name: "unit", size: "10%", position: 1 },
@@ -214,7 +230,7 @@ const InvoicesModal = ({ checkedData, setCheckedData, getProduct, NUM, acItem, }
             { name: "amount", size: "14%", position: 2 },
             { name: "total_quantity", size: "14%", position: 2 },
             { name: "price", size: "14%", position: 2 },
-            { name: "different", size: "14%", position: 2 },
+            // { name: "different", size: "14%", position: 2 },
           ]}
         />
       </CalcResult>

@@ -64,8 +64,8 @@ export const InvoicesGroups = () => {
 
   const actionItem = (item) => {
     dispatch(acActiveThing(item));
-    dispatch(setDocuments("invGr", item));
-    navigate(`?page-code=invGr`);
+    dispatch(setDocuments("invGr", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=invGr`);
     setAcItem(item);
   }
 
@@ -159,7 +159,7 @@ export const InvoicesGroups = () => {
               required
             />
             <input type="hidden" name="res_id" value={user?.id} />
-            {acItem.id && <input type="hidden" name="id" value={acItem?.id} />}
+            {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
           </UniversalModal>
         </Suspense>
       )}

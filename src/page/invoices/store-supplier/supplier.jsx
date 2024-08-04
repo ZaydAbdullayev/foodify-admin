@@ -39,8 +39,8 @@ export const StorageSupplier = () => {
 
   const actionItem = (item) => {
     dispatch(acActiveThing(item));
-    dispatch(setDocuments("supplier", item));
-    navigate(`?page-code=supplier`);
+    dispatch(setDocuments("supplier", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=supplier`);
     setAcItem(item);
   }
 
@@ -356,7 +356,7 @@ export const StorageSupplier = () => {
             )
           )}
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
     </div>

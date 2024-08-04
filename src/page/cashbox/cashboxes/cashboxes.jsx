@@ -34,8 +34,8 @@ export const Cashboxes = () => {
 
   const actionItem = (item) => {
     dispatch(acActiveThing(item));
-    dispatch(setDocuments("cashbox", item));
-    navigate(`?page-code=cashbox`);
+    dispatch(setDocuments("cashbox", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=cashbox`);
     setAcItem(item);
   }
 
@@ -80,7 +80,7 @@ export const Cashboxes = () => {
               const check = ckddt?.cashbox?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={acItem.id === item.id ? "storage_body_item active" : "storage_body_item"}
+                  className={acItem?.id === item.id ? "storage_body_item active" : "storage_body_item"}
                   key={item.id}
                   onDoubleClick={() => actionItem(item)}>
                   <label aria-label="checked this elements">
@@ -112,7 +112,7 @@ export const Cashboxes = () => {
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
     </div>

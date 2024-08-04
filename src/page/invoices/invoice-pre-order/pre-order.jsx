@@ -87,8 +87,8 @@ export const InvoicePreOrders = () => {
 
   const actionItem = (item) => {
     dispatch(!acItem?.id ? acActiveThing(item) : acPassiveThing());
-    dispatch(setDocuments("preOrder", item));
-    navigate(`?page-code=preOrder`);
+    dispatch(setDocuments("preOrder", { id: item.id, st1_id: item.st1_id }));;
+    navigate(`?pagecode=preOrder`);
     setAcItem(item);
   }
 

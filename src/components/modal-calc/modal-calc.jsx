@@ -18,7 +18,7 @@ import { FaCalculator, FaCheck, FaInfo } from "react-icons/fa";
 import { TbArrowBarLeft } from "react-icons/tb";
 import { RiImageAddFill } from "react-icons/ri";
 import { setRelease } from "../../redux/deleteFoods";
-import { useLocation } from "react-router-dom";
+import { useSearchAppParams } from "../../hooks/useSearchParam";
 const user = JSON.parse(localStorage.getItem("user"))?.user || null;
 
 export const UniversalControlModal = ({ children, status, type, Pdata, Udata, setCheckedData, sp = false, }) => {
@@ -26,7 +26,8 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
   const image = useSelector((state) => state.image);
   const ing = useSelector((state) => state.ing);
   const formV = useSelector((state) => state.values);
-  const p_code = new URLSearchParams(useLocation()?.search).get("page-code");
+  const { getParams } = useSearchAppParams();
+  const p_code = getParams("pagecode");
   const [fetchdata, setFetchdata] = useState({});
   const [loading, setLoading] = useState(false);
   const [postData] = usePostDataMutation();
@@ -150,9 +151,7 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         }
       }
 
-      if (result?.error) {
-        es({ message: "Xatolik", variant: "error" });
-      } else {
+      if (result?.data?.status === 200) {
         es({ message: "Qo'shildi", variant: "success" });
         ClearForm("#u-control-form");
         dispatch(acCloseUModal());
@@ -162,6 +161,8 @@ export const UniversalControlModal = ({ children, status, type, Pdata, Udata, se
         dispatch(acCutting(0));
         dispatch(acGetUrl({ st: false, img: "" }));
         dispatch(setRelease(p_code));
+      } else {
+        es({ message: "Xatolik", variant: "error" });
       }
     } catch (err) {
       console.error(err);
@@ -365,7 +366,7 @@ export const CalcResultHeader = ({ children }) => {
   return <div className="product_box_item">{children}</div>;
 };
 
-export const CalcResultBody = ({ data = [], status, displayKeys }) => {
+export const CalcResultBody = ({ data = [], total, displayKeys }) => {
   return (
     <div className="product_box_body">
       {data?.map((item, index) => (
@@ -381,7 +382,7 @@ export const CalcResultBody = ({ data = [], status, displayKeys }) => {
               {item?.[name] || 0}
             </p>
           ))}
-          {status !== "inv" && (
+          {total && (
             <p
               style={{ "--data-line-size": "18%", justifyContent: "end", }}>
               {(item.price * item.amount)?.toFixed(1)}

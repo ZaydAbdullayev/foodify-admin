@@ -3,7 +3,7 @@ import "./navbar.css";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { acOpenMadal, acCloseModal } from "../../redux/modal";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { acSearch } from "../../redux/search";
 import { acMedia } from "../../redux/media";
 import { UniversalFilterBox } from "../filter/filter";
@@ -22,6 +22,7 @@ import default_img from "../../assets/images/default-img.png";
 import logo from "../../assets/images/logo.png";
 import { SlArrowLeft } from "react-icons/sl";
 import { acFormValues } from "../../redux/active";
+import { useSearchAppParams } from "../../hooks/useSearchParam";
 
 export const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || [];
@@ -30,12 +31,12 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [pathData] = usePatchDataMutation();
+  const { getParams, removeParamsByKeys } = useSearchAppParams();
   const name = user?.user?.username?.split("_")?.join(" ");
   const status = useSelector((state) => state.status);
   const media = useSelector((state) => state.media);
   const delDocuments = useSelector((state) => state.delRouter);
-  const search = useLocation().search;
-  const page_code = new URLSearchParams(search).get("page-code")
+  const page_code = getParams("pagecode")
   const delDatas = delDocuments?.[page_code];
   const [api, contextHolder] = notification.useNotification();
 
@@ -74,6 +75,9 @@ export const Navbar = () => {
   const openUModal = () => {
     dispatch(acFormValues("R_V", {}));
     dispatch(acOpenUModal());
+    if (getParams("id")) {
+      removeParamsByKeys(["id", "st1_id"]);
+    }
   };
 
   const openUModalU = () => {

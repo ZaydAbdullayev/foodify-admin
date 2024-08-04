@@ -1,33 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./payment.css";
 import { useNavigate } from "react-router-dom";
-import { AddPayment } from "./addPayment/addPayment";
+// import { AddPayment } from "./addPayment/addPayment";
 import { useDispatch, useSelector } from "react-redux";
 import { acNavStatus } from "../../redux/navbar.status";
 import { DatePicker, Segmented, Result, Button } from "antd";
 import dayjs from "dayjs";
 import { useFetchDataQuery } from "../../service/fetch.service";
 import { MdTableBar } from "react-icons/md";
+import { LoadingBtn } from "../../components/loading/loading";
 const { RangePicker } = DatePicker;
 
+const AddPayment = lazy(() => import('./addPayment/addPayment.jsx'));
+
 export const Payment = () => {
+  const today = new Date().toISOString().split("T")[0];
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("openOrders");
   const res_id = useSelector((state) => state?.res_id);
   // const search = useLocation().search?.split("=").pop();
-  const [date, setDate] = useState({
-    start: new Date().toISOString().split("T")[0],
-    end: new Date().toISOString().split("T")[0],
-  });
+  const [date, setDate] = useState({ start: today, end: today, });
   const { data: ordersData = [] } = useFetchDataQuery({
     url: `/get/ordersForCashier/${res_id}/${date.start}/${date.end}`,
     tags: ["order"],
   });
   const dispatch = useDispatch();
-  React.useEffect(() => {
-    dispatch(acNavStatus([100]));
-  }, [dispatch]);
+  useEffect(() => { dispatch(acNavStatus([100])); }, [dispatch]);
 
   const getDetails = (id) => {
     navigate(`/financial?dt=${id}`);
@@ -39,6 +38,8 @@ export const Payment = () => {
     closedOrders: "Yopiq",
     debtOrders: "Qarz",
   };
+
+  console.log("ordersData", ordersData?.innerData?.[type]?.length);
 
   return (
     <div className="payment_container">
@@ -65,7 +66,7 @@ export const Payment = () => {
           />
         </div>
       </div>
-      {ordersData?.innerData?.[type] ? (
+      {ordersData?.innerData?.[type]?.length > 0 ? (
         ordersData?.innerData?.[type]?.map((item, index) => {
           const reverseIndex = ordersData?.innerData?.[type]?.length - index;
           const p_data = JSON?.parse(item?.product_data);
@@ -155,7 +156,11 @@ export const Payment = () => {
           />
         </figure>
       )}
-      <AddPayment active={setOpen} actives={open} />
+      {open && (
+        <Suspense fallback={<LoadingBtn />}>
+          <AddPayment active={setOpen} actives={open} />
+        </Suspense>
+      )}
     </div>
   );
 };

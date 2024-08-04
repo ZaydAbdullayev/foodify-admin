@@ -16,7 +16,7 @@ import { FaMoneyBillAlt } from "react-icons/fa";
 import { FcDebt } from "react-icons/fc";
 import { MdMoneyOff } from "react-icons/md";
 
-export const AddPayment = memo(({ active, actives }) => {
+const AddPayment = memo(({ active, actives }) => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || "";
   const dep = JSON.parse(localStorage.getItem("department")) || "";
   const [loading, setLoading] = useState(false);
@@ -269,3 +269,5 @@ export const AddPayment = memo(({ active, actives }) => {
     </div>
   );
 });
+
+export default AddPayment;

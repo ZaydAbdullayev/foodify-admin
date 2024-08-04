@@ -214,7 +214,7 @@ export const StorageCatgegories = () => {
             })}
           </select>
           <input type="hidden" name="res_id" value={user?.id} />
-          {acItem.id && <input type="hidden" name="id" value={acItem.id} />}
+          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
     </div>

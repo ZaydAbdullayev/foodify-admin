@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { DatePicker, Select, Input } from "antd";
@@ -10,9 +10,9 @@ import { calculateMonthRange } from "../../service/calc-date.service";
 import { getFormattedDate } from "../../service/calc-date.service";
 import { calculateWeekRange } from "../../service/calc-date.service";
 import { CgArrowsExchange } from "react-icons/cg";
+import { useSearchAppParams } from "../../hooks/useSearchParam";
 
 import { BsSearch } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 const { RangePicker } = DatePicker;
 
 export const universalFilter = (data, key, value) => {
@@ -28,15 +28,17 @@ export const universalFilter = (data, key, value) => {
 };
 
 
-export const UniversalFilterBox = ({ status }) => {
+export const UniversalFilterBox = ({ status = null }) => {
   const [search, setSearch] = React.useState({});
   const dispatch = useDispatch();
+  const { setParams } = useSearchAppParams()
   const { date } = useSelector((state) => state.uSearch);
   const res_id = useSelector((state) => state.res_id);
+  let fields = useSelector((state) => state.status);
   const { data = [] } = useFetchDataQuery({ url: `get/cashbox/${res_id}`, tags: ["cashbox"], });
-  const { data: storage = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: storage = [], isLoading: sl } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
   const { data: ingredientData = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
-  const navigate = useNavigate();
+  fields = status ? status : fields;
 
   const today = getFormattedDate(0);
   const yesterday = getFormattedDate(1);
@@ -51,9 +53,9 @@ export const UniversalFilterBox = ({ status }) => {
     const newValue = e;
     if (fieldName === "date") {
       const rewordValue = JSON.parse(newValue);
-      navigate(`?start=${rewordValue.start}&&end=${rewordValue.end}`);
+      setParams({ start: rewordValue.start, end: rewordValue.end });
     } else {
-      navigate(`?${fieldName}=${newValue}`);
+      setParams({ [fieldName]: newValue });
     }
     if (fieldName === "date")
       return dispatch(acGetNewData(fieldName, JSON.parse(newValue)));
@@ -69,9 +71,15 @@ export const UniversalFilterBox = ({ status }) => {
     }
   };
 
+  useEffect(() => {
+    if (!sl) {
+      setParams({ storage: storage?.data?.[0]?.id || "all" });
+    }
+  }, [setParams, sl, storage?.data])
+
   return (
     <div className="short-hands_sort__box">
-      {status?.includes(5) && (
+      {fields?.includes(5) && (
         <label aria-label="to filter the data according by name">
           <Input
             name="name"
@@ -81,7 +89,7 @@ export const UniversalFilterBox = ({ status }) => {
           />
         </label>
       )}
-      {status?.includes(4) && (
+      {fields?.includes(4) && (
         <label aria-label="to filter the data according by group">
           <Input
             name="group"
@@ -90,7 +98,7 @@ export const UniversalFilterBox = ({ status }) => {
           />
         </label>
       )}
-      {status?.includes(6) && (
+      {fields?.includes(6) && (
         <Select
           defaultValue={{
             value: JSON.stringify({ start: today, end: today }),
@@ -125,7 +133,7 @@ export const UniversalFilterBox = ({ status }) => {
           ]}
         />
       )}
-      {status?.includes(8) && (
+      {fields?.includes(8) && (
         <Select
           defaultValue={{ value: "all", label: "Kassa bo'yicha" }}
           aria-label="select cashbox"
@@ -138,7 +146,7 @@ export const UniversalFilterBox = ({ status }) => {
           }
         />
       )}
-      {status?.includes(9) && (
+      {fields?.includes(9) && (
         <Select
           defaultValue={{ value: "all", label: "Ombor bo'yicha" }}
           aria-label="select storage"
@@ -151,7 +159,7 @@ export const UniversalFilterBox = ({ status }) => {
           }
         />
       )}
-      {status?.includes(10) && (
+      {fields?.includes(10) && (
         <label aria-label="to filter the data according by waiter">
           <Input
             name="waiter"
@@ -160,7 +168,7 @@ export const UniversalFilterBox = ({ status }) => {
           />
         </label>
       )}
-      {status?.includes(11) && (
+      {fields?.includes(11) && (
         <label aria-label="to filter the data according by table/room's location">
           <Input
             name="location"
@@ -169,7 +177,7 @@ export const UniversalFilterBox = ({ status }) => {
           />
         </label>
       )}
-      {status?.includes(12) && (
+      {fields?.includes(12) && (
         <label aria-label="to filter the data according by table or room">
           <Input
             name="table"
@@ -178,7 +186,7 @@ export const UniversalFilterBox = ({ status }) => {
           />
         </label>
       )}
-      {status?.includes(7) && (
+      {fields?.includes(7) && (
         <label>
           {window.innerWidth > 768 ? (
             <RangePicker
@@ -211,7 +219,7 @@ export const UniversalFilterBox = ({ status }) => {
           )}
         </label>
       )}
-      {status?.includes(13) && (
+      {fields?.includes(13) && (
         <Select
           showSearch
           style={{
@@ -229,13 +237,13 @@ export const UniversalFilterBox = ({ status }) => {
           }
           options={
             ingredientData?.data?.map((item) => ({
-              value: item?.id,
-              label: item?.name,
+              value: item?.item_id,
+              label: item?.item_name,
             })) || []
           }
         />
       )}
-      {status?.includes(15) && (
+      {fields?.includes(15) && (
         <button
           style={
             search.length ? {} : { opacity: "0.4", border: "1px solid #ccc6" }

@@ -4,7 +4,6 @@ import "./assets/root.css";
 import { Route, Routes } from "react-router-dom";
 import { Home } from "./page/home/home";
 import { Layout } from "./layout/layout";
-import { Sidebar } from "./components/sideBar/sidebar";
 import { Restaurant } from "./page/restaurants/restaurant";
 import { CheackDepartment, Login } from "./auth/login";
 import { Auth } from "./auth/auth";
@@ -14,7 +13,7 @@ import { Statistics } from "./components/statistics/layout.statis";
 import { StatisticsIncome, StatisticDetails, StatisticsExpenses, BillReportById, BillsReport } from "./components/statistics/bill.jsx";
 import { Document } from "./page/document/document";
 import { Payment } from "./page/payment/payment";
-import { AddPayment } from "./page/payment/addPayment/addPayment.jsx";
+import AddPayment from "./page/payment/addPayment/addPayment.jsx";
 import { Workers } from "./page/workers/workers";
 import { AddWorker } from "./page/workers/addWorker/addWorker";
 import { PaymentCheck } from "./components/payment-check/check";
@@ -49,9 +48,6 @@ import { NavigationPanel } from "./page/navigation/navigation";
 import { TableBox } from "./page/table-box/table-box";
 import { Orders } from "./page/orders/orders";
 import { OrderById } from "./page/order-by-id/order-by-id";
-// import { InvoiceInvantar } from "./page/invoices/invoice-envanter/envanter";
-import { Howl } from "howler";
-import audio from "./assets/images/nothification.mp3";
 import { acDeviceWidth } from "./redux/media";
 import { acNothification } from "./redux/nothification";
 import { NothificationPage } from "./page/nothification/nothification.jsx";
@@ -63,166 +59,108 @@ import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx
 import { Result, Button } from "antd";
 import { setRelease } from "./redux/deleteFoods.js";
 import { acFormValues } from "./redux/active.js";
+import { useSearchAppParams } from "./hooks/useSearchParam.js";
+import { Howl } from "howler";
+import audio from "./assets/images/nothification.mp3";
 
-export const Router = () => {
-  const department = useSelector((state) => state.permission);
-  const nothificate = useSelector((state) => state.nothificate);
-  const lc = useLocation();
-  const page_code = new URLSearchParams(lc?.search).get("page-code")
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (nothificate) {
-      let sound = new Howl({
-        src: [audio],
-        html5: true,
-      });
-      sound.play();
-      setTimeout(() => {
-        sound.stop();
-        dispatch(acNothification(false));
-      }, 1000);
-    }
-  }, [dispatch, nothificate]);
-
-  useEffect(() => {
-    dispatch(acCloseUModal());
-    dispatch(setRelease(page_code));
-  }, [dispatch, lc?.search, page_code]);
-
-  useEffect(() => {
-    dispatch(acFormValues("R_V", {}));
-  }, [dispatch, lc?.pathname]);
-
-  useEffect(() => {
-    if (window.innerWidth < 600) {
-      dispatch(acDeviceWidth(true));
-    } else {
-      dispatch(acDeviceWidth(false));
-    }
-  }, [dispatch]);
-
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      {department === "creator" ? (
-        <Route path="/" element={<Auth />}>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="sidebar" element={<Sidebar />} />
-            <Route path="product/add" element={<Addproduct />} />
-            <Route path="restaurant/add" element={<Restaurant />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Route>
-      ) : (
-        <Route path="/" element={<Auth />}>
-          <Route path="check" element={<CheackDepartment />} />
-          <Route path="/" element={<Layout />}>
-            {/* ============== pages of the navbar ================= */}
-            <Route path="" element={<Statistics />} />
-            <Route path="statistics" element={<Statistics />} />
-            <Route path="my-receive-orders" element={<MyOrder />} />
-            <Route path="nothifications" element={<NothificationPage />} />
-
-            {/* ============== pages of the sidebar ================= */}
-            <Route path="managment" element={<Blog />}>
-              <Route path="" element={<Products />} />
-              <Route path="workers" element={<Workers />} />
-              <Route path="inventory" element={<Inventory />} />
-            </Route>
-
-            <Route path="orders" element={<Blog />}>
-              <Route path="" element={<Home />} />
-              <Route path="pre-orders" element={<InvoicePreOrders />} />
-              <Route path="tables" element={<TableBox />} />
-              <Route path="tables/:type/:number/:id" element={<OrderById />} />
-              <Route path="items-report" element={<ReportItems />} />
-              <Route path="rejects" element={<ReportRejects />} />
-            </Route>
-            <Route path="financial" element={<Blog />}>
-              <Route path="" element={<Payment />} />
-              <Route path="cashbox" element={<Cashboxes />} />
-              <Route path="order-reports" element={<ReportOrders />} />
-              <Route path="payment" element={<AddPayment />} />
-              <Route
-                path="cashbox/transactions"
-                element={<CashboxTransaction />}
-              />
-              <Route
-                path="cashbox/transaction-report"
-                element={<TransactionRapor />}
-              />
-              <Route path="get/check/:id" element={<PaymentCheck />} />
-            </Route>
-            <Route path="sections" element={<Blog />}>
-              <Route path="storage" element={<Storage />} />
-              <Route path="departments" element={<StorageDep />} />
-              <Route path="categories" element={<StorageCatgegories />} />
-              <Route path="ingredients" element={<StorageIngredients />} />
-              <Route path="groups" element={<StorageGroups />} />
-              <Route path="s-products" element={<StorageProducts />} />
-              <Route path="" element={<StorageSupplier />} />
-              <Route path="invoice-group" element={<InvoicesGroups />} />
-              <Route
-                path="cashbox/transaction-group"
-                element={<TransactionGroups />}
-              />
-            </Route>
-            <Route path="storage" element={<Blog />}>
-              <Route path="" element={<StorageInvoices />} />
-              <Route path="expenses" element={<StorageExpenditures />} />
-              <Route path="cutting" element={<StorageCutting />} />
-              <Route path="damaged-items" element={<StorageDamaged />} />
-              <Route path="carry-up" element={<StorageCarryUp />} />
-              <Route path="making-food" element={<InvoicesMakingFood />} />
-            </Route>
-            <Route path="other-pages" element={<Blog />}>
-              <Route path="supplier-reports" element={<ReportSuppliers />} />
-              <Route path="documents" element={<Document />} />
-              <Route path="navigation" element={<NavigationPanel />} />
-              <Route
-                path="report-according-by-one-ingredient"
-                element={<ReportOneIngredient />}
-              />
-              <Route
-                path="ingredient-reports"
-                element={<ReportIngredients />}
-              />
-            </Route>
-
-            {/* ============== pages of the single ================= */}
-            <Route path="more/info/:id" element={<ShowProduct />} />
-            <Route
-              path="get-full-report/:res_id/:storage_id/:storage/:id/:item/:type"
-              element={<FullReportById />}
-            />
-            <Route path="view/food-report/:id" element={<ReportOneItems />} />
-            <Route path="statistic/:name" element={<StatisticsExpenses />} />
-            <Route path="statistic/incomes" element={<StatisticsIncome />} />
-            <Route path="statistic-details" element={<StatisticDetails />} />
-            <Route path="bills-report" element={<BillsReport />} />
-            <Route path="one-bill-report/:id" element={<BillReportById />} />
-            <Route path="report-ingredients/:id" element={<FullReportById />} />
-            <Route path="category/:type/:number/:id" element={<Orders />} />
-            <Route
-              path="update-order/:type/:number/:id/:ProductId/:queue"
-              element={<Orders />}
-            />
-
-            {/* ============== pages of the modal ================= */}
-            <Route path="add/product" element={<Addproduct />} />
-            <Route path="workers/add" element={<AddWorker />} />
-
-            {/* ============== pages of the other ================= */}
-            <Route path="sidebar" element={<Sidebar />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Route>
-      )}
-    </Routes>
-  );
+const routes = {
+  creator: {
+    path: "/", element: <Auth />, children: [
+      {
+        path: "/", element: <Layout />, children: [
+          { path: "/", element: <Home /> },
+          { path: "product/add", element: <Addproduct /> },
+          { path: "restaurant/add", element: <Restaurant /> },
+        ]
+      }
+    ]
+  },
+  user: {
+    path: "/", element: <Auth />, children: [
+      { path: "check", element: <CheackDepartment /> },
+      {
+        path: "/", element: <Layout />, children: [
+          { path: "", element: <Statistics /> },
+          { path: "statistics", element: <Statistics /> },
+          { path: "my-receive-orders", element: <MyOrder /> },
+          { path: "nothifications", element: <NothificationPage /> },
+          {
+            path: "managment", element: <Blog />, children: [
+              { path: "", element: <Products /> },
+              { path: "workers", element: <Workers /> },
+              { path: "inventory", element: <Inventory /> }
+            ]
+          },
+          {
+            path: "orders", element: <Blog />, children: [
+              { path: "", element: <Home /> },
+              { path: "pre-orders", element: <InvoicePreOrders /> },
+              { path: "tables", element: <TableBox /> },
+              { path: "tables/:type/:number/:id", element: <OrderById /> },
+              { path: "items-report", element: <ReportItems /> },
+              { path: "rejects", element: <ReportRejects /> }
+            ]
+          },
+          {
+            path: "financial", element: <Blog />, children: [
+              { path: "", element: <Payment /> },
+              { path: "cashbox", element: <Cashboxes /> },
+              { path: "order-reports", element: <ReportOrders /> },
+              { path: "payment", element: <AddPayment /> },
+              { path: "cashbox/transactions", element: <CashboxTransaction /> },
+              { path: "cashbox/transaction-report", element: <TransactionRapor /> },
+              { path: "get/check/:id", element: <PaymentCheck /> }
+            ]
+          },
+          {
+            path: "sections", element: <Blog />, children: [
+              { path: "storage", element: <Storage /> },
+              { path: "departments", element: <StorageDep /> },
+              { path: "categories", element: <StorageCatgegories /> },
+              { path: "ingredients", element: <StorageIngredients /> },
+              { path: "groups", element: <StorageGroups /> },
+              { path: "s-products", element: <StorageProducts /> },
+              { path: "", element: <StorageSupplier /> },
+              { path: "invoice-group", element: <InvoicesGroups /> },
+              { path: "cashbox/transaction-group", element: <TransactionGroups /> }
+            ]
+          },
+          {
+            path: "storage", element: <Blog />, children: [
+              { path: "", element: <StorageInvoices /> },
+              { path: "expenses", element: <StorageExpenditures /> },
+              { path: "cutting", element: <StorageCutting /> },
+              { path: "damaged-items", element: <StorageDamaged /> },
+              { path: "carry-up", element: <StorageCarryUp /> },
+              { path: "making-food", element: <InvoicesMakingFood /> }
+            ]
+          },
+          {
+            path: "other-pages", element: <Blog />, children: [
+              { path: "supplier-reports", element: <ReportSuppliers /> },
+              { path: "documents", element: <Document /> },
+              { path: "navigation", element: <NavigationPanel /> },
+              { path: "report-according-by-one-ingredient", element: <ReportOneIngredient /> },
+              { path: "ingredient-reports", element: <ReportIngredients /> }
+            ]
+          },
+          { path: "more/info/:id", element: <ShowProduct /> },
+          { path: "get-full-report/:st_id/:item_id/:start/:end", element: <FullReportById /> },
+          { path: "view/food-report/:id", element: <ReportOneItems /> },
+          { path: "statistic/:name", element: <StatisticsExpenses /> },
+          { path: "statistic/incomes", element: <StatisticsIncome /> },
+          { path: "statistic-details", element: <StatisticDetails /> },
+          { path: "bills-report", element: <BillsReport /> },
+          { path: "one-bill-report/:id", element: <BillReportById /> },
+          { path: "report-ingredients/:id", element: <FullReportById /> },
+          { path: "category/:type/:number/:id", element: <Orders /> },
+          { path: "update-order/:type/:number/:id/:ProductId/:queue", element: <Orders /> },
+          { path: "add/product", element: <Addproduct /> },
+          { path: "workers/add", element: <AddWorker /> },
+        ]
+      }
+    ]
+  }
 };
 
 const NotFound = () => {
@@ -239,3 +177,65 @@ const NotFound = () => {
     />
   );
 };
+
+export const Router = () => {
+  const dep = useSelector((state) => state.permission);
+  const nothificate = useSelector((state) => state.nothificate);
+  const { getParams, removeParamsByKeys } = useSearchAppParams()
+  const lc = useLocation();
+  const page_code = getParams("pagecode")
+  const route = dep === "creator" ? "creator" : "user";
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (nothificate) {
+      let sound = new Howl({ src: [audio], html5: true, });
+      sound.play();
+      setTimeout(() => {
+        sound.stop();
+        dispatch(acNothification(false));
+      }, 1000);
+    }
+  }, [dispatch, nothificate]);
+
+  useEffect(() => {
+    dispatch(acCloseUModal());
+    dispatch(setRelease(page_code));
+    if (getParams("id")) {
+      removeParamsByKeys(["id", "st1_id"])
+    }
+  }, [dispatch, page_code, removeParamsByKeys, getParams]);
+
+  useEffect(() => {
+    dispatch(acFormValues("R_V", {}));
+  }, [dispatch, lc?.pathname]);
+
+  useEffect(() => {
+    if (window.innerWidth < 600) {
+      dispatch(acDeviceWidth(true));
+    } else {
+      dispatch(acDeviceWidth(false));
+    }
+  }, [dispatch]);
+
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      {routes[route].children.map((route, index) => (
+        <Route key={index} path={route.path} element={route.element}>
+          {route.children?.map((child, index) => (
+            <Route key={index} path={child.path} element={child.element}>
+              {child.children?.map((subChild, index) => (
+                <Route key={index} path={subChild.path} element={subChild.element} />
+              ))}
+            </Route>
+          ))}
+        </Route>
+      ))}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
+

@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useEffect, useCallback } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -15,23 +15,13 @@ const InvoicesModal = lazy(() => import("./damaged.modal"));
 export const StorageDamaged = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
-  const [checkedData, setCheckedData] = useState([]);
   const [showMore, setShowMore] = useState([]);
-  const [acItem, setAcItem] = useState({ id: null, ingredients: [] });
   const ckddt = useSelector((state) => state.delRouter);
   const open = useSelector((state) => state.uModal);
-  const { actionItem, getProductService } = useActionItemService();
+  const { actionItem, } = useActionItemService();
   const dispatch = useDispatch();
   const { data: demagedData = [], isLoading } = useFetchDataQuery({ url: `get/actions/damaged_goods`, tags: ["action"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
-
-  const getProduct = useCallback((item, status) => {
-    getProductService(item, status, acItem, setCheckedData, "damaged_goods", "expense");
-  }, [acItem, getProductService])
-
-  const actionItemLabel = useCallback((item) => {
-    actionItem("damagedGoods", item, acItem, setCheckedData, setAcItem);
-  }, [actionItem, acItem])
 
   const headerKeys = [
     { name: "Kun", size: "16.5%", sort: true },
@@ -67,12 +57,12 @@ export const StorageDamaged = () => {
   ];
 
   const sortData = demagedData?.data && [...demagedData?.data]?.sort((a, b) => {
-      if (sort.state) {
-        return a?.name?.localeCompare(b.name);
-      } else {
-        return b?.name?.localeCompare(a.name);
-      }
-    });
+    if (sort.state) {
+      return a?.name?.localeCompare(b.name);
+    } else {
+      return b?.name?.localeCompare(a.name);
+    }
+  });
 
   return (
     <div className="storage_container">
@@ -136,14 +126,14 @@ export const StorageDamaged = () => {
                   className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
                   key={item?.id}>
                   <div
-                    className={acItem === item?.id ? "storage_body_item active" : "storage_body_item"}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    className={check ? "storage_body_item active" : "storage_body_item"}
+                    onDoubleClick={() => actionItem("damagedGoods", item, check)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         name="id"
                         checked={check}
-                        onChange={() => actionItemLabel(item)}
+                        onChange={() => actionItem("damagedGoods", item, check)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>
@@ -232,13 +222,7 @@ export const StorageDamaged = () => {
       </div>
       {open && (
         <Suspense>
-          <InvoicesModal
-            checkedData={checkedData}
-            setCheckedData={setCheckedData}
-            getProduct={getProduct}
-            NUM={!isLoading && { num: demagedData?.data?.length + 1 }}
-            acItem={acItem}
-          />
+          <InvoicesModal NUM={!isLoading && { num: demagedData?.data?.length + 1 }} />
         </Suspense>
       )}
     </div>
