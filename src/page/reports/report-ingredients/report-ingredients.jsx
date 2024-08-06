@@ -77,7 +77,7 @@ export const ReportIngredients = () => {
 
   const renderTooltipText = (data) => {
     const keys = Object.keys(data)
-    return (<p>
+    return (<p style={{ fontSize: "12px" }}>
       {keys.map((key, index) => {
         return <span className="w100 df aic jcsb" key={index}>{key}: {data[key]}</span>
       })}
@@ -126,7 +126,7 @@ export const ReportIngredients = () => {
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
                     {displayKeys?.map(({ name, size, position, short, n, t }, ind) => {
                       return t ?
-                        <Tooltip title={renderTooltipText(item?.[t])} color={"#353535"} key={ind} placement="bottom" style={{ fontSize: "10px" }}>
+                        <Tooltip title={renderTooltipText(item?.[t])} color={"#353535"} key={ind} placement="bottom">
                           <p style={{
                             "--data-line-size": size,
                             justifyContent: position || "flex-start",

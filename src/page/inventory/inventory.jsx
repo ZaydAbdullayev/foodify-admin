@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./inventory.css";
-import {
-  useFetchDataQuery,
-  usePostDataMutation,
-  usePatchDataMutation,
-} from "../../service/fetch.service";
+import { useFetchDataQuery, usePostDataMutation, usePatchDataMutation, } from "../../service/fetch.service";
 import { LoadingBtn } from "../../components/loading/loading";
 import { enqueueSnackbar as es } from "notistack";
 import { useDispatch } from "react-redux";
@@ -19,39 +15,23 @@ import { BsPencilSquare } from "react-icons/bs";
 
 export const Inventory = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const { data: stores = [] } = useFetchDataQuery({
-    url: user ? `get/storage/${user?.id}` : "",
-    tags: ["store"],
-  });
-  const { data: syncsData = [] } = useFetchDataQuery({
-    url: user ? `get/actions/sync_goods` : "",
-    tags: ["action"],
-  });
+  const today = new Date().toISOString().split("T")[0];
+  const { data: stores = [] } = useFetchDataQuery({ url: user ? `get/storage` : "", tags: ["store"], });
+  const { data: syncsData = [] } = useFetchDataQuery({ url: user ? `get/actions/sync_goods/${null}` : "", tags: ["action"], });
   const [storage, setStorage] = useState(null);
   const [snc, setSnc] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncsValue, setSyncsValue] = useState([]);
-  const [storageV, setStorageV] = useState({
-    order: 1,
-    time: new Date().toISOString().split("T")[0],
-    description: "",
-  });
+  const [storageV, setStorageV] = useState({ order: 1, time: today, description: "", })
   const [active, setActive] = useState(null);
   const [seeOne, setSeeOne] = useState(false);
   const [syncs, setSyncs] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [postData] = usePostDataMutation();
   const [patchData] = usePatchDataMutation();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(acNavStatus([100]));
-  }, [dispatch]);
-
-  const { data = {} } = useFetchDataQuery({
-    url: storage?.id ? `get/storageItems/${storage?.id}` : "",
-    tags: ["invoices", "action"],
-  });
+  useEffect(() => { dispatch(acNavStatus([100])); }, [dispatch]);
+  const { data = {} } = useFetchDataQuery({ url: storage?.id ? `get/storageItems/${storage?.id}/${storageV.time}` : "", tags: ["invoices", "action"], });
 
   useEffect(() => {
     if (stores?.data && stores?.data[0]) {
@@ -132,7 +112,7 @@ export const Inventory = () => {
 
   const syncData = async (status) => {
     try {
-      setLoading(true); 
+      setLoading(true);
       let res;
       const values = {
         url: seeOne ? `/update/action` : `/add/action`,
@@ -140,7 +120,7 @@ export const Inventory = () => {
         tags: ["action", "invoices"],
       };
       if (seeOne) {
-        res = await patchData(values); 
+        res = await patchData(values);
       } else {
         res = await postData(values);
       }
@@ -174,8 +154,7 @@ export const Inventory = () => {
           <p>Inventarizatsiya</p>{" "}
           {seeOne ? (
             <span>
-              {" "}
-              {active.st1_name} — {active.time}
+              {" "}{active.st1_name} — {active.time}
             </span>
           ) : (
             <div className="df aic gap5">
@@ -216,11 +195,7 @@ export const Inventory = () => {
             <>
               {!snc && (
                 <div
-                  className={
-                    syncs && syncsData?.data?.length > 0
-                      ? "inventory-history active"
-                      : "inventory-history"
-                  }
+                    className={syncs && syncsData?.data?.length > 0 ? "inventory-history active" : "inventory-history"}
                   onClick={() => setTimeout(() => setSyncs(!syncs), 100)}>
                   <MdOutlineHistory />
                   <span className="ticket"></span>
@@ -321,7 +296,7 @@ export const Inventory = () => {
                       {ingredient?.total_quantity} {ingredient?.unit}
                       {seeOne && (
                         <del>
-                          {ingredient?.old_quantity || 0}{" "}
+                            {ingredient?.total_quantity - ingredient?.amount || 0}{" "}
                           {ingredient?.unit || ""}
                         </del>
                       )}

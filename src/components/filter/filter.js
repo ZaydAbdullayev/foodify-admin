@@ -36,7 +36,7 @@ export const UniversalFilterBox = ({ status = null }) => {
   const res_id = useSelector((state) => state.res_id);
   let fields = useSelector((state) => state.status);
   const { data = [] } = useFetchDataQuery({ url: `get/cashbox/${res_id}`, tags: ["cashbox"], });
-  const { data: storage = [], isLoading: sl } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: storage = [], isLoading: sl } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: ingredientData = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   fields = status ? status : fields;
 
@@ -72,10 +72,10 @@ export const UniversalFilterBox = ({ status = null }) => {
   };
 
   useEffect(() => {
-    if (!sl) {
+    if (!sl && fields?.includes(9)) {
       setParams({ storage: storage?.data?.[0]?.id || "all" });
     }
-  }, [setParams, sl, storage?.data])
+  }, [setParams, sl, storage?.data, fields]);
 
   return (
     <div className="short-hands_sort__box">

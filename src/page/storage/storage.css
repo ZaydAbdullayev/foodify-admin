@@ -154,7 +154,7 @@
 
 .storage_body__box .storage-body_inner_item {
   height: 0px;
-  width: 50%;
+  width: 65%;
   border: 1px solid var(--cl38);
   transition: all 0.3s ease-in-out;
 }

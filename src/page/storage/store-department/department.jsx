@@ -20,7 +20,7 @@ export const StorageDep = () => {
   const dispatch = useDispatch();
   const { actionItem } = useActionItemService();
   const { data: depData = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/departments`, tags: ["department"], });
-  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${user?.id}`, tags: ["store"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
 
   const sortData = depData?.data && [...depData.data].sort((a, b) => {

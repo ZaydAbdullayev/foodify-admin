@@ -1,48 +1,69 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
 import { PatternFormat } from "react-number-format";
-import { useNavigate } from "react-router-dom";
 import { setAllDocuments, setRelease } from "../../../redux/deleteFoods";
 
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { acNavStatus } from "../../../redux/navbar.status";
 import { UniversalFilterBox } from "../../../components/filter/filter";
-import { setDocuments } from "../../../redux/deleteFoods";
 import { useFetchDataQuery } from "../../../service/fetch.service";
+import { useActionItemService } from "../../../service/form.service";
 const UniversalModal = lazy(() => import("../../../components/modal/modal"));
 
 export const StorageSupplier = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
-  const [acItem, setAcItem] = useState();
+  const acItem = useSelector((state) => state.values)?.vl;
   const ckddt = useSelector((state) => state.delRouter);
+  const open = useSelector((state) => state.uModal);
   const [sort, setSort] = useState({ id: null, state: false });
   const [type, setType] = useState();
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { data: suplierData = [], isLoading } = useFetchDataQuery({
-    url: `get/suppliers/${user?.id}`,
-    tags: ["suplier"],
-  });
-  React.useEffect(() => {
-    dispatch(acNavStatus([0, 1, 2, 3]));
-  }, [dispatch]);
+  const { actionItem } = useActionItemService()
+  const { data: suplierData = [], isLoading } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
+  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
   const sortData = suplierData?.data && [...suplierData.data].sort((a, b) => {
-      if (sort.state) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
+    if (sort.state) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
   });
 
-  const actionItem = (item) => {
-    dispatch(acActiveThing(item));
-    dispatch(setDocuments("supplier", { id: item.id, st1_id: item.st1_id }));;
-    navigate(`?pagecode=supplier`);
-    setAcItem(item);
-  }
+  const groupedInputs = (inputs) => (
+    <>
+      {inputs.map((group, index) => (
+        <label key={index}>
+          {group.map((input, subIndex) => (
+            <input
+              key={subIndex}
+              type="text"
+              name={input.name}
+              defaultValue={acItem?.[input.name]}
+              placeholder={input.placeholder}
+              required
+            />
+          ))}
+        </label>
+      ))}
+    </>
+  );
+
+  const personGroupedInputs = [
+    [{ name: "passport", placeholder: "Passport ma'limotlari" }, { name: "SNILS", placeholder: "SNLS" }],
+    [{ name: "code", placeholder: "Bo'lim kodi" }, { name: "date", placeholder: "Berilgan vaqti" }],
+    [{ name: "INN", placeholder: "INN" }, { name: "issued_by", placeholder: "Kim tomonidan berilgan" }],
+    [{ name: "registered_address", placeholder: "Bazoviy manzili" }, { name: "residence_address", placeholder: "Yashash manzili" }]
+  ];
+
+  const juridicalGroupedInputs = [
+    [{ name: "shortOrganizationName", placeholder: "Kompaniya qisqa nomi" }, { name: "INN", placeholder: "INN" }],
+    [{ name: "code", placeholder: "email" }, { name: "number", placeholder: "Telefon Numarası" }],
+    [{ name: "KPP", placeholder: "KPP" }, { name: "OKPO", placeholder: "OKPO" }],
+    [{ name: "ORGN", placeholder: "ORGN" }, { name: "headDirector", placeholder: "Direktor ismi" }],
+    [{ name: "Yuridik_address", placeholder: "Bazoviy manzili" }, { name: "ActualAddress", placeholder: "Yashash manzili" }]
+  ];
 
   return (
     <div className="storage_container">
@@ -69,41 +90,25 @@ export const StorageSupplier = () => {
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "22%" }}>
             <p>Ism/Familiya</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "22%" }}>
             <p>Shaxsi</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "22%" }}>
             <p>INN</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "22%" }}>
             <p>Telefon N.</p>
-            {sort.id === 1 && sort.state ? (
-              <RiArrowUpSLine />
-            ) : (
-              <RiArrowDownSLine />
-            )}
+            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
           </label>
         </div>
         <div className="storage_body_box">
@@ -123,12 +128,12 @@ export const StorageSupplier = () => {
                         : "storage_body_item"
                     }
                     key={item.id}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItem("supplier", item, check)}>
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
                         checked={check}
-                        onChange={() => actionItem(item)}
+                        onChange={() => actionItem("supplier", item, check)}
                       />
                     </label>
                     <p style={{ inlineSize: "var(--univslH)" }}>{index + 1}</p>
@@ -159,7 +164,7 @@ export const StorageSupplier = () => {
           )}
         </div>
       </div>
-      <Suspense>
+      {open && <Suspense>
         <UniversalModal
           type="supp"
           setChecked={setChecked}
@@ -188,70 +193,7 @@ export const StorageSupplier = () => {
                 placeholder="To'liq ism/familiyasi"
                 required
               />
-              <label>
-                <input
-                  type="text"
-                  name="passport"
-                  defaultValue={acItem?.passport}
-                  placeholder="Passport ma'limotlari"
-                  required
-                />
-                <input
-                  type="text"
-                  name="SNILS"
-                  defaultValue={acItem?.SNILS}
-                  placeholder="SNLS"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="code"
-                  defaultValue={acItem?.code}
-                  placeholder="Bo'lim kodi"
-                  required
-                />
-                <input
-                  type="text"
-                  name="date"
-                  defaultValue={acItem?.date}
-                  placeholder="Berilgan vaqti"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="INN"
-                  defaultValue={acItem?.INN}
-                  placeholder="INN"
-                  required
-                />
-                <input
-                  type="text"
-                  name="issued_by"
-                  defaultValue={acItem?.issued_by}
-                  placeholder="Kim tomonidan berilgan"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="registered_address"
-                  defaultValue={acItem?.registered_address}
-                  placeholder="Bazoviy manzili"
-                  required
-                />
-                <input
-                  type="text"
-                  name="residence_address"
-                  defaultValue={acItem?.residence_address}
-                  placeholder="Yashash manzili"
-                  required
-                />
-              </label>
+              {groupedInputs(personGroupedInputs)}
               <PatternFormat
                 defaultValue={acItem?.number}
                 format="+998 ## ### ## ##"
@@ -261,104 +203,23 @@ export const StorageSupplier = () => {
                 required
               />
             </>
-          ) : (
-            (acItem?.type === "juridical" || type === "juridical") && (
-              <>
-                <input
-                  type="text"
-                  name="fullOrganizationName"
-                  defaultValue={acItem?.fullOrganizationName}
-                  placeholder="Kompaniya to'liq nomi"
-                  required
-                />
-                <label>
-                  <input
-                    type="text"
-                    name="shortOrganizationName"
-                    defaultValue={acItem?.shortOrganizationName}
-                    placeholder="Kompaniya qisqa nomi"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="INN"
-                    defaultValue={acItem?.INN}
-                    placeholder="INN"
-                    required
-                  />
-                </label>
-                <label>
-                  <input
-                    type="text"
-                    name="code"
-                    defaultValue={acItem?.code}
-                    placeholder="email"
-                    required
-                  />
-                  <PatternFormat
-                    defaultValue={acItem?.number}
-                    format="+998 ## ### ####"
-                    name="number"
-                    mask="_"
-                    placeholder="+998"
-                    required
-                  />
-                </label>
-                <label>
-                  <input
-                    type="text"
-                    name="KPP"
-                    defaultValue={acItem?.KPP}
-                    placeholder="KPP"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="OKPO"
-                    defaultValue={acItem?.OKPO}
-                    placeholder="OKPO"
-                    required
-                  />
-                </label>
-                <label>
-                  <input
-                    type="text"
-                    name="ORGN"
-                    defaultValue={acItem?.ORGN}
-                    placeholder="ORGN"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="headDirector"
-                    defaultValue={acItem?.headDirector}
-                    placeholder="Direktor ismi"
-                    required
-                  />
-                </label>
-                <label>
-                  <input
-                    type="text"
-                    name="Yuridik_address"
-                    defaultValue={acItem?.Yuridik_address}
-                    placeholder="Bazoviy manzili"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="ActualAddress"
-                    defaultValue={acItem?.ActualAddress}
-                    placeholder="Yashash manzili"
-                    required
-                  />
-                </label>
-              </>
-            )
+          ) : ((acItem?.type === "juridical" || type === "juridical") &&
+            <>
+              <input
+                type="text"
+                name="fullOrganizationName"
+                defaultValue={acItem?.fullOrganizationName}
+                placeholder="Kompaniya to'liq nomi"
+                required
+              />
+              {groupedInputs(juridicalGroupedInputs)}
+            </>
           )}
           <input type="hidden" name="res_id" value={user?.id} />
           {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
         </UniversalModal>
       </Suspense>
+      }
     </div>
   );
 };

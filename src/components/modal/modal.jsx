@@ -9,7 +9,7 @@ import { LoadingBtn } from "../../components/loading/loading";
 import { ClearForm } from "../../service/form.service";
 import { acClosePayModal } from "../../redux/modal";
 
-const UniversalModal = ({ children, type, newGrData, setChecked, status, title, payment, darkMode, color, }) => {
+const UniversalModal = ({ children, type, newGrData, setChecked, status, title, payment, darkMode, color, setAcItem }) => {
   const open = useSelector((state) => state.uModal);
   const pay = useSelector((state) => state.pay);
   const dispatch = useDispatch();
@@ -236,13 +236,14 @@ const UniversalModal = ({ children, type, newGrData, setChecked, status, title, 
         }
       }
 
-      if (result?.error) {
-        es({ message: "Xatolik", variant: "error" });
-      } else if (result?.data) {
+      if (result?.data?.status === 200) {
         dispatch(acCloseUModal());
         dispatch(acClosePayModal());
         setChecked(false);
         ClearForm(".u_modal");
+        setAcItem({});
+      } else {
+        es({ message: "Xatolik", variant: "error" });
       }
     } catch (err) {
       console.error(err);
@@ -259,15 +260,10 @@ const UniversalModal = ({ children, type, newGrData, setChecked, status, title, 
 
   return (
     <div
-      className={
-        payment
-          ? `u_modal_container ${pay && "open"}`
-          : `u_modal_container ${open && "open"}`
-      }>
+      className={payment ? `u_modal_container ${pay && "open"}` : `u_modal_container ${open && "open"}`}>
       <div className="w100 df aic jcc u_modal_box">
         <form
-          className={`df flc aic u_modal ${darkMode ? "dark-mode" : color ? "dark-color-mode" : ""
-            }`}
+          className={`df flc aic u_modal ${darkMode ? "dark-mode" : color ? "dark-color-mode" : ""}`}
           onSubmit={fetchValues}>
           <p>{status ? title : "Taxrirlash"}</p>
           {children}

@@ -20,7 +20,7 @@ const InvoicesModal = ({ NUM }) => {
   const { pair } = useSearchAppParams().getAllParams()
   let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: `get/actions/received_goods/${pair?.id}`, tags: ["invoices"], });
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/storageItems/${pair?.st1_id || acS}/${time}`, tags: ["invoices"], });
-  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const updatedData = checkedData?.map((newItem) => {
     const oldData =

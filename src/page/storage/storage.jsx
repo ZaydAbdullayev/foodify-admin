@@ -22,7 +22,7 @@ export const Storage = () => {
   const res_id = useSelector((state) => state.res_id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data = [], isLoading } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

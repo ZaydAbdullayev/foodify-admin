@@ -36,14 +36,16 @@ export const useActionItemService = () => {
   const actionItem = useCallback((page_code, item, c) => {
     const mutationItem = { ...item };
     delete mutationItem?.ingredients;
-    dispatch(acFormValues("A_F_V", mutationItem));
     dispatch(setDocuments(page_code, { id: item?.id, st1_id: item?.st1_id }));
 
     if (ckddt?.[page_code]?.length === 0) {
       setParams({ pagecode: page_code, id: item?.id, st1_id: item?.st1_id });
+      dispatch(acFormValues("A_F_V", mutationItem));
     } else if (ckddt?.[page_code]?.length === 2 && c) {
       setParams({ pagecode: page_code, id: ckddt?.[page_code]?.[0]?.id, st1_id: ckddt?.[page_code]?.[0]?.st1_id });
+      dispatch(acFormValues("A_F_V", mutationItem));
     } else {
+      dispatch(acFormValues("A_F_V", {}));
       removeParamsByKeys(["id", "st1_id"]);
     }
   }, [ckddt, dispatch, removeParamsByKeys, setParams]);

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// const base_url = process.env.REACT_APP_BASE_URL;
-const base_url = "https://tmm428sh-8081.euw.devtunnels.ms/";
+const base_url = process.env.REACT_APP_BASE_URL;
+// const base_url = "https://tmm428sh-8081.euw.devtunnels.ms/";
 const user = JSON.parse(localStorage.getItem("user")) || [];
 
 const baseQuery = fetchBaseQuery({
@@ -82,13 +82,9 @@ const api = createApi({
   }),
 });
 
-export const useFetchDataQuery = (props) =>
-  api.endpoints.fetchData.useQuery(props);
-export const usePostDataMutation = (props) =>
-  api.endpoints.postData.useMutation(props);
-export const usePatchDataMutation = (props) =>
-  api.endpoints.patchData.useMutation(props);
-export const useDelDataMutation = (props) =>
-  api.endpoints.delData.useMutation(props);
+export const useFetchDataQuery = (props) => api.endpoints.fetchData.useQuery(props);
+export const usePostDataMutation = (props) => api.endpoints.postData.useMutation(props);
+export const usePatchDataMutation = (props) => api.endpoints.patchData.useMutation(props);
+export const useDelDataMutation = (props) => api.endpoints.delData.useMutation(props);
 
 export default api;

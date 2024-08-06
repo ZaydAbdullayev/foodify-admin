@@ -20,7 +20,7 @@ const InvoicesModal = ({ NUM }) => {
   const { pair } = useSearchAppParams().getAllParams();
   let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: pair?.id ? `get/actions/received_goods/${pair?.id}` : null, tags: ["invoices"], });
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
-  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${user?.id}`, tags: ["store"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${pair?.st1_id || s_id}/${time}`, tags: ["invoices", "action"], });
   const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
   const updatedData = checkedData?.map((newItem) => {

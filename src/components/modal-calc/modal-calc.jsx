@@ -272,7 +272,7 @@ export const UniversalForm = ({ formData }) => {
 };
 
 export const UniversalProductControl = ({ children, setActivePart, activePart, type, }) => {
-  const { data: store = [] } = useFetchDataQuery({ url: `/get/storage/${user?.id}`, tags: ["store"], });
+  const { data: store = [] } = useFetchDataQuery({ url: `/get/storage`, tags: ["store"], });
   const { data: groups = [] } = useFetchDataQuery({ url: `get/ingredientGroups`, tags: ["groups"], });
   const dispatch = useDispatch();
   React.useEffect(() => {

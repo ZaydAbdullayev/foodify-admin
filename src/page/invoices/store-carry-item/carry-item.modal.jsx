@@ -23,7 +23,7 @@ const InvoicesModal = ({ NUM }) => {
   const [postData] = usePostDataMutation();
   let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: pair?.id ? `get/actions/received_goods/${pair?.id}` : null, tags: ["invoices"], });
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/storageItems/${id || pair?.st1_id}/${time}`, tags: ["invoices", "action"], });
-  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage/${res_id}`, tags: ["store"], });
+  const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups/${res_id}`, tags: ["invoice-group"], });
   const { data: productData = [] } = useFetchDataQuery({ url: `get/foods/${res_id}`, tags: ["s-products", "product"], });
   isLoading = pair?.id ? isLoading : false;

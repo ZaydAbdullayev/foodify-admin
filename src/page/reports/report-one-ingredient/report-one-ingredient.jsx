@@ -13,7 +13,7 @@ export const ReportOneIngredient = () => {
   const [part, setPart] = useState(1);
   const res_id = useSelector((state) => state.res_id);
   const { data: storeData = [] } = useFetchDataQuery({
-    url: `get/storage/${res_id}`,
+    url: `get/storage`,
     tags: ["store"],
   });
   const dispatch = useDispatch();
