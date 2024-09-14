@@ -24,7 +24,6 @@ import { StorageCatgegories } from "./page/storage/store-category/categories";
 import { StorageGroups } from "./page/storage/store-groups/groups";
 import { StorageIngredients } from "./page/storage/store-ingredients/ingredients";
 import { StorageProducts } from "./page/storage/store-products/products";
-import { useLocation } from "react-router-dom";
 import { acCloseUModal } from "./redux/u-modal";
 import { StorageInvoices } from "./page/invoices/store-invoices/invoices";
 import { StorageExpenditures } from "./page/invoices/store-expenditures/expenditures";
@@ -58,62 +57,81 @@ import { ReportOneIngredient } from "./page/reports/report-one-ingredient/report
 import { FullReportById } from "./page/reports/full-report-by-id/full-report.jsx";
 import { Result, Button } from "antd";
 import { setRelease } from "./redux/deleteFoods.js";
-import { acFormValues } from "./redux/active.js";
+// import { acFormValues } from "./redux/active.js";
 import { useSearchAppParams } from "./hooks/useSearchParam.js";
 import { Howl } from "howler";
 import audio from "./assets/images/nothification.mp3";
 
 const routes = {
   creator: {
-    path: "/", element: <Auth />, children: [
+    path: "/",
+    element: <Auth />,
+    children: [
       {
-        path: "/", element: <Layout />, children: [
+        path: "/",
+        element: <Layout />,
+        children: [
           { path: "/", element: <Home /> },
           { path: "product/add", element: <Addproduct /> },
           { path: "restaurant/add", element: <Restaurant /> },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   user: {
-    path: "/", element: <Auth />, children: [
+    path: "/",
+    element: <Auth />,
+    children: [
       { path: "check", element: <CheackDepartment /> },
       {
-        path: "/", element: <Layout />, children: [
+        path: "/",
+        element: <Layout />,
+        children: [
           { path: "", element: <Statistics /> },
           { path: "statistics", element: <Statistics /> },
           { path: "my-receive-orders", element: <MyOrder /> },
           { path: "nothifications", element: <NothificationPage /> },
           {
-            path: "managment", element: <Blog />, children: [
+            path: "managment",
+            element: <Blog />,
+            children: [
               { path: "", element: <Products /> },
               { path: "workers", element: <Workers /> },
-              { path: "inventory", element: <Inventory /> }
-            ]
+              { path: "inventory", element: <Inventory /> },
+            ],
           },
           {
-            path: "orders", element: <Blog />, children: [
+            path: "orders",
+            element: <Blog />,
+            children: [
               { path: "", element: <Home /> },
               { path: "pre-orders", element: <InvoicePreOrders /> },
               { path: "tables", element: <TableBox /> },
               { path: "tables/:type/:number/:id", element: <OrderById /> },
               { path: "items-report", element: <ReportItems /> },
-              { path: "rejects", element: <ReportRejects /> }
-            ]
+              { path: "rejects", element: <ReportRejects /> },
+            ],
           },
           {
-            path: "financial", element: <Blog />, children: [
+            path: "financial",
+            element: <Blog />,
+            children: [
               { path: "", element: <Payment /> },
               { path: "cashbox", element: <Cashboxes /> },
               { path: "order-reports", element: <ReportOrders /> },
               { path: "payment", element: <AddPayment /> },
               { path: "cashbox/transactions", element: <CashboxTransaction /> },
-              { path: "cashbox/transaction-report", element: <TransactionRapor /> },
-              { path: "get/check/:id", element: <PaymentCheck /> }
-            ]
+              {
+                path: "cashbox/transaction-report",
+                element: <TransactionRapor />,
+              },
+              { path: "get/check/:id", element: <PaymentCheck /> },
+            ],
           },
           {
-            path: "sections", element: <Blog />, children: [
+            path: "sections",
+            element: <Blog />,
+            children: [
               { path: "storage", element: <Storage /> },
               { path: "departments", element: <StorageDep /> },
               { path: "categories", element: <StorageCatgegories /> },
@@ -122,30 +140,43 @@ const routes = {
               { path: "s-products", element: <StorageProducts /> },
               { path: "", element: <StorageSupplier /> },
               { path: "invoice-group", element: <InvoicesGroups /> },
-              { path: "cashbox/transaction-group", element: <TransactionGroups /> }
-            ]
+              {
+                path: "cashbox/transaction-group",
+                element: <TransactionGroups />,
+              },
+            ],
           },
           {
-            path: "storage", element: <Blog />, children: [
+            path: "storage",
+            element: <Blog />,
+            children: [
               { path: "", element: <StorageInvoices /> },
               { path: "expenses", element: <StorageExpenditures /> },
               { path: "cutting", element: <StorageCutting /> },
               { path: "damaged-items", element: <StorageDamaged /> },
               { path: "carry-up", element: <StorageCarryUp /> },
-              { path: "making-food", element: <InvoicesMakingFood /> }
-            ]
+              { path: "making-food", element: <InvoicesMakingFood /> },
+            ],
           },
           {
-            path: "other-pages", element: <Blog />, children: [
+            path: "other-pages",
+            element: <Blog />,
+            children: [
               { path: "supplier-reports", element: <ReportSuppliers /> },
               { path: "documents", element: <Document /> },
               { path: "navigation", element: <NavigationPanel /> },
-              { path: "report-according-by-one-ingredient", element: <ReportOneIngredient /> },
-              { path: "ingredient-reports", element: <ReportIngredients /> }
-            ]
+              {
+                path: "report-according-by-one-ingredient",
+                element: <ReportOneIngredient />,
+              },
+              { path: "ingredient-reports", element: <ReportIngredients /> },
+            ],
           },
           { path: "more/info/:id", element: <ShowProduct /> },
-          { path: "get-full-report/:st_id/:item_id/:start/:end", element: <FullReportById /> },
+          {
+            path: "get-full-report/:st_id/:item_id/:start/:end",
+            element: <FullReportById />,
+          },
           { path: "view/food-report/:id", element: <ReportOneItems /> },
           { path: "statistic/:name", element: <StatisticsExpenses /> },
           { path: "statistic/incomes", element: <StatisticsIncome /> },
@@ -154,13 +185,16 @@ const routes = {
           { path: "one-bill-report/:id", element: <BillReportById /> },
           { path: "report-ingredients/:id", element: <FullReportById /> },
           { path: "category/:type/:number/:id", element: <Orders /> },
-          { path: "update-order/:type/:number/:id/:ProductId/:queue", element: <Orders /> },
+          {
+            path: "update-order/:type/:number/:id/:ProductId/:queue",
+            element: <Orders />,
+          },
           { path: "add/product", element: <Addproduct /> },
           { path: "workers/add", element: <AddWorker /> },
-        ]
-      }
-    ]
-  }
+        ],
+      },
+    ],
+  },
 };
 
 const NotFound = () => {
@@ -181,16 +215,15 @@ const NotFound = () => {
 export const Router = () => {
   const dep = useSelector((state) => state.permission);
   const nothificate = useSelector((state) => state.nothificate);
-  const { getParams, removeParamsByKeys } = useSearchAppParams()
-  const lc = useLocation();
-  const page_code = getParams("pagecode")
+  const { getParams } = useSearchAppParams();
+  const page_code = getParams("pagecode");
   const route = dep === "creator" ? "creator" : "user";
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (nothificate) {
-      let sound = new Howl({ src: [audio], html5: true, });
+      let sound = new Howl({ src: [audio], html5: true });
       sound.play();
       setTimeout(() => {
         sound.stop();
@@ -227,7 +260,11 @@ export const Router = () => {
           {route.children?.map((child, index) => (
             <Route key={index} path={child.path} element={child.element}>
               {child.children?.map((subChild, index) => (
-                <Route key={index} path={subChild.path} element={subChild.element} />
+                <Route
+                  key={index}
+                  path={subChild.path}
+                  element={subChild.element}
+                />
               ))}
             </Route>
           ))}

@@ -61,7 +61,11 @@ export const StorageIngredients = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("ingredient") : setAllDocuments("ingredient", ingredientData?.data));
+                dispatch(
+                  checked
+                    ? setRelease("ingredient")
+                    : setAllDocuments("ingredient", ingredientData?.data)
+                );
               }}
               aria-label="checked this elements"
             />
@@ -72,7 +76,8 @@ export const StorageIngredients = () => {
               onClick={() => setSort({ id: 1, state: !sort.state })}
               style={{ "--data-line-size": title.size }}
               key={index + 3280}
-              aria-label="sort data down of top or top of down">
+              aria-label="sort data down of top or top of down"
+            >
               <p>{title.name}</p>
               {sort.id === 1 && sort.state ? (
                 <RiArrowUpSLine />
@@ -91,15 +96,27 @@ export const StorageIngredients = () => {
               <LoadingBtn />
             </span>
           ) : (
-              ingredientData?.data?.map((item, index) => {
-                const check = ckddt?.ingredient?.find((el) => el.item_id === item.item_id);
+            ingredientData?.data?.map((item, index) => {
+              const check = ckddt?.ingredient?.find(
+                (el) => el.item_id === item.item_id
+              );
               return (
                 <div
-                  className={showMore?.includes(item?.item_id) ? "storage_body__box active" : "storage_body__box"}
-                  key={item.item_id}>
+                  className={
+                    showMore?.includes(item?.item_id)
+                      ? "storage_body__box active"
+                      : "storage_body__box"
+                  }
+                  key={item.item_id}
+                >
                   <div
-                    className={acItem === item.item_id ? "storage_body_item active" : "storage_body_item"}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    className={
+                      acItem === item.item_id
+                        ? "storage_body_item active"
+                        : "storage_body_item"
+                    }
+                    onDoubleClick={() => actionItemLabel(item)}
+                  >
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
@@ -115,7 +132,8 @@ export const StorageIngredients = () => {
                           "--data-line-size": `${key.size}%`,
                           justifyContent: key.position || "flex-start",
                         }}
-                        key={ind + key.size}>
+                        key={ind + key.size}
+                      >
                         {item[key.name]}
                       </p>
                     ))}
@@ -124,14 +142,21 @@ export const StorageIngredients = () => {
                         "--data-line-size": "20%",
                         justifyContent: "center",
                       }}
-                      onClick={() => setShowMore((prev) => prev?.includes(item?.item_id) ? prev?.filter((el) => el !== item?.item_id) : [...prev, item?.item_id])}
+                      onClick={() =>
+                        setShowMore((prev) =>
+                          prev?.includes(item?.item_id)
+                            ? prev?.filter((el) => el !== item?.item_id)
+                            : [...prev, item?.item_id]
+                        )
+                      }
                     >
                       <u
                         style={
                           showMore?.includes(item?.item_id)
                             ? { color: "#787aff" }
                             : {}
-                        }>
+                        }
+                      >
                         ovqatlar
                       </u>
                     </p>
@@ -141,12 +166,14 @@ export const StorageIngredients = () => {
                       <div className=" storage-body_inner_item">
                         <div
                           className="storage_body_item"
-                          style={{ background: "#454545" }}>
+                          style={{ background: "#454545" }}
+                        >
                           <p
                             style={{
                               "--data-line-size": "100%",
                               justifyContent: "center",
-                            }}>
+                            }}
+                          >
                             Ovqatlar{" "}
                             {!JSON?.parse(item?.details)?.length ? " yo'q" : ""}
                           </p>
@@ -154,13 +181,17 @@ export const StorageIngredients = () => {
                         <div
                           className="storage_body_item"
                           style={{
-                            display: JSON?.parse(item?.details)?.length ? "flex" : "none",
+                            display: JSON?.parse(item?.details)?.length
+                              ? "flex"
+                              : "none",
                             background: "#454545",
-                          }}>
+                          }}
+                        >
                           <p
                             style={{
                               borderRight: "1px solid #ccc5",
-                            }}>
+                            }}
+                          >
                             №
                           </p>
                           {item_d_hk.map(({ name, size, border }, index) => (
@@ -170,7 +201,8 @@ export const StorageIngredients = () => {
                                 justifyContent: "center",
                                 borderRight: border,
                               }}
-                              key={`${index}_${name}`}>
+                              key={`${index}_${name}`}
+                            >
                               {name}
                             </p>
                           ))}
@@ -179,11 +211,13 @@ export const StorageIngredients = () => {
                           return (
                             <div
                               className="storage_body_item inner_item"
-                              key={ind}>
+                              key={ind}
+                            >
                               <p
                                 style={{
                                   borderRight: "1px solid #ccc5",
-                                }}>
+                                }}
+                              >
                                 {ind + 1}
                               </p>
                               {item_d_dk.map(
@@ -194,7 +228,8 @@ export const StorageIngredients = () => {
                                       justifyContent: "center",
                                       borderRight: border,
                                     }}
-                                    key={`${index}_${name}`}>
+                                    key={`${index}_${name}`}
+                                  >
                                     {product[name]}
                                   </p>
                                 )
@@ -206,26 +241,34 @@ export const StorageIngredients = () => {
                       <div className=" storage-body_inner_item">
                         <div
                           className="storage_body_item"
-                          style={{ background: "#454545" }}>
+                          style={{ background: "#454545" }}
+                        >
                           <p
                             style={{
                               "--data-line-size": "100%",
                               justifyContent: "center",
-                            }}>
+                            }}
+                          >
                             Faktura narxi{" "}
-                            {!JSON?.parse(item?.priceAction)?.length ? " yo'q" : ""}
+                            {!JSON?.parse(item?.priceAction)?.length
+                              ? " yo'q"
+                              : ""}
                           </p>
                         </div>
                         <div
                           className="storage_body_item"
                           style={{
-                            display: JSON?.parse(item?.priceAction)?.length ? "flex" : "none",
+                            display: JSON?.parse(item?.priceAction)?.length
+                              ? "flex"
+                              : "none",
                             background: "#454545",
-                          }}>
+                          }}
+                        >
                           <p
                             style={{
                               borderRight: "1px solid #ccc5",
-                            }}>
+                            }}
+                          >
                             №
                           </p>
                           {item_p_hk.map(({ name, size, border }, index) => (
@@ -235,7 +278,8 @@ export const StorageIngredients = () => {
                                 justifyContent: "center",
                                 borderRight: border,
                               }}
-                              key={`${index}_${name}`}>
+                              key={`${index}_${name}`}
+                            >
                               {name}
                             </p>
                           ))}
@@ -244,11 +288,13 @@ export const StorageIngredients = () => {
                           return (
                             <div
                               className="storage_body_item inner_item"
-                              key={ind}>
+                              key={ind}
+                            >
                               <p
                                 style={{
                                   borderRight: "1px solid #ccc5",
-                                }}>
+                                }}
+                              >
                                 {ind + 1}
                               </p>
                               {item_p_dk.map(
@@ -259,8 +305,13 @@ export const StorageIngredients = () => {
                                       justifyContent: "center",
                                       borderRight: border,
                                     }}
-                                    key={`${index}_${name}`}>
-                                    {fix ? new Date(product[name])?.toLocaleDateString() : product[name]}
+                                    key={`${index}_${name}`}
+                                  >
+                                    {fix
+                                      ? new Date(
+                                          product[name]
+                                        )?.toLocaleDateString()
+                                      : product[name]}
                                   </p>
                                 )
                               )}
@@ -282,20 +333,21 @@ export const StorageIngredients = () => {
           newGrData={{ name: newGrData, res_id: user?.id }}
           setChecked={setChecked}
           title="Ingredient qo'shish"
-          status={acItem.item_id ? false : true}>
+          status={acItem?.item_id ? false : true}
+        >
           <input
             type="text"
             name="item_name"
-            defaultValue={acItem.item_name}
+            defaultValue={acItem?.item_name}
             placeholder="Ingredient nomi*"
             required
           />
-          {acItem.item_id && (
+          {acItem?.item_id && (
             <input type="hidden" name="item_id" value={acItem?.item_id} />
           )}
           <select name="unit">
             {acItem?.unit ? (
-              <option value={acItem.unit}>{acItem.unit}</option>
+              <option value={acItem?.unit}>{acItem?.unit}</option>
             ) : (
               <option value="default">O'ljov birligi</option>
             )}
@@ -305,7 +357,7 @@ export const StorageIngredients = () => {
           </select>
           <select name="group" onChange={(e) => setNewIngGr(e.target.value)}>
             {acItem?.group ? (
-              <option value={acItem.group}>{acItem.group}</option>
+              <option value={acItem?.group}>{acItem?.group}</option>
             ) : (
               <option value="default">Guruh tanlang*</option>
             )}

@@ -16,14 +16,24 @@ export const StorageCatgegories = () => {
   const [sort, setSort] = useState({ id: null, state: false });
   const [checked, setChecked] = useState(false);
   const [showMore, setShowMore] = useState([]);
-  const [acItem, setAcItem] = useState();
+  const [acItem, setAcItem] = useState({});
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const { actionItem } = useActionItemService();
-  const { data: depData = [] } = useFetchDataQuery({ url: `get/${user?.id}/departments`, tags: ["department"], });
-  const { data: storeData = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/categories`, tags: ["category"], });
-  useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
-  const sortData = storeData?.data && [...storeData?.data]?.sort((a, b) => {
+  const { data: depData = [] } = useFetchDataQuery({
+    url: `get/${user?.id}/departments`,
+    tags: ["department"],
+  });
+  const { data: storeData = [], isLoading } = useFetchDataQuery({
+    url: `get/${user?.id}/categories`,
+    tags: ["category"],
+  });
+  useEffect(() => {
+    dispatch(acNavStatus([0, 1, 2, 3]));
+  }, [dispatch]);
+  const sortData =
+    storeData?.data &&
+    [...storeData?.data]?.sort((a, b) => {
       if (sort.state) {
         return a.name.localeCompare(b.name);
       } else {
@@ -31,9 +41,12 @@ export const StorageCatgegories = () => {
       }
     });
 
-  const actionItemLabel = useCallback((item) => {
-    actionItem("category", item, acItem, null, setAcItem);
-  }, [actionItem, acItem])
+  const actionItemLabel = useCallback(
+    (item) => {
+      actionItem("category", item, acItem, null, setAcItem);
+    },
+    [actionItem, acItem]
+  );
 
   return (
     <div className="storage_container">
@@ -50,7 +63,10 @@ export const StorageCatgegories = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("category") : setAllDocuments("category", storeData?.data)
+                dispatch(
+                  checked
+                    ? setRelease("category")
+                    : setAllDocuments("category", storeData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -59,21 +75,36 @@ export const StorageCatgegories = () => {
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}>
+            style={{ "--data-line-size": "40%" }}
+          >
             <p>Nomi</p>
-            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
+            {sort.id === 1 && sort.state ? (
+              <RiArrowUpSLine />
+            ) : (
+              <RiArrowDownSLine />
+            )}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}>
+            style={{ "--data-line-size": "30%" }}
+          >
             <p>Bo'limlar</p>
-            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
+            {sort.id === 1 && sort.state ? (
+              <RiArrowUpSLine />
+            ) : (
+              <RiArrowDownSLine />
+            )}
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "30%" }}>
+            style={{ "--data-line-size": "30%" }}
+          >
             <p>Ombor</p>
-            {sort.id === 1 && sort.state ? (<RiArrowUpSLine />) : (<RiArrowDownSLine />)}
+            {sort.id === 1 && sort.state ? (
+              <RiArrowUpSLine />
+            ) : (
+              <RiArrowDownSLine />
+            )}
           </label>
           <p style={{ "--data-line-size": "10%" }}>Oyqatlar</p>
         </div>
@@ -87,12 +118,22 @@ export const StorageCatgegories = () => {
               const check = ckddt?.category?.some((el) => el.id === item.id);
               return (
                 <div
-                  className={showMore?.includes(item?.id) ? "storage_body__box active" : "storage_body__box"}
-                  key={item.id}>
+                  className={
+                    showMore?.includes(item?.id)
+                      ? "storage_body__box active"
+                      : "storage_body__box"
+                  }
+                  key={item.id}
+                >
                   <div
-                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
+                    className={
+                      acItem === item.id
+                        ? "storage_body_item active"
+                        : "storage_body_item"
+                    }
                     key={item.id}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}
+                  >
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
@@ -110,14 +151,20 @@ export const StorageCatgegories = () => {
                     <p
                       style={{ "--data-line-size": "10%" }}
                       onClick={() =>
-                        setShowMore((prev) => prev?.includes(item?.id) ? prev?.filter((el) => el !== item?.id) : [...prev, item?.id])
-                      }>
+                        setShowMore((prev) =>
+                          prev?.includes(item?.id)
+                            ? prev?.filter((el) => el !== item?.id)
+                            : [...prev, item?.id]
+                        )
+                      }
+                    >
                       <u
                         style={
                           showMore?.includes(item?.id)
                             ? { color: "#787aff" }
                             : {}
-                        }>
+                        }
+                      >
                         ovqatlar
                       </u>
                     </p>
@@ -128,28 +175,32 @@ export const StorageCatgegories = () => {
                         <p
                           style={{
                             borderRight: "1px solid #ccc5",
-                          }}>
+                          }}
+                        >
                           №
                         </p>
                         <p
                           style={{
                             "--data-line-size": "35%",
                             borderRight: "1px solid #ccc5",
-                          }}>
+                          }}
+                        >
                           Nomi
                         </p>
                         <p
                           style={{
                             "--data-line-size": "20%",
                             borderRight: "1px solid #ccc5",
-                          }}>
+                          }}
+                        >
                           Narxi
                         </p>
                         <p
                           style={{
                             "--data-line-size": "25%",
                             borderRight: "1px solid #ccc5",
-                          }}>
+                          }}
+                        >
                           Tan Narxi
                         </p>
                         <p style={{ "--data-line-size": "15%" }}>Foyda</p>
@@ -160,7 +211,8 @@ export const StorageCatgegories = () => {
                             <p
                               style={{
                                 borderRight: "1px solid #ccc5",
-                              }}>
+                              }}
+                            >
                               {ind + 1}
                             </p>
                             <p style={{ "--data-line-size": "35%" }}>
@@ -186,37 +238,40 @@ export const StorageCatgegories = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <UniversalModal
-          type="category"
-          setChecked={setChecked}
-          title="Categoriya qo'shish"
-          status={acItem?.id ? false : true}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Categoriya nomi*"
-            defaultValue={acItem.name}
-            required
-          />
-          <select name="department">
-            {acItem?.department ? (
-              <option value="default">Bo'lim tanlang*</option>
-            ) : (
-              <option value={acItem.category}>{acItem.category}</option>
-            )}
-            {depData?.data?.map((item, index) => {
-              return (
-                <option value={item.name} key={index}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
-          <input type="hidden" name="res_id" value={user?.id} />
-          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
-        </UniversalModal>
-      </Suspense>
+      {acItem?.id && (
+        <Suspense>
+          <UniversalModal
+            type="category"
+            setChecked={setChecked}
+            title="Categoriya qo'shish"
+            status={acItem?.id ? false : true}
+          >
+            <input
+              type="text"
+              name="name"
+              placeholder="Categoriya nomi*"
+              defaultValue={acItem?.name}
+              required
+            />
+            <select name="department">
+              {acItem?.department ? (
+                <option value="default">Bo'lim tanlang*</option>
+              ) : (
+                <option value={acItem?.category}>{acItem?.category}</option>
+              )}
+              {depData?.data?.map((item, index) => {
+                return (
+                  <option value={item.name} key={index}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
+            <input type="hidden" name="res_id" value={user?.id} />
+            {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
+          </UniversalModal>
+        </Suspense>
+      )}
     </div>
   );
 };

@@ -96,7 +96,11 @@ export const StorageProducts = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("products") : setAllDocuments("products", products.data));
+                dispatch(
+                  checked
+                    ? setRelease("products")
+                    : setAllDocuments("products", products.data)
+                );
               }}
               aria-label="checked this elements"
             />
@@ -108,7 +112,8 @@ export const StorageProducts = () => {
                 onClick={() => setSort({ id: 1, state: !sort.state })}
                 style={{ "--data-line-size": item?.size }}
                 key={index}
-                aria-label="sort data down of top or top of down">
+                aria-label="sort data down of top or top of down"
+              >
                 <p>{item?.name}</p>
                 {sort.id === 1 && sort.state ? (
                   <RiArrowUpSLine />
@@ -125,16 +130,28 @@ export const StorageProducts = () => {
               <LoadingBtn />
             </span>
           ) : (
-              sortData?.map((item, index) => {
-                const check = ckddt?.products?.some((i) => i.food_id === item?.food_id);
+            sortData?.map((item, index) => {
+              const check = ckddt?.products?.some(
+                (i) => i.food_id === item?.food_id
+              );
               return (
                 <div
-                  className={showMore?.includes(item?.food_id) ? "storage_body__box active" : "storage_body__box"}
-                  key={item?.food_id}>
+                  className={
+                    showMore?.includes(item?.food_id)
+                      ? "storage_body__box active"
+                      : "storage_body__box"
+                  }
+                  key={item?.food_id}
+                >
                   <div
-                    className={acItem === item?.food_id ? "storage_body_item active" : "storage_body_item"}
+                    className={
+                      acItem === item?.food_id
+                        ? "storage_body_item active"
+                        : "storage_body_item"
+                    }
                     key={item?.food_id}
-                    onDoubleClick={() => actionItemLabel(item)}>
+                    onDoubleClick={() => actionItemLabel(item)}
+                  >
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
@@ -149,8 +166,13 @@ export const StorageProducts = () => {
                         key={ind}
                         style={{
                           "--data-line-size": size,
-                          justifyContent: position ? position === 1 ? "center" : "flex-end" : "flex-start",
-                        }}>
+                          justifyContent: position
+                            ? position === 1
+                              ? "center"
+                              : "flex-end"
+                            : "flex-start",
+                        }}
+                      >
                         {item[name]}
                       </p>
                     ))}
@@ -159,9 +181,21 @@ export const StorageProducts = () => {
                         "--data-line-size": "10%",
                         justifyContent: "center",
                       }}
-                      onClick={() => setShowMore(showMore?.includes(item?.food_id) ? showMore?.filter((i) => i !== item?.food_id) : [...showMore, item?.food_id])}>
+                      onClick={() =>
+                        setShowMore(
+                          showMore?.includes(item?.food_id)
+                            ? showMore?.filter((i) => i !== item?.food_id)
+                            : [...showMore, item?.food_id]
+                        )
+                      }
+                    >
                       <u
-                        style={showMore?.includes(item?.food_id) ? { color: "#787aff" } : {}}>
+                        style={
+                          showMore?.includes(item?.food_id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }
+                      >
                         tafsilot
                       </u>
                     </p>
@@ -170,9 +204,21 @@ export const StorageProducts = () => {
                         "--data-line-size": "8%",
                         justifyContent: "center",
                       }}
-                      onClick={() => setShowMore(showMore?.includes(item?.food_id) ? showMore?.filter((i) => i !== item?.food_id) : [...showMore, item?.food_id])}>
+                      onClick={() =>
+                        setShowMore(
+                          showMore?.includes(item?.food_id)
+                            ? showMore?.filter((i) => i !== item?.food_id)
+                            : [...showMore, item?.food_id]
+                        )
+                      }
+                    >
                       <u
-                        style={showMore?.includes(item?.food_id) ? { color: "#787aff" } : {}}>
+                        style={
+                          showMore?.includes(item?.food_id)
+                            ? { color: "#787aff" }
+                            : {}
+                        }
+                      >
                         tarix
                       </u>
                     </p>
@@ -181,7 +227,8 @@ export const StorageProducts = () => {
                     <div className=" storage-body_inner_item">
                       <div
                         className="storage_body_item"
-                        style={{ background: "#454545" }}>
+                        style={{ background: "#454545" }}
+                      >
                         {innerHeaderData?.map((item, index) => {
                           return (
                             <p
@@ -189,7 +236,8 @@ export const StorageProducts = () => {
                                 "--data-line-size": item?.size,
                                 borderRight: item?.border,
                               }}
-                              key={index}>
+                              key={index}
+                            >
                               {item?.name}
                             </p>
                           );
@@ -199,11 +247,13 @@ export const StorageProducts = () => {
                         return (
                           <div
                             className="storage_body_item inner_item"
-                            key={ind}>
+                            key={ind}
+                          >
                             <p
                               style={{
                                 borderRight: "1px solid #ccc4",
-                              }}>
+                              }}
+                            >
                               {ind + 1}
                             </p>
                             {innerDisplayKeys?.map(
@@ -212,9 +262,14 @@ export const StorageProducts = () => {
                                   key={innerind}
                                   style={{
                                     "--data-line-size": size,
-                                    justifyContent: position ? position === 1 ? "center" : "flex-end" : "flex-start",
+                                    justifyContent: position
+                                      ? position === 1
+                                        ? "center"
+                                        : "flex-end"
+                                      : "flex-start",
                                     borderRight: "1px solid #ccc4",
-                                  }}>
+                                  }}
+                                >
                                   {product[name]}
                                 </p>
                               )
@@ -222,7 +277,8 @@ export const StorageProducts = () => {
                             <p
                               style={{
                                 "--data-line-size": "16.5%",
-                              }}>
+                              }}
+                            >
                               {product.total_price}
                             </p>
                           </div>
@@ -230,7 +286,8 @@ export const StorageProducts = () => {
                       })}
                       <div
                         className="storage_body_item inner_item"
-                        style={{ background: "#454545" }}>
+                        style={{ background: "#454545" }}
+                      >
                         <p></p>
                         <p style={{ "--data-line-size": "66%" }}>
                           {item?.date?.split("T")[0]}{" "}
@@ -238,7 +295,11 @@ export const StorageProducts = () => {
                           -ga ko'ra Jami mablag'
                         </p>
                         <p
-                          style={{ "--data-line-size": "30%", justifyContent: "flex-end", }}>
+                          style={{
+                            "--data-line-size": "30%",
+                            justifyContent: "flex-end",
+                          }}
+                        >
                           {item?.prime_cost}
                         </p>
                       </div>
@@ -256,7 +317,8 @@ export const StorageProducts = () => {
             status={acItem?.food_id ? true : false}
             type="product"
             Pdata={checkedData}
-            setCheckedData={setCheckedData}>
+            setCheckedData={setCheckedData}
+          >
             <UniversalForm
               formData={[
                 {
@@ -269,11 +331,11 @@ export const StorageProducts = () => {
                   type: "s_extra",
                   extra: "category_id",
                   name: "category",
-                  df_value: acItem.category
+                  df_value: acItem?.category
                     ? {
-                      value: `category_id=${acItem?.category}|${acItem?.category_id}`,
-                      label: acItem?.category,
-                    }
+                        value: `category_id=${acItem?.category}|${acItem?.category_id}`,
+                        label: acItem?.category,
+                      }
                     : { value: "default", label: "Kategoriya tanlang*" },
                   options: category?.data,
                 },
@@ -304,13 +366,20 @@ export const StorageProducts = () => {
             />
             <UniversalProductControl
               activePart={activePart}
-              setActivePart={setActivePart}>
+              setActivePart={setActivePart}
+            >
               <div className="product_box_item">
                 <label>
-                  <input type="checkbox" name="id" onChange={() => getProduct(data)} />
+                  <input
+                    type="checkbox"
+                    name="id"
+                    onChange={() => getProduct(data)}
+                  />
                 </label>
                 <p
-                  style={{ "--data-line-size": activePart === 1 ? "35%" : "60%" }}
+                  style={{
+                    "--data-line-size": activePart === 1 ? "35%" : "60%",
+                  }}
                 >
                   Nomi
                 </p>
@@ -325,11 +394,14 @@ export const StorageProducts = () => {
               </div>
               <div className="product_box_body">
                 {modalData?.data?.map((item, index) => {
-                  const checked = checkedData?.find((i) => i.item_id === item?.item_id) || false;
+                  const checked =
+                    checkedData?.find((i) => i.item_id === item?.item_id) ||
+                    false;
                   return (
                     <div
                       className={`product_box_item ${checked ? "active" : ""}`}
-                      key={item?.item_id}>
+                      key={item?.item_id}
+                    >
                       <label>
                         <input
                           type="checkbox"
@@ -348,38 +420,57 @@ export const StorageProducts = () => {
                         />
                       </label>
                       <p
-                        style={{ "--data-line-size": activePart === 1 ? "35%" : "60%" }}
+                        style={{
+                          "--data-line-size": activePart === 1 ? "35%" : "60%",
+                        }}
                       >
                         {item?.item_name}
                       </p>
                       {activePart === 1 && (
                         <>
                           <p
-                            style={{ "--data-line-size": "20%", justifyContent: "center", }}
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "center",
+                            }}
                           >
                             {item?.unit}
                           </p>
                           <p
-                            style={{ "--data-line-size": "20%", justifyContent: "center", }}
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "center",
+                            }}
                           >
                             {item?.group}
                           </p>
                           <p
-                            style={{ "--data-line-size": "20%", justifyContent: "flex-end", }}
+                            style={{
+                              "--data-line-size": "20%",
+                              justifyContent: "flex-end",
+                            }}
                           >
                             {item?.price}
                           </p>
                         </>
                       )}
                       <p
-                        style={{ "--data-line-size": "20%", justifyContent: "center", }}
+                        style={{
+                          "--data-line-size": "20%",
+                          justifyContent: "center",
+                        }}
                       >
                         {checked && (
                           <input
                             type="text"
                             name="amount"
                             defaultValue={checked?.amount ? checked.amount : 0}
-                            onChange={(e) => getProduct({ ...checked, amount: e.target.value }, 1)}
+                            onChange={(e) =>
+                              getProduct(
+                                { ...checked, amount: e.target.value },
+                                1
+                              )
+                            }
                           />
                         )}
                       </p>

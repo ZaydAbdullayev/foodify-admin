@@ -97,7 +97,11 @@ export const InvoicesGroups = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("invGr") : setAllDocuments("invGr", groupData?.data));
+                dispatch(
+                  checked
+                    ? setRelease("invGr")
+                    : setAllDocuments("invGr", groupData?.data)
+                );
               }}
               aria-label="checked this elements"
             />
@@ -105,7 +109,8 @@ export const InvoicesGroups = () => {
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "94%" }}>
+            style={{ "--data-line-size": "94%" }}
+          >
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -125,9 +130,14 @@ export const InvoicesGroups = () => {
               return (
                 <div className={"storage_body__box"}>
                   <div
-                    className={acItem === item.id ? "storage_body_item active" : "storage_body_item"}
+                    className={
+                      acItem === item.id
+                        ? "storage_body_item active"
+                        : "storage_body_item"
+                    }
                     key={item.id}
-                    onDoubleClick={() => actionItem(item)}>
+                    onDoubleClick={() => actionItem(item)}
+                  >
                     <label aria-label="checked this elements">
                       <input
                         type="checkbox"
@@ -150,12 +160,13 @@ export const InvoicesGroups = () => {
           <UniversalModal
             type="invGr"
             title="Guruh qo'shish"
-            status={acItem?.id ? false : true}>
+            status={acItem?.id ? false : true}
+          >
             <input
               type="text"
               name="name"
               placeholder="Guruh nomi*"
-              defaultValue={acItem.name}
+              defaultValue={acItem?.name}
               required
             />
             <input type="hidden" name="res_id" value={user?.id} />

@@ -56,7 +56,11 @@ export const Storage = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("main") : setAllDocuments("main", data?.data));
+                dispatch(
+                  checked
+                    ? setRelease("main")
+                    : setAllDocuments("main", data?.data)
+                );
               }}
               aria-label="checked this elements"
             />
@@ -64,7 +68,8 @@ export const Storage = () => {
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            aria-label="for sort data and see al info about this product">
+            aria-label="for sort data and see al info about this product"
+          >
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -84,9 +89,13 @@ export const Storage = () => {
               return (
                 <div
                   className={
-                    acItem?.id === item.id ? "storage_body_item active" : "storage_body_item"}
+                    acItem?.id === item.id
+                      ? "storage_body_item active"
+                      : "storage_body_item"
+                  }
                   key={item.id}
-                  onDoubleClick={() => actionItem(item)}>
+                  onDoubleClick={() => actionItem(item)}
+                >
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
@@ -108,11 +117,12 @@ export const Storage = () => {
           type="main"
           setChecked={setChecked}
           title="Ombor qo'shish"
-          status={acItem?.id ? false : true}>
+          status={acItem?.id ? false : true}
+        >
           <input
             type="text"
             name="name"
-            defaultValue={acItem.name}
+            defaultValue={acItem?.name}
             placeholder="Ombor nomi*"
             required
           />

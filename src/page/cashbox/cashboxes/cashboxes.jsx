@@ -19,25 +19,29 @@ export const Cashboxes = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox`, tags: ["cashbox"], });
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({
+    url: `get/cashbox`,
+    tags: ["cashbox"],
+  });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);
 
-  const sortData = cashboxData?.data && [...(cashboxData?.data || [])]?.sort((a, b) => {
-    if (sort?.state) {
-      return a?.name?.localeCompare(b?.name);
-    } else {
-      return b?.name?.localeCompare(a?.name);
-    }
-  });
+  const sortData = cashboxData?.data || [];
+  // const sortData = cashboxData?.data && [...(cashboxData?.data || [])]?.sort((a, b) => {
+  //   if (sort?.state) {
+  //     return a?.name?.localeCompare(b?.name);
+  //   } else {
+  //     return b?.name?.localeCompare(a?.name);
+  //   }
+  // });
 
   const actionItem = (item) => {
     dispatch(acActiveThing(item));
-    dispatch(setDocuments("cashbox", { id: item.id, st1_id: item.st1_id }));;
+    dispatch(setDocuments("cashbox", { id: item.id, st1_id: item.st1_id }));
     navigate(`?pagecode=cashbox`);
     setAcItem(item);
-  }
+  };
 
   return (
     <div className="storage_container">
@@ -54,14 +58,19 @@ export const Cashboxes = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("cashbox") : setAllDocuments("cashbox", cashboxData.data));
+                dispatch(
+                  checked
+                    ? setRelease("cashbox")
+                    : setAllDocuments("cashbox", cashboxData.data)
+                );
               }}
             />
           </label>
           <p style={{ inlineSize: "var(--univslH)" }}>№</p>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            aria-label="sort data down of top or top of down">
+            aria-label="sort data down of top or top of down"
+          >
             <p>Nomi</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -80,9 +89,14 @@ export const Cashboxes = () => {
               const check = ckddt?.cashbox?.some((el) => el?.id === item?.id);
               return (
                 <div
-                  className={acItem?.id === item.id ? "storage_body_item active" : "storage_body_item"}
+                  className={
+                    acItem?.id === item.id
+                      ? "storage_body_item active"
+                      : "storage_body_item"
+                  }
                   key={item.id}
-                  onDoubleClick={() => actionItem(item)}>
+                  onDoubleClick={() => actionItem(item)}
+                >
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
@@ -99,22 +113,25 @@ export const Cashboxes = () => {
           )}
         </div>
       </div>
-      <Suspense>
-        <UniversalModal
-          type="cashbox"
-          title="Kassa qo'shish"
-          status={acItem?.id ? false : true}>
-          <input
-            type="text"
-            name="name"
-            defaultValue={acItem.name}
-            placeholder="Kassa nomi*"
-            required
-          />
-          <input type="hidden" name="res_id" value={user?.id} />
-          {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
-        </UniversalModal>
-      </Suspense>
+      {acItem?.id && (
+        <Suspense>
+          <UniversalModal
+            type="cashbox"
+            title="Kassa qo'shish"
+            status={acItem?.id ? false : true}
+          >
+            <input
+              type="text"
+              name="name"
+              defaultValue={acItem?.name}
+              placeholder="Kassa nomi*"
+              required
+            />
+            <input type="hidden" name="res_id" value={user?.id} />
+            {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
+          </UniversalModal>
+        </Suspense>
+      )}
     </div>
   );
 };

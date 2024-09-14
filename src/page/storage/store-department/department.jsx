@@ -50,7 +50,10 @@ export const StorageDep = () => {
               checked={checked}
               onChange={() => {
                 setChecked(!checked);
-                dispatch(checked ? setRelease("main") : setAllDocuments("main", depData?.data)
+                dispatch(
+                  checked
+                    ? setRelease("main")
+                    : setAllDocuments("main", depData?.data)
                 );
               }}
               aria-label="checked this elements"
@@ -60,7 +63,8 @@ export const StorageDep = () => {
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
             style={{ "--data-line-size": "40%" }}
-            aria-label="for sort this data down of top or top of down">
+            aria-label="for sort this data down of top or top of down"
+          >
             <p>Bo'limlar</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -70,7 +74,8 @@ export const StorageDep = () => {
           </label>
           <label
             onClick={() => setSort({ id: 1, state: !sort.state })}
-            style={{ "--data-line-size": "40%" }}>
+            style={{ "--data-line-size": "40%" }}
+          >
             <p>Ombor</p>
             {sort.id === 1 && sort.state ? (
               <RiArrowUpSLine />
@@ -95,7 +100,8 @@ export const StorageDep = () => {
                       : "storage_body_item"
                   }
                   key={item.id}
-                  onDoubleClick={() => actionItemLabel(item)}>
+                  onDoubleClick={() => actionItemLabel(item)}
+                >
                   <label aria-label="checked this elements">
                     <input
                       type="checkbox"
@@ -118,19 +124,20 @@ export const StorageDep = () => {
           type="dep"
           setChecked={setChecked}
           title="Bo'lim qo'shish"
-          status={acItem?.id ? false : true}>
+          status={acItem?.id ? false : true}
+        >
           <input
             type="text"
             name="name"
             placeholder="Bo'lim nomi*"
-            defaultValue={acItem.name}
+            defaultValue={acItem?.name}
             required
           />
           <input type="hidden" name="res_id" value={user?.id} />
           {acItem?.id && <input type="hidden" name="id" value={acItem?.id} />}
           <select name="storage">
             {acItem?.id ? (
-              <option value={acItem.storage}>{acItem.storage}</option>
+              <option value={acItem?.storage}>{acItem?.storage}</option>
             ) : (
               <option value="default">Ombor tanlang</option>
             )}
