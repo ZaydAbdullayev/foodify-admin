@@ -87,7 +87,8 @@ export const Sidebar = () => {
                       {Category?.filter(
                         (cat) => cat?.id === activeCategoryId
                       ).map((catItem) => (
-                        <li
+                        <Link
+                          to={`${item?.path}${catItem?.path}`}
                           key={catItem?.path}
                           className={`inner_menu-item ${
                             item.id === activeCategoryId ? "active" : ""
@@ -99,10 +100,8 @@ export const Sidebar = () => {
                           }}
                           aria-label={`the path target to ${item?.path}${catItem?.path}`}
                         >
-                          <Link to={`${item?.path}${catItem?.path}`}>
-                            {catItem?.icon}
-                          </Link>
-                        </li>
+                          <span>{catItem?.icon}</span>
+                        </Link>
                       ))}
                     </div>
                   </ul>

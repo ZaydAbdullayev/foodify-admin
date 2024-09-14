@@ -87,50 +87,55 @@ export const Addproduct = memo(() => {
 export const ShowProduct = memo(() => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useFetchDataQuery({ url: `get/oneFood/${id}`, tags: ["product"], });
+  const { data, isLoading } = useFetchDataQuery({ url: `get/oneFood/${id}`, tags: ["one-product"], });
   const ingredientData = data?.data?.ingredients;
   return (
     <div className="product_box open p_info">
       <div className="product_item">
-        <h3>{data?.data?.name}</h3>
+        <h3>{data?.data?.item_name}</h3>
         <span>Product description</span>
-        <div>
-          Narxi: <i></i>
-          <span>
-            {data?.data?.price.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
-          </span>
-        </div>
-        <div>
-          Tan Narxi: <i></i>
-          <span>
-            {data?.data?.prime_cost.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
-          </span>
-        </div>
-        <div>
-          Foyda: <i></i>
-          <span>
-            {data?.data?.profit.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
-          </span>
-        </div>
-        <div>
-          Kategoriyasi: <i></i> <span>{data?.data?.category}</span>
-        </div>
-        <div>
-          Ombor: <i></i> <span>{data?.data?.storage}</span>
-        </div>
-        <div>
-          Ingredientlari:{" "}
-          <ol>
-            {ingredientData?.map((item) => {
-              return (
-                <li key={item?.id}>
-                  {item?.name} - {item?.amount} <span>{item?.unit}</span>
-                  {item?.price} so'm
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+        {isLoading ?
+          <span className="loader_box relative">
+            <LoadingBtn />
+          </span> : <>
+            <div>
+              Narxi: <i></i>
+              <span>
+                {data?.data?.price.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+              </span>
+            </div>
+            <div>
+              Tan Narxi: <i></i>
+              <span>
+                {data?.data?.prime_cost?.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+              </span>
+            </div>
+            <div>
+              Foyda: <i></i>
+              <span>
+                {data?.data?.profit?.replace(/\d(?=(\d{3})+$)/g, "$& ")} so'm
+              </span>
+            </div>
+            <div>
+              Kategoriyasi: <i></i> <span>{data?.data?.category}</span>
+            </div>
+            <div>
+              Ombor: <i></i> <span>{data?.data?.storage}</span>
+            </div>
+            <div>
+              Ingredientlari:{" "}
+              <ol>
+                {ingredientData?.map((item) => {
+                  return (
+                    <li key={item?.id}>
+                      {item?.name} - {item?.amount} <span>{item?.unit}</span>
+                      {item?.price} so'm
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </>}
         <button
           className="product_box_btn"
           onClick={() => navigate("/managment")}

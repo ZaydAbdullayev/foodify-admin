@@ -23,7 +23,7 @@ export const TransactionGroups = () => {
   const open = useSelector((state) => state.uModel);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data = [], isLoading } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
+  const { data = [], isLoading } = useFetchDataQuery({ url: `get/transactionGroups`, tags: ["tr-group"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

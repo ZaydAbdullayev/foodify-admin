@@ -87,7 +87,7 @@ export const reActiveB = (state = {}, action) => {
   }
 };
 
-const df_s = { worker: user?.worker_name || user?.username, worker_id: user?.worker_id || user?.id, }
+const df_s = { worker: user?.worker_name || user?.username, worker_id: user?.worker_id || user?.id, time: today, };
 
 export const reFormValues = (state = { st: false, vl: df_s, }, action) => {
   switch (action?.type) {

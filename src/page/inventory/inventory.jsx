@@ -176,7 +176,7 @@ export const Inventory = () => {
               <DatePicker
                 style={{ fontSize: "10px" }}
                 defaultValue={dayjs(new Date())}
-                onChange={(date) => setStorageV({ ...storageV, date })}
+                  onChange={(date) => setStorageV({ ...storageV, time: date })}
               />
             </div>
           )}

@@ -207,7 +207,7 @@ export const StatisticsExpenses = () => {
   const searchParams = new URLSearchParams(lc.search);
   const point = searchParams.get("point");
   const { data: e = [] } = useFetchDataQuery({
-    url: `${point}/${user?.id}/${date?.start}/${date?.end}`,
+    url: `${point}/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   console.log("e", e?.data);
@@ -302,14 +302,13 @@ export const StatisticsExpenses = () => {
 };
 
 export const StatisticsIncome = () => {
-  const user = JSON?.parse(localStorage?.getItem("user"))?.user || {};
   const { date } = useSelector((state) => state.uSearch);
   const { data: e = [] } = useFetchDataQuery({
-    url: `/get/incomeFromSales/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/incomeFromSales/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const { data: l = [] } = useFetchDataQuery({
-    url: `/get/incomeForPeriod/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/incomeForPeriod/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const dispatch = useDispatch();

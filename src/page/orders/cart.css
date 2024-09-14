@@ -1,5 +1,5 @@
 :root {
-  --wh1: 30px;
+  --wh1: 33px;
   --ipd: 1.5% 3%;
 }
 
@@ -91,16 +91,16 @@
 .update_item {
   display: flex;
   align-items: center;
-  gap: var(--gap3);
+  gap: var(--gap6);
 }
 
 .update_item :where(button, input) {
   height: var(--wh1);
   background: var(--cl42);
   border-radius: 10px;
-  color: var(--cl1);
+  color: var(--cl4);
   border: none;
-  font-size: var(--fs4);
+  font-size: var(--fs5);
 }
 
 .update_item > button {
@@ -134,7 +134,6 @@
 
 .takeaway.active {
   background: lime;
-  color: var(--cl1);
 }
 
 .takeaway > svg {

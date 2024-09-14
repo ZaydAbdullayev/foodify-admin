@@ -24,15 +24,14 @@ import { acNothification } from "../../redux/nothification";
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const dep = JSON.parse(localStorage.getItem("department")) || null;
-  const id = user.user?.id || null;
   const permissions = JSON.parse(localStorage.getItem("permissions")) || [
     "Bar",
     "Oshxona",
   ];
   const [page, setPage] = useState(1);
   const [params, setParams] = useState({
-    s: `/get/newOrderOne/${id}`,
-    b: `get/orders/${id}`,
+    s: `/get/newOrderOne`,
+    b: `get/orders`,
     oa: "reject",
   });
   const [situation, setSituation] = useState(false);
@@ -88,16 +87,16 @@ export const Home = () => {
 
   useEffect(() => {
     if (page === 1) {
-      socket.on(`/get/newOrders/${id}`, (data) => {
+      socket.on(`/get/newOrders`, (data) => {
         setOrders(data);
         dispatch(acNothification(true));
         console.log("socket", data);
       });
       return () => {
-        socket.off(`/get/newOrders/${id}`);
+        socket.off(`/get/newOrders`);
       };
     }
-  }, [dispatch, id, page]);
+  }, [dispatch, page]);
 
   useEffect(() => {
     socket.on(params?.s, (newData) => {
@@ -190,20 +189,20 @@ export const Home = () => {
               setOrders([]);
               if (p === 1) {
                 setParams({
-                  s: `/get/newOrderOne/${id}`,
-                  b: `get/orders/${id}`,
+                  s: `/get/newOrderOne`,
+                  b: `get/orders`,
                   oa: "reject",
                 });
               } else if (p === 2) {
                 setParams({
-                  s: `/get/makingOrderOne/${id}`,
-                  b: `get/foodsBeingMade/${id}`,
+                  s: `/get/makingOrderOne`,
+                  b: `get/foodsBeingMade`,
                   oa: "back",
                 });
               } else {
                 setParams({
-                  s: `/get/readyOrderOne/${user?.id}`,
-                  b: `get/readyFoods/${id}`,
+                  s: `/get/readyOrderOne`,
+                  b: `get/readyFoods`,
                   oa: "backToKitchen",
                 });
               }

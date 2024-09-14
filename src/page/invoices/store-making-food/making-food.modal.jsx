@@ -27,7 +27,7 @@ const InvoicesModal = ({ NUM }) => {
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${pair.st1_id || id}/${time}`, tags: ["invoices", "action"], });
-  const { data: productData = [] } = useFetchDataQuery({ url: `get/foods/${res_id}`, tags: ["s-products", "product"], });
+  const { data: productData = [] } = useFetchDataQuery({ url: `get/foods`, tags: ["s-products", "product"], });
   isLoading = pair?.id ? isLoading : false;
   acItem = !isLoading ? acItem?.data?.[0] : acItem;
 

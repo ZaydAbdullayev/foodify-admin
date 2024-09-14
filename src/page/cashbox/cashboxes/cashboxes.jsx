@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense } from "react";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
-import { acActiveThing, acPassiveThing } from "../../../redux/active";
+import { acActiveThing } from "../../../redux/active";
 import { LoadingBtn } from "../../../components/loading/loading";
 import { useFetchDataQuery } from "../../../service/fetch.service";
 import { acNavStatus } from "../../../redux/navbar.status";
@@ -19,7 +19,7 @@ export const Cashboxes = () => {
   const ckddt = useSelector((state) => state.delRouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox`, tags: ["cashbox"], });
   React.useEffect(() => {
     dispatch(acNavStatus([0, 1, 2, 3]));
   }, [dispatch]);

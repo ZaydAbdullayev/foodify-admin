@@ -23,10 +23,10 @@ export const CashboxTransaction = () => {
   const ckddt = useSelector((state) => state.delTouter);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
-  const { data: cashboxGrData = [] } = useFetchDataQuery({ url: `get/${user?.id}/transactionGroups`, tags: ["tr-group"], });
+  const { data: cashboxData = [], isLoading } = useFetchDataQuery({ url: `get/cashbox`, tags: ["cashbox"], });
+  const { data: cashboxGrData = [] } = useFetchDataQuery({ url: `get/transactionGroups`, tags: ["tr-group"], });
   const { data: cashTrData = [] } = useFetchDataQuery({ url: `get/transactions`, tags: ["cashbox-transaction"], });
-  const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
+  const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers`, tags: ["suplier"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
 
   const sortData = cashTrData?.data && [...cashTrData?.data].sort((a, b) => {

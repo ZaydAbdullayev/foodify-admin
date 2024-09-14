@@ -17,8 +17,8 @@ const InvoicesPaymentModal = ({ s, setS }) => {
   const [moneyOnSupp, setMoneyOnSupp] = useState(null);
   const id = user?.user_id || user?.id;
   const name = user?.name || user?.username;
-  const { data: cashs = [] } = useFetchDataQuery({ url: `get/cashbox/${user?.id}`, tags: ["cashbox"], });
-  const { data: trg = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${user?.id}`, tags: ["cashbox"], });
+  const { data: cashs = [] } = useFetchDataQuery({ url: `get/cashbox`, tags: ["cashbox"], });
+  const { data: trg = [] } = useFetchDataQuery({ url: `get/InvoiceGroups`, tags: ["cashbox"], });
   const { data: p_h = [] } = useFetchDataQuery({ url: `get/paymentHistory/${pay?.id}`, tags: ["payment_history"], });
   const { data: sp = [] } = useFetchDataQuery({
     url: `get/supplierPayments/${pay?.supplier_id}`,

@@ -17,7 +17,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const id = useSelector((state) => state?.activeSt_id);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const { data = [] } = useFetchDataQuery({
-    url: `get/foods/${user?.id}`,
+    url: `get/foods`,
     tag: ["s-product"],
   });
   const { data: storeData = [] } = useFetchDataQuery({

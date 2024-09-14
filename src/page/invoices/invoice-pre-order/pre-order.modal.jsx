@@ -13,7 +13,7 @@ const InvoicesModal = ({ checkedData, getProduct, NUM, setCheckedData }) => {
   const [activePart, setActivePart] = React.useState(1);
   const user = JSON.parse(localStorage.getItem("user"))?.user || {};
   const { data = [] } = useFetchDataQuery({
-    url: `get/foods/${user?.id}`,
+    url: `get/foods`,
     tags: ["s-product"],
   });
 

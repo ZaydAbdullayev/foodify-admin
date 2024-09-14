@@ -14,6 +14,7 @@ import { BiCircle, BiCheck } from "react-icons/bi";
 import { FiCheckCircle } from "react-icons/fi";
 import { TbMessage2Plus } from "react-icons/tb";
 import { useFetchDataQuery } from "../../service/fetch.service";
+import { useSearchAppParams } from "../../hooks/useSearchParam";
 
 export const Orders = () => {
   const user = JSON.parse(localStorage.getItem("user"))?.user || null;
@@ -24,17 +25,12 @@ export const Orders = () => {
   const [desc, setDesc] = useState(false);
   const [extra, setExtra] = useState("");
   const location = useLocation();
-  const { data = [], isLoading } = useFetchDataQuery({
-    url: `get/foods/${user?.id}`,
-    tags: ["s-products", "product"],
-  });
-  const { data: categoryData = [] } = useFetchDataQuery({
-    url: `get/${user?.id}/categories`,
-    tags: ["category"],
-  });
+  const { getParams, setParams } = useSearchAppParams()
+  const { data = [], isLoading } = useFetchDataQuery({ url: `get/foods`, tags: ["s-products", "product"], });
+  const { data: categoryData = [] } = useFetchDataQuery({ url: `get/categories`, tags: ["category"], });
   const position = location.pathname.split("/");
   const ct = categoryData?.data?.[0]?.name?.toLowerCase().replace(/\s|'/g, "");
-  const category = location.search.split("=")[1] || ct;
+  const category = getParams("category") || ct;
   const cart = useMemo(() => {
     return JSON?.parse(localStorage?.getItem("cart")) || [];
   }, []);
@@ -43,7 +39,6 @@ export const Orders = () => {
 
   const paymentData = {
     address: `&${position[3]}-stoll`,
-    restaurant_id: user?.id,
     user_id: position[4],
     product_data: JSON.stringify({ 1: { pd: cart } }),
     food_total: total?.totalPrice,
@@ -67,28 +62,30 @@ export const Orders = () => {
     product_data: JSON.stringify({ [queue]: cart }),
   };
 
-  const handleTarget = (item) => {
-    const url = item?.name?.toLowerCase().replace(/\s|'/g, "");
-    navigate(`?category=${url}`);
+  const handleTarget = (name) => {
+    const url = name?.toLowerCase().replace(/\s|'/g, "");
+    setParams({ category: url });
   };
 
   const addToCart = (item) => {
     setUpdate(!update);
-    const cartItem = cart?.find((x) => x?.id === item?.id);
+    const cartItem = cart?.find((x) => x?.food_id === item?.food_id);
     if (cartItem) {
       cartItem.quantity++;
+      cartItem.stop_list--;
       localStorage?.setItem("cart", JSON?.stringify(cart));
     } else {
-      cart?.push({ ...item, quantity: 1, status: 1 });
+      cart?.push({ ...item, quantity: 1, status: 1, stop_list: item?.stop_list - 1 });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   };
 
   const updateCart = (item) => {
     setUpdate(!update);
-    const cartItem = cart.find((x) => x.id === item.id);
+    const cartItem = cart.find((x) => x.food_id === item.id);
     if (cartItem && item?.quantity > 0) {
       cartItem.quantity = item?.quantity;
+      cartItem.stop_list = item?.stop_list;
       localStorage.setItem("cart", JSON.stringify(cart));
     } else if (cartItem && item.quantity === 0) {
       const index = cart.indexOf(cartItem);
@@ -103,7 +100,7 @@ export const Orders = () => {
       status: 2,
       res_id: user?.id,
       location: position[2],
-      worker_id: user?.worker_id,
+      worker_id: user?.worker_id || user?.id
     };
     if (!cart.length) {
       alert("Savatcha bo'sh");
@@ -146,11 +143,9 @@ export const Orders = () => {
             return (
               <span
                 key={item?.id}
-                onClick={() => handleTarget({ id: item?.id, name: item?.name })}
+                onClick={() => handleTarget(item?.name)}
                 className={
-                  category === item?.name?.toLowerCase().replace(/\s|'/g, "")
-                    ? "active"
-                    : ""
+                  category === item?.name?.toLowerCase().replace(/\s|'/g, "") ? "active" : ""
                 }
                 aria-label="to filter info according to this category">
                 {item?.name}
@@ -167,14 +162,16 @@ export const Orders = () => {
             </span>
           ) : (
             filteredData?.map((item) => {
-              const count = cart?.filter((x) => x?.id === item?.id);
+              const count = cart?.filter((x) => x?.food_id === item?.food_id);
               return (
                 <div
                   className="res_menu_item"
-                  key={item?.id}
-                  onClick={() => addToCart(item)}
+                  key={item?.food_id}
+                  style={{ opacity: (item?.status && item?.stop_list) === 0 ? 0.5 : 1 }}
+                  onClick={() => (item?.status === 1 && item?.stop_list > 0) && addToCart(item)}
                   aria-label="click this aria for add basket this product">
-                  <p style={{ textTransform: "capitalize" }}>{item?.name}</p>
+                  {count[0]?.stop_list ? <i>{count[0]?.stop_list}</i> : item?.stop_list < 1000 && <i>{item?.stop_list}</i>}
+                  <p style={{ textTransform: "capitalize" }}>{item?.food_name}</p>
                   <span>{item?.description}</span>
                   {count[0]?.quantity && <i>{count[0]?.quantity}</i>}
                 </div>
@@ -198,8 +195,8 @@ export const Orders = () => {
         <div className="cart_body">
           {cart?.map((item) => {
             return (
-              <div className="cart_body__item" key={item?.id}>
-                {desc === item.id ? (
+              <div className="cart_body__item" key={item?.food_id}>
+                {desc === item?.food_id ? (
                   <input
                     type="text"
                     name="comment"
@@ -210,7 +207,7 @@ export const Orders = () => {
                   />
                 ) : (
                   <p>
-                    {item?.name}
+                      {item?.food_name}
                     <b>{item?.description}</b>
                     <NumericFormat
                       value={item?.price * item?.quantity}
@@ -229,17 +226,17 @@ export const Orders = () => {
                 />
                 <div className="update_item">
                   <button aria-label="add message">
-                    {desc === item.id ? (
+                    {desc === item?.food_id ? (
                       <BiCheck
-                        onClick={() => addExtr({ id: item.id, comment: extra })}
+                        onClick={() => addExtr({ id: item?.food_id, comment: extra })}
                       />
                     ) : (
-                      <TbMessage2Plus onClick={() => setDesc(item.id)} />
+                        <TbMessage2Plus onClick={() => setDesc(item?.food_id)} />
                     )}
                   </button>
                   <button
                     onClick={() =>
-                      updateCart({ id: item.id, quantity: item.quantity - 1 })
+                      updateCart({ id: item?.food_id, quantity: item.quantity - 1, stop_list: item.stop_list + 1 })
                     }
                     aria-label="minus 1x">
                     –
@@ -249,7 +246,7 @@ export const Orders = () => {
                     value={item?.quantity}
                     onChange={(e) =>
                       updateCart({
-                        id: item.id,
+                        id: item?.food_id,
                         quantity: e.target.value,
                       })
                     }
@@ -257,7 +254,7 @@ export const Orders = () => {
                   />
                   <button
                     onClick={() =>
-                      updateCart({ id: item.id, quantity: item.quantity + 1 })
+                      updateCart({ id: item?.food_id, quantity: item.quantity + 1, stop_list: item.stop_list - 1 })
                     }
                     aria-label="plus 1x">
                     +

@@ -57,7 +57,7 @@ export const StorageExpenditures = () => {
     { name: "Jami", size: "17.8%" },
   ];
 
-  const innerData = [
+  const innerDisplayKeys = [
     { name: "item_name", size: "20%", border: "1px solid #ccc5" },
     { name: "price", size: "15.7%", border: "1px solid #ccc5" },
     { name: "total_quantity", size: "14%", border: "1px solid #ccc5" },
@@ -167,7 +167,7 @@ export const StorageExpenditures = () => {
                             <p style={{ borderRight: "1px solid #ccc5", justifyContent: "center", }}>
                               {ind + 1}
                             </p>
-                            {innerData.map((key, index) => {
+                            {innerDisplayKeys.map((key, index) => {
                               return (
                                 <p style={{ "--data-line-size": key.size, borderRight: key.border, }}
                                   key={index}>

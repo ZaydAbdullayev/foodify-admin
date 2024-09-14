@@ -21,7 +21,7 @@ export const StorageSupplier = () => {
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const { actionItem } = useActionItemService()
-  const { data: suplierData = [], isLoading } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
+  const { data: suplierData = [], isLoading } = useFetchDataQuery({ url: `get/suppliers`, tags: ["suplier"], });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3])); }, [dispatch]);
   const sortData = suplierData?.data && [...suplierData.data].sort((a, b) => {
     if (sort.state) {

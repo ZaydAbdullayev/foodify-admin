@@ -20,7 +20,7 @@ const InvoicesModal = ({ NUM }) => {
   let { data: acItem = {}, isLoading } = useFetchDataQuery({ url: pair?.id ? `get/actions/received_goods/${pair?.id}` : null, tags: ["invoices"], });
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/storageItems/${pair?.st1_id || id}/${time}`, tags: ["invoices", "action"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
-  const { data: groupsData = [] } = useFetchDataQuery({ url: `get/invoiceGroups/${res_id}`, tags: ["invoice-group"], });
+  const { data: groupsData = [] } = useFetchDataQuery({ url: `get/InvoiceGroups`, tags: ["invoice-group"], });
   isLoading = pair?.id ? isLoading : false;
   acItem = !isLoading ? acItem?.data?.[0] : acItem;
 

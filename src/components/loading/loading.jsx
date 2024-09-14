@@ -2,7 +2,6 @@ import React from "react";
 import "./loading.css";
 import { BiLoader } from "react-icons/bi";
 
-
 export const LoadingBtn = () => {
   return (
     <div className="loading_btn">

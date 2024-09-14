@@ -26,7 +26,7 @@ export const InvoicesGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: groupData = [], isLoading } = useFetchDataQuery({
-    url: `get/InvoiceGroups/${user?.id}`,
+    url: `get/InvoiceGroups`,
     tags: ["invoice-group"],
   });
   React.useEffect(() => {

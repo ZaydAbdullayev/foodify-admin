@@ -53,6 +53,10 @@ export const InvoicesMakingFood = () => {
     { name: "description", size: "9%" },
   ];
 
+  const innerDisplayKeys = [
+
+  ];
+
   return (
     <div className="storage_container">
       <UniversalFilterBox />

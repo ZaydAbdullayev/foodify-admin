@@ -202,14 +202,14 @@ export const Router = () => {
   useEffect(() => {
     dispatch(acCloseUModal());
     dispatch(setRelease(page_code));
-    if (getParams("id")) {
-      removeParamsByKeys(["id", "st1_id"])
-    }
-  }, [dispatch, page_code, removeParamsByKeys, getParams]);
+    // if (getParams("id")) {
+    //   removeParamsByKeys(["id", "st1_id"])
+    // }
+  }, [dispatch, page_code]);
 
-  useEffect(() => {
-    dispatch(acFormValues("R_V", {}));
-  }, [dispatch, lc?.pathname]);
+  // useEffect(() => {
+  //   dispatch(acFormValues("R_V", {}));
+  // }, [dispatch, lc?.pathname]);
 
   useEffect(() => {
     if (window.innerWidth < 600) {

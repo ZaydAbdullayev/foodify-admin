@@ -3,11 +3,11 @@ import { UniversalControlModal, UniversalForm, UniversalProductControl, CalcResu
 
 import { useDispatch, useSelector } from "react-redux";
 import { useFetchDataQuery } from "../../../service/fetch.service";
-import { acActiveSt_id } from "../../../redux/active";
+import { acActiveSt_id, acFormValues } from "../../../redux/active";
 import { addAllIng } from "../../../service/unique.service";
 import { useSearchAppParams } from "../../../hooks/useSearchParam";
 import { getProductService } from "../../../service/form.service";
-import { LoaderSvg } from "../../../components/loading/loading";
+import { LoaderSvg, LoadingBtn } from "../../../components/loading/loading";
 
 const InvoicesModal = ({ NUM }) => {
   const today = new Date().toISOString().split("T")[0]
@@ -22,7 +22,7 @@ const InvoicesModal = ({ NUM }) => {
   const { data = [], isLoading: gl } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   const { data: storeData = [] } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: storageItems = [] } = useFetchDataQuery({ url: `get/storageItems/${pair?.st1_id || s_id}/${time}`, tags: ["invoices", "action"], });
-  const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers/${user?.id}`, tags: ["suplier"], });
+  const { data: suplierData = [] } = useFetchDataQuery({ url: `get/suppliers`, tags: ["suplier"], });
   const updatedData = checkedData?.map((newItem) => {
     const oldData = storageItems?.data?.find((old) => old.item_id === newItem?.item_id);
     const ototal = oldData ? oldData?.total_quantity : 0;
@@ -44,7 +44,6 @@ const InvoicesModal = ({ NUM }) => {
 
   isLoading = pair?.id ? isLoading : false;
   acItem = !isLoading ? acItem?.data?.[0] : acItem;
-  console.log("acItem", acItem);
 
   useEffect(() => {
     if (pair?.st1_id) { dispatch(acActiveSt_id(pair?.st1_id)); }
@@ -59,6 +58,20 @@ const InvoicesModal = ({ NUM }) => {
     getProductService(item, status, acItem, setCheckedData, "received_goods", "income");
   }, [acItem, isLoading]);
 
+  useEffect(() => {
+    dispatch(acFormValues("A_V", { order: NUM.num }));
+    console.log("NUM.num", NUM.num);
+
+  }, [NUM.num, dispatch]);
+  // <p style={{ "--data-line-size": "20%" }}>Nomi</p>
+  //         <p style={{ "--data-line-size": "15%" }}>O'lchov birligi</p>
+  //         <p style={{ "--data-line-size": "15%" }}>Guruh</p>
+  //         <p style={{ "--data-line-size": "15%" }}>Narxi</p>
+  //         <p style={{ "--data-line-size": "15%" }}>Miqdori</p>
+  //         <p style={{ "--data-line-size": "15%" }}>Jami</p>
+
+
+
   // const ingredientData = storageItems?.data ? storageItems?.data : data;
   return (
     <UniversalControlModal
@@ -68,7 +81,7 @@ const InvoicesModal = ({ NUM }) => {
       Udata={updatedData}
       id={s_id || pair?.st1_id}
       setCheckedData={setCheckedData}>
-      {isLoading ? <LoaderSvg color="#eee" fontSize="24px" /> : <UniversalForm
+      {isLoading ? <span><LoadingBtn /></span> : <UniversalForm
         formData={[
           {
             type: "inputN",

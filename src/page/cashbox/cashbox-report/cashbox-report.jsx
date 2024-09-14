@@ -63,6 +63,7 @@ export const TransactionRapor = () => {
     income: CalculateTotal(trIncData?.data, "transactions"),
     expense: CalculateTotal(trExpData?.data, "transactions"),
     balance: CalculateTotal(trIncData?.data, "transactions") - CalculateTotal(trExpData?.data, "transactions"),
+    debt: CalculateTotal(trIncData?.data, "transactions") - CalculateTotal(trExpData?.data, "transactions"),
     endOfDay: CalculateTotal(trIncData?.data, "transactions") - CalculateTotal(trExpData?.data, "transactions") + balance?.data,
   };
 

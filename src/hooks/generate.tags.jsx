@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { DatePicker, Input, InputNumber, Select, Checkbox, Table } from "antd";
 import dayjs from "dayjs";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { acActiveSt_id, acFormValues, acActive } from "../redux/active";
 import "./hook.css";
 import { acCutting } from "../redux/calc";
@@ -14,33 +14,7 @@ function genrateId() {
 
 export const GenerateField = ({ fieldData }) => {
   const dispatch = useDispatch();
-  const values = useSelector((state) => state.values);
-  const {
-    type = "text",
-    options = [],
-    plc_hr = "",
-    df_value = "",
-    name = "",
-    extra = "",
-    take_id = false,
-    getAmount = false,
-    u_option = [],
-    getFullInfo = false,
-  } = fieldData;
-
-  // useEffect(() => {
-  //   const dfVal = df_value?.value || df_value;
-  //   if ((df_value && dfVal !== "default") && values?.vl[name] !== dfVal) {
-  //     const isSelectableType = ["s_extra", "s_search", "select"].includes(type);
-  //     if (u_option.length > 0 && isSelectableType) {
-  //       const payload = extra ? { [name]: u_option[0], [extra]: u_option[1] } : { [name]: u_option[0] };
-  //       dispatch(acFormValues("A_V", payload));
-  //     } else {
-  //       dispatch(acFormValues("A_V", { [name]: dfVal }));
-  //     }
-  //   }
-  // }, [dispatch, values?.vl, name, df_value, type, u_option, extra]);
-
+  const { type = "text", options = [], plc_hr = "", df_value = "", name = "", extra = "", take_id = false, getAmount = false, getFullInfo = false, } = fieldData;
 
   const getExtraValue = (extraV) => {
     const value = extraV?.split("=")?.[1]?.split("|");

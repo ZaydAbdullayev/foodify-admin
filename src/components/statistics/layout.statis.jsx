@@ -156,26 +156,25 @@ const statsData = [
 ];
 
 export const DataBill = () => {
-  const user = JSON.parse(localStorage.getItem("user"))?.user || null;
   const { date } = useSelector((state) => state.uSearch);
   const { data = [] } = useFetchDataQuery({
-    url: `/generate/ordersReport/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/generate/ordersReport/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const { data: bd = [] } = useFetchDataQuery({
-    url: `/get/resOrders/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/resOrders/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const { data: st_v = [] } = useFetchDataQuery({
-    url: `/get/moneyInfo/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/moneyInfo/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const { data: db = [] } = useFetchDataQuery({
-    url: `/get/debts/supplires/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/debts/supplires/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
   const { data: dp = [] } = useFetchDataQuery({
-    url: `/get/credits/supplires/${user?.id}/${date?.start}/${date?.end}`,
+    url: `/get/credits/supplires/${date?.start}/${date?.end}`,
     tags: ["report"],
   });
 
