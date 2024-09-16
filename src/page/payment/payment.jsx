@@ -117,7 +117,10 @@ export const Payment = () => {
                       <span>{product?.quantity}</span>
                       <span className="p_name">{product?.name}</span>
                       <span>
-                        {product?.price.replace(/\d(?=(\d{3})+$)/g, "$&,")} so'm
+                        {product?.price
+                          ?.toString()
+                          .replace(/\d(?=(\d{3})+$)/g, "$&,")}{" "}
+                        so'm
                       </span>
                     </li>
                   );

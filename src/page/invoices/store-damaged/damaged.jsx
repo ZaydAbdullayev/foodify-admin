@@ -20,7 +20,10 @@ export const StorageDamaged = () => {
   const open = useSelector((state) => state.uModal);
   const { actionItem, } = useActionItemService();
   const dispatch = useDispatch();
-  const { data: demagedData = [], isLoading } = useFetchDataQuery({ url: `get/actions/damaged_goods`, tags: ["action"], });
+  const { data: demagedData = [], isLoading } = useFetchDataQuery({
+    url: `get/actions/damaged_goods/null`,
+    tags: ["action"],
+  });
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
 
   const headerKeys = [

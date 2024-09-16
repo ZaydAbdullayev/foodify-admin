@@ -33,9 +33,11 @@ export const UniversalFilterBox = ({ status = null }) => {
   const dispatch = useDispatch();
   const { setParams } = useSearchAppParams()
   const { date } = useSelector((state) => state.uSearch);
-  const res_id = useSelector((state) => state.res_id);
   let fields = useSelector((state) => state.status);
-  const { data = [] } = useFetchDataQuery({ url: `get/cashbox/${res_id}`, tags: ["cashbox"], });
+  const { data = [] } = useFetchDataQuery({
+    url: `get/cashbox`,
+    tags: ["cashbox"],
+  });
   const { data: storage = [], isLoading: sl } = useFetchDataQuery({ url: `get/storage`, tags: ["store"], });
   const { data: ingredientData = [] } = useFetchDataQuery({ url: `get/ingredients`, tags: ["ingredient"], });
   fields = status ? status : fields;

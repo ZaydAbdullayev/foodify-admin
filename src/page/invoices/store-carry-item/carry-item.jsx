@@ -19,7 +19,10 @@ export const StorageCarryUp = () => {
   const { actionItem } = useActionItemService();
   const dispatch = useDispatch();
   useEffect(() => { dispatch(acNavStatus([0, 1, 2, 3, 6, 7, 9, 15])); }, [dispatch]);
-  const { data: movedData = [], isLoading } = useFetchDataQuery({ url: `/get/actions/moved_goods`, tags: ["action", "invoices"], });
+  const { data: movedData = [], isLoading } = useFetchDataQuery({
+    url: `/get/actions/moved_goods/null`,
+    tags: ["action", "invoices"],
+  });
 
   const sortData = movedData?.data && [...movedData?.data]?.sort((a, b) => {
     if (sort.state) {
