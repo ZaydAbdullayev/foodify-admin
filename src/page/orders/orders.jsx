@@ -27,7 +27,10 @@ export const Orders = () => {
   const location = useLocation();
   const { getParams, setParams } = useSearchAppParams()
   const { data = [], isLoading } = useFetchDataQuery({ url: `get/foods`, tags: ["s-products", "product"], });
-  const { data: categoryData = [] } = useFetchDataQuery({ url: `get/categories`, tags: ["category"], });
+  const { data: categoryData = [] } = useFetchDataQuery({
+    url: `get/${user?.id}/categories`,
+    tags: ["category"],
+  });
   const position = location.pathname.split("/");
   const ct = categoryData?.data?.[0]?.name?.toLowerCase().replace(/\s|'/g, "");
   const category = getParams("category") || ct;
@@ -54,6 +57,7 @@ export const Orders = () => {
     t_location: position[2],
     table_id: position[4],
     discount: 0,
+    restaurant_id: user?.id,
   };
 
   const queue = parseInt(position[6]) + 1;
@@ -75,7 +79,12 @@ export const Orders = () => {
       cartItem.stop_list--;
       localStorage?.setItem("cart", JSON?.stringify(cart));
     } else {
-      cart?.push({ ...item, quantity: 1, status: 1, stop_list: item?.stop_list - 1 });
+      cart?.push({
+        ...item,
+        quantity: 1,
+        status: 1,
+        stop_list: item?.stop_list - 1,
+      });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   };
@@ -100,7 +109,7 @@ export const Orders = () => {
       status: 2,
       res_id: user?.id,
       location: position[2],
-      worker_id: user?.worker_id || user?.id
+      worker_id: user?.worker_id || user?.id,
     };
     if (!cart.length) {
       alert("Savatcha bo'sh");

@@ -31,7 +31,7 @@ export const Home = () => {
   const [page, setPage] = useState(1);
   const [params, setParams] = useState({
     s: `/get/newOrderOne`,
-    b: `get/orders`,
+    b: `get/orders/${user?.user?.id}`,
     oa: "reject",
   });
   const [situation, setSituation] = useState(false);
@@ -190,19 +190,19 @@ export const Home = () => {
               if (p === 1) {
                 setParams({
                   s: `/get/newOrderOne`,
-                  b: `get/orders`,
+                  b: `get/orders/${user?.user?.id}`,
                   oa: "reject",
                 });
               } else if (p === 2) {
                 setParams({
                   s: `/get/makingOrderOne`,
-                  b: `get/foodsBeingMade`,
+                  b: `get/foodsBeingMade/${user?.user?.id}`,
                   oa: "back",
                 });
               } else {
                 setParams({
                   s: `/get/readyOrderOne`,
-                  b: `get/readyFoods`,
+                  b: `get/readyFoods/${user?.user?.id}`,
                   oa: "backToKitchen",
                 });
               }
@@ -215,7 +215,8 @@ export const Home = () => {
           {dep !== "oshpaz" && (
             <b
               onClick={() => setFull(!full)}
-              aria-label={full ? "Exit full screen" : "Full screen"}>
+              aria-label={full ? "Exit full screen" : "Full screen"}
+            >
               {full ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
             </b>
           )}
@@ -245,7 +246,8 @@ export const Home = () => {
                     "--grid-col": full ? 1 : 1.5,
                     "--grid-row": pd?.length + 1,
                     display: order?.deleted || !del.length ? "none" : "flex",
-                  }}>
+                  }}
+                >
                   <figure className="order_item">
                     <div className="order_item_header">
                       <p>
@@ -264,7 +266,8 @@ export const Home = () => {
                           onClick={() =>
                             orderAccept({ ...order, status: 4 }, params?.oa)
                           }
-                          aria-label="cancel this order">
+                          aria-label="cancel this order"
+                        >
                           {page === 1 ? <RxCross2 /> : "↶"}
                         </button>
                         {page === 3 ? (
@@ -291,7 +294,8 @@ export const Home = () => {
                                 "do"
                               );
                             }}
-                            aria-label="to accept or to prepare">
+                            aria-label="to accept or to prepare"
+                          >
                             <BsCheck2All />
                           </button>
                         )}
@@ -318,7 +322,8 @@ export const Home = () => {
                                     orderNumber: orderNum,
                                     data: order,
                                   });
-                                }}></i>
+                                }}
+                              ></i>
                               {product?.status === 3 && <i></i>}
                               <p className="qty">{product?.quantity}</p>
                               <pre>
@@ -346,7 +351,8 @@ export const Home = () => {
                                         data: order,
                                       })
                                     }
-                                    aria-label="cancel this product">
+                                    aria-label="cancel this product"
+                                  >
                                     <RxCross2 />
                                   </button>
                                 )}
@@ -369,7 +375,8 @@ export const Home = () => {
                                       data: order,
                                     });
                                   }}
-                                  aria-label="to accept or to prepare this product">
+                                  aria-label="to accept or to prepare this product"
+                                >
                                   {product?.status === 1 || !product?.status ? (
                                     <HiCheck />
                                   ) : product?.status === 5 ? (
@@ -414,12 +421,14 @@ export const Home = () => {
                   defaultBg: "var(--cl49)",
                 },
               },
-            }}>
+            }}
+          >
             {["Hammasi"]?.map((tag, i) => (
               <Tag.CheckableTag
                 key={`${tag}_${i}`}
                 checked={tags.includes(tag)}
-                onChange={(checked) => handleChangeH(tag, checked)}>
+                onChange={(checked) => handleChangeH(tag, checked)}
+              >
                 {tag}
               </Tag.CheckableTag>
             ))}
@@ -427,7 +436,8 @@ export const Home = () => {
               <Tag.CheckableTag
                 key={`${tag}_${i}`}
                 checked={selectedTags.includes(tag)}
-                onChange={(checked) => handleChange(tag, checked)}>
+                onChange={(checked) => handleChange(tag, checked)}
+              >
                 {tag}
               </Tag.CheckableTag>
             ))}
